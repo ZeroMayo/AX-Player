@@ -68,6 +68,7 @@ namespace NekoPlayer.App
             public static FontUsage OwnglyphDaisy = FontUsage.Default.With("OwnglyphDaisy", 16);
             public static FontUsage OwnglyphYuntaeng = FontUsage.Default.With("OwnglyphYuntaeng", 16);
             public static FontUsage GoogleSansFlexRounded = FontUsage.Default.With("GoogleSansFlexRounded", 16, "Regular");
+            public static FontUsage Hippie = FontUsage.Default.With("Hippie", 16);
         }
 
         private BindableNumber<double> sampleVolume = null!;

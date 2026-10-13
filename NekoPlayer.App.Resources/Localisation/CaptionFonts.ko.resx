@@ -97,4 +97,7 @@
   <data name="OwnglyphYuntaeng" xml:space="preserve">
     <value>온글잎 윤탱체</value>
   </data>
+  <data name="Hippie" xml:space="preserve">
+    <value>히피체</value>
+  </data>
 </root>

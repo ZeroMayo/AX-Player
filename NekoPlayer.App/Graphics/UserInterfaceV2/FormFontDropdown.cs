@@ -368,6 +368,11 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV2
                             label.Font = NekoPlayerApp.Fonts.GoogleSansFlexRounded;
                             break;
                         }
+                        case CaptionFonts.Hippie:
+                        {
+                            label.Font = NekoPlayerApp.Fonts.Hippie;
+                            break;
+                        }
                     }
                 }, true);
 

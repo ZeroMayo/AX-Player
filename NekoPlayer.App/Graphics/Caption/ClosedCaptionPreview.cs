@@ -188,6 +188,11 @@ namespace NekoPlayer.App.Graphics.Caption
                         textCreationParameters = spriteText => spriteText.Font = NekoPlayerApp.Fonts.GoogleSansFlexRounded.With(size: 24);
                         break;
                     }
+                    case CaptionFonts.Hippie:
+                    {
+                        textCreationParameters = spriteText => spriteText.Font = NekoPlayerApp.Fonts.Hippie.With(size: 24);
+                        break;
+                    }
                 }
                 RefreshFont();
             }, true);

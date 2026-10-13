@@ -100,4 +100,7 @@
   <data name="OwnglyphYuntaeng" xml:space="preserve">
     <value>Ownglyph Yuntaeng</value>
   </data>
+  <data name="Hippie" xml:space="preserve">
+    <value>Hippie</value>
+  </data>
 </root>

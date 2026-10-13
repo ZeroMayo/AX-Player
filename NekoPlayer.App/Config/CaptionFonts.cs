@@ -37,5 +37,7 @@ namespace NekoPlayer.App.Config
         OwnglyphDaisy,
         [LocalisableDescription(typeof(CaptionFontStrings), nameof(CaptionFontStrings.OwnglyphYuntaeng))]
         OwnglyphYuntaeng,
+        [LocalisableDescription(typeof(CaptionFontStrings), nameof(CaptionFontStrings.Hippie))]
+        Hippie,
     }
 }

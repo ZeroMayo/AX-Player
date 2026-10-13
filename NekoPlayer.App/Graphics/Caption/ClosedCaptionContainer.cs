@@ -225,6 +225,9 @@ namespace NekoPlayer.App.Graphics.Caption
                     case CaptionFonts.GoogleSansFlexRounded:
                         textCreationParameters = t => t.Font = NekoPlayerApp.Fonts.GoogleSansFlexRounded.With(size: 24);
                         break;
+                    case CaptionFonts.Hippie:
+                        textCreationParameters = t => t.Font = NekoPlayerApp.Fonts.Hippie.With(size: 24);
+                        break;
                     default:
                         textCreationParameters = t => t.Font = NekoPlayerApp.Fonts.GoogleSansFlex.With(size: 24);
                         break;
@@ -402,6 +405,8 @@ namespace NekoPlayer.App.Graphics.Caption
                     return NekoPlayerApp.Fonts.OwnglyphYuntaeng.With(size: size);
                 case CaptionFonts.GoogleSansFlexRounded:
                     return NekoPlayerApp.Fonts.GoogleSansFlexRounded.With(size: size);
+                case CaptionFonts.Hippie:
+                    return NekoPlayerApp.Fonts.Hippie.With(size: size);
                 default:
                     return NekoPlayerApp.Fonts.GoogleSansFlex.With(size: size);
             }
