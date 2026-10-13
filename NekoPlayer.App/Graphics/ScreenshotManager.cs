@@ -195,13 +195,11 @@ namespace NekoPlayer.App.Graphics
                     });
                     */
 
-                    Schedule(() =>
-                    {
-                        pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Image, Color4.Green, NekoPlayerStrings.ScreenshotSaved, filename)
-                        {
-                            Action = () => storage.PresentFileExternally(filename),
-                        });
-                    });
+                    Toast toast = new Toast(NekoPlayerStrings.ScreenshotSaved, filename);
+
+                    onScreenDisplay.Display(toast);
+
+                    storage.PresentFileExternally(filename);
                 }
             }
             finally
