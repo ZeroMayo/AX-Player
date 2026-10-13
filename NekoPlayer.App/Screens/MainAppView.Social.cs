@@ -833,7 +833,10 @@ namespace NekoPlayer.App.Screens
 
                                     Schedule(() => onScreenDisplay.Display(toast));
                                     */
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignOutAlt, Color4.Red, NekoPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                    Schedule(() =>
+                                    {
+                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignOutAlt, Color4.Red, NekoPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                    });
                                     Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
                                 };
 
@@ -854,7 +857,10 @@ namespace NekoPlayer.App.Screens
 
                                 Schedule(() => onScreenDisplay.Display(toast));
                                 */
-                                notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignInAlt, Color4.Green, NekoPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                Schedule(() =>
+                                {
+                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignInAlt, Color4.Green, NekoPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                });
                                 Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
                             }
                         });
@@ -865,7 +871,10 @@ namespace NekoPlayer.App.Screens
                         if (!googleOAuth2.SignedIn.Value)
                             return;
 
-                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, NekoPlayerStrings.ReportSuccess, NekoPlayerStrings.Report));
+                        Schedule(() =>
+                        {
+                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, NekoPlayerStrings.ReportSuccess, NekoPlayerStrings.Report));
+                        });
                         //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Report, NekoPlayerStrings.ReportSuccess, FontAwesome.Solid.CheckCircle);
                         api.ReportAbuse(videoId, reportReason.Current.Value.Id, (reportReason.Current.Value.ContainsSecondaryReasons ? reportSubReason.Current.Value.Id : null), (!string.IsNullOrEmpty(reportComment.Current.Value) ? reportComment.Current.Value : null));
                         //Schedule(() => onScreenDisplay.Display(toast));
@@ -889,7 +898,10 @@ namespace NekoPlayer.App.Screens
                         Scheduler.AddDelayed(() => updateComments(videoId), 2000);
 
                         //Schedule(() => onScreenDisplay.Display(toast));
-                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, NekoPlayerStrings.CommentAdded, NekoPlayerStrings.General));
+                        Schedule(() =>
+                        {
+                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, NekoPlayerStrings.CommentAdded, NekoPlayerStrings.General));
+                        });
 
                         commentTextBox.Text = string.Empty;
                     };

@@ -100,9 +100,12 @@ namespace NekoPlayer.Desktop.Windows.Updater
                     game.UpdateButtonEnabled.Value = false;
                 }, cancellationToken).ConfigureAwait(false);
                 game.UpdateManagerVersionText.Value = NekoPlayerStrings.RestartRequired;
-                pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Sync, Color4.Green, NekoPlayerStrings.RestartRequired, NekoPlayerStrings.Updates)
+                Schedule(() =>
                 {
-                    Action = () => restartToApplyUpdate(updateManager, update),
+                    pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Sync, Color4.Green, NekoPlayerStrings.RestartRequired, NekoPlayerStrings.Updates)
+                    {
+                        Action = () => restartToApplyUpdate(updateManager, update),
+                    });
                 });
                 game.RestartRequired.Value = true;
                 game.RestartAction = () => restartToApplyUpdate(updateManager, update);
@@ -112,7 +115,10 @@ namespace NekoPlayer.Desktop.Windows.Updater
             {
                 // In the case of an error, a separate notification will be displayed.
                 game.UpdateManagerVersionText.Value = NekoPlayerStrings.UpdateFailed;
-                pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Sync, Color4.Red, NekoPlayerStrings.UpdateFailed, NekoPlayerStrings.Updates));
+                Schedule(() =>
+                {
+                    pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Sync, Color4.Red, NekoPlayerStrings.UpdateFailed, NekoPlayerStrings.Updates));
+                });
                 game.UpdateButtonEnabled.Value = true;
                 Logger.Error(e, @"Update failed!");
             }

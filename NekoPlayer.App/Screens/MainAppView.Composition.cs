@@ -1453,7 +1453,10 @@ namespace NekoPlayer.App.Screens
                                                 Scheduler.AddDelayed(() => updateComments(videoId), 2000);
 
                                                 //Schedule(() => onScreenDisplay.Display(toast));
-                                                notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, NekoPlayerStrings.CommentAdded, NekoPlayerStrings.General));
+                                                Schedule(() =>
+                                                {
+                                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, NekoPlayerStrings.CommentAdded, NekoPlayerStrings.General));
+                                                });
 
                                                 commentTextBox.Text = string.Empty;
                                             }

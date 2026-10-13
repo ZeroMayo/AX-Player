@@ -125,7 +125,10 @@ namespace NekoPlayer.App.Screens
 
                 Schedule(() => onScreenDisplay.Display(toast));
                 */
-                notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Green, NekoPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), NekoPlayerStrings.Playlists));
+                Schedule(() =>
+                {
+                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Green, NekoPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), NekoPlayerStrings.Playlists));
+                });
 
                 await Task.Delay(1000);
 
@@ -152,7 +155,10 @@ namespace NekoPlayer.App.Screens
 
                 Schedule(() => onScreenDisplay.Display(toast));
                 */
-                notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Red, NekoPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), NekoPlayerStrings.Playlists));
+                Schedule(() =>
+                {
+                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Red, NekoPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), NekoPlayerStrings.Playlists));
+                });
 
                 await Task.Delay(1000);
 

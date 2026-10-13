@@ -8,27 +8,30 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NekoPlayer.App.Config;
+using NekoPlayer.App.Extensions;
+using NekoPlayer.App.Graphics.Containers;
+using NekoPlayer.App.Input.Binding;
+using NekoPlayer.App.Localisation;
+using NekoPlayer.App.Overlays;
+using NekoPlayer.App.Overlays.OSD;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
+using osuTK.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using NekoPlayer.App.Config;
-using NekoPlayer.App.Extensions;
-using NekoPlayer.App.Input.Binding;
-using NekoPlayer.App.Localisation;
-using NekoPlayer.App.Overlays;
-using NekoPlayer.App.Overlays.OSD;
-using SixLabors.ImageSharp.Formats.Webp;
 
 namespace NekoPlayer.App.Graphics
 {
@@ -53,6 +56,9 @@ namespace NekoPlayer.App.Graphics
 
         [Resolved]
         private OnScreenDisplay onScreenDisplay { get; set; } = null!;
+
+        [Resolved]
+        private PushNotificationOverlay pushNotificationOverlay { get; set; } = null!;
 
         private Storage storage = null!;
 
@@ -189,11 +195,13 @@ namespace NekoPlayer.App.Graphics
                     });
                     */
 
-                    Toast toast = new Toast(NekoPlayerStrings.ScreenshotSaved, filename);
-
-                    onScreenDisplay.Display(toast);
-
-                    storage.PresentFileExternally(filename);
+                    Schedule(() =>
+                    {
+                        pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Image, Color4.Green, NekoPlayerStrings.ScreenshotSaved, filename)
+                        {
+                            Action = () => storage.PresentFileExternally(filename),
+                        });
+                    });
                 }
             }
             finally

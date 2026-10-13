@@ -75,7 +75,10 @@ namespace NekoPlayer.App.Screens
                     */
                     if (settingsContainer.IsVisible)
                     {
-                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, NekoPlayerStrings.RunningLatestRelease(game.Version), NekoPlayerStrings.Updates));
+                        Schedule(() =>
+                        {
+                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, NekoPlayerStrings.RunningLatestRelease(game.Version), NekoPlayerStrings.Updates));
+                        });
                         /*
                         ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Updates, NekoPlayerStrings.RunningLatestRelease(game.Version), FontAwesome.Solid.CheckCircle);
 
