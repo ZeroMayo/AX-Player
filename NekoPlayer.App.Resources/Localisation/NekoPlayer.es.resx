@@ -381,7 +381,7 @@
     <value>pantalla completa</value>
   </data>
   <data name="vertical_sync" xml:space="preserve">
-    <value>VSync</value>
+    <value>Sincronización vertical</value>
   </data>
   <data name="refresh_rate_2x" xml:space="preserve">
     <value>2x tasa de refresco</value>
@@ -915,6 +915,6 @@ Recomendado tener En, apagar sólo si experimenta problemas.</value>
     <value>Relación de muestra inferior</value>
   </data>
   <data name="vertical_sync_vrr" xml:space="preserve">
-    <value>VSync (VRR baja latencia)</value>
+    <value>Sincronización vertical (VRR baja latencia)</value>
   </data>
 </root>

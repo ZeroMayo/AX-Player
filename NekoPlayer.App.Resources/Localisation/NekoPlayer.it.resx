@@ -381,7 +381,7 @@
     <value>Schermo intero</value>
   </data>
   <data name="vertical_sync" xml:space="preserve">
-    <value>VSync</value>
+    <value>Sincronizzazione verticale</value>
   </data>
   <data name="refresh_rate_2x" xml:space="preserve">
     <value>Frequenza di aggiornamento 2x</value>
@@ -914,6 +914,6 @@
     <value>Rapporto di abbassamento</value>
   </data>
   <data name="vertical_sync_vrr" xml:space="preserve">
-    <value>VSync (VRR bassa latenza)</value>
+    <value>Sincronizzazione verticale (VRR bassa latenza)</value>
   </data>
 </root>

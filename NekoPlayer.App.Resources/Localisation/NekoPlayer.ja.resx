@@ -381,7 +381,7 @@
     <value>全画面</value>
   </data>
   <data name="vertical_sync" xml:space="preserve">
-    <value>VSync</value>
+    <value>バーティカルシンク</value>
   </data>
   <data name="refresh_rate_2x" xml:space="preserve">
     <value>2倍のリフレッシュレート</value>
@@ -915,6 +915,6 @@ On にすることを推奨します。問題が発生している場合のみ O
     <value>ダウンサンプリング比率</value>
   </data>
   <data name="vertical_sync_vrr" xml:space="preserve">
-    <value>VSync（VRR低遅延）</value>
+    <value>バーティカルシンク（VRR低遅延）</value>
   </data>
 </root>
