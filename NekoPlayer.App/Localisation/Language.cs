@@ -26,6 +26,9 @@ namespace NekoPlayer.App.Localisation
         [Description(@"한국어")]
         ko,
 
+        [Description(@"简体中文")]
+        zh,
+
 #if DEBUG
         [Description(@"Debug (show raw keys)")]
         debug

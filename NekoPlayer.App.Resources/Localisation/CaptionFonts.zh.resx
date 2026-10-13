@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="hungeul" xml:space="preserve">
+    <value>Hungeul</value>
+  </data>
+  <data name="ownglyph_pdh" xml:space="preserve">
+    <value>Ownglyph PDH</value>
+  </data>
+  <data name="dovemayo_gothic" xml:space="preserve">
+    <value>Dovemayo Gothic</value>
+  </data>
+  <data name="pretendard" xml:space="preserve">
+    <value>Pretendard</value>
+  </data>
+  <data name="griun_mongtori" xml:space="preserve">
+    <value>Griun Mongtori</value>
+  </data>
+  <data name="one_mobile_pop" xml:space="preserve">
+    <value>ONE Mobile POP</value>
+  </data>
+  <data name="hayu_font" xml:space="preserve">
+    <value>Hayu Font</value>
+  </data>
+  <data name="puzzle_sans_super" xml:space="preserve">
+    <value>Puzzle Sans SUPER</value>
+  </data>
+  <data name="x12y12pxMaruMinyaHangul" xml:space="preserve">
+    <value>x12y12pxMaruMinyaHangul</value>
+  </data>
+  <data name="Cafe24Syongsyong" xml:space="preserve">
+    <value>Cafe24 Ssong Ssong</value>
+  </data>
+  <data name="DreamHeumulKR" xml:space="preserve">
+    <value>DreamHeumul KR</value>
+  </data>
+  <data name="Hakgyoansim_ManitoR" xml:space="preserve">
+    <value>Hakgyoansim Manito</value>
+  </data>
+  <data name="OwnglyphDaisy" xml:space="preserve">
+    <value>Ownglyph Daisy</value>
+  </data>
+  <data name="OwnglyphYuntaeng" xml:space="preserve">
+    <value>Ownglyph Yuntaeng</value>
+  </data>
+  <data name="Hippie" xml:space="preserve">
+    <value>Hippie</value>
+  </data>
+</root>
