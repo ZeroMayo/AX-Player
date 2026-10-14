@@ -57,6 +57,7 @@ namespace NekoPlayer.App.Graphics.Videos
                     {
                         rightContent.RepeatCount = 0;
                         rightContent.HideNow();
+                        leftContent.RepeatCount += 5;
                         leftContent.PlaySeekAnimation(FontAwesome.Solid.ChevronLeft);
                         break;
                     }
@@ -64,6 +65,7 @@ namespace NekoPlayer.App.Graphics.Videos
                     {
                         leftContent.RepeatCount = 0;
                         leftContent.HideNow();
+                        rightContent.RepeatCount += 5;
                         rightContent.PlaySeekAnimation(FontAwesome.Solid.ChevronRight);
                         break;
                     }
@@ -242,6 +244,7 @@ namespace NekoPlayer.App.Graphics.Videos
                         content.ScaleTo(new osuTK.Vector2(.9f), 250, Easing.OutExpo);
                         content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10, 250, Easing.OutExpo);
                         this.BlurTo(new osuTK.Vector2(4), 250, Easing.OutExpo);
+                        RepeatCount = 0;
                     }
                 }
 
@@ -250,6 +253,7 @@ namespace NekoPlayer.App.Graphics.Videos
                     seekArrow.Icon = icon;
                     if (trackAction != SeekAction.PlayPause)
                     {
+                        seekValue.Text = $"{(trackAction == SeekAction.FastForward10sec ? "+" : "-")} {RepeatCount}";
                         this.BlurTo(new osuTK.Vector2(4));
                         this.BlurTo(new osuTK.Vector2(0), 500, Easing.OutExpo);
                         content.FadeInFromZero(500, Easing.OutExpo);
