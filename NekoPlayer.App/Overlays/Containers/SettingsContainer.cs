@@ -1078,7 +1078,7 @@ namespace NekoPlayer.App.Overlays.Containers
                                                                 {
                                                                     Width = 100,
                                                                     Height = 100,
-                                                                    Texture = textures.Get(@"NekoPlayer_Icon_20260922"),
+                                                                    Texture = textures.Get(@"NekoPlayer_Logo_20261014"),
                                                                     FillMode = FillMode.Fit,
                                                                 }
                                                             },

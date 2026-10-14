@@ -1,7 +1,7 @@
 [English](README.md) | **한국어**
 
 <h1 align="center">NekoPlayer</h1>
-<p align="center"><img width="250" alt="NekoPlayer Logo" src="assets/NekoPlayer_Icon_20260922.png"></p>
+<p align="center"><img width="250" alt="NekoPlayer Logo" src="assets/NekoPlayer_Logo_20261014.png"></p>
 <p align="center">디자인과 창의성에 중점을 둔 새로운 시대의 YouTube 동영상 플레이어</p>
 <p align="center">이 앱의 일부 리소스(samples)는 <a href="https://github.com/ppy/osu-resources">ppy/osu-resources</a>를 사용하고 있습니다.</p>
 
@@ -77,6 +77,8 @@ dotnet run --project NekoPlayer.Desktop (for Linux and other platform)
 ## 기여하기
 
 프로젝트에 기여하는 방법으로는 문제를 보고하거나 풀 리퀘스트를 제출하는 두 가지가 있습니다. 가장 효과적으로 도움을 줄 수 있는 방법을 이해하려면 [기여 지침](CONTRIBUTING.md)을 참고해 주세요.
+
+우리 팀은 인간의 기여를 믿습니다. AI/LLM을 사용해 작성되었거나 문서화되었거나 지원받은 이슈 리포트나 풀 리퀘스트 등 모든 기여물은 추가 논의 없이 보통 종료 및 잠금 처리됩니다.
 
 ## 라이선스
 
