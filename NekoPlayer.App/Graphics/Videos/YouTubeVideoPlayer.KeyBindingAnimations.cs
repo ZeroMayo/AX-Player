@@ -80,7 +80,6 @@ namespace NekoPlayer.App.Graphics.Videos
                 private SeekAction trackAction;
                 private SpriteIcon seekArrow;
                 private ProjectYomiSpriteText seekValue;
-                private BufferedContainer seekArrowContainer;
 
                 private Container content;
                 public int RepeatCount = 0;
@@ -100,34 +99,39 @@ namespace NekoPlayer.App.Graphics.Videos
                             Origin = Anchor.Centre,
                             Children = new Drawable[]
                             {
-                                new Box
+                                new CircularContainer
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0.5f), Color4.Black.Opacity(0f)),
+                                    Width = 75,
+                                    Height = 75,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Masking = true,
+                                    Child = new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Alpha = 0.7f,
+                                        Colour = Color4.Black,
+                                    }
                                 },
-                                seekArrowContainer = new BufferedContainer
+                                new FillFlowContainer
                                 {
                                     AutoSizeAxes = Axes.Both,
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
+                                    Direction = FillDirection.Horizontal,
                                     Children = new Drawable[]
                                     {
                                         seekArrow = new SpriteIcon
                                         {
-                                            Width = 25,
-                                            Height = 25,
-                                            Scale = new osuTK.Vector2(0.8f, 1),
-                                            Position = new osuTK.Vector2(20, 0),
+                                            Width = 15,
+                                            Height = 15,
                                             Icon = FontAwesome.Solid.ChevronLeft,
+                                            Margin = new MarginPadding { Right = 2 },
                                         },
                                         seekValue = new ProjectYomiSpriteText
                                         {
                                             Text = $"- 5",
-                                            Margin = new MarginPadding
-                                            {
-                                                Left = 30,
-                                            },
-                                            Font = NekoPlayerApp.DefaultFont.With(size: 25, weight: "Bold"),
+                                            Font = NekoPlayerApp.DefaultFont.With(size: 15, weight: "Bold"),
                                         },
                                     }
                                 }
@@ -143,34 +147,39 @@ namespace NekoPlayer.App.Graphics.Videos
                             Origin = Anchor.Centre,
                             Children = new Drawable[]
                             {
-                                new Box
+                                new CircularContainer
                                 {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0f), Color4.Black.Opacity(0.5f)),
+                                    Width = 75,
+                                    Height = 75,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Masking = true,
+                                    Child = new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Alpha = 0.7f,
+                                        Colour = Color4.Black,
+                                    }
                                 },
-                                seekArrowContainer = new BufferedContainer
+                                new FillFlowContainer
                                 {
                                     AutoSizeAxes = Axes.Both,
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
+                                    Direction = FillDirection.Horizontal,
                                     Children = new Drawable[]
                                     {
-                                        seekArrow = new SpriteIcon
-                                        {
-                                            Width = 25,
-                                            Height = 25,
-                                            Scale = new osuTK.Vector2(0.8f, 1),
-                                            Position = new osuTK.Vector2(20, 0),
-                                            Icon = FontAwesome.Solid.ChevronRight,
-                                        },
                                         seekValue = new ProjectYomiSpriteText
                                         {
                                             Text = $"+ 5",
-                                            Margin = new MarginPadding
-                                            {
-                                                Right = 45,
-                                            },
-                                            Font = NekoPlayerApp.DefaultFont.With(size: 25, weight: "Bold"),
+                                            Font = NekoPlayerApp.DefaultFont.With(size: 15, weight: "Bold"),
+                                        },
+                                        seekArrow = new SpriteIcon
+                                        {
+                                            Width = 15,
+                                            Height = 15,
+                                            Icon = FontAwesome.Solid.ChevronRight,
+                                            Margin = new MarginPadding { Left = 2 },
                                         },
                                     }
                                 }
@@ -230,21 +239,10 @@ namespace NekoPlayer.App.Graphics.Videos
                 {
                     if (trackAction != SeekAction.PlayPause)
                     {
-                        content.FadeOut(250, Easing.In);
-                        seekArrowContainer.BlurTo(new osuTK.Vector2(4), 250, Easing.In);
-                        using (BeginDelayedSequence(250))
-                        {
-                            seekArrow.ScaleTo(new osuTK.Vector2(0.8f, 1));
-                            RepeatCount = 0;
-                            if (trackAction == SeekAction.FastRewind10sec)
-                            {
-                                seekArrow.MoveTo(new osuTK.Vector2(20, 0));
-                            }
-                            else
-                            {
-                                seekArrow.MoveTo(new osuTK.Vector2(40, 0));
-                            }
-                        }
+                        content.FadeOut(500, Easing.OutExpo);
+                        content.ScaleTo(new osuTK.Vector2(.9f), 250, Easing.OutExpo);
+                        content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10, 250, Easing.OutExpo);
+                        this.BlurTo(new osuTK.Vector2(4), 250, Easing.OutExpo);
                     }
                 }
 
@@ -253,29 +251,12 @@ namespace NekoPlayer.App.Graphics.Videos
                     seekArrow.Icon = icon;
                     if (trackAction != SeekAction.PlayPause)
                     {
-                        RepeatCount += 5;
-                        seekArrowContainer.BlurTo(new osuTK.Vector2(4));
-                        seekArrowContainer.BlurTo(new osuTK.Vector2(0), 250, Easing.Out);
-                        content.FadeInFromZero(250, Easing.Out);
-                        seekArrow.ScaleTo(new osuTK.Vector2(0.7f, 1));
-                        if (trackAction == SeekAction.FastRewind10sec)
-                        {
-                            seekArrow.MoveTo(new osuTK.Vector2(20, 0));
-                        }
-                        else
-                        {
-                            seekArrow.MoveTo(new osuTK.Vector2(20, 0));
-                        }
-                        seekArrow.ScaleTo(1, 250, Easing.Out);
-                        if (trackAction == SeekAction.FastRewind10sec)
-                        {
-                            seekArrow.MoveTo(new osuTK.Vector2(0), 500, Easing.OutQuart);
-                        }
-                        else
-                        {
-                            seekArrow.MoveTo(new osuTK.Vector2(40, 0), 500, Easing.OutQuart);
-                        }
-                        using (BeginDelayedSequence(1250))
+                        this.BlurTo(new osuTK.Vector2(4));
+                        this.BlurTo(new osuTK.Vector2(0), 500, Easing.OutExpo);
+                        content.FadeInFromZero(500, Easing.OutExpo);
+                        content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10).MoveToX(0, 750, Easing.OutExpo);
+                        content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 750, Easing.OutExpo);
+                        using (BeginDelayedSequence(750))
                         {
                             HideNow();
                         }
@@ -283,14 +264,14 @@ namespace NekoPlayer.App.Graphics.Videos
                     else
                     {
                         this.BlurTo(new osuTK.Vector2(4));
-                        this.BlurTo(new osuTK.Vector2(0), 500, Easing.OutQuint);
-                        content.FadeInFromZero(500, Easing.OutQuint);
-                        content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 250, Easing.OutQuint);
+                        this.BlurTo(new osuTK.Vector2(0), 500, Easing.OutExpo);
+                        content.FadeInFromZero(500, Easing.OutExpo);
+                        content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 750, Easing.OutExpo);
                         using (BeginDelayedSequence(750))
                         {
-                            content.FadeOut(500, Easing.OutQuint);
-                            content.ScaleTo(new osuTK.Vector2(.9f), 250, Easing.OutQuint);
-                            this.BlurTo(new osuTK.Vector2(4), 250, Easing.OutQuint);
+                            content.FadeOut(500, Easing.OutExpo);
+                            content.ScaleTo(new osuTK.Vector2(.9f), 250, Easing.OutExpo);
+                            this.BlurTo(new osuTK.Vector2(4), 250, Easing.OutExpo);
                         }
                     }
                 }
