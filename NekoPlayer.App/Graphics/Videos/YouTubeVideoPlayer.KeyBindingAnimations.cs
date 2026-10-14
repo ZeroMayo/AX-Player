@@ -128,7 +128,7 @@ namespace NekoPlayer.App.Graphics.Videos
                                             Icon = FontAwesome.Solid.ChevronLeft,
                                             Margin = new MarginPadding { Right = 2 },
                                         },
-                                        seekValue = new ProjectYomiSpriteText
+                                        seekValue = new ProjectYomiSpriteText(false)
                                         {
                                             Text = $"- 5",
                                             Font = NekoPlayerApp.DefaultFont.With(size: 15, weight: "Bold"),
@@ -169,7 +169,7 @@ namespace NekoPlayer.App.Graphics.Videos
                                     Direction = FillDirection.Horizontal,
                                     Children = new Drawable[]
                                     {
-                                        seekValue = new ProjectYomiSpriteText
+                                        seekValue = new ProjectYomiSpriteText(false)
                                         {
                                             Text = $"+ 5",
                                             Font = NekoPlayerApp.DefaultFont.With(size: 15, weight: "Bold"),
