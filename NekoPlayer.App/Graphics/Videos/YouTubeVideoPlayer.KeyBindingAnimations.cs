@@ -84,7 +84,6 @@ namespace NekoPlayer.App.Graphics.Videos
                 private Container content;
                 public int RepeatCount = 0;
 
-                private ScheduledDelegate fadeIn;
                 private ScheduledDelegate fadeOut;
 
                 public SeekAnimation(SeekAction trackAction)
@@ -256,10 +255,11 @@ namespace NekoPlayer.App.Graphics.Videos
                         content.FadeInFromZero(500, Easing.OutExpo);
                         content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10).MoveToX(0, 750, Easing.OutExpo);
                         content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 750, Easing.OutExpo);
-                        using (BeginDelayedSequence(750))
+                        fadeOut?.Cancel();
+                        fadeOut = Scheduler.AddDelayed(() =>
                         {
                             HideNow();
-                        }
+                        }, 750);
                     }
                     else
                     {
@@ -267,12 +267,13 @@ namespace NekoPlayer.App.Graphics.Videos
                         this.BlurTo(new osuTK.Vector2(0), 500, Easing.OutExpo);
                         content.FadeInFromZero(500, Easing.OutExpo);
                         content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 750, Easing.OutExpo);
-                        using (BeginDelayedSequence(750))
+                        fadeOut?.Cancel();
+                        fadeOut = Scheduler.AddDelayed(() =>
                         {
                             content.FadeOut(500, Easing.OutExpo);
                             content.ScaleTo(new osuTK.Vector2(.9f), 250, Easing.OutExpo);
                             this.BlurTo(new osuTK.Vector2(4), 250, Easing.OutExpo);
-                        }
+                        }, 750);
                     }
                 }
             }
