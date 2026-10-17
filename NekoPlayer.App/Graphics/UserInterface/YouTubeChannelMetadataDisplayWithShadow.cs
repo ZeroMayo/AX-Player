@@ -209,6 +209,9 @@ namespace NekoPlayer.App.Graphics.UserInterface
         {
             uiLanguage.UnbindEvents();
             channelData = channel;
+
+            GetPalette();
+
             Task.Run(async () =>
             {
                 Schedule(() =>
