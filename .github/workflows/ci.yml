@@ -25,3 +25,21 @@ jobs:
 
       - name: Compile
         run: dotnet build -c Debug NekoPlayer.Desktop.Windows.slnf
+        
+  build-only-linux:
+    name: Build only (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+            submodules: "true"
+
+      - name: Install .NET 10.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Compile
+        run: dotnet build -c Debug NekoPlayer.Desktop.slnf
