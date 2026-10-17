@@ -26,8 +26,8 @@ using NekoPlayer.App.Input;
 using NekoPlayer.App.Input.Binding;
 using NekoPlayer.App.Localisation;
 using NekoPlayer.App.Online;
-using NekoPlayer.App.Utils;
 using NekoPlayer.App.Resources;
+using NekoPlayer.App.Utils;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -538,6 +538,12 @@ namespace NekoPlayer.App
 
             #region Reverb
             enableReverb = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ReverbEnabled);
+
+            if (enableReverb.Value)
+                Audio.TrackMixer.AddEffect(reverbParameters);
+            else
+                Audio.TrackMixer.RemoveEffect(reverbParameters);
+
             enableReverb.BindValueChanged(enabled =>
             {
                 if (enabled.NewValue)
@@ -547,6 +553,12 @@ namespace NekoPlayer.App
             }, true);
 
             reverbWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbWetMix);
+
+            reverbParameters.fWetMix = reverbWetMix.Value;
+
+            if (enableReverb.Value)
+                Audio.TrackMixer.UpdateEffect(reverbParameters);
+
             reverbWetMix.BindValueChanged(value =>
             {
                 reverbParameters.fWetMix = value.NewValue;
@@ -556,6 +568,12 @@ namespace NekoPlayer.App
             }, true);
 
             reverbRoomSize = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbRoomSize);
+
+            reverbParameters.fRoomSize = reverbRoomSize.Value;
+
+            if (enableReverb.Value)
+                Audio.TrackMixer.UpdateEffect(reverbParameters);
+
             reverbRoomSize.BindValueChanged(value =>
             {
                 reverbParameters.fRoomSize = value.NewValue;
@@ -565,6 +583,12 @@ namespace NekoPlayer.App
             }, true);
 
             reverbDamp = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbDamp);
+
+            reverbParameters.fDamp = reverbDamp.Value;
+
+            if (enableReverb.Value)
+                Audio.TrackMixer.UpdateEffect(reverbParameters);
+
             reverbDamp.BindValueChanged(value =>
             {
                 reverbParameters.fDamp = value.NewValue;
@@ -574,6 +598,12 @@ namespace NekoPlayer.App
             }, true);
 
             reverbStereoWidth = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbStereoWidth);
+
+            reverbParameters.fWidth = reverbStereoWidth.Value;
+
+            if (enableReverb.Value)
+                Audio.TrackMixer.UpdateEffect(reverbParameters);
+
             reverbStereoWidth.BindValueChanged(value =>
             {
                 reverbParameters.fWidth = value.NewValue;
@@ -585,6 +615,12 @@ namespace NekoPlayer.App
 
             #region Rotate
             rotateEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.RotateEnabled);
+
+            if (rotateEnabled.Value)
+                Audio.TrackMixer.AddEffect(rotateParameters);
+            else
+                Audio.TrackMixer.RemoveEffect(rotateParameters);
+
             rotateEnabled.BindValueChanged(enabled =>
             {
                 if (enabled.NewValue)
@@ -594,6 +630,12 @@ namespace NekoPlayer.App
             }, true);
 
             rotateRate = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.RotateRate);
+
+            rotateParameters.fRate = rotateRate.Value;
+
+            if (rotateEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(rotateParameters);
+
             rotateRate.BindValueChanged(value =>
             {
                 rotateParameters.fRate = value.NewValue;
@@ -605,6 +647,12 @@ namespace NekoPlayer.App
 
             #region Echo
             echoEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EchoEnabled);
+
+            if (echoEnabled.Value)
+                Audio.TrackMixer.AddEffect(echoParameters);
+            else
+                Audio.TrackMixer.RemoveEffect(echoParameters);
+
             echoEnabled.BindValueChanged(enabled =>
             {
                 if (enabled.NewValue)
@@ -614,6 +662,12 @@ namespace NekoPlayer.App
             }, true);
 
             echoDryMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDryMix);
+
+            echoParameters.fDryMix = echoDryMix.Value - 2;
+
+            if (echoEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(echoParameters);
+
             echoDryMix.BindValueChanged(value =>
             {
                 echoParameters.fDryMix = value.NewValue - 2;
@@ -623,6 +677,12 @@ namespace NekoPlayer.App
             }, true);
 
             echoWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoWetMix);
+
+            echoParameters.fWetMix = echoWetMix.Value - 2;
+
+            if (echoEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(echoParameters);
+
             echoWetMix.BindValueChanged(value =>
             {
                 echoParameters.fWetMix = value.NewValue - 2;
@@ -632,6 +692,12 @@ namespace NekoPlayer.App
             }, true);
 
             echoFeedback = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoFeedback);
+
+            echoParameters.fFeedback = echoFeedback.Value - 1;
+
+            if (echoEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(echoParameters);
+
             echoFeedback.BindValueChanged(value =>
             {
                 echoParameters.fFeedback = value.NewValue - 1;
@@ -641,6 +707,12 @@ namespace NekoPlayer.App
             }, true);
 
             echoDelay = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay);
+
+            echoParameters.fDelay = echoDelay.Value;
+
+            if (echoEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(echoParameters);
+
             echoDelay.BindValueChanged(value =>
             {
                 echoParameters.fDelay = value.NewValue;
@@ -652,6 +724,12 @@ namespace NekoPlayer.App
 
             #region Distortion
             distortionEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.DistortionEnabled);
+
+            if (distortionEnabled.Value)
+                Audio.TrackMixer.AddEffect(distortionParameters);
+            else
+                Audio.TrackMixer.RemoveEffect(distortionParameters);
+
             distortionEnabled.BindValueChanged(enabled =>
             {
                 if (enabled.NewValue)
@@ -661,6 +739,12 @@ namespace NekoPlayer.App
             }, true);
 
             distortionVolume = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume);
+
+            distortionParameters.fVolume = distortionVolume.Value;
+
+            if (distortionEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(distortionParameters);
+
             distortionVolume.BindValueChanged(value =>
             {
                 distortionParameters.fVolume = value.NewValue;
@@ -670,6 +754,12 @@ namespace NekoPlayer.App
             }, true);
 
             distortionDrive = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionDrive);
+
+            distortionParameters.fDrive = distortionDrive.Value;
+
+            if (distortionEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(distortionParameters);
+
             distortionDrive.BindValueChanged(value =>
             {
                 distortionParameters.fDrive = value.NewValue;
@@ -685,6 +775,12 @@ namespace NekoPlayer.App
             _karaokeDsp = new DSPProcedure(KaraokeDsp);
 
             karaokeModeEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.KaraokeEnabled);
+
+            if (karaokeModeEnabled.Value)
+                Audio.TrackMixer.AddDSP(_karaokeDsp, 1);
+            else
+                Audio.TrackMixer.RemoveDSP(_karaokeDsp);
+
             karaokeModeEnabled.BindValueChanged(enabled =>
             {
                 if (enabled.NewValue)
@@ -696,6 +792,12 @@ namespace NekoPlayer.App
 
             #region Chorus
             chorusEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ChorusEnabled);
+
+            if (chorusEnabled.Value)
+                Audio.TrackMixer.AddEffect(chorusParameters);
+            else
+                Audio.TrackMixer.RemoveEffect(chorusParameters);
+
             chorusEnabled.BindValueChanged(enabled =>
             {
                 if (enabled.NewValue)
@@ -705,6 +807,12 @@ namespace NekoPlayer.App
             }, true);
 
             chorusDryMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusDryMix);
+
+            chorusParameters.fDryMix = chorusDryMix.Value - 2;
+
+            if (chorusEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(chorusParameters);
+
             chorusDryMix.BindValueChanged(value =>
             {
                 chorusParameters.fDryMix = value.NewValue - 2;
@@ -714,6 +822,12 @@ namespace NekoPlayer.App
             }, true);
 
             chorusWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusWetMix);
+
+            chorusParameters.fWetMix = chorusWetMix.Value - 2;
+
+            if (chorusEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(chorusParameters);
+
             chorusWetMix.BindValueChanged(value =>
             {
                 chorusParameters.fWetMix = value.NewValue - 2;
@@ -723,6 +837,12 @@ namespace NekoPlayer.App
             }, true);
 
             chorusFeedback = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusFeedback);
+
+            chorusParameters.fFeedback = chorusFeedback.Value - 1;
+
+            if (chorusEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(chorusParameters);
+
             chorusFeedback.BindValueChanged(value =>
             {
                 chorusParameters.fFeedback = value.NewValue - 1;
@@ -732,6 +852,12 @@ namespace NekoPlayer.App
             }, true);
 
             chorusMinSweep = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMinSweep);
+
+            chorusParameters.fMinSweep = chorusMinSweep.Value;
+
+            if (chorusEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(chorusParameters);
+
             chorusMinSweep.BindValueChanged(value =>
             {
                 chorusParameters.fMinSweep = value.NewValue;
@@ -741,18 +867,30 @@ namespace NekoPlayer.App
             }, true);
 
             chorusMaxSweep = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMaxSweep);
+
+            chorusParameters.fMaxSweep = chorusMaxSweep.Value;
+
+            if (chorusEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(chorusParameters);
+
             chorusMaxSweep.BindValueChanged(value =>
             {
-                chorusParameters.fMinSweep = value.NewValue;
+                chorusParameters.fMaxSweep = value.NewValue;
 
                 if (chorusEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(chorusParameters);
             }, true);
 
             chorusRate = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusRate);
+
+            chorusParameters.fRate = chorusRate.Value;
+
+            if (chorusEnabled.Value)
+                Audio.TrackMixer.UpdateEffect(chorusParameters);
+
             chorusRate.BindValueChanged(value =>
             {
-                chorusParameters.fMinSweep = value.NewValue;
+                chorusParameters.fRate = value.NewValue;
 
                 if (chorusEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(chorusParameters);
@@ -766,6 +904,12 @@ namespace NekoPlayer.App
             _eightBitDsp = new DSPProcedure(EightBitDspCallback);
 
             eightBitEffectEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled);
+
+            if (eightBitEffectEnabled.Value)
+                Audio.TrackMixer.AddDSP(_eightBitDsp, 1);
+            else
+                Audio.TrackMixer.RemoveDSP(_eightBitDsp);
+
             eightBitEffectEnabled.BindValueChanged(enabled =>
             {
                 if (enabled.NewValue)
