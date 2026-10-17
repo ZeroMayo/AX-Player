@@ -920,4 +920,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="preparing" xml:space="preserve">
     <value>Preparing...</value>
   </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>If the distortion volume exceeds 50%, sound quality loss will occur!</value>
+  </data>
 </root>

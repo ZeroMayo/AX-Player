@@ -920,4 +920,7 @@ Recomendado tener En, apagar sólo si experimenta problemas.</value>
   <data name="preparing" xml:space="preserve">
     <value>Preparante...</value>
   </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>Si el volumen de distorsión supera el 50%, ¡se producirá una pérdida de calidad del sonido!</value>
+  </data>
 </root>

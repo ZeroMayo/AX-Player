@@ -107,6 +107,11 @@ namespace NekoPlayer.App.Screens
         private CircularContainer videoLoadingProgressBase;
         private NekoPlayerLoadingSpinner videoLoadingProgressSpinner;
         private Box videoLoadingProgressBaseBG;
+
+        private Bindable<float> DistortionVolume;
+        private FormSliderBar<float> DistortionVolumeSlider;
+        private readonly Bindable<SettingsNote.Data?> DistortionVolumeNotice = new Bindable<SettingsNote.Data?>();
+
         private ProjectYomiSpriteText videoLoadingProgress, videoInfoDetails, likeCount, dislikeCount, commentCount, commentsContainerTitle, currentTime, totalTime, volumeText;
         private ProjectYomiSpriteText speedText;
         private LinkFlowContainer videoDescription;

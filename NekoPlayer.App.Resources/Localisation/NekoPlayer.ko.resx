@@ -920,4 +920,7 @@
   <data name="preparing" xml:space="preserve">
     <value>준비 중...</value>
   </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>디스토션 음량이 50%를 넘으면 음질 손실이 발생합니다!</value>
+  </data>
 </root>

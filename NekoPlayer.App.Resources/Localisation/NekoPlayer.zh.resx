@@ -920,4 +920,7 @@
   <data name="preparing" xml:space="preserve">
     <value>正在准备...</value>
   </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>如果失真幅度超过50%，就会导致音质损失！</value>
+  </data>
 </root>

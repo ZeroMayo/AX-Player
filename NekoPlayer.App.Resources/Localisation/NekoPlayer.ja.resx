@@ -920,4 +920,7 @@ On にすることを推奨します。問題が発生している場合のみ O
   <data name="preparing" xml:space="preserve">
     <value>準備中...</value>
   </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>歪み量が50％を超えると、音質の劣化が発生します！</value>
+  </data>
 </root>

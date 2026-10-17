@@ -919,4 +919,7 @@
   <data name="preparing" xml:space="preserve">
     <value>Preparazione...</value>
   </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>Se il volume di distorsione supera il 50%, si verifica una perdita di qualità sonora!</value>
+  </data>
 </root>

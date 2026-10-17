@@ -1442,6 +1442,11 @@ namespace NekoPlayer.App.Localisation
         /// </summary>
         public static LocalisableString Preparing => new TranslatableString(getKey(@"preparing"), "Preparing...");
 
+        /// <summary>
+        /// "If the distortion volume exceeds 50%, sound quality loss will occur!"
+        /// </summary>
+        public static LocalisableString DistortionWarning => new TranslatableString(getKey(@"distortion_warning"), "If the distortion volume exceeds 50%, sound quality loss will occur!");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

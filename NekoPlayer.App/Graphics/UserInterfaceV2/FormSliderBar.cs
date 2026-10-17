@@ -16,6 +16,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
@@ -94,6 +95,14 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV2
         public LocalisableString HintText { get; init; }
 
         public IconUsage Icon { get; init; }
+
+        public ColourInfo ValueTextColour
+        {
+            get => valueTextColour;
+            set => valueTextColour = value;
+        }
+
+        private ColourInfo valueTextColour;
 
         public Hotkey Hotkey { get; init; }
 
@@ -386,7 +395,9 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV2
 
             captionText.TextColour = currentNumberInstantaneous.Disabled ? colourProvider.Background1 : colourProvider.Content2;
             textBox.Colour = currentNumberInstantaneous.Disabled ? colourProvider.Background1 : colourProvider.Content1;
-            valueLabel.Colour = currentNumberInstantaneous.Disabled ? colourProvider.Background1 : colourProvider.Content1;
+            var baseColour = currentNumberInstantaneous.Disabled ? colourProvider.Background1 : colourProvider.Content1;
+            var baseColourInfo = ColourInfo.SingleColour(SRGBColour.FromVector(new osuTK.Vector4(baseColour.R * valueTextColour.AverageColour.SRGB.R, baseColour.G * valueTextColour.AverageColour.SRGB.G, baseColour.B * valueTextColour.AverageColour.SRGB.B, baseColour.A * valueTextColour.AverageColour.SRGB.A)));
+            valueLabel.Colour = baseColourInfo;
 
             if (Current.Disabled)
                 background.VisualStyle = VisualStyle.Disabled;

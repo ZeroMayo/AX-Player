@@ -120,6 +120,8 @@ namespace NekoPlayer.App.Screens
             chorusEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ChorusEnabled);
             eightBitEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled);
 
+            DistortionVolume = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume);
+
             videoMetadataDisplayAlignment = appConfig.GetBindable<VideoMetadataDisplayAlignment>(NekoPlayerSetting.VideoMetadataDisplayAlignment);
 
             scalingMode = appConfig.GetBindable<ScalingMode>(NekoPlayerSetting.Scaling);
@@ -2296,12 +2298,15 @@ namespace NekoPlayer.App.Screens
                                                             Spacing = new Vector2(0, 4),
                                                             Children = new Drawable[]
                                                             {
-                                                                new SettingsItemV2(new FormSliderBar<float>
+                                                                new SettingsItemV2(DistortionVolumeSlider = new FormSliderBar<float>
                                                                 {
                                                                     Caption = NekoPlayerStrings.DistortionVolume,
-                                                                    Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume),
+                                                                    Current = DistortionVolume,
                                                                     DisplayAsPercentage = true,
-                                                                }),
+                                                                })
+                                                                {
+                                                                    Note = { BindTarget = DistortionVolumeNotice },
+                                                                },
                                                             }
                                                         },
                                                         new SettingsItemV2(new FormCheckBox
@@ -3279,6 +3284,20 @@ namespace NekoPlayer.App.Screens
             RegisterOverlayContainer(myPlaylistsOverlay);
             RegisterOverlayContainer(exitOptions);
             RegisterOverlayContainer(editPlaylistOverlay);
+
+            DistortionVolume.BindValueChanged(value =>
+            {
+                if (value.NewValue > 0.5f)
+                {
+                    DistortionVolumeSlider.ValueTextColour = Color4.Red;
+                    DistortionVolumeNotice.Value = new SettingsNote.Data(NekoPlayerStrings.DistortionWarning, SettingsNote.Type.Warning);
+                }
+                else
+                {
+                    DistortionVolumeSlider.ValueTextColour = Color4.White;
+                    DistortionVolumeNotice.Value = null;
+                }
+            }, true);
 
             ReleaseStream.BindValueChanged(async _ => await checkForUpdates());
 
