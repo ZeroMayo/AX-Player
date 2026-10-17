@@ -585,6 +585,9 @@ namespace NekoPlayer.App.Screens
                     return true;
 
                 case GlobalAction.OpenMyPlaylists:
+                    if (signedIn.Value == false)
+                        return true;
+
                     if (!myPlaylistsOverlay.IsVisible)
                     {
                         hideOverlays();
