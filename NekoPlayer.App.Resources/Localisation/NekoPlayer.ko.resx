@@ -917,4 +917,7 @@
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>수직 동기화 (VRR 저지연)</value>
   </data>
+  <data name="preparing" xml:space="preserve">
+    <value>준비 중...</value>
+  </data>
 </root>

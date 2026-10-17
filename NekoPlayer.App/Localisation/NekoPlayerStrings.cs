@@ -1437,6 +1437,11 @@ namespace NekoPlayer.App.Localisation
         /// </summary>
         public static LocalisableString VSyncVRR => new TranslatableString(getKey(@"vertical_sync_vrr"), "VSync (VRR low latency)");
 
+        /// <summary>
+        /// "Preparing..."
+        /// </summary>
+        public static LocalisableString Preparing => new TranslatableString(getKey(@"preparing"), "Preparing...");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

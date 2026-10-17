@@ -49,7 +49,7 @@ namespace NekoPlayer.App.Screens
         private ControlBarIconButton prevVideoButton, nextVideoButton;
         private EnhancedFocusedTextBox videoIdBox, playlistIdBox, searchTextBox;
         private EnhancedFocusedTextBoxWithProfileImage commentTextBox;
-        private NekoPlayerLoadingSpinner spinner;
+        //private NekoPlayerLoadingSpinner spinner;
         private ScheduledDelegate spinnerShow;
         private IdleTracker idleTracker;
         private BufferedContainer uiContainer;
@@ -104,6 +104,9 @@ namespace NekoPlayer.App.Screens
         [Resolved]
         private AudioManager audio { get; set; } = null!;
 
+        private CircularContainer videoLoadingProgressBase;
+        private NekoPlayerLoadingSpinner videoLoadingProgressSpinner;
+        private Box videoLoadingProgressBaseBG;
         private ProjectYomiSpriteText videoLoadingProgress, videoInfoDetails, likeCount, dislikeCount, commentCount, commentsContainerTitle, currentTime, totalTime, volumeText;
         private ProjectYomiSpriteText speedText;
         private LinkFlowContainer videoDescription;

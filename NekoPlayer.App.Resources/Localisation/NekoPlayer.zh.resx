@@ -917,4 +917,7 @@
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>垂直同步（VRR 低延迟）</value>
   </data>
+  <data name="preparing" xml:space="preserve">
+    <value>正在准备...</value>
+  </data>
 </root>

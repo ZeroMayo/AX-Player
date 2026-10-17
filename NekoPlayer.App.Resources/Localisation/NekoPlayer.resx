@@ -917,4 +917,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>VSync (VRR low latency)</value>
   </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Preparing...</value>
+  </data>
 </root>

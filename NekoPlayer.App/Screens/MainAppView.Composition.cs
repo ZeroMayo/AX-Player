@@ -237,19 +237,64 @@ namespace NekoPlayer.App.Screens
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
+                        /*
                         spinner = new NekoPlayerLoadingSpinner(true, true)
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Margin = new MarginPadding(40),
                         },
-                        videoLoadingProgress = new ProjectYomiSpriteText
+                        */
+                        videoLoadingProgressBase = new CircularContainer
                         {
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            Margin = new MarginPadding
+                            AutoSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Masking = true,
+                            Children = new Drawable[]
                             {
-                                Bottom = 110,
+                                new FillFlowContainer
+                                {
+                                    AutoSizeAxes = Axes.Both,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Direction = FillDirection.Vertical,
+                                    Spacing = new Vector2(0, 4),
+                                    Children = new Drawable[]
+                                    {
+                                        videoLoadingProgressSpinner = new NekoPlayerLoadingSpinner(true, true)
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
+                                        new CircularContainer
+                                        {
+                                            AutoSizeAxes = Axes.Both,
+                                            Masking = true,
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Children = new Drawable[]
+                                            {
+                                                videoLoadingProgressBaseBG = new Box
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    Colour = overlayColourProvider.Background3,
+                                                    Alpha = 0.7f,
+                                                },
+                                                new Container
+                                                {
+                                                    AutoSizeAxes = Axes.Both,
+                                                    Padding = new MarginPadding(8),
+                                                    Child = videoLoadingProgress = new ProjectYomiSpriteText
+                                                    {
+                                                        Anchor = Anchor.CentreLeft,
+                                                        Origin = Anchor.CentreLeft,
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                },
                             },
                         },
                         uiGradientContainer = new DrawSizePreservingFillContainer
@@ -3196,6 +3241,9 @@ namespace NekoPlayer.App.Screens
                 }
             };
             #endregion
+
+            videoLoadingProgressBase.Hide();
+            videoLoadingProgressSpinner.Show();
 
             prevVideoButton.SetCornerRadius(new CornersInfo(15, 15, NekoPlayerApp.UI_CORNER_RADIUS / 3f, NekoPlayerApp.UI_CORNER_RADIUS / 3f));
             nextVideoButton.SetCornerRadius(new CornersInfo(NekoPlayerApp.UI_CORNER_RADIUS / 3f, NekoPlayerApp.UI_CORNER_RADIUS / 3f, 15, 15));

@@ -916,4 +916,7 @@
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>Sincronizzazione verticale (VRR bassa latenza)</value>
   </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Preparazione...</value>
+  </data>
 </root>

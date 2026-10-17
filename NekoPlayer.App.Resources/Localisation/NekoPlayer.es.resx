@@ -917,4 +917,7 @@ Recomendado tener En, apagar sólo si experimenta problemas.</value>
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>Sincronización vertical (VRR baja latencia)</value>
   </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Preparante...</value>
+  </data>
 </root>
