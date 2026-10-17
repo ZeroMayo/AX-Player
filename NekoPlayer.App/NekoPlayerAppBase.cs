@@ -498,6 +498,44 @@ namespace NekoPlayer.App
 
         private void trackAudioEffects()
         {
+            #region Init Step
+            enableReverb = null;
+            rotateEnabled = null;
+            echoEnabled = null;
+            distortionEnabled = null;
+            chorusEnabled = null;
+            reverbWetMix = null;
+            reverbRoomSize = null;
+            reverbDamp = null;
+            reverbStereoWidth = null;
+            echoDryMix = null;
+            echoWetMix = null;
+            echoFeedback = null;
+            echoDelay = null;
+            rotateRate = null;
+            distortionVolume = null;
+            distortionDrive = null;
+            karaokeModeEnabled = null;
+            chorusDryMix = null;
+            chorusWetMix = null;
+            chorusFeedback = null;
+            chorusMinSweep = null;
+            chorusMaxSweep = null;
+            chorusRate = null;
+            eightBitEffectEnabled = null;
+            eightBitEffectBitDepth = null;
+            eightBitEffectDownsampleRatio = null;
+            reverbParameters = null;
+            rotateParameters = null;
+            echoParameters = null;
+            distortionParameters = null;
+            chorusParameters = null;
+            _karaokeDsp = null;
+            _eightBitDsp = null;
+
+            Logger.Log("Tracking audio effects");
+            #endregion
+
             #region Reverb
             enableReverb = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ReverbEnabled);
             enableReverb.BindValueChanged(enabled =>
