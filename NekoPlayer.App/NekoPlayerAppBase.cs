@@ -498,426 +498,436 @@ namespace NekoPlayer.App
 
         private void trackAudioEffects()
         {
-            #region Init Step
-            enableReverb = null;
-            rotateEnabled = null;
-            echoEnabled = null;
-            distortionEnabled = null;
-            chorusEnabled = null;
-            reverbWetMix = null;
-            reverbRoomSize = null;
-            reverbDamp = null;
-            reverbStereoWidth = null;
-            echoDryMix = null;
-            echoWetMix = null;
-            echoFeedback = null;
-            echoDelay = null;
-            rotateRate = null;
-            distortionVolume = null;
-            distortionDrive = null;
-            karaokeModeEnabled = null;
-            chorusDryMix = null;
-            chorusWetMix = null;
-            chorusFeedback = null;
-            chorusMinSweep = null;
-            chorusMaxSweep = null;
-            chorusRate = null;
-            eightBitEffectEnabled = null;
-            eightBitEffectBitDepth = null;
-            eightBitEffectDownsampleRatio = null;
-            reverbParameters = new ReverbParameters();
-            rotateParameters = new RotateParameters();
-            echoParameters = new EchoParameters();
-            distortionParameters = new DistortionParameters();
-            chorusParameters = new ChorusParameters();
-            _karaokeDsp = null;
-            _eightBitDsp = null;
-
-            Logger.Log("Tracking audio effects");
-            #endregion
-
-            #region Reverb
-            enableReverb = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ReverbEnabled);
-
-            if (enableReverb.Value)
-                Audio.TrackMixer.AddEffect(reverbParameters);
-            else
-                Audio.TrackMixer.RemoveEffect(reverbParameters);
-
-            enableReverb.BindValueChanged(enabled =>
+            Schedule(() =>
             {
-                if (enabled.NewValue)
+                #region Init Step
+                Audio.TrackMixer.RemoveEffect(reverbParameters);
+                Audio.TrackMixer.RemoveEffect(rotateParameters);
+                Audio.TrackMixer.RemoveEffect(echoParameters);
+                Audio.TrackMixer.RemoveEffect(distortionParameters);
+                Audio.TrackMixer.RemoveDSP(_karaokeDsp);
+                Audio.TrackMixer.RemoveEffect(chorusParameters);
+                Audio.TrackMixer.RemoveDSP(_eightBitDsp);
+                enableReverb = null;
+                rotateEnabled = null;
+                echoEnabled = null;
+                distortionEnabled = null;
+                chorusEnabled = null;
+                reverbWetMix = null;
+                reverbRoomSize = null;
+                reverbDamp = null;
+                reverbStereoWidth = null;
+                echoDryMix = null;
+                echoWetMix = null;
+                echoFeedback = null;
+                echoDelay = null;
+                rotateRate = null;
+                distortionVolume = null;
+                distortionDrive = null;
+                karaokeModeEnabled = null;
+                chorusDryMix = null;
+                chorusWetMix = null;
+                chorusFeedback = null;
+                chorusMinSweep = null;
+                chorusMaxSweep = null;
+                chorusRate = null;
+                eightBitEffectEnabled = null;
+                eightBitEffectBitDepth = null;
+                eightBitEffectDownsampleRatio = null;
+                reverbParameters = new ReverbParameters();
+                rotateParameters = new RotateParameters();
+                echoParameters = new EchoParameters();
+                distortionParameters = new DistortionParameters();
+                chorusParameters = new ChorusParameters();
+                _karaokeDsp = null;
+                _eightBitDsp = null;
+
+                Logger.Log("Tracking audio effects");
+                #endregion
+
+                #region Reverb
+                enableReverb = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ReverbEnabled);
+
+                if (enableReverb.Value)
                     Audio.TrackMixer.AddEffect(reverbParameters);
                 else
                     Audio.TrackMixer.RemoveEffect(reverbParameters);
-            }, true);
 
-            reverbWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbWetMix);
+                enableReverb.BindValueChanged(enabled =>
+                {
+                    if (enabled.NewValue)
+                        Audio.TrackMixer.AddEffect(reverbParameters);
+                    else
+                        Audio.TrackMixer.RemoveEffect(reverbParameters);
+                }, true);
 
-            reverbParameters.fWetMix = reverbWetMix.Value;
+                reverbWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbWetMix);
 
-            if (enableReverb.Value)
-                Audio.TrackMixer.UpdateEffect(reverbParameters);
-
-            reverbWetMix.BindValueChanged(value =>
-            {
-                reverbParameters.fWetMix = value.NewValue;
-
-                if (enableReverb.Value)
-                    Audio.TrackMixer.UpdateEffect(reverbParameters);
-            }, true);
-
-            reverbRoomSize = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbRoomSize);
-
-            reverbParameters.fRoomSize = reverbRoomSize.Value;
-
-            if (enableReverb.Value)
-                Audio.TrackMixer.UpdateEffect(reverbParameters);
-
-            reverbRoomSize.BindValueChanged(value =>
-            {
-                reverbParameters.fRoomSize = value.NewValue;
+                reverbParameters.fWetMix = reverbWetMix.Value;
 
                 if (enableReverb.Value)
                     Audio.TrackMixer.UpdateEffect(reverbParameters);
-            }, true);
 
-            reverbDamp = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbDamp);
+                reverbWetMix.BindValueChanged(value =>
+                {
+                    reverbParameters.fWetMix = value.NewValue;
 
-            reverbParameters.fDamp = reverbDamp.Value;
+                    if (enableReverb.Value)
+                        Audio.TrackMixer.UpdateEffect(reverbParameters);
+                }, true);
 
-            if (enableReverb.Value)
-                Audio.TrackMixer.UpdateEffect(reverbParameters);
+                reverbRoomSize = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbRoomSize);
 
-            reverbDamp.BindValueChanged(value =>
-            {
-                reverbParameters.fDamp = value.NewValue;
-
-                if (enableReverb.Value)
-                    Audio.TrackMixer.UpdateEffect(reverbParameters);
-            }, true);
-
-            reverbStereoWidth = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbStereoWidth);
-
-            reverbParameters.fWidth = reverbStereoWidth.Value;
-
-            if (enableReverb.Value)
-                Audio.TrackMixer.UpdateEffect(reverbParameters);
-
-            reverbStereoWidth.BindValueChanged(value =>
-            {
-                reverbParameters.fWidth = value.NewValue;
+                reverbParameters.fRoomSize = reverbRoomSize.Value;
 
                 if (enableReverb.Value)
                     Audio.TrackMixer.UpdateEffect(reverbParameters);
-            }, true);
-            #endregion
 
-            #region Rotate
-            rotateEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.RotateEnabled);
+                reverbRoomSize.BindValueChanged(value =>
+                {
+                    reverbParameters.fRoomSize = value.NewValue;
 
-            if (rotateEnabled.Value)
-                Audio.TrackMixer.AddEffect(rotateParameters);
-            else
-                Audio.TrackMixer.RemoveEffect(rotateParameters);
+                    if (enableReverb.Value)
+                        Audio.TrackMixer.UpdateEffect(reverbParameters);
+                }, true);
 
-            rotateEnabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+                reverbDamp = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbDamp);
+
+                reverbParameters.fDamp = reverbDamp.Value;
+
+                if (enableReverb.Value)
+                    Audio.TrackMixer.UpdateEffect(reverbParameters);
+
+                reverbDamp.BindValueChanged(value =>
+                {
+                    reverbParameters.fDamp = value.NewValue;
+
+                    if (enableReverb.Value)
+                        Audio.TrackMixer.UpdateEffect(reverbParameters);
+                }, true);
+
+                reverbStereoWidth = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbStereoWidth);
+
+                reverbParameters.fWidth = reverbStereoWidth.Value;
+
+                if (enableReverb.Value)
+                    Audio.TrackMixer.UpdateEffect(reverbParameters);
+
+                reverbStereoWidth.BindValueChanged(value =>
+                {
+                    reverbParameters.fWidth = value.NewValue;
+
+                    if (enableReverb.Value)
+                        Audio.TrackMixer.UpdateEffect(reverbParameters);
+                }, true);
+                #endregion
+
+                #region Rotate
+                rotateEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.RotateEnabled);
+
+                if (rotateEnabled.Value)
                     Audio.TrackMixer.AddEffect(rotateParameters);
                 else
                     Audio.TrackMixer.RemoveEffect(rotateParameters);
-            }, true);
 
-            rotateRate = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.RotateRate);
+                rotateEnabled.BindValueChanged(enabled =>
+                {
+                    if (enabled.NewValue)
+                        Audio.TrackMixer.AddEffect(rotateParameters);
+                    else
+                        Audio.TrackMixer.RemoveEffect(rotateParameters);
+                }, true);
 
-            rotateParameters.fRate = rotateRate.Value;
+                rotateRate = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.RotateRate);
 
-            if (rotateEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(rotateParameters);
-
-            rotateRate.BindValueChanged(value =>
-            {
-                rotateParameters.fRate = value.NewValue;
+                rotateParameters.fRate = rotateRate.Value;
 
                 if (rotateEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(rotateParameters);
-            }, true);
-            #endregion
 
-            #region Echo
-            echoEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EchoEnabled);
+                rotateRate.BindValueChanged(value =>
+                {
+                    rotateParameters.fRate = value.NewValue;
 
-            if (echoEnabled.Value)
-                Audio.TrackMixer.AddEffect(echoParameters);
-            else
-                Audio.TrackMixer.RemoveEffect(echoParameters);
+                    if (rotateEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(rotateParameters);
+                }, true);
+                #endregion
 
-            echoEnabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+                #region Echo
+                echoEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EchoEnabled);
+
+                if (echoEnabled.Value)
                     Audio.TrackMixer.AddEffect(echoParameters);
                 else
                     Audio.TrackMixer.RemoveEffect(echoParameters);
-            }, true);
 
-            echoDryMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDryMix);
+                echoEnabled.BindValueChanged(enabled =>
+                {
+                    if (enabled.NewValue)
+                        Audio.TrackMixer.AddEffect(echoParameters);
+                    else
+                        Audio.TrackMixer.RemoveEffect(echoParameters);
+                }, true);
 
-            echoParameters.fDryMix = echoDryMix.Value - 2;
+                echoDryMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDryMix);
 
-            if (echoEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(echoParameters);
-
-            echoDryMix.BindValueChanged(value =>
-            {
-                echoParameters.fDryMix = value.NewValue - 2;
-
-                if (echoEnabled.Value)
-                    Audio.TrackMixer.UpdateEffect(echoParameters);
-            }, true);
-
-            echoWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoWetMix);
-
-            echoParameters.fWetMix = echoWetMix.Value - 2;
-
-            if (echoEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(echoParameters);
-
-            echoWetMix.BindValueChanged(value =>
-            {
-                echoParameters.fWetMix = value.NewValue - 2;
+                echoParameters.fDryMix = echoDryMix.Value - 2;
 
                 if (echoEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(echoParameters);
-            }, true);
 
-            echoFeedback = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoFeedback);
+                echoDryMix.BindValueChanged(value =>
+                {
+                    echoParameters.fDryMix = value.NewValue - 2;
 
-            echoParameters.fFeedback = echoFeedback.Value - 1;
+                    if (echoEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(echoParameters);
+                }, true);
 
-            if (echoEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(echoParameters);
+                echoWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoWetMix);
 
-            echoFeedback.BindValueChanged(value =>
-            {
-                echoParameters.fFeedback = value.NewValue - 1;
-
-                if (echoEnabled.Value)
-                    Audio.TrackMixer.UpdateEffect(echoParameters);
-            }, true);
-
-            echoDelay = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay);
-
-            echoParameters.fDelay = echoDelay.Value;
-
-            if (echoEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(echoParameters);
-
-            echoDelay.BindValueChanged(value =>
-            {
-                echoParameters.fDelay = value.NewValue;
+                echoParameters.fWetMix = echoWetMix.Value - 2;
 
                 if (echoEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(echoParameters);
-            }, true);
-            #endregion
 
-            #region Distortion
-            distortionEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.DistortionEnabled);
+                echoWetMix.BindValueChanged(value =>
+                {
+                    echoParameters.fWetMix = value.NewValue - 2;
 
-            if (distortionEnabled.Value)
-                Audio.TrackMixer.AddEffect(distortionParameters);
-            else
-                Audio.TrackMixer.RemoveEffect(distortionParameters);
+                    if (echoEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(echoParameters);
+                }, true);
 
-            distortionEnabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+                echoFeedback = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoFeedback);
+
+                echoParameters.fFeedback = echoFeedback.Value - 1;
+
+                if (echoEnabled.Value)
+                    Audio.TrackMixer.UpdateEffect(echoParameters);
+
+                echoFeedback.BindValueChanged(value =>
+                {
+                    echoParameters.fFeedback = value.NewValue - 1;
+
+                    if (echoEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(echoParameters);
+                }, true);
+
+                echoDelay = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay);
+
+                echoParameters.fDelay = echoDelay.Value;
+
+                if (echoEnabled.Value)
+                    Audio.TrackMixer.UpdateEffect(echoParameters);
+
+                echoDelay.BindValueChanged(value =>
+                {
+                    echoParameters.fDelay = value.NewValue;
+
+                    if (echoEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(echoParameters);
+                }, true);
+                #endregion
+
+                #region Distortion
+                distortionEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.DistortionEnabled);
+
+                if (distortionEnabled.Value)
                     Audio.TrackMixer.AddEffect(distortionParameters);
                 else
                     Audio.TrackMixer.RemoveEffect(distortionParameters);
-            }, true);
 
-            distortionVolume = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume);
+                distortionEnabled.BindValueChanged(enabled =>
+                {
+                    if (enabled.NewValue)
+                        Audio.TrackMixer.AddEffect(distortionParameters);
+                    else
+                        Audio.TrackMixer.RemoveEffect(distortionParameters);
+                }, true);
 
-            distortionParameters.fVolume = distortionVolume.Value;
+                distortionVolume = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume);
 
-            if (distortionEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(distortionParameters);
-
-            distortionVolume.BindValueChanged(value =>
-            {
-                distortionParameters.fVolume = value.NewValue;
-
-                if (distortionEnabled.Value)
-                    Audio.TrackMixer.UpdateEffect(distortionParameters);
-            }, true);
-
-            distortionDrive = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionDrive);
-
-            distortionParameters.fDrive = distortionDrive.Value;
-
-            if (distortionEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(distortionParameters);
-
-            distortionDrive.BindValueChanged(value =>
-            {
-                distortionParameters.fDrive = value.NewValue;
+                distortionParameters.fVolume = distortionVolume.Value;
 
                 if (distortionEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(distortionParameters);
-            }, true);
-            #endregion
 
-            #region Karaoke
-            KaraokeVocalVolume = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.KaraokeVocalVolume);
+                distortionVolume.BindValueChanged(value =>
+                {
+                    distortionParameters.fVolume = value.NewValue;
 
-            _karaokeDsp = new DSPProcedure(KaraokeDsp);
+                    if (distortionEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(distortionParameters);
+                }, true);
 
-            karaokeModeEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.KaraokeEnabled);
+                distortionDrive = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionDrive);
 
-            if (karaokeModeEnabled.Value)
-                Audio.TrackMixer.AddDSP(_karaokeDsp, 1);
-            else
-                Audio.TrackMixer.RemoveDSP(_karaokeDsp);
+                distortionParameters.fDrive = distortionDrive.Value;
 
-            karaokeModeEnabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+                if (distortionEnabled.Value)
+                    Audio.TrackMixer.UpdateEffect(distortionParameters);
+
+                distortionDrive.BindValueChanged(value =>
+                {
+                    distortionParameters.fDrive = value.NewValue;
+
+                    if (distortionEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(distortionParameters);
+                }, true);
+                #endregion
+
+                #region Karaoke
+                KaraokeVocalVolume = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.KaraokeVocalVolume);
+
+                _karaokeDsp = new DSPProcedure(KaraokeDsp);
+
+                karaokeModeEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.KaraokeEnabled);
+
+                if (karaokeModeEnabled.Value)
                     Audio.TrackMixer.AddDSP(_karaokeDsp, 1);
                 else
                     Audio.TrackMixer.RemoveDSP(_karaokeDsp);
-            }, true);
-            #endregion
 
-            #region Chorus
-            chorusEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ChorusEnabled);
+                karaokeModeEnabled.BindValueChanged(enabled =>
+                {
+                    if (enabled.NewValue)
+                        Audio.TrackMixer.AddDSP(_karaokeDsp, 1);
+                    else
+                        Audio.TrackMixer.RemoveDSP(_karaokeDsp);
+                }, true);
+                #endregion
 
-            if (chorusEnabled.Value)
-                Audio.TrackMixer.AddEffect(chorusParameters);
-            else
-                Audio.TrackMixer.RemoveEffect(chorusParameters);
+                #region Chorus
+                chorusEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ChorusEnabled);
 
-            chorusEnabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+                if (chorusEnabled.Value)
                     Audio.TrackMixer.AddEffect(chorusParameters);
                 else
                     Audio.TrackMixer.RemoveEffect(chorusParameters);
-            }, true);
 
-            chorusDryMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusDryMix);
+                chorusEnabled.BindValueChanged(enabled =>
+                {
+                    if (enabled.NewValue)
+                        Audio.TrackMixer.AddEffect(chorusParameters);
+                    else
+                        Audio.TrackMixer.RemoveEffect(chorusParameters);
+                }, true);
 
-            chorusParameters.fDryMix = chorusDryMix.Value - 2;
+                chorusDryMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusDryMix);
 
-            if (chorusEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(chorusParameters);
-
-            chorusDryMix.BindValueChanged(value =>
-            {
-                chorusParameters.fDryMix = value.NewValue - 2;
-
-                if (chorusEnabled.Value)
-                    Audio.TrackMixer.UpdateEffect(chorusParameters);
-            }, true);
-
-            chorusWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusWetMix);
-
-            chorusParameters.fWetMix = chorusWetMix.Value - 2;
-
-            if (chorusEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(chorusParameters);
-
-            chorusWetMix.BindValueChanged(value =>
-            {
-                chorusParameters.fWetMix = value.NewValue - 2;
+                chorusParameters.fDryMix = chorusDryMix.Value - 2;
 
                 if (chorusEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(chorusParameters);
-            }, true);
 
-            chorusFeedback = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusFeedback);
+                chorusDryMix.BindValueChanged(value =>
+                {
+                    chorusParameters.fDryMix = value.NewValue - 2;
 
-            chorusParameters.fFeedback = chorusFeedback.Value - 1;
+                    if (chorusEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(chorusParameters);
+                }, true);
 
-            if (chorusEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(chorusParameters);
+                chorusWetMix = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusWetMix);
 
-            chorusFeedback.BindValueChanged(value =>
-            {
-                chorusParameters.fFeedback = value.NewValue - 1;
-
-                if (chorusEnabled.Value)
-                    Audio.TrackMixer.UpdateEffect(chorusParameters);
-            }, true);
-
-            chorusMinSweep = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMinSweep);
-
-            chorusParameters.fMinSweep = chorusMinSweep.Value;
-
-            if (chorusEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(chorusParameters);
-
-            chorusMinSweep.BindValueChanged(value =>
-            {
-                chorusParameters.fMinSweep = value.NewValue;
+                chorusParameters.fWetMix = chorusWetMix.Value - 2;
 
                 if (chorusEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(chorusParameters);
-            }, true);
 
-            chorusMaxSweep = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMaxSweep);
+                chorusWetMix.BindValueChanged(value =>
+                {
+                    chorusParameters.fWetMix = value.NewValue - 2;
 
-            chorusParameters.fMaxSweep = chorusMaxSweep.Value;
+                    if (chorusEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(chorusParameters);
+                }, true);
 
-            if (chorusEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(chorusParameters);
+                chorusFeedback = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusFeedback);
 
-            chorusMaxSweep.BindValueChanged(value =>
-            {
-                chorusParameters.fMaxSweep = value.NewValue;
-
-                if (chorusEnabled.Value)
-                    Audio.TrackMixer.UpdateEffect(chorusParameters);
-            }, true);
-
-            chorusRate = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusRate);
-
-            chorusParameters.fRate = chorusRate.Value;
-
-            if (chorusEnabled.Value)
-                Audio.TrackMixer.UpdateEffect(chorusParameters);
-
-            chorusRate.BindValueChanged(value =>
-            {
-                chorusParameters.fRate = value.NewValue;
+                chorusParameters.fFeedback = chorusFeedback.Value - 1;
 
                 if (chorusEnabled.Value)
                     Audio.TrackMixer.UpdateEffect(chorusParameters);
-            }, true);
-            #endregion
 
-            #region 8-bit Effect
-            eightBitEffectBitDepth = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth);
-            eightBitEffectDownsampleRatio = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectDownsampleRatio);
+                chorusFeedback.BindValueChanged(value =>
+                {
+                    chorusParameters.fFeedback = value.NewValue - 1;
 
-            _eightBitDsp = new DSPProcedure(EightBitDspCallback);
+                    if (chorusEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(chorusParameters);
+                }, true);
 
-            eightBitEffectEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled);
+                chorusMinSweep = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMinSweep);
 
-            if (eightBitEffectEnabled.Value)
-                Audio.TrackMixer.AddDSP(_eightBitDsp, 1);
-            else
-                Audio.TrackMixer.RemoveDSP(_eightBitDsp);
+                chorusParameters.fMinSweep = chorusMinSweep.Value;
 
-            eightBitEffectEnabled.BindValueChanged(enabled =>
-            {
-                if (enabled.NewValue)
+                if (chorusEnabled.Value)
+                    Audio.TrackMixer.UpdateEffect(chorusParameters);
+
+                chorusMinSweep.BindValueChanged(value =>
+                {
+                    chorusParameters.fMinSweep = value.NewValue;
+
+                    if (chorusEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(chorusParameters);
+                }, true);
+
+                chorusMaxSweep = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMaxSweep);
+
+                chorusParameters.fMaxSweep = chorusMaxSweep.Value;
+
+                if (chorusEnabled.Value)
+                    Audio.TrackMixer.UpdateEffect(chorusParameters);
+
+                chorusMaxSweep.BindValueChanged(value =>
+                {
+                    chorusParameters.fMaxSweep = value.NewValue;
+
+                    if (chorusEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(chorusParameters);
+                }, true);
+
+                chorusRate = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusRate);
+
+                chorusParameters.fRate = chorusRate.Value;
+
+                if (chorusEnabled.Value)
+                    Audio.TrackMixer.UpdateEffect(chorusParameters);
+
+                chorusRate.BindValueChanged(value =>
+                {
+                    chorusParameters.fRate = value.NewValue;
+
+                    if (chorusEnabled.Value)
+                        Audio.TrackMixer.UpdateEffect(chorusParameters);
+                }, true);
+                #endregion
+
+                #region 8-bit Effect
+                eightBitEffectBitDepth = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth);
+                eightBitEffectDownsampleRatio = AudioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectDownsampleRatio);
+
+                _eightBitDsp = new DSPProcedure(EightBitDspCallback);
+
+                eightBitEffectEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled);
+
+                if (eightBitEffectEnabled.Value)
                     Audio.TrackMixer.AddDSP(_eightBitDsp, 1);
                 else
                     Audio.TrackMixer.RemoveDSP(_eightBitDsp);
-            }, true);
-            #endregion
+
+                eightBitEffectEnabled.BindValueChanged(enabled =>
+                {
+                    if (enabled.NewValue)
+                        Audio.TrackMixer.AddDSP(_eightBitDsp, 1);
+                    else
+                        Audio.TrackMixer.RemoveDSP(_eightBitDsp);
+                }, true);
+                #endregion
+            });
         }
         #endregion
 
