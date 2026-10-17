@@ -863,8 +863,7 @@
     <value>Actualizaciones</value>
   </data>
   <data name="reflex_hint" xml:space="preserve">
-    <value>Reduce la latencia aprovechando la API Reflex NVIDIA en GPUs NVIDIA.
-Recomendado tener En, apagar sólo si experimenta problemas.</value>
+    <value>Reduce la latencia aprovechando la API Reflex NVIDIA en GPUs NVIDIA. Recomendado tener En, apagar sólo si experimenta problemas.</value>
   </data>
   <data name="reflex_notice" xml:space="preserve">
     <value>Boost aumenta el consumo de energía GPU y puede aumentar la latencia en algunos casos. Desactivar Boost si experimenta problemas.</value>

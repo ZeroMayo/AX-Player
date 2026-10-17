@@ -1345,12 +1345,9 @@ namespace NekoPlayer.App.Localisation
         public static LocalisableString Updates => new TranslatableString(getKey(@"updates"), "Updates");
 
         /// <summary>
-        /// "Reduces latency by leveraging the NVIDIA Reflex API on NVIDIA GPUs."
-        /// "Recommended to have On, turn Off only if experiencing issues."
+        /// "Reduces latency by leveraging the NVIDIA Reflex API on NVIDIA GPUs. Recommended to have On, turn Off only if experiencing issues."
         /// </summary>
-        public static LocalisableString ReflexHint => new TranslatableString(getKey(@"reflex_hint"),
-            "Reduces latency by leveraging the NVIDIA Reflex API on NVIDIA GPUs." +
-            "Recommended to have On, turn Off only if experiencing issues.");
+        public static LocalisableString ReflexHint => new TranslatableString(getKey(@"reflex_hint"), "Reduces latency by leveraging the NVIDIA Reflex API on NVIDIA GPUs. Recommended to have On, turn Off only if experiencing issues.");
 
         /// <summary>
         /// "Boost increases GPU power consumption and may increase latency in some cases. Disable Boost if experiencing issues."

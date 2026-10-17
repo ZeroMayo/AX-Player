@@ -863,8 +863,7 @@
     <value>アップデート</value>
   </data>
   <data name="reflex_hint" xml:space="preserve">
-    <value>NVIDIA GPU上のNVIDIA Reflex APIを活用することで、レイテンシを低減します。
-On にすることを推奨します。問題が発生している場合のみ Off にしてください。</value>
+    <value>NVIDIA GPU上のNVIDIA Reflex APIを活用することで、レイテンシを低減します。 On にすることを推奨します。問題が発生している場合のみ Off にしてください。</value>
   </data>
   <data name="reflex_notice" xml:space="preserve">
     <value>Boost は GPU の消費電力を増加させ、場合によっては遅延が増加することがあります。 問題が発生している場合は、Boostを無効にしてください。</value>
