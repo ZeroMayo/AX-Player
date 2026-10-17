@@ -189,6 +189,12 @@ namespace NekoPlayer.App.Graphics.UserInterface
                         desc.Colour = (textColor);
                     });
                 }
+                else
+                {
+                    bgLayer.Colour = overlayColourProvider.Background4;
+                    videoName.Colour = overlayColourProvider.Content2;
+                    desc.Colour = overlayColourProvider.Foreground2;
+                }
             });
         }
 
