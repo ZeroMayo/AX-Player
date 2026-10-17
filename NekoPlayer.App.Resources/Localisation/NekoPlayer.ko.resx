@@ -921,7 +921,7 @@
     <value>준비 중...</value>
   </data>
   <data name="distortion_warning" xml:space="preserve">
-    <value>디스토션 음량이 50%를 넘으면 음질 손실이 발생합니다!</value>
+    <value>디스토션 음량이 50%를 넘으면 음질 손실이 발생할 수 있습니다!</value>
   </data>
   <data name="modern" xml:space="preserve">
     <value>모던</value>
