@@ -562,12 +562,19 @@ namespace NekoPlayer.App.Screens
         {
             Task.Run(async () =>
             {
-                bool response = await api.IsChannelSubscribed(channelId);
+                if (signedIn.Value == true)
+                {
+                    bool response = await api.IsChannelSubscribed(channelId);
 
-                if (response == true)
-                    Schedule(() => subscribeButton.Text = NekoPlayerStrings.Unsubscribe);
+                    if (response == true)
+                        Schedule(() => subscribeButton.Text = NekoPlayerStrings.Unsubscribe);
+                    else
+                        Schedule(() => subscribeButton.Text = NekoPlayerStrings.Subscribe);
+                }
                 else
+                {
                     Schedule(() => subscribeButton.Text = NekoPlayerStrings.Subscribe);
+                }
             });
         }
 
