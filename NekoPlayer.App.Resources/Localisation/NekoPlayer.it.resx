@@ -928,4 +928,7 @@
   <data name="player_controller_fade_style" xml:space="preserve">
     <value>Lo stile di sfumatura del controller del giocatore</value>
   </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>Cerca animazione delle onde a barre</value>
+  </data>
 </root>

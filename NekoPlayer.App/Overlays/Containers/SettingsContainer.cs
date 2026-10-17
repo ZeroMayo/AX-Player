@@ -598,6 +598,12 @@ namespace NekoPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Eye,
                                                             Current = appConfig.GetBindable<PlayerControllerFadeStyle>(NekoPlayerSetting.PlayerControllerFadeStyle),
                                                         }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = NekoPlayerStrings.WavySeekbar,
+                                                            Icon = FontAwesome.Solid.SlidersH,
+                                                            Current = appConfig.GetBindable<bool>(NekoPlayerSetting.WavySeekBar),
+                                                        }),
                                                         new ProjectYomiSpriteText
                                                         {
                                                             Name = "Graphics Settings",
