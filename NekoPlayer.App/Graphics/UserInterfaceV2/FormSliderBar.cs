@@ -102,7 +102,7 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV2
             set => valueTextColour = value;
         }
 
-        private ColourInfo valueTextColour;
+        private ColourInfo valueTextColour = Color4.White;
 
         public Hotkey Hotkey { get; init; }
 
