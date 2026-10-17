@@ -20,7 +20,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
-using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
@@ -168,6 +167,43 @@ namespace NekoPlayer.App.Graphics.UserInterface
 
             return value.Substring(0, truncateLength) + "...";
         }
+
+        public void GetPalette()
+        {
+            Task.Run(async () =>
+            {
+                var cachePath = app.Host.CacheStorage.GetStorageForDirectory("profile_cache").GetFullPath($"{channelData.Id}.png");
+
+                using (var httpClient = new System.Net.Http.HttpClient())
+                {
+                    var imageBytes = await httpClient.GetByteArrayAsync(channelData.Snippet.Thumbnails.High.Url);
+                    await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
+                }
+
+                using Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(app.Host.CacheStorage.GetStorageForDirectory("profile_cache").GetFullPath($"{channelData.Id}.png"));
+
+                IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
+                PaletteBuilder paletteBuilder = new PaletteBuilder();
+                Palette palette = paletteBuilder.Generate(bitmapHelper);
+                int? rgbColor = palette.MutedSwatch.Rgb;
+                int? rgbTextColor = palette.MutedSwatch.TitleTextColor;
+
+                if (rgbColor != null && rgbTextColor != null)
+                {
+                    Color4 bgColor = System.Drawing.Color.FromArgb((int)rgbColor);
+                    Color4 textColor = System.Drawing.Color.FromArgb((int)rgbTextColor);
+                    Schedule(() =>
+                    {
+                        bgLayer.Colour = ColourInfo.GradientHorizontal(bgColor, overlayColourProvider.Background4);
+                        videoName.Colour = (textColor);
+                        desc.Colour = (textColor);
+                    });
+                }
+            });
+        }
+
+        [Resolved]
+        private OverlayColourProvider overlayColourProvider { get; set; }
 
         public void UpdateUser(Channel channel)
         {
