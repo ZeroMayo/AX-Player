@@ -14,13 +14,9 @@ namespace NekoPlayer.App.Graphics.Containers
 
         public SmoothFadeInOutContainer()
         {
-            RelativeSizeAxes = Axes.Both;
-
-            InternalChildren = new Drawable[] {
-                content = new Container
-                {
-                    RelativeSizeAxes = Axes.Both,
-                }
+            InternalChild = content = new Container
+            {
+                AutoSizeAxes = Axes.Both,
             };
         }
 
