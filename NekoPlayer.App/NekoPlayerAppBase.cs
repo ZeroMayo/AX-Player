@@ -413,10 +413,10 @@ namespace NekoPlayer.App
 
                 trackAudioEffects();
 
-                Audio.UseExperimentalWasapi.BindValueChanged(_ =>
+                Audio.DeviceInitialisedAction = () =>
                 {
                     trackAudioEffects();
-                });
+                };
             }
             catch (Exception ex)
             {
