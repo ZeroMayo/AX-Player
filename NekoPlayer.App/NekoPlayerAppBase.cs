@@ -501,13 +501,27 @@ namespace NekoPlayer.App
             Schedule(() =>
             {
                 #region Init Step
-                Audio.TrackMixer.RemoveEffect(reverbParameters);
-                Audio.TrackMixer.RemoveEffect(rotateParameters);
-                Audio.TrackMixer.RemoveEffect(echoParameters);
-                Audio.TrackMixer.RemoveEffect(distortionParameters);
-                Audio.TrackMixer.RemoveDSP(_karaokeDsp);
-                Audio.TrackMixer.RemoveEffect(chorusParameters);
-                Audio.TrackMixer.RemoveDSP(_eightBitDsp);
+                if (enableReverb != null && enableReverb.Value)
+                    Audio.TrackMixer.RemoveEffect(reverbParameters);
+
+                if (rotateEnabled != null && rotateEnabled.Value)
+                    Audio.TrackMixer.RemoveEffect(rotateParameters);
+
+                if (echoEnabled != null && echoEnabled.Value)
+                    Audio.TrackMixer.RemoveEffect(echoParameters);
+
+                if (distortionEnabled != null && distortionEnabled.Value)
+                    Audio.TrackMixer.RemoveEffect(distortionParameters);
+
+                if (karaokeModeEnabled != null && karaokeModeEnabled.Value)
+                    Audio.TrackMixer.RemoveDSP(_karaokeDsp);
+
+                if (chorusEnabled != null && chorusEnabled.Value)
+                    Audio.TrackMixer.RemoveEffect(chorusParameters);
+
+                if (eightBitEffectEnabled != null && eightBitEffectEnabled.Value)
+                    Audio.TrackMixer.RemoveDSP(_eightBitDsp);
+
                 enableReverb = null;
                 rotateEnabled = null;
                 echoEnabled = null;
