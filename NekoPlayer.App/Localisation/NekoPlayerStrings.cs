@@ -1454,6 +1454,11 @@ namespace NekoPlayer.App.Localisation
         /// </summary>
         public static LocalisableString PlayerControllerFadeStyle => new TranslatableString(getKey(@"player_controller_fade_style"), "Player controller fade style");
 
+        /// <summary>
+        /// "Seek bar wave animation"
+        /// </summary>
+        public static LocalisableString WavySeekbar => new TranslatableString(getKey(@"wavy_seekbar"), "Seek bar wave animation");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

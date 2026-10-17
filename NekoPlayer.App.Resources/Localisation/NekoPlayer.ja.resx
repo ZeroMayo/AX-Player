@@ -928,4 +928,7 @@
   <data name="player_controller_fade_style" xml:space="preserve">
     <value>プレイヤーコントローラのフェードスタイル</value>
   </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>バー波アニメーションを探してください</value>
+  </data>
 </root>

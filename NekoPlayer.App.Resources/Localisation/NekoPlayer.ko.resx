@@ -928,4 +928,7 @@
   <data name="player_controller_fade_style" xml:space="preserve">
     <value>플레이어 컨트롤러 페이드 스타일</value>
   </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>재생바 물결 효과</value>
+  </data>
 </root>

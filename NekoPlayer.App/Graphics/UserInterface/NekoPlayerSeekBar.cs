@@ -25,6 +25,7 @@ using PaletteNet;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Vector2 = osuTK.Vector2;
+using NekoPlayer.App.Config;
 
 namespace NekoPlayer.App.Graphics.UserInterface
 {
@@ -170,6 +171,7 @@ namespace NekoPlayer.App.Graphics.UserInterface
         {
             AccentColour = Nub.Colour = overlayColourProvider.Content2;
             BackgroundColour = overlayColourProvider.Content2.Darken(1);
+            WavyToggle = configManager.GetBindable<bool>(NekoPlayerSetting.WavySeekBar);
 
             PlaybackSpeed.BindValueChanged(speed =>
             {
@@ -178,9 +180,19 @@ namespace NekoPlayer.App.Graphics.UserInterface
 
             IsPlaying.BindValueChanged(what =>
             {
-                this.TransformBindableTo(amplitudeAnimated, what.NewValue ? 3.5f : 0f, 400, Easing.OutQuint);
+                this.TransformBindableTo(amplitudeAnimated, what.NewValue && WavyToggle.Value ? 3.5f : 0f, 400, Easing.OutQuint);
+            }, true);
+
+            WavyToggle.BindValueChanged(what =>
+            {
+                this.TransformBindableTo(amplitudeAnimated, what.NewValue && IsPlaying.Value ? 3.5f : 0f, 400, Easing.OutQuint);
             }, true);
         }
+
+        [Resolved]
+        private NekoPlayerConfigManager configManager { get; set; }
+
+        private Bindable<bool> WavyToggle;
 
         [Resolved]
         private OverlayColourProvider overlayColourProvider { get; set; } = null!;

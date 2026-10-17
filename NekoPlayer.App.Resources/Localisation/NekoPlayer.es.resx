@@ -928,4 +928,7 @@
   <data name="player_controller_fade_style" xml:space="preserve">
     <value>Estilo de desvanecencia del controlador del reproductor</value>
   </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>Buscar animación de onda de barras</value>
+  </data>
 </root>

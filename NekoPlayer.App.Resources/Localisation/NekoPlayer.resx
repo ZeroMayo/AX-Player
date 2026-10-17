@@ -929,4 +929,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="player_controller_fade_style" xml:space="preserve">
     <value>Player controller fade style</value>
   </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>Seek bar wave animation</value>
+  </data>
 </root>
