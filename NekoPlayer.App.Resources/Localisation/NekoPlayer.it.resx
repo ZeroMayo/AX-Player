@@ -916,4 +916,16 @@
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>Sincronizzazione verticale (VRR bassa latenza)</value>
   </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Preparazione...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>Se il volume di distorsione supera il 50%, si verifica una perdita di qualità sonora!</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>Moderno</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>Lo stile di sfumatura del controller del giocatore</value>
+  </data>
 </root>

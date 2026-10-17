@@ -56,6 +56,7 @@ namespace NekoPlayer.App.Screens
 
             videoContainer.Add(currentVideoSource);
 
+            videoLoadingProgressBase.Hide();
             Schedule(() => videoLoadingProgress.Text = "");
 
             videoProgress.BindValueChanged(seek =>
@@ -297,10 +298,12 @@ namespace NekoPlayer.App.Screens
                     {
                         Google.Apis.YouTube.v3.Data.Video videoData = api.GetVideo(this.videoId);
 
+                        videoLoadingProgressBase.Show();
+                        videoLoadingProgress.Text = NekoPlayerStrings.Preparing;
                         IProgress<double> audioDownloadProgress = new Progress<double>((percent) => Schedule(() => videoLoadingProgress.Text = NekoPlayerStrings.DownloadingAudioStream($"{(percent * 100):N0}%")));
                         IProgress<double> videoDownloadProgress = new Progress<double>((percent) => Schedule(() => videoLoadingProgress.Text = NekoPlayerStrings.DownloadingVideoStream($"{(percent * 100):N0}%")));
 
-                        spinnerShow = Scheduler.AddDelayed(spinner.Show, 0);
+                        //spinnerShow = Scheduler.AddDelayed(spinner.Show, 0);
 
                         Schedule(() => videoProgress.MaxValue = 1);
 
@@ -367,7 +370,7 @@ namespace NekoPlayer.App.Screens
                                 Schedule(() => thumbnailContainer.Hide());
                                 isVideoLoading = false;
                                 loadBtnOverlayShow.Enabled.Value = true;
-                                Schedule(() => spinner.Hide());
+                                //Schedule(() => spinner.Hide());
                                 return;
                             }
 
@@ -736,7 +739,7 @@ namespace NekoPlayer.App.Screens
                                 RelativeSizeAxes = Axes.Both
                             };
 
-                            spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);
+                            //spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);
 
                             spinnerShow = Scheduler.AddDelayed(addVideoToScreen, 0);
 
@@ -766,7 +769,7 @@ namespace NekoPlayer.App.Screens
                                 Schedule(() => thumbnailContainer.Hide());
                                 isVideoLoading = false;
                                 loadBtnOverlayShow.Enabled.Value = true;
-                                Schedule(() => spinner.Hide());
+                                //Schedule(() => spinner.Hide());
                                 return;
                             }
 
@@ -1098,7 +1101,7 @@ namespace NekoPlayer.App.Screens
                                 RelativeSizeAxes = Axes.Both
                             };
 
-                            spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);
+                            //spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);
 
                             spinnerShow = Scheduler.AddDelayed(addVideoToScreen, 0);
 

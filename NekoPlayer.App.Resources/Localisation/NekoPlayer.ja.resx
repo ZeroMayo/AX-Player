@@ -863,8 +863,7 @@
     <value>アップデート</value>
   </data>
   <data name="reflex_hint" xml:space="preserve">
-    <value>NVIDIA GPU上のNVIDIA Reflex APIを活用することで、レイテンシを低減します。
-On にすることを推奨します。問題が発生している場合のみ Off にしてください。</value>
+    <value>NVIDIA GPU上のNVIDIA Reflex APIを活用することで、レイテンシを低減します。 On にすることを推奨します。問題が発生している場合のみ Off にしてください。</value>
   </data>
   <data name="reflex_notice" xml:space="preserve">
     <value>Boost は GPU の消費電力を増加させ、場合によっては遅延が増加することがあります。 問題が発生している場合は、Boostを無効にしてください。</value>
@@ -916,5 +915,17 @@ On にすることを推奨します。問題が発生している場合のみ O
   </data>
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>バーティカルシンク（VRR低遅延）</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>準備中...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>歪み量が50％を超えると、音質の劣化が発生します！</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>現代の</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>プレイヤーコントローラのフェードスタイル</value>
   </data>
 </root>

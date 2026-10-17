@@ -106,13 +106,23 @@ namespace NekoPlayer.App.Screens
         {
             if (isControlVisible == false)
             {
-                isControlVisible = true;
-                uiContainer.FadeInFromZero(500, Easing.OutQuint);
-                uiGradientContainer.FadeInFromZero(500, Easing.OutQuint);
-                uiContainer.BlurTo(new Vector2(0), 500, Easing.OutQuint);
-                sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = true;
-                bottomUIContainer.MoveToY(0, 500, Easing.OutQuint);
-                topUIContainer.MoveToY(0, 500, Easing.OutQuint);
+                if (appGlobalConfig.Get<PlayerControllerFadeStyle>(NekoPlayerSetting.PlayerControllerFadeStyle) == PlayerControllerFadeStyle.Modern)
+                {
+                    isControlVisible = true;
+                    uiContainer.FadeInFromZero(500, Easing.OutQuint);
+                    uiGradientContainer.FadeInFromZero(500, Easing.OutQuint);
+                    uiContainer.BlurTo(new Vector2(0), 500, Easing.OutQuint);
+                    sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = true;
+                    bottomUIContainer.MoveToY(0, 500, Easing.OutQuint);
+                    topUIContainer.MoveToY(0, 500, Easing.OutQuint);
+                }
+                else
+                {
+                    isControlVisible = true;
+                    uiContainer.FadeInFromZero(125);
+                    uiGradientContainer.FadeInFromZero(125);
+                    sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = true;
+                }
             }
         }
 
@@ -122,13 +132,23 @@ namespace NekoPlayer.App.Screens
             {
                 if (isControlVisible == true)
                 {
-                    isControlVisible = false;
-                    uiContainer.FadeOutFromOne(250, Easing.InCubic);
-                    uiGradientContainer.FadeOutFromOne(250, Easing.InCubic);
-                    uiContainer.BlurTo(new Vector2(8), 250, Easing.InCubic);
-                    sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
-                    bottomUIContainer.MoveToY(30, 250, Easing.InCubic);
-                    topUIContainer.MoveToY(-30, 250, Easing.InCubic);
+                    if (appGlobalConfig.Get<PlayerControllerFadeStyle>(NekoPlayerSetting.PlayerControllerFadeStyle) == PlayerControllerFadeStyle.Modern)
+                    {
+                        isControlVisible = false;
+                        uiContainer.FadeOutFromOne(250, Easing.InCubic);
+                        uiGradientContainer.FadeOutFromOne(250, Easing.InCubic);
+                        uiContainer.BlurTo(new Vector2(8), 250, Easing.InCubic);
+                        sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
+                        bottomUIContainer.MoveToY(30, 250, Easing.InCubic);
+                        topUIContainer.MoveToY(-30, 250, Easing.InCubic);
+                    }
+                    else
+                    {
+                        isControlVisible = false;
+                        uiContainer.FadeOutFromOne(250);
+                        uiGradientContainer.FadeOutFromOne(250);
+                        sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
+                    }
                 }
             }
         }

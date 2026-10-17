@@ -863,8 +863,7 @@
     <value>Actualizaciones</value>
   </data>
   <data name="reflex_hint" xml:space="preserve">
-    <value>Reduce la latencia aprovechando la API Reflex NVIDIA en GPUs NVIDIA.
-Recomendado tener En, apagar sólo si experimenta problemas.</value>
+    <value>Reduce la latencia aprovechando la API Reflex NVIDIA en GPUs NVIDIA. Recomendado tener En, apagar sólo si experimenta problemas.</value>
   </data>
   <data name="reflex_notice" xml:space="preserve">
     <value>Boost aumenta el consumo de energía GPU y puede aumentar la latencia en algunos casos. Desactivar Boost si experimenta problemas.</value>
@@ -916,5 +915,17 @@ Recomendado tener En, apagar sólo si experimenta problemas.</value>
   </data>
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>Sincronización vertical (VRR baja latencia)</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Preparante...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>Si el volumen de distorsión supera el 50%, ¡se producirá una pérdida de calidad del sonido!</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>Moderno</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>Estilo de desvanecencia del controlador del reproductor</value>
   </data>
 </root>

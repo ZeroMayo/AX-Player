@@ -863,8 +863,7 @@
     <value>更新</value>
   </data>
   <data name="reflex_hint" xml:space="preserve">
-    <value>通过 NVIDIA GPU 上的 NVIDIA Reflex API 降低延迟。
-建议保持开启，仅在遇到问题时关闭。</value>
+    <value>通过 NVIDIA GPU 上的 NVIDIA Reflex API 降低延迟。 建议保持开启，仅在遇到问题时关闭。</value>
   </data>
   <data name="reflex_notice" xml:space="preserve">
     <value>Boost 会增加 GPU 功耗，并且在某些情况下可能增加延迟。如果遇到问题，请关闭 Boost。</value>
@@ -916,5 +915,17 @@
   </data>
   <data name="vertical_sync_vrr" xml:space="preserve">
     <value>垂直同步（VRR 低延迟）</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>正在准备...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>如果失真幅度超过50%，就会导致音质损失！</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>现代的</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>玩家控制器淡出样式</value>
   </data>
 </root>

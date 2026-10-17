@@ -93,6 +93,7 @@ namespace NekoPlayer.App.Config
             SetDefault(NekoPlayerSetting.CaptionCornerRadius, 0, 0, 16);
             SetDefault(NekoPlayerSetting.UseNewSubtitlesFeature, false);
             SetDefault(NekoPlayerSetting.ScreenshotQuality, 92, 1, 100);
+            SetDefault(NekoPlayerSetting.PlayerControllerFadeStyle, PlayerControllerFadeStyle.Modern);
         }
 
         public NekoPlayerConfigManager(Storage storage, IDictionary<NekoPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
@@ -181,5 +182,6 @@ namespace NekoPlayer.App.Config
         CaptionCornerRadius,
         UseNewSubtitlesFeature,
         ScreenshotQuality,
+        PlayerControllerFadeStyle,
     }
 }

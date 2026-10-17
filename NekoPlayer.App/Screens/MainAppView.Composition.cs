@@ -120,6 +120,8 @@ namespace NekoPlayer.App.Screens
             chorusEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ChorusEnabled);
             eightBitEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled);
 
+            DistortionVolume = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume);
+
             videoMetadataDisplayAlignment = appConfig.GetBindable<VideoMetadataDisplayAlignment>(NekoPlayerSetting.VideoMetadataDisplayAlignment);
 
             scalingMode = appConfig.GetBindable<ScalingMode>(NekoPlayerSetting.Scaling);
@@ -237,19 +239,64 @@ namespace NekoPlayer.App.Screens
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
                     {
+                        /*
                         spinner = new NekoPlayerLoadingSpinner(true, true)
                         {
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Margin = new MarginPadding(40),
                         },
-                        videoLoadingProgress = new ProjectYomiSpriteText
+                        */
+                        videoLoadingProgressBase = new SmoothFadeInOutContainer
                         {
-                            Anchor = Anchor.BottomCentre,
-                            Origin = Anchor.BottomCentre,
-                            Margin = new MarginPadding
+                            AutoSizeAxes = Axes.Both,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Masking = true,
+                            Children = new Drawable[]
                             {
-                                Bottom = 110,
+                                new FillFlowContainer
+                                {
+                                    AutoSizeAxes = Axes.Both,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Direction = FillDirection.Vertical,
+                                    Spacing = new Vector2(0, 4),
+                                    Children = new Drawable[]
+                                    {
+                                        videoLoadingProgressSpinner = new NekoPlayerLoadingSpinner(true, true)
+                                        {
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                        },
+                                        new CircularContainer
+                                        {
+                                            AutoSizeAxes = Axes.Both,
+                                            Masking = true,
+                                            Anchor = Anchor.Centre,
+                                            Origin = Anchor.Centre,
+                                            Children = new Drawable[]
+                                            {
+                                                videoLoadingProgressBaseBG = new Box
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    Colour = overlayColourProvider.Background3,
+                                                    Alpha = 0.7f,
+                                                },
+                                                new Container
+                                                {
+                                                    AutoSizeAxes = Axes.Both,
+                                                    Padding = new MarginPadding(8),
+                                                    Child = videoLoadingProgress = new ProjectYomiSpriteText
+                                                    {
+                                                        Anchor = Anchor.CentreLeft,
+                                                        Origin = Anchor.CentreLeft,
+                                                    }
+                                                }
+                                            },
+                                        }
+                                    }
+                                },
                             },
                         },
                         uiGradientContainer = new DrawSizePreservingFillContainer
@@ -2251,12 +2298,15 @@ namespace NekoPlayer.App.Screens
                                                             Spacing = new Vector2(0, 4),
                                                             Children = new Drawable[]
                                                             {
-                                                                new SettingsItemV2(new FormSliderBar<float>
+                                                                new SettingsItemV2(DistortionVolumeSlider = new FormSliderBar<float>
                                                                 {
                                                                     Caption = NekoPlayerStrings.DistortionVolume,
-                                                                    Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume),
+                                                                    Current = DistortionVolume,
                                                                     DisplayAsPercentage = true,
-                                                                }),
+                                                                })
+                                                                {
+                                                                    Note = { BindTarget = DistortionVolumeNotice },
+                                                                },
                                                             }
                                                         },
                                                         new SettingsItemV2(new FormCheckBox
@@ -3197,6 +3247,9 @@ namespace NekoPlayer.App.Screens
             };
             #endregion
 
+            videoLoadingProgressBase.Hide();
+            videoLoadingProgressSpinner.Show();
+
             prevVideoButton.SetCornerRadius(new CornersInfo(15, 15, NekoPlayerApp.UI_CORNER_RADIUS / 3f, NekoPlayerApp.UI_CORNER_RADIUS / 3f));
             nextVideoButton.SetCornerRadius(new CornersInfo(NekoPlayerApp.UI_CORNER_RADIUS / 3f, NekoPlayerApp.UI_CORNER_RADIUS / 3f, 15, 15));
 
@@ -3231,6 +3284,20 @@ namespace NekoPlayer.App.Screens
             RegisterOverlayContainer(myPlaylistsOverlay);
             RegisterOverlayContainer(exitOptions);
             RegisterOverlayContainer(editPlaylistOverlay);
+
+            DistortionVolume.BindValueChanged(value =>
+            {
+                if (value.NewValue > 0.5f)
+                {
+                    DistortionVolumeSlider.ValueTextColour = Color4.Red;
+                    DistortionVolumeNotice.Value = new SettingsNote.Data(NekoPlayerStrings.DistortionWarning, SettingsNote.Type.Warning);
+                }
+                else
+                {
+                    DistortionVolumeSlider.ValueTextColour = Color4.White;
+                    DistortionVolumeNotice.Value = null;
+                }
+            }, true);
 
             ReleaseStream.BindValueChanged(async _ => await checkForUpdates());
 

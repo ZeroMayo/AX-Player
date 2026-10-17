@@ -562,12 +562,19 @@ namespace NekoPlayer.App.Screens
         {
             Task.Run(async () =>
             {
-                bool response = await api.IsChannelSubscribed(channelId);
+                if (signedIn.Value == true)
+                {
+                    bool response = await api.IsChannelSubscribed(channelId);
 
-                if (response == true)
-                    Schedule(() => subscribeButton.Text = NekoPlayerStrings.Unsubscribe);
+                    if (response == true)
+                        Schedule(() => subscribeButton.Text = NekoPlayerStrings.Unsubscribe);
+                    else
+                        Schedule(() => subscribeButton.Text = NekoPlayerStrings.Subscribe);
+                }
                 else
+                {
                     Schedule(() => subscribeButton.Text = NekoPlayerStrings.Subscribe);
+                }
             });
         }
 
@@ -634,8 +641,12 @@ namespace NekoPlayer.App.Screens
                     seekbar.AccentColour = accentColor;
                     seekbar.BackgroundColour = bgColor2;
 
-                    spinner.AccentColor = accentColor;
-                    spinner.BackgroundColour = bgColor;
+                    //spinner.AccentColor = accentColor;
+                    //spinner.BackgroundColour = bgColor;
+
+                    videoLoadingProgressSpinner.AccentColor = accentColor;
+                    videoLoadingProgressSpinner.BackgroundColour = bgColor;
+                    videoLoadingProgressBaseBG.Colour = bgColor;
 
                     prevVideoButton.AccentColor = accentColor;
                     prevVideoButton.BackgroundColour = bgColor;

@@ -592,6 +592,12 @@ namespace NekoPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.VolumeUp,
                                                             Current = overlaySFXType,
                                                         }),
+                                                        new SettingsItemV2(new FormEnumDropdown<PlayerControllerFadeStyle>
+                                                        {
+                                                            Caption = NekoPlayerStrings.PlayerControllerFadeStyle,
+                                                            Icon = FontAwesome.Solid.Eye,
+                                                            Current = appConfig.GetBindable<PlayerControllerFadeStyle>(NekoPlayerSetting.PlayerControllerFadeStyle),
+                                                        }),
                                                         new ProjectYomiSpriteText
                                                         {
                                                             Name = "Graphics Settings",
