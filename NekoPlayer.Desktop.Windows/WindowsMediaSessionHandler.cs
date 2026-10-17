@@ -97,7 +97,7 @@ namespace NekoPlayer.Desktop.Windows
             {
                 try
                 {
-                    smtc.PlaybackStatus = playing ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused; //ignore this error
+                    smtc.PlaybackStatus = playing ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused;
                     smtc.DisplayUpdater.Update();
                 }
                 catch (Exception e)
