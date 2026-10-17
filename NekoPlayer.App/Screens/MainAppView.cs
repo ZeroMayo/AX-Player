@@ -104,7 +104,7 @@ namespace NekoPlayer.App.Screens
         [Resolved]
         private AudioManager audio { get; set; } = null!;
 
-        private CircularContainer videoLoadingProgressBase;
+        private SmoothFadeInOutContainer videoLoadingProgressBase;
         private NekoPlayerLoadingSpinner videoLoadingProgressSpinner;
         private Box videoLoadingProgressBaseBG;
 

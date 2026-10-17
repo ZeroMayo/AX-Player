@@ -923,4 +923,10 @@ On にすることを推奨します。問題が発生している場合のみ O
   <data name="distortion_warning" xml:space="preserve">
     <value>歪み量が50％を超えると、音質の劣化が発生します！</value>
   </data>
+  <data name="modern" xml:space="preserve">
+    <value>現代の</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>プレイヤーコントローラのフェードスタイル</value>
+  </data>
 </root>

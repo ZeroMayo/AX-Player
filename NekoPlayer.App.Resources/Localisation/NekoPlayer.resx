@@ -923,4 +923,10 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="distortion_warning" xml:space="preserve">
     <value>If the distortion volume exceeds 50%, sound quality loss will occur!</value>
   </data>
+  <data name="modern" xml:space="preserve">
+    <value>Modern</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>Player controller fade style</value>
+  </data>
 </root>

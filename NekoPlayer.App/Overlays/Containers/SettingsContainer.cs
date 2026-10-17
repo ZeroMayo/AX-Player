@@ -684,6 +684,12 @@ namespace NekoPlayer.App.Overlays.Containers
                                                             Current = fpsDisplay,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleFPSDisplay),
                                                         }),
+                                                        new SettingsItemV2(new FormEnumDropdown<PlayerControllerFadeStyle>
+                                                        {
+                                                            Caption = NekoPlayerStrings.PlayerControllerFadeStyle,
+                                                            Icon = FontAwesome.Solid.Eye,
+                                                            Current = appConfig.GetBindable<PlayerControllerFadeStyle>(NekoPlayerSetting.PlayerControllerFadeStyle),
+                                                        }),
                                                         new SettingsItemV2(new FormEnumDropdown<ScalingMode>
                                                         {
                                                             Caption = NekoPlayerStrings.ScreenScaling,

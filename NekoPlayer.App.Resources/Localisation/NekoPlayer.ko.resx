@@ -923,4 +923,10 @@
   <data name="distortion_warning" xml:space="preserve">
     <value>디스토션 음량이 50%를 넘으면 음질 손실이 발생합니다!</value>
   </data>
+  <data name="modern" xml:space="preserve">
+    <value>모던</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>플레이어 컨트롤러 페이드 스타일</value>
+  </data>
 </root>

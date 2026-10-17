@@ -247,7 +247,7 @@ namespace NekoPlayer.App.Screens
                             Margin = new MarginPadding(40),
                         },
                         */
-                        videoLoadingProgressBase = new CircularContainer
+                        videoLoadingProgressBase = new SmoothFadeInOutContainer
                         {
                             AutoSizeAxes = Axes.Both,
                             Anchor = Anchor.Centre,

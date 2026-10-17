@@ -1447,6 +1447,16 @@ namespace NekoPlayer.App.Localisation
         /// </summary>
         public static LocalisableString DistortionWarning => new TranslatableString(getKey(@"distortion_warning"), "If the distortion volume exceeds 50%, sound quality loss will occur!");
 
+        /// <summary>
+        /// "Modern"
+        /// </summary>
+        public static LocalisableString Modern => new TranslatableString(getKey(@"modern"), "Modern");
+
+        /// <summary>
+        /// "Player controller fade style"
+        /// </summary>
+        public static LocalisableString PlayerControllerFadeStyle => new TranslatableString(getKey(@"player_controller_fade_style"), "Player controller fade style");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

@@ -923,4 +923,10 @@
   <data name="distortion_warning" xml:space="preserve">
     <value>如果失真幅度超过50%，就会导致音质损失！</value>
   </data>
+  <data name="modern" xml:space="preserve">
+    <value>现代的</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>玩家控制器淡出样式</value>
+  </data>
 </root>
