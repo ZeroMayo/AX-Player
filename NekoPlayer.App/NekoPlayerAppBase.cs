@@ -525,11 +525,11 @@ namespace NekoPlayer.App
             eightBitEffectEnabled = null;
             eightBitEffectBitDepth = null;
             eightBitEffectDownsampleRatio = null;
-            reverbParameters = null;
-            rotateParameters = null;
-            echoParameters = null;
-            distortionParameters = null;
-            chorusParameters = null;
+            reverbParameters = new ReverbParameters();
+            rotateParameters = new RotateParameters();
+            echoParameters = new EchoParameters();
+            distortionParameters = new DistortionParameters();
+            chorusParameters = new ChorusParameters();
             _karaokeDsp = null;
             _eightBitDsp = null;
 
