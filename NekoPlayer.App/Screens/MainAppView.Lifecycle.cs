@@ -607,6 +607,9 @@ namespace NekoPlayer.App.Screens
                     return true;
 
                 case GlobalAction.AddPlaylistKey:
+                    if (signedIn.Value == false)
+                        return true;
+
                     if (!addPlaylistOverlay.IsVisible)
                     {
                         hideOverlays();
@@ -619,6 +622,9 @@ namespace NekoPlayer.App.Screens
 
                 case GlobalAction.SaveVideoToPlaylist:
                     if (videoData == null)
+                        return true;
+
+                    if (signedIn.Value == false)
                         return true;
 
                     if (!videoSaveLocationOverlay.IsVisible)
@@ -655,6 +661,9 @@ namespace NekoPlayer.App.Screens
 
                 case GlobalAction.ReportAbuse:
                     if (videoData == null)
+                        return true;
+
+                    if (signedIn.Value == false)
                         return true;
 
                     if (!reportAbuseOverlay.IsVisible)
