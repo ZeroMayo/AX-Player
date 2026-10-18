@@ -25,10 +25,13 @@
     <None Update="avcodec-62.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="avformat-62.dll">
+    <None Update="avcodec-63.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="avutil-60.dll">
+    <None Update="avformat-63.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="avutil-61.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="bassloud.dll">
@@ -40,16 +43,22 @@
     <None Update="libavcodec.so.62">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="libavformat.so.62">
+    <None Update="libavcodec.so.63">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="libavformat.so.63">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="libavutil.so.60">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="libavutil.so.61">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="libbassloud.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="libswscale.so.9">
+    <None Update="libswscale.so.10">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="nekoplayer_app.bmp">
@@ -58,37 +67,37 @@
     <None Update="nekoplayer_app.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\linux-x64\native\libavcodec.so.62">
+    <None Update="runtimes\linux-x64\native\libavcodec.so.63">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\linux-x64\native\libavformat.so.62">
+    <None Update="runtimes\linux-x64\native\libavformat.so.63">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\linux-x64\native\libavutil.so.60">
+    <None Update="runtimes\linux-x64\native\libavutil.so.61">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="runtimes\linux-x64\native\libbassloud.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\linux-x64\native\libswscale.so.9">
+    <None Update="runtimes\linux-x64\native\libswscale.so.10">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\win-x64\native\avcodec-62.dll">
+    <None Update="runtimes\win-x64\native\avcodec-63.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\win-x64\native\avformat-62.dll">
+    <None Update="runtimes\win-x64\native\avformat-63.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\win-x64\native\avutil-60.dll">
+    <None Update="runtimes\win-x64\native\avutil-61.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="runtimes\win-x64\native\bassloud.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\win-x64\native\swscale-9.dll">
+    <None Update="runtimes\win-x64\native\swscale-10.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="swscale-9.dll">
+    <None Update="swscale-10.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="yt-dlp.exe">
