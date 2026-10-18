@@ -278,7 +278,7 @@ namespace NekoPlayer.App.Graphics.Videos
                         }
                         else
                         {
-                            content.ScaleTo(new osuTK.Vector2(1.35f), 250, Easing.OutQuint).ScaleTo(new osuTK.Vector2(1.5f), 250, Easing.OutQuint);
+                            content.ScaleTo(new osuTK.Vector2(1.35f), 250, Easing.OutQuint).Then().ScaleTo(new osuTK.Vector2(1.5f), 250, Easing.OutQuint);
                         }
                         fadeOut?.Cancel();
                         isShowing = true;
