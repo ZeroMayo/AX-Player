@@ -96,7 +96,7 @@ namespace NekoPlayer.App.Config
             SetDefault(NekoPlayerSetting.PlayerControllerFadeStyle, PlayerControllerFadeStyle.Modern);
             SetDefault(NekoPlayerSetting.WavySeekBar, true);
 
-            SetDefault(OsuSetting.Version, string.Empty);
+            SetDefault(NekoPlayerSetting.Version, string.Empty);
         }
 
         public NekoPlayerConfigManager(Storage storage, IDictionary<NekoPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
