@@ -381,7 +381,7 @@ namespace NekoPlayer.App.Graphics.Videos
                 {
                     trackFinished = true;
                     Pause();
-                    SeekTo(0);
+                    SeekTo(1);
                     OnVideoCompleted.Invoke();
                 }
 
