@@ -241,6 +241,7 @@ namespace NekoPlayer.App.Graphics.Videos
 
                     seekTextRolling.BindValueChanged(speed =>
                     {
+                        if (seekValue == null) return;
                         int intValue = speed.NewValue;
                         seekValue.Text = $"{(trackAction == SeekAction.FastForward10sec ? "+" : "-")} {intValue}";
                     }, true);
