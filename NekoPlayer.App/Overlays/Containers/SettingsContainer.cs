@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
+using FFmpeg.AutoGen;
 using NekoPlayer.App.Config;
 using NekoPlayer.App.Graphics;
 using NekoPlayer.App.Graphics.Caption;
@@ -1125,6 +1126,17 @@ namespace NekoPlayer.App.Overlays.Containers
                                                             AutoSizeAxes = Axes.Y,
                                                             TextAnchor = Anchor.Centre,
                                                         },
+                                                        ffmpegLibVersion = new ProjectYomiTextFlowContainer(f =>
+                                                        {
+                                                            f.Font = NekoPlayerApp.DefaultFont.With(size: 15);
+                                                            f.Colour = overlayColourProvider.Content2;
+                                                        })
+                                                        {
+                                                            Margin = new MarginPadding { Top = 4 },
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            TextAnchor = Anchor.Centre,
+                                                        },
                                                         madeByText = new LinkFlowContainer(f =>
                                                         {
                                                             f.Font = NekoPlayerApp.DefaultFont.With(size: 15);
@@ -1224,6 +1236,11 @@ namespace NekoPlayer.App.Overlays.Containers
             dislikeCounterCredits.AddText(NekoPlayerStrings.DislikeCounterCredits_1);
             dislikeCounterCredits.AddLink("Return YouTube Dislike API", "https://returnyoutubedislike.com/");
             dislikeCounterCredits.AddText(NekoPlayerStrings.DislikeCounterCredits_2);
+
+            ffmpegLibVersion.AddText($"libavcodec {ffmpeg.LIBAVCODEC_VERSION}\n");
+            ffmpegLibVersion.AddText($"libavformat {ffmpeg.LIBAVFORMAT_VERSION}\n");
+            ffmpegLibVersion.AddText($"libavutil {ffmpeg.LIBAVUTIL_VERSION}\n");
+            ffmpegLibVersion.AddText($"libswscale {ffmpeg.LIBSWSCALE_VERSION}");
 
             if (game.IsDeployedBuild)
             {
@@ -1604,6 +1621,8 @@ namespace NekoPlayer.App.Overlays.Containers
         private NekoPlayerSettingsTabBar settingsTabBar;
         private Bindable<SettingsNote.Data> discordNotInstalledNote = new Bindable<SettingsNote.Data>();
         private LinkFlowContainer dislikeCounterCredits, madeByText, gameVersion;
+
+        private ProjectYomiTextFlowContainer ffmpegLibVersion;
         private FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode> discordRichPresenceDropdown;
         private FillFlowContainer volumeOptions, screenshotOptions;
 
