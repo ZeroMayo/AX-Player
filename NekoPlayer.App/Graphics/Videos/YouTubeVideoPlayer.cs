@@ -293,18 +293,20 @@ namespace NekoPlayer.App.Graphics.Videos
                 hueShift.Strength = value.NewValue / 360;
             }, true);
 
-            drawableTrack.Completed += trackCompleted;
+            //drawableTrack.Completed += trackCompleted;
         }
 
         private IBindable<bool> uiVisible = null!;
 
+        /*
         private void trackCompleted()
         {
             trackFinished = true;
-            SeekTo(0);
-            Pause();
+            //SeekTo(0);
+            //Pause();
             OnVideoCompleted?.Invoke();
         }
+        */
 
         public void UpdatePreservePitch(bool value)
         {
@@ -324,8 +326,10 @@ namespace NekoPlayer.App.Graphics.Videos
             mediaSession?.UnregisterControlEvents();
             mediaSession?.DeleteMediaSession();
 
+            /*
             if (drawableTrack != null)
                 drawableTrack.Completed -= trackCompleted;
+            */
 
             base.Dispose(isDisposing);
         }
@@ -372,6 +376,14 @@ namespace NekoPlayer.App.Graphics.Videos
 
                 if (VideoProgress.MaxValue != length)
                     VideoProgress.MaxValue = length;
+
+                if (VideoProgress.Value >= drawableTrack.Length - 500) //this will fix app hang bugs
+                {
+                    trackFinished = true;
+                    Pause();
+                    SeekTo(0);
+                    OnVideoCompleted.Invoke();
+                }
 
                 VideoProgress.Value = drawableTrack.CurrentTime / milliseconds_per_second;
 
