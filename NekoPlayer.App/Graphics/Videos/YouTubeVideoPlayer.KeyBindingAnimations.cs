@@ -276,6 +276,10 @@ namespace NekoPlayer.App.Graphics.Videos
                             content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10).MoveToX(0, 750, Easing.OutExpo);
                             content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 750, Easing.OutExpo);
                         }
+                        else
+                        {
+                            content.ScaleTo(new osuTK.Vector2(1.35f), 250, Easing.OutExpo).ScaleTo(new osuTK.Vector2(1.5f), 250, Easing.OutExpo);
+                        }
                         fadeOut?.Cancel();
                         isShowing = true;
                         fadeOut = Scheduler.AddDelayed(() =>
