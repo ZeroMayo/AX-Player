@@ -247,6 +247,39 @@ namespace NekoPlayer.App.Screens
                             Margin = new MarginPadding(40),
                         },
                         */
+                        muteStateOverlay = new SmoothFadeInOutContainer
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+                            Masking = true,
+                            Padding = new MarginPadding(8),
+                            Children = new Drawable[]
+                            {
+                                new CircularContainer
+                                {
+                                    Width = 50,
+                                    Height = 50,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Masking = true,
+                                    Child = new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Alpha = 0.7f,
+                                        Colour = Color4.Black,
+                                    }
+                                },
+                                new SpriteIcon
+                                {
+                                    Width = 24,
+                                    Height = 24,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Icon = FontAwesome.Solid.VolumeMute,
+                                },
+                            }
+                        },
                         videoLoadingProgressBase = new SmoothFadeInOutContainer
                         {
                             AutoSizeAxes = Axes.Both,
