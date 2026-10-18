@@ -285,7 +285,7 @@ namespace NekoPlayer.App.Graphics.Videos
                         fadeOut = Scheduler.AddDelayed(() =>
                         {
                             HideNow();
-                        }, 1500);
+                        }, 1250);
                     }
                     else
                     {
