@@ -377,7 +377,7 @@ namespace NekoPlayer.App.Graphics.Videos
                 if (VideoProgress.MaxValue != length)
                     VideoProgress.MaxValue = length;
 
-                if (VideoProgress.Value >= drawableTrack.Length - 500) //this will fix app hang bugs
+                if (VideoProgress.Value >= drawableTrack.Length - 100) //this will fix app hang bugs
                 {
                     trackFinished = true;
                     Pause();
