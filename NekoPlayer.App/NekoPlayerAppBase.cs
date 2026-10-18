@@ -143,9 +143,7 @@ namespace NekoPlayer.App
         {
             if (Interlocked.Decrement(ref allowableExceptions) < 0)
             {
-                Logger.Log("oops nekoplayer crashed");
-                Logger.Log("i lost my hope but i had an logs");
-                //Logger.Log("Too many unhandled exceptions, crashing out.");
+                Logger.Log("Too many unhandled exceptions, crashing out.");
                 return false;
             }
 
@@ -248,18 +246,6 @@ namespace NekoPlayer.App
                 Host.ExceptionThrown -= onExceptionThrown;
         }
 
-        public static void RecursiveDelete(DirectoryInfo baseDir)
-        {
-            if (!baseDir.Exists)
-                return;
-
-            foreach (var dir in baseDir.EnumerateDirectories())
-            {
-                RecursiveDelete(dir);
-            }
-            baseDir.Delete(true);
-        }
-
         protected SessionStatics SessionStatics { get; private set; }
 
         public virtual Version AssemblyVersion => Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
@@ -311,7 +297,7 @@ namespace NekoPlayer.App
         {
             try
             {
-                Logger.Log($"------------------------------------------------\nNekoPlayer by BoomboxRapsody\n------------------------------------------------\nApp version is: {Version}\nApp version hash is: {VersionHash}\nCultureInfo.CurrentCulture name is {CultureInfo.CurrentCulture.Name}\n------------------------------------------------\ngood luck ^^\n------------------------------------------------");
+                Logger.Log($"Here we go!");
                 RestartRequired.Value = false;
                 UpdateManagerVersionText.Value = Version;
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

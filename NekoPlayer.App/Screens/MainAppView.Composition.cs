@@ -247,6 +247,39 @@ namespace NekoPlayer.App.Screens
                             Margin = new MarginPadding(40),
                         },
                         */
+                        muteStateOverlay = new SmoothFadeInOutContainer
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Anchor = Anchor.TopRight,
+                            Origin = Anchor.TopRight,
+                            Masking = true,
+                            Padding = new MarginPadding(8),
+                            Children = new Drawable[]
+                            {
+                                new CircularContainer
+                                {
+                                    Width = 50,
+                                    Height = 50,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Masking = true,
+                                    Child = new Box
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Alpha = 0.7f,
+                                        Colour = Color4.Black,
+                                    }
+                                },
+                                new SpriteIcon
+                                {
+                                    Width = 24,
+                                    Height = 24,
+                                    Anchor = Anchor.Centre,
+                                    Origin = Anchor.Centre,
+                                    Icon = FontAwesome.Solid.VolumeMute,
+                                },
+                            }
+                        },
                         videoLoadingProgressBase = new SmoothFadeInOutContainer
                         {
                             AutoSizeAxes = Axes.Both,
@@ -3475,14 +3508,23 @@ namespace NekoPlayer.App.Screens
                 this.TransformBindableTo(volumeTextRolling, volume.NewValue, 400, Easing.OutQuint);
                 if (volume.NewValue > 0.5)
                 {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Hide();
+
                     volumeIcon.Icon = FontAwesome.Solid.VolumeUp;
                 }
                 else if (volume.NewValue >= 0.01)
                 {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Hide();
+
                     volumeIcon.Icon = FontAwesome.Solid.VolumeDown;
                 }
                 else
                 {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Show();
+
                     volumeIcon.Icon = FontAwesome.Solid.VolumeMute;
                 }
             }, true);

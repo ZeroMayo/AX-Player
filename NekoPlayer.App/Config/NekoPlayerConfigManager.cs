@@ -95,6 +95,8 @@ namespace NekoPlayer.App.Config
             SetDefault(NekoPlayerSetting.ScreenshotQuality, 92, 1, 100);
             SetDefault(NekoPlayerSetting.PlayerControllerFadeStyle, PlayerControllerFadeStyle.Modern);
             SetDefault(NekoPlayerSetting.WavySeekBar, true);
+
+            SetDefault(NekoPlayerSetting.Version, string.Empty);
         }
 
         public NekoPlayerConfigManager(Storage storage, IDictionary<NekoPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
@@ -185,5 +187,6 @@ namespace NekoPlayer.App.Config
         ScreenshotQuality,
         PlayerControllerFadeStyle,
         WavySeekBar,
+        Version,
     }
 }

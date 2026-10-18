@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
+using FFmpeg.AutoGen;
 using NekoPlayer.App.Config;
 using NekoPlayer.App.Graphics;
 using NekoPlayer.App.Graphics.Caption;
@@ -188,7 +189,9 @@ namespace NekoPlayer.App.Overlays.Containers
 
         public FormButton CheckForUpdatesButton;
 
-        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, captionLangOptions;
+        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, captionLangOptions, wasapiExperimentalItem;
+
+        private FormCheckBox wasapiExperimental;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
 
         private Bindable<UIFont> ui_font;
@@ -217,6 +220,8 @@ namespace NekoPlayer.App.Overlays.Containers
 
         private readonly Bindable<SettingsNote.Data?> alsaExclusiveDeviceNote = new Bindable<SettingsNote.Data?>();
         private readonly Bindable<SettingsNote.Data?> srv3Notice = new Bindable<SettingsNote.Data?>();
+
+        private readonly Bindable<SettingsNote.Data?> wasapiExperimentalNote = new Bindable<SettingsNote.Data?>();
 
         private void onDeviceSelected(string selectedDevice)
         {
@@ -335,9 +340,12 @@ namespace NekoPlayer.App.Overlays.Containers
 
         private SettingsItemV2 advancedSubtitlesBase;
 
+        private BindableBool wasapi;
+
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider overlayColourProvider, TextureStore textures, ProjectYomiColour colours, FrameworkDebugConfigManager debugConfig, FrameworkConfigManager config, Storage storage, NekoPlayerConfigManager appConfig)
         {
+            wasapi = audio.UseExperimentalWasapi;
             videoVolume = config.GetBindable<double>(FrameworkSetting.VolumeMusic);
             fpsDisplay = appConfig.GetBindable<bool>(NekoPlayerSetting.ShowFpsDisplay);
             closeButtonAction = appConfig.GetBindable<CloseButtonAction>(NekoPlayerSetting.CloseButtonAction);
@@ -983,6 +991,10 @@ namespace NekoPlayer.App.Overlays.Containers
                                                         {
                                                             Note = { BindTarget = alsaExclusiveDeviceNote },
                                                         },
+                                                        wasapiExperimentalItem = new SettingsItemV2(wasapiExperimental = new LegacyAudioCheckbox())
+                                                        {
+                                                            Keywords = new[] { "wasapi", "latency", "exclusive", "legacy", "experimental" },
+                                                        },
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = NekoPlayerStrings.AdjustPitchOnSpeedChange,
@@ -1114,6 +1126,17 @@ namespace NekoPlayer.App.Overlays.Containers
                                                             AutoSizeAxes = Axes.Y,
                                                             TextAnchor = Anchor.Centre,
                                                         },
+                                                        ffmpegLibVersion = new ProjectYomiTextFlowContainer(f =>
+                                                        {
+                                                            f.Font = NekoPlayerApp.DefaultFont.With(size: 15);
+                                                            f.Colour = overlayColourProvider.Content2;
+                                                        })
+                                                        {
+                                                            Margin = new MarginPadding { Top = 4 },
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            TextAnchor = Anchor.Centre,
+                                                        },
                                                         madeByText = new LinkFlowContainer(f =>
                                                         {
                                                             f.Font = NekoPlayerApp.DefaultFont.With(size: 15);
@@ -1200,12 +1223,24 @@ namespace NekoPlayer.App.Overlays.Containers
                 updateScreenshotOptionsVisibility();
             }, true);
 
+            if (RuntimeInfo.OS != RuntimeInfo.Platform.Windows)
+            {
+                wasapiExperimentalItem.Hide();
+            }
+
+            wasapiExperimental.Current.ValueChanged += _ => onAudioDeviceChanged(string.Empty);
+
             VideoQualitySettingsCore.Hide();
             AudioQualitySettingsCore.Hide();
 
             dislikeCounterCredits.AddText(NekoPlayerStrings.DislikeCounterCredits_1);
             dislikeCounterCredits.AddLink("Return YouTube Dislike API", "https://returnyoutubedislike.com/");
             dislikeCounterCredits.AddText(NekoPlayerStrings.DislikeCounterCredits_2);
+
+            ffmpegLibVersion.AddText($"libavcodec {ffmpeg.LIBAVCODEC_VERSION}\n");
+            ffmpegLibVersion.AddText($"libavformat {ffmpeg.LIBAVFORMAT_VERSION}\n");
+            ffmpegLibVersion.AddText($"libavutil {ffmpeg.LIBAVUTIL_VERSION}\n");
+            ffmpegLibVersion.AddText($"libswscale {ffmpeg.LIBSWSCALE_VERSION}");
 
             if (game.IsDeployedBuild)
             {
@@ -1586,6 +1621,8 @@ namespace NekoPlayer.App.Overlays.Containers
         private NekoPlayerSettingsTabBar settingsTabBar;
         private Bindable<SettingsNote.Data> discordNotInstalledNote = new Bindable<SettingsNote.Data>();
         private LinkFlowContainer dislikeCounterCredits, madeByText, gameVersion;
+
+        private ProjectYomiTextFlowContainer ffmpegLibVersion;
         private FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode> discordRichPresenceDropdown;
         private FillFlowContainer volumeOptions, screenshotOptions;
 

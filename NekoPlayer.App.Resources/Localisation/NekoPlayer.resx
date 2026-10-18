@@ -932,4 +932,10 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="wavy_seekbar" xml:space="preserve">
     <value>Seek bar wave animation</value>
   </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>Use legacy audio mode</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>Use this if you are experiencing audio issues. Note that audio latency will be higher when this is toggled on.</value>
+  </data>
 </root>

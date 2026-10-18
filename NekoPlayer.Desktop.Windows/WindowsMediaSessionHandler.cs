@@ -132,7 +132,7 @@ namespace NekoPlayer.Desktop.Windows
         public override void DeleteMediaSession()
         {
             smtc.DisplayUpdater.ClearAll();
-            smtc = null;
+            //smtc = null;
             IsLoaded = false;
             mediaPlayer.Dispose();
         }

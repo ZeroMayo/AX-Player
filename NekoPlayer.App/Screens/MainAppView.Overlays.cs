@@ -106,6 +106,7 @@ namespace NekoPlayer.App.Screens
         {
             if (isControlVisible == false)
             {
+                muteStateOverlay.Hide();
                 if (appGlobalConfig.Get<PlayerControllerFadeStyle>(NekoPlayerSetting.PlayerControllerFadeStyle) == PlayerControllerFadeStyle.Modern)
                 {
                     isControlVisible = true;
@@ -149,6 +150,9 @@ namespace NekoPlayer.App.Screens
                         uiGradientContainer.FadeOutFromOne(250);
                         sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
                     }
+
+                    if (videoVolume.Value == 0)
+                        Scheduler.AddDelayed(() => muteStateOverlay.Show(), 250);
                 }
             }
         }

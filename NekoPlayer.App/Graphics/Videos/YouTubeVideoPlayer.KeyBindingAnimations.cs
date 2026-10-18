@@ -5,6 +5,7 @@
 
 using NekoPlayer.App.Graphics.Sprites;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
@@ -230,21 +231,35 @@ namespace NekoPlayer.App.Graphics.Videos
                     }
                 }
 
+                private Bindable<int> seekTextRolling;
+
                 [BackgroundDependencyLoader]
                 private void load()
                 {
+                    seekTextRolling = new Bindable<int>(0);
                     content.FadeOut();
+
+                    seekTextRolling.BindValueChanged(speed =>
+                    {
+                        if (seekValue == null) return;
+                        int intValue = speed.NewValue;
+                        seekValue.Text = $"{(trackAction == SeekAction.FastForward10sec ? "+" : "-")} {intValue}";
+                    }, true);
                 }
+
+                private bool isShowing = false;
 
                 public void HideNow()
                 {
                     if (trackAction != SeekAction.PlayPause)
                     {
+                        isShowing = false;
                         content.FadeOut(500, Easing.OutExpo);
                         content.ScaleTo(new osuTK.Vector2(.9f), 250, Easing.OutExpo);
                         content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10, 250, Easing.OutExpo);
                         this.BlurTo(new osuTK.Vector2(4), 250, Easing.OutExpo);
                         RepeatCount = 0;
+                        this.TransformBindableTo(seekTextRolling, RepeatCount, 400, Easing.OutQuint);
                     }
                 }
 
@@ -253,17 +268,25 @@ namespace NekoPlayer.App.Graphics.Videos
                     seekArrow.Icon = icon;
                     if (trackAction != SeekAction.PlayPause)
                     {
-                        seekValue.Text = $"{(trackAction == SeekAction.FastForward10sec ? "+" : "-")} {RepeatCount}";
-                        this.BlurTo(new osuTK.Vector2(4));
-                        this.BlurTo(new osuTK.Vector2(0), 500, Easing.OutExpo);
-                        content.FadeInFromZero(500, Easing.OutExpo);
-                        content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10).MoveToX(0, 750, Easing.OutExpo);
-                        content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 750, Easing.OutExpo);
+                        this.TransformBindableTo(seekTextRolling, RepeatCount, 400, Easing.OutQuint);
+                        if (!isShowing)
+                        {
+                            this.BlurTo(new osuTK.Vector2(4));
+                            this.BlurTo(new osuTK.Vector2(0), 500, Easing.OutExpo);
+                            content.FadeInFromZero(500, Easing.OutExpo);
+                            content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10).MoveToX(0, 750, Easing.OutExpo);
+                            content.ScaleTo(new osuTK.Vector2(.9f)).ScaleTo(new osuTK.Vector2(1.5f), 750, Easing.OutExpo);
+                        }
+                        else
+                        {
+                            content.ScaleTo(new osuTK.Vector2(1.35f), 250, Easing.OutQuint).Then().ScaleTo(new osuTK.Vector2(1.5f), 250, Easing.OutQuint);
+                        }
                         fadeOut?.Cancel();
+                        isShowing = true;
                         fadeOut = Scheduler.AddDelayed(() =>
                         {
                             HideNow();
-                        }, 750);
+                        }, 1250);
                     }
                     else
                     {

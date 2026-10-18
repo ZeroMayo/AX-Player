@@ -931,4 +931,11 @@
   <data name="wavy_seekbar" xml:space="preserve">
     <value>寻找条纹波动画</value>
   </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>使用旧版音频引擎</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>游玩过程中遇到音频问题时，请开启此选项。
+注意：该选项会增加音频延迟。</value>
+  </data>
 </root>
