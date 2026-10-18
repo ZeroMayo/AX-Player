@@ -259,6 +259,7 @@ namespace NekoPlayer.App.Graphics.Videos
                         content.MoveToX(trackAction != SeekAction.FastForward10sec ? -10 : 10, 250, Easing.OutExpo);
                         this.BlurTo(new osuTK.Vector2(4), 250, Easing.OutExpo);
                         RepeatCount = 0;
+                        this.TransformBindableTo(seekTextRolling, RepeatCount, 400, Easing.OutQuint);
                     }
                 }
 
