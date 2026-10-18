@@ -98,7 +98,9 @@ namespace NekoPlayer.App.Screens
             // This is automatic for DrawableTrack.
             overlayShowSample.Dispose();
             overlayHideSample.Dispose();
-            currentVideoSource?.Expire();
+
+            currentVideoSource?.Dispose();
+            currentVideoSource = null;
         }
 
         [Resolved]

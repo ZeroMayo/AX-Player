@@ -326,6 +326,9 @@ namespace NekoPlayer.App.Graphics.Videos
             mediaSession?.UnregisterControlEvents();
             mediaSession?.DeleteMediaSession();
 
+            video.Dispose();
+            drawableTrack.Dispose();
+
             /*
             if (drawableTrack != null)
                 drawableTrack.Completed -= trackCompleted;
