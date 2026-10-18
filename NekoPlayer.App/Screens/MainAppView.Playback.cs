@@ -370,7 +370,7 @@ namespace NekoPlayer.App.Screens
                                 Schedule(() => thumbnailContainer.Hide());
                                 isVideoLoading = false;
                                 loadBtnOverlayShow.Enabled.Value = true;
-                                //Schedule(() => spinner.Hide());
+                                Schedule(() => videoLoadingProgressBase.Hide());
                                 return;
                             }
 
@@ -769,7 +769,7 @@ namespace NekoPlayer.App.Screens
                                 Schedule(() => thumbnailContainer.Hide());
                                 isVideoLoading = false;
                                 loadBtnOverlayShow.Enabled.Value = true;
-                                //Schedule(() => spinner.Hide());
+                                Schedule(() => videoLoadingProgressBase.Hide());
                                 return;
                             }
 
