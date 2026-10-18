@@ -3508,14 +3508,23 @@ namespace NekoPlayer.App.Screens
                 this.TransformBindableTo(volumeTextRolling, volume.NewValue, 400, Easing.OutQuint);
                 if (volume.NewValue > 0.5)
                 {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Hide();
+
                     volumeIcon.Icon = FontAwesome.Solid.VolumeUp;
                 }
                 else if (volume.NewValue >= 0.01)
                 {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Hide();
+
                     volumeIcon.Icon = FontAwesome.Solid.VolumeDown;
                 }
                 else
                 {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Show();
+
                     volumeIcon.Icon = FontAwesome.Solid.VolumeMute;
                 }
             }, true);
