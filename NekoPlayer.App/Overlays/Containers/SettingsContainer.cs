@@ -188,7 +188,9 @@ namespace NekoPlayer.App.Overlays.Containers
 
         public FormButton CheckForUpdatesButton;
 
-        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, captionLangOptions;
+        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, captionLangOptions, wasapiExperimentalItem;
+
+        private FormCheckBox wasapiExperimental;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
 
         private Bindable<UIFont> ui_font;
@@ -217,6 +219,8 @@ namespace NekoPlayer.App.Overlays.Containers
 
         private readonly Bindable<SettingsNote.Data?> alsaExclusiveDeviceNote = new Bindable<SettingsNote.Data?>();
         private readonly Bindable<SettingsNote.Data?> srv3Notice = new Bindable<SettingsNote.Data?>();
+
+        private readonly Bindable<SettingsNote.Data?> wasapiExperimentalNote = new Bindable<SettingsNote.Data?>();
 
         private void onDeviceSelected(string selectedDevice)
         {
@@ -335,9 +339,12 @@ namespace NekoPlayer.App.Overlays.Containers
 
         private SettingsItemV2 advancedSubtitlesBase;
 
+        private BindableBool wasapi;
+
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider overlayColourProvider, TextureStore textures, ProjectYomiColour colours, FrameworkDebugConfigManager debugConfig, FrameworkConfigManager config, Storage storage, NekoPlayerConfigManager appConfig)
         {
+            wasapi = audio.UseExperimentalWasapi;
             videoVolume = config.GetBindable<double>(FrameworkSetting.VolumeMusic);
             fpsDisplay = appConfig.GetBindable<bool>(NekoPlayerSetting.ShowFpsDisplay);
             closeButtonAction = appConfig.GetBindable<CloseButtonAction>(NekoPlayerSetting.CloseButtonAction);
@@ -983,6 +990,10 @@ namespace NekoPlayer.App.Overlays.Containers
                                                         {
                                                             Note = { BindTarget = alsaExclusiveDeviceNote },
                                                         },
+                                                        wasapiExperimentalItem = new SettingsItemV2(wasapiExperimental = new LegacyAudioCheckbox())
+                                                        {
+                                                            Keywords = new[] { "wasapi", "latency", "exclusive", "legacy", "experimental" },
+                                                        },
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = NekoPlayerStrings.AdjustPitchOnSpeedChange,
@@ -1199,6 +1210,13 @@ namespace NekoPlayer.App.Overlays.Containers
 
                 updateScreenshotOptionsVisibility();
             }, true);
+
+            if (RuntimeInfo.OS != RuntimeInfo.Platform.Windows)
+            {
+                wasapiExperimentalItem.Hide();
+            }
+
+            wasapiExperimental.Current.ValueChanged += _ => onAudioDeviceChanged(string.Empty);
 
             VideoQualitySettingsCore.Hide();
             AudioQualitySettingsCore.Hide();

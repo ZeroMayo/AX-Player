@@ -931,4 +931,10 @@
   <data name="wavy_seekbar" xml:space="preserve">
     <value>재생바 물결 효과</value>
   </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>레거시 오디오 모드 사용</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>오디오에 문제가 있을 때 사용하세요. 이 모드를 사용할 경우 오디오 지연 시간이 늘어날 수 있습니다.</value>
+  </data>
 </root>

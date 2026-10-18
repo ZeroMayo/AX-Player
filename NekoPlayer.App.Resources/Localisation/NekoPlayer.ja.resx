@@ -931,4 +931,10 @@
   <data name="wavy_seekbar" xml:space="preserve">
     <value>バー波アニメーションを探してください</value>
   </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>従来のオーディオモードを使用</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>オーディオに問題がある場合に使用してください。オンにすると、オーディオの遅延が増加するのでご注意ください。</value>
+  </data>
 </root>

@@ -35,6 +35,8 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
+using osu.Framework.Input.Handlers.Mouse;
+using osu.Framework.Input.Handlers.Pen;
 using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
@@ -89,6 +91,14 @@ namespace NekoPlayer.App
         private FrameworkConfigManager frameworkConfig { get; set; }
 
         private Bindable<float> uiScale;
+
+        protected override IDictionary<FrameworkSetting, object> GetFrameworkConfigDefaults()
+        {
+            return new Dictionary<FrameworkSetting, object>
+            {
+                { FrameworkSetting.AudioUseExperimentalWasapi, true },
+            };
+        }
 
         public override bool OnPressed(KeyBindingPressEvent<PlatformAction> e)
         {
@@ -201,6 +211,42 @@ namespace NekoPlayer.App
 
             applySafeAreaConsiderations = LocalConfig.GetBindable<bool>(NekoPlayerSetting.SafeAreaConsiderations);
             applySafeAreaConsiderations.BindValueChanged(apply => SafeAreaContainer.SafeAreaOverrideEdges = apply.NewValue ? SafeAreaOverrideEdges : Edges.All, true);
+
+            applyConfigMigrations();
+
+            string lastVersion = LocalConfig.Get<string>(NekoPlayerSetting.Version);
+            string version = Version;
+
+            // finally, update the version stored to the configuration.
+            // this MUST happen after `applyConfigMigrations()` call, as it relies on comparing the previous version.
+            // debug / local compilations will reset to a non-release string.
+            LocalConfig.SetValue(NekoPlayerSetting.Version, version);
+        }
+
+        /// <summary>
+        /// Apply any migrations to configuration.
+        /// </summary>
+        private void applyConfigMigrations()
+        {
+            // arrives as 2026.1018.0
+            string rawVersion = LocalConfig.Get<string>(NekoPlayerSetting.Version);
+
+            if (rawVersion.Length < 6)
+                return;
+
+            string[] pieces = rawVersion.Split('.');
+
+            // on a fresh install or when coming from a non-release build, execution will end here.
+            // we don't want to run migrations in such cases.
+            if (!int.TryParse(pieces[0], out int year)) return;
+            if (!int.TryParse(pieces[1], out int monthDay)) return;
+
+            int combined = year * 10000 + monthDay;
+
+            if (combined < 20261018 && RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
+            {
+                Audio.UseExperimentalWasapi.Value = true;
+            }
         }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)

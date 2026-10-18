@@ -931,4 +931,10 @@
   <data name="wavy_seekbar" xml:space="preserve">
     <value>Cerca animazione delle onde a barre</value>
   </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>Usa la modalità audio legacy</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>Usa questa opzione se si verificano problemi audio. Nota che la latenza audio sarà maggiore quando l'opzione è attiva.</value>
+  </data>
 </root>
