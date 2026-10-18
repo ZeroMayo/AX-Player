@@ -241,7 +241,7 @@ namespace NekoPlayer.App
             if (!int.TryParse(pieces[0], out int year)) return;
             if (!int.TryParse(pieces[1], out int monthDay)) return;
 
-            int combined = year * 10000 + monthDay;
+            int combined = (year * 10000) + monthDay;
 
             if (combined < 20261018 && RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
             {
