@@ -248,7 +248,6 @@ namespace NekoPlayer.App.Graphics.Videos
 
                 private bool isShowing = false;
 
-
                 public void HideNow()
                 {
                     if (trackAction != SeekAction.PlayPause)
