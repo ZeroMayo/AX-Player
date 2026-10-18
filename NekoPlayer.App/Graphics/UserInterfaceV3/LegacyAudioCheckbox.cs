@@ -6,6 +6,7 @@ using NekoPlayer.App.Localisation;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics.Sprites;
 
 namespace NekoPlayer.App.Graphics.UserInterfaceV3
 {
@@ -17,6 +18,7 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV3
         {
             Caption = NekoPlayerStrings.LegacyAudioLabel;
             HintText = NekoPlayerStrings.LegacyAudioTooltip;
+            Icon = FontAwesome.Solid.VolumeUp;
         }
 
         [BackgroundDependencyLoader]
