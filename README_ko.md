@@ -1,30 +1,30 @@
 [English](README.md) | **한국어**
 
-<h1 align="center">NekoPlayer</h1>
-<p align="center"><img width="250" alt="NekoPlayer Logo" src="assets/NekoPlayer_Logo_20261014.png"></p>
+<h1 align="center">AX Player</h1>
+<p align="center"><img width="250" alt="AX Player Logo" src="assets/NekoPlayer_Logo_20261014.png"></p>
 <p align="center">디자인과 창의성에 중점을 둔 새로운 시대의 YouTube 동영상 플레이어</p>
 <p align="center">이 앱의 일부 리소스(samples)는 <a href="https://github.com/ppy/osu-resources">ppy/osu-resources</a>를 사용하고 있습니다.</p>
 
 <p align="center">
 <a href="https://github.com/ZeroMayo/ZeroMayo/blob/main/docs/project-status.md"><img src="https://img.shields.io/badge/status-active-47c219.svg" alt="상태"></a>
-<a href="https://github.com/ZeroMayo/NekoPlayer/actions/workflows/ci.yml"><img src="https://github.com/ZeroMayo/NekoPlayer/actions/workflows/ci.yml/badge.svg?branch=master&event=push" alt="빌드 상태"></a>
-<a href="https://github.com/ZeroMayo/NekoPlayer/releases/latest"><img src="https://img.shields.io/github/release/ZeroMayo/NekoPlayer.svg" alt="GitHub 릴리스"></a>
+<a href="https://github.com/ZeroMayo/AX-Player/actions/workflows/ci.yml"><img src="https://github.com/ZeroMayo/AX-Player/actions/workflows/ci.yml/badge.svg?branch=master&event=push" alt="빌드 상태"></a>
+<a href="https://github.com/ZeroMayo/AX-Player/releases/latest"><img src="https://img.shields.io/github/release/ZeroMayo/AX-Player.svg" alt="GitHub 릴리스"></a>
 <img src="https://img.shields.io/badge/made_in-korea-0F64CD.svg?labelColor=CD2E3A" alt="Made In Korea">
-<a href="https://github.com/ZeroMayo/NekoPlayer/blob/master/LICENSE.md"><img src="https://img.shields.io/github/license/ZeroMayo/NekoPlayer.svg" alt="라이선스"></a>
+<a href="https://github.com/ZeroMayo/AX-Player/blob/master/LICENSE.md"><img src="https://img.shields.io/github/license/ZeroMayo/AX-Player.svg" alt="라이선스"></a>
 <a href="https://discord.gg/UZWDqQ29ch"><img src="https://discordapp.com/api/guilds/1474931183854026812/widget.png?style=shield" alt="dev chat"></a>
-<a href="https://www.codefactor.io/repository/github/ZeroMayo/NekoPlayer"><img src="https://www.codefactor.io/repository/github/ZeroMayo/NekoPlayer/badge" alt="CodeFactor"></a>
+<a href="https://www.codefactor.io/repository/github/ZeroMayo/AX-Player"><img src="https://www.codefactor.io/repository/github/ZeroMayo/AX-Player/badge" alt="CodeFactor"></a>
 </p>
 
 ## 앱 다운로드 및 설치
 
 ### 최신 릴리스:
 
-| [Windows 10+ (x64)](https://github.com/ZeroMayo/NekoPlayer/releases/latest/download/NekoPlayer-win-Setup.exe) |
+| [Windows 10+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AX Player-win-Setup.exe) |
 |--------------------------------------------------------------------------------------|
 
 YouTube API Daily Quota는 매우 빠르게 차버립니다(구글은 10,000단위의 엄격한 제한을 두고 있습니다). 이에 대해 묻지 마세요.
 
-## NekoPlayer 개발
+## AX Player 개발
 
 ### 사전 조건
 
@@ -40,11 +40,11 @@ YouTube API Daily Quota는 매우 빠르게 차버립니다(구글은 10,000단�
 서브모듈을 포함해 저장소를 복제합니다:
 
 ```shell
-git clone --recurse-submodules https://github.com/ZeroMayo/NekoPlayer
-cd NekoPlayer
+git clone --recurse-submodules https://github.com/ZeroMayo/AX-Player
+cd AXPlayer
 ```
 
-`NekoPlayer` 디렉터리 안에서 다음 명령어를 실행해 소스 코드를 최신 커밋으로 업데이트하세요:
+`AX Player` 디렉터리 안에서 다음 명령어를 실행해 소스 코드를 최신 커밋으로 업데이트하세요:
 
 ```shell
 git pull --recurse-submodules
@@ -56,18 +56,18 @@ git pull --recurse-submodules
 
 주요 `.sln` 파일 대신 플랫폼별 `.slnf` 파일 중 하나를 통해 솔루션을 로드해야 합니다. 이렇게 하면 의존성을 줄이고 신경 쓰지 않는 플랫폼을 숨길 수 있습니다. 유효한 `.slnf` 파일은 다음과 같습니다:
 
-- `NekoPlayer.Desktop.Windows.slnf` (WinRT 확장 기능이 포함된 Windows 플랫폼, 가장 일반적)
-- `NekoPlayer.Desktop.slnf` (Linux 및 기타 플랫폼)
+- `AXPlayer.Desktop.Windows.slnf` (WinRT 확장 기능이 포함된 Windows 플랫폼, 가장 일반적)
+- `AXPlayer.Desktop.slnf` (Linux 및 기타 플랫폼)
 
-위에 나열된 권장 IDE들의 실행 설정도 포함되어 있습니다. IDE에서 제공하는 Build/Run 기능을 사용해서 작업을 시작해야 합니다. 새 컴포넌트를 테스트하거나 빌드할 때는 `NekoPlayer (Tests)` 프로젝트나 설정을 사용하는 것을 강력히 권장합니다. 이에 대한 자세한 정보는 [아래](#contributing)에 제공되어 있습니다.
+위에 나열된 권장 IDE들의 실행 설정도 포함되어 있습니다. IDE에서 제공하는 Build/Run 기능을 사용해서 작업을 시작해야 합니다. 새 컴포넌트를 테스트하거나 빌드할 때는 `AX Player (Tests)` 프로젝트나 설정을 사용하는 것을 강력히 권장합니다. 이에 대한 자세한 정보는 [아래](#contributing)에 제공되어 있습니다.
 
 #### CLI에서
 
-또한 명령어 한 줄로 커맨드라인에서 *NekoPlayer*를 빌드하고 실행할 수 있습니다:
+또한 명령어 한 줄로 커맨드라인에서 *AX Player*를 빌드하고 실행할 수 있습니다:
 
 ```shell
-dotnet run --project NekoPlayer.Desktop.Windows (for Windows)
-dotnet run --project NekoPlayer.Desktop (for Linux and other platform)
+dotnet run --project AXPlayer.Desktop.Windows (for Windows)
+dotnet run --project AXPlayer.Desktop (for Linux and other platform)
 ```
 
 로컬에서 성능 테스트를 할 때는 빌드 명령어에 `-c Release` 옵션을 꼭 추가하세요. 기본 `Debug` 설정으로 실행하면 오버헤드가 클 수 있기 때문입니다(특히 로컬 프레임워크 수정 테스트 시).
@@ -82,19 +82,23 @@ dotnet run --project NekoPlayer.Desktop (for Linux and other platform)
 
 ## 라이선스
 
-*NekoPlayer*의 코드는 [MIT 라이선스](https://opensource.org/licenses/MIT) 하에 배포됩니다. 자세한 내용은 [라이선스 파일](LICENCE)을 참고해 주세요. [요약](https://tldrlegal.com/license/mit-license)하자면, 소프트웨어나 소스의 어떤 복사본에든 원본 저작권과 라이선스 고지를 포함하는 한 원하는 대로 자유롭게 사용할 수 있습니다.
+*AX Player*의 코드는 [MIT 라이선스](https://opensource.org/licenses/MIT) 하에 배포됩니다. 자세한 내용은 [라이선스 파일](LICENCE)을 참고해 주세요. [요약](https://tldrlegal.com/license/mit-license)하자면, 소프트웨어나 소스의 어떤 복사본에든 원본 저작권과 라이선스 고지를 포함하는 한 원하는 대로 자유롭게 사용할 수 있습니다.
 
 **참고:** FFmpeg 바이너리는 원본 라이선스(GPL/LGPL) 하에 소스에서 배포됩니다.
 자세한 내용은 [FFmpeg 라이선스](https://www.ffmpeg.org/legal.html)를 참고해 주세요.
 
-또한 앱 리소스는 별도의 라이선스가 적용된다는 점도 참고해 주세요. 자세한 내용은 [라이선스 파일](https://github.com/ZeroMayo/NekoPlayer/blob/master/NekoPlayer.App.Resources/LICENSE.md)을 참고해 주세요.
+또한 앱 리소스는 별도의 라이선스가 적용된다는 점도 참고해 주세요. 자세한 내용은 [라이선스 파일](https://github.com/ZeroMayo/AX-Player/blob/master/AX-Player.App.Resources/LICENSE.md)을 참고해 주세요.
 
 ## 즐겨찾기 기록
 
-<a href="https://www.star-history.com/?repos=ZeroMayo%2FNekoPlayer&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=ZeroMayo%2FAX-Player&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=ZeroMayo/NekoPlayer&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=ZeroMayo/NekoPlayer&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=ZeroMayo/NekoPlayer&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=ZeroMayo/AX-Player&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=ZeroMayo/AX-Player&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=ZeroMayo/AX-Player&type=date&legend=top-left" />
  </picture>
 </a>
+
+## 어원
+
+**AX Player**에서 "AX"는 '**A**dvanced e**X**perience(고급 경험)'라는 구상에서 비롯되었습니다.

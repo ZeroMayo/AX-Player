@@ -9,13 +9,13 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/YouTubePlayerEX.Game.Tests/bin/Debug/net8.0/YouTubePlayerEX.Game.Tests.dll",
+                "${workspaceRoot}/AXPlayer.Game.Tests/bin/Debug/net8.0/AXPlayer.Game.Tests.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Tests, Debug)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/YouTubePlayerEX.Game.Tests/bin/Debug/net8.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AXPlayer.Game.Tests/bin/Debug/net8.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"
@@ -26,47 +26,47 @@
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/YouTubePlayerEX.Game.Tests/bin/Release/net8.0/YouTubePlayerEX.Game.Tests.dll",
+                "${workspaceRoot}/AXPlayer.Game.Tests/bin/Release/net8.0/AXPlayer.Game.Tests.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Tests, Release)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/YouTubePlayerEX.Game.Tests/bin/Release/net8.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AXPlayer.Game.Tests/bin/Release/net8.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"
         },
         {
-            "name": "NekoPlayer (Debug)",
+            "name": "AX Player (Debug)",
             "type": "coreclr",
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/NekoPlayer.Desktop/bin/Debug/net8.0/NekoPlayer.dll",
+                "${workspaceRoot}/AXPlayer.Desktop/bin/Debug/net8.0/AXPlayer.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Desktop, Debug)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/NekoPlayer.Desktop/bin/Debug/net8.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AXPlayer.Desktop/bin/Debug/net8.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"
         },
         {
-            "name": "NekoPlayer (Release)",
+            "name": "AX Player (Release)",
             "type": "coreclr",
             "request": "launch",
             "program": "dotnet",
             "args": [
-                "${workspaceRoot}/NekoPlayer.Desktop/bin/Debug/net8.0/NekoPlayer.dll",
+                "${workspaceRoot}/AXPlayer.Desktop/bin/Debug/net8.0/AXPlayer.dll",
             ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Build (Desktop, Release)",
             "linux": {
                 "env": {
-                    "LD_LIBRARY_PATH": "${workspaceRoot}/NekoPlayer.Desktop/bin/Debug/net8.0:${env:LD_LIBRARY_PATH}"
+                    "LD_LIBRARY_PATH": "${workspaceRoot}/AXPlayer.Desktop/bin/Debug/net8.0:${env:LD_LIBRARY_PATH}"
                 }
             },
             "console": "internalConsole"

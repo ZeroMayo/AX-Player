@@ -1,0 +1,9 @@
+﻿extensions: .cs
+// Copyright (c) ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
+
+extensions:  .xml .config .xsd
+<!--
+Copyright (c) ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+See the LICENCE file in the repository root for full licence text.
+-->

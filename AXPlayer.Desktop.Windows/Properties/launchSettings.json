@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "AX Player Desktop (with WinRT extensions)": {
+      "commandName": "Project"
+    }
+  }
+}
