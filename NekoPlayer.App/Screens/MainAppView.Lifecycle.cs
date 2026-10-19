@@ -540,6 +540,10 @@ namespace NekoPlayer.App.Screens
                     }
                     return true;
 
+                case GlobalAction.OpenPlaybackSpeedMenu:
+                    playbackSpeedContainer.ShowPopover();
+                    return true;
+
                 case GlobalAction.QuitApp:
                     game.AttemptExit();
                     return true;

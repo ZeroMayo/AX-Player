@@ -117,6 +117,8 @@ namespace NekoPlayer.App.Input.Binding
 
             new KeyBinding(new[] { InputKey.Control, InputKey.F8 }, GlobalAction.CycleProfileShape),
             new KeyBinding(new[] { InputKey.Shift, InputKey.F7 }, GlobalAction.ToggleEightBitEffect),
+
+            new KeyBinding(new[] { InputKey.Shift, InputKey.S }, GlobalAction.OpenPlaybackSpeedMenu),
         };
     }
 
@@ -191,5 +193,7 @@ namespace NekoPlayer.App.Input.Binding
         Notifications,
         CycleProfileShape,
         ToggleEightBitEffect,
+
+        OpenPlaybackSpeedMenu
     }
 }

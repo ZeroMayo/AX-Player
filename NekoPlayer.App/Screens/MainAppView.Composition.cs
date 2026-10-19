@@ -660,7 +660,7 @@ namespace NekoPlayer.App.Screens
                                                                                 }
                                                                             }
                                                                         },
-                                                                        new PlaybackSpeedContainer
+                                                                        playbackSpeedContainer = new PlaybackSpeedContainer
                                                                         {
                                                                             AutoSizeAxes = Axes.X,
                                                                             Height = 30,
