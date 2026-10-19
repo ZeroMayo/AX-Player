@@ -693,9 +693,6 @@ namespace NekoPlayer.App.Screens
                     pinButton.AccentColor = accentColor;
                     pinButton.BackgroundColour = bgColor;
 
-                    speedBarSlider.AccentColour = accentColor;
-                    speedBarSlider.BackgroundColour = bgColor.Lighten(0.5f);
-
                     speedText.Colour = accentColor;
 
                     volumeBarBG.Colour = bgColor;

@@ -192,7 +192,6 @@ namespace NekoPlayer.App.Screens
 
         private SpriteIcon volumeIcon, speedBarIcon;
 
-        private PlaybackSpeedSliderBar speedBarSlider;
         private RoundedSliderBar<double> volumeBarSlider;
 
         private LinkFlowContainer playlistAuthor;
