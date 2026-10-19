@@ -98,3 +98,7 @@ dotnet run --project AXPlayer.Desktop (for Linux and other platform)
    <img alt="Star History Chart" src="https://api.star-history.com/image?repos=ZeroMayo/AX-Player&type=date&legend=top-left" />
  </picture>
 </a>
+
+## 어원
+
+**AX Player**에서 "AX"는 '**A**dvanced e**X**perience(고급 경험)'라는 구상에서 비롯되었습니다.

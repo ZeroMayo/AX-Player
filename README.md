@@ -96,3 +96,7 @@ Please also note that app resources are covered by a separate licence. Please se
    <img alt="Star History Chart" src="https://api.star-history.com/image?repos=ZeroMayo/AX-Player&type=date&legend=top-left" />
  </picture>
 </a>
+
+## Etymology
+
+The "AX" in **AX Player** comes from the plan of a **A**dvanced e**X**perience.
