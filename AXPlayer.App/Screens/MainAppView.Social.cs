@@ -660,6 +660,7 @@ namespace AXPlayer.App.Screens
 
                     speedBarBG.Colour = bgColor;
                     speedBarIcon.Colour = accentColor;
+                    speedBarExpandIcon.Colour = accentColor;
 
                     repeatButton.IconObject.FadeColour(repeat.Value ? bgColor : accentColor);
                     repeatButton.AccentColor = accentColor;
