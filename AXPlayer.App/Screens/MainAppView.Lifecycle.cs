@@ -197,7 +197,7 @@ namespace AXPlayer.App.Screens
                                 LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
                                 LargeImageUrl = $"https://youtu.be/{videoData.Id}",
                                 SmallImageText = "AX Player",
-                                SmallImageKey = "ax_player"
+                                SmallImageKey = "ax_player_new"
                             },
                             Buttons =
                             [
@@ -217,7 +217,7 @@ namespace AXPlayer.App.Screens
                             State = AXPlayer_DiscordRPCStrings.IdleString,
                             Assets = new Assets()
                             {
-                                LargeImageKey = "ax_player",
+                                LargeImageKey = "ax_player_new",
                             },
                         });
                     }
@@ -234,7 +234,7 @@ namespace AXPlayer.App.Screens
                             Timestamps = timestamps,
                             Assets = new Assets()
                             {
-                                LargeImageKey = "ax_player"
+                                LargeImageKey = "ax_player_new"
                             },
                             Buttons =
                             [
@@ -254,7 +254,7 @@ namespace AXPlayer.App.Screens
                             State = AXPlayer_DiscordRPCStrings.IdleString,
                             Assets = new Assets()
                             {
-                                LargeImageKey = "ax_player",
+                                LargeImageKey = "ax_player_new",
                             },
                         });
                     }

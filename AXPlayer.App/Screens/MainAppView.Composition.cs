@@ -689,6 +689,17 @@ namespace AXPlayer.App.Screens
                                                                                             Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                                                                                             Colour = overlayColourProvider.Content2,
                                                                                         },
+                                                                                        speedBarExpandIcon = new SpriteIcon
+                                                                                        {
+                                                                                            Icon = FontAwesome.Solid.ChevronUp,
+                                                                                            Width = 12,
+                                                                                            Height = 12,
+                                                                                            Margin = new MarginPadding
+                                                                                            {
+                                                                                                Top = 9,
+                                                                                            },
+                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                        },
                                                                                     }
                                                                                 }
                                                                             }

@@ -1103,7 +1103,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 {
                                                                     Width = 100,
                                                                     Height = 100,
-                                                                    Texture = textures.Get(@"NekoPlayer_Logo_20261014"),
+                                                                    Texture = textures.Get(@"AXPlayer-Icon"),
                                                                     FillMode = FillMode.Fit,
                                                                 }
                                                             },
