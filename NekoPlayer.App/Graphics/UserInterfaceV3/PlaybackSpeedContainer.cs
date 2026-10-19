@@ -33,7 +33,7 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV3
             AllowableAnchors = [Anchor.TopCentre, Anchor.BottomCentre],
             Child = new Container
             {
-                Width = 300,
+                Width = 550,
                 AutoSizeAxes = Axes.Y,
                 Child = new FormSliderBar<double>
                 {
