@@ -14,6 +14,7 @@ using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 
 namespace NekoPlayer.App.Graphics.UserInterfaceV3
 {
@@ -40,7 +41,7 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV3
                     Icon = FontAwesome.Solid.TachometerAlt,
                     Caption = NekoPlayerStrings.PlaybackSpeedWithoutValue,
                     Current = Current,
-                    DisplayAsPercentage = true,
+                    LabelFormat = value => $@"{value:0.##}x"
                 }
             }
         };
