@@ -4,6 +4,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>WinExe</OutputType>
     <AssemblyName>AXPlayer</AssemblyName>
+    <Product>AX Player</Product>
+    <AssemblyTitle>AX Player</AssemblyTitle>
+    <Copyright>Copyright (c) 2026 ZeroMayo</Copyright>
     <ApplicationIcon>nekoplayer_app.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Version>0.0.0</Version>
