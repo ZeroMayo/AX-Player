@@ -11,7 +11,7 @@
                 "-p:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
-                "YouTubePlayerEX.Game.Tests"
+                "AXPlayer.Game.Tests"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
@@ -26,7 +26,7 @@
                 "-p:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
-                "YouTubePlayerEX.Game.Tests"
+                "AXPlayer.Game.Tests"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
@@ -40,7 +40,7 @@
                 "-p:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
-                "YouTubePlayerEX.Desktop"
+                "AXPlayer.Desktop"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
@@ -54,7 +54,7 @@
                 "-p:GenerateFullPaths=true",
                 "-m",
                 "-verbosity:m",
-                "YouTubePlayerEX.Desktop"
+                "AXPlayer.Desktop"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
@@ -64,7 +64,7 @@
             "command": "dotnet",
             "args": [
                 "restore",
-                "YouTubePlayerEX.sln"
+                "AXPlayer.sln"
             ],
             "problemMatcher": []
         }

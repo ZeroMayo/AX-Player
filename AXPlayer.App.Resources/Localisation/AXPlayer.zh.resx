@@ -1,0 +1,941 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aspect_ratio_method" xml:space="preserve">
+    <value>宽高比模式</value>
+  </data>
+  <data name="audio" xml:space="preserve">
+    <value>音频</value>
+  </data>
+  <data name="audio_language" xml:space="preserve">
+    <value>音轨</value>
+  </data>
+  <data name="auto" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="caption_disabled" xml:space="preserve">
+    <value>已禁用</value>
+  </data>
+  <data name="caption_language" xml:space="preserve">
+    <value>字幕语言</value>
+  </data>
+  <data name="disabled" xml:space="preserve">
+    <value>已禁用</value>
+  </data>
+  <data name="display" xml:space="preserve">
+    <value>显示</value>
+  </data>
+  <data name="enabled" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="error_noVideoId" xml:space="preserve">
+    <value>视频 ID 不能为空！</value>
+  </data>
+  <data name="fill" xml:space="preserve">
+    <value>填充</value>
+  </data>
+  <data name="frame_limiter" xml:space="preserve">
+    <value>帧率限制</value>
+  </data>
+  <data name="fullscreen_entered" xml:space="preserve">
+    <value>按 F11 退出全屏模式。</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="google_translate" xml:space="preserve">
+    <value>谷歌翻译</value>
+  </data>
+  <data name="graphics" xml:space="preserve">
+    <value>图形</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="letterbox" xml:space="preserve">
+    <value>黑边</value>
+  </data>
+  <data name="load_from_video_id" xml:space="preserve">
+    <value>通过视频或播放列表 ID 或 URL 加载</value>
+  </data>
+  <data name="load_video" xml:space="preserve">
+    <value>加载视频或播放列表</value>
+  </data>
+  <data name="master_volume" xml:space="preserve">
+    <value>主音量</value>
+  </data>
+  <data name="minimise_on_focus_loss" xml:space="preserve">
+    <value>切换到其他应用时最小化播放器</value>
+  </data>
+  <data name="prefer_high_quality" xml:space="preserve">
+    <value>优先使用高画质</value>
+  </data>
+  <data name="adjust_pitch_on_speed_change" xml:space="preserve">
+    <value>变速时调整音调</value>
+  </data>
+  <data name="profile_image_tooltip" xml:space="preserve">
+    <value>{0} • {1} 位订阅者</value>
+  </data>
+  <data name="screen_mode" xml:space="preserve">
+    <value>屏幕模式</value>
+  </data>
+  <data name="screen_resolution" xml:space="preserve">
+    <value>屏幕分辨率</value>
+  </data>
+  <data name="selected_caption" xml:space="preserve">
+    <value>已选择字幕：{0}</value>
+  </data>
+  <data name="selected_caption_auto_gen" xml:space="preserve">
+    <value>已选择字幕：{0}（自动生成）</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="sfx_volume" xml:space="preserve">
+    <value>音效音量</value>
+  </data>
+  <data name="ui_scaling" xml:space="preserve">
+    <value>界面缩放</value>
+  </data>
+  <data name="use_hardware_acceleration" xml:space="preserve">
+    <value>使用硬件加速</value>
+  </data>
+  <data name="video" xml:space="preserve">
+    <value>视频</value>
+  </data>
+  <data name="video_metadata_desc" xml:space="preserve">
+    <value>{0} • {1} 次观看 • {2}</value>
+  </data>
+  <data name="video_metadata_desc_without_channel_name" xml:space="preserve">
+    <value>{0} 次观看  {1}</value>
+  </data>
+  <data name="video_metadata_translate_source" xml:space="preserve">
+    <value>视频元数据翻译来源</value>
+  </data>
+  <data name="video_quality" xml:space="preserve">
+    <value>视频画质</value>
+  </data>
+  <data name="video_volume" xml:space="preserve">
+    <value>视频音量</value>
+  </data>
+  <data name="comments" xml:space="preserve">
+    <value>评论（{0}）</value>
+  </data>
+  <data name="comments_without_count" xml:space="preserve">
+    <value>评论</value>
+  </data>
+  <data name="dim" xml:space="preserve">
+    <value>视频暗化程度</value>
+  </data>
+  <data name="translate_to" xml:space="preserve">
+    <value>翻译为 {0}</value>
+  </data>
+  <data name="translate_view_original" xml:space="preserve">
+    <value>查看原文（由 Google 翻译）</value>
+  </data>
+  <data name="comment_reply" xml:space="preserve">
+    <value>{0}（回复 {1}）</value>
+  </data>
+  <data name="running_latest_release" xml:space="preserve">
+    <value>当前已是最新版本（{0}）</value>
+  </data>
+  <data name="updating" xml:space="preserve">
+    <value>正在更新 AX Player（{0}%）</value>
+  </data>
+  <data name="restart_required" xml:space="preserve">
+    <value>更新即将完成。请重新启动 AX Player 以完成更新。</value>
+  </data>
+  <data name="update_failed" xml:space="preserve">
+    <value>更新失败！</value>
+  </data>
+  <data name="checking_update" xml:space="preserve">
+    <value>正在检查更新…</value>
+  </data>
+  <data name="check_update" xml:space="preserve">
+    <value>检查更新</value>
+  </data>
+  <data name="like_count_hidden" xml:space="preserve">
+    <value>上传者已隐藏点赞数</value>
+  </data>
+  <data name="disabled_by_uploader" xml:space="preserve">
+    <value>上传者已禁用</value>
+  </data>
+  <data name="common_default" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="show_fps" xml:space="preserve">
+    <value>显示 FPS</value>
+  </data>
+  <data name="cannot_play_private_videos" xml:space="preserve">
+    <value>无法播放私密视频。</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>播放</value>
+  </data>
+  <data name="pause" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="playback_speed" xml:space="preserve">
+    <value>播放速度：{0}</value>
+  </data>
+  <data name="video_quality_8k_warning" xml:space="preserve">
+    <value>将视频画质设为 8K 可能导致部分设备性能下降、GPU 过载或驱动程序崩溃。</value>
+  </data>
+  <data name="renderer" xml:space="preserve">
+    <value>渲染器</value>
+  </data>
+  <data name="export_logs" xml:space="preserve">
+    <value>导出日志</value>
+  </data>
+  <data name="logs_export_finished" xml:space="preserve">
+    <value>日志已导出！</value>
+  </data>
+  <data name="revert_to_default" xml:space="preserve">
+    <value>恢复默认值</value>
+  </data>
+  <data name="playback_speed_without_value" xml:space="preserve">
+    <value>播放速度</value>
+  </data>
+  <data name="quick_action" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="caption_font" xml:space="preserve">
+    <value>字幕字体</value>
+  </data>
+  <data name="dislike_count_tooltip" xml:space="preserve">
+    <value>估算：{0} | 实际：{1}</value>
+  </data>
+  <data name="caption_auto_gen" xml:space="preserve">
+    <value>{0}（自动生成）</value>
+  </data>
+  <data name="scale_video" xml:space="preserve">
+    <value>视频</value>
+    <comment>scale_video</comment>
+  </data>
+  <data name="scale_everything" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="scaling_off" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="screen_scaling" xml:space="preserve">
+    <value>屏幕缩放</value>
+  </data>
+  <data name="horizontal_position" xml:space="preserve">
+    <value>水平位置</value>
+  </data>
+  <data name="vertical_position" xml:space="preserve">
+    <value>垂直位置</value>
+  </data>
+  <data name="horizontal_scale" xml:space="preserve">
+    <value>水平缩放</value>
+  </data>
+  <data name="vertical_scale" xml:space="preserve">
+    <value>垂直缩放</value>
+  </data>
+  <data name="thumbnail_dim" xml:space="preserve">
+    <value>缩略图暗化</value>
+  </data>
+  <data name="shrink_game_to_safe_area" xml:space="preserve">
+    <value>缩小应用界面以避开摄像头和刘海区域</value>
+  </data>
+  <data name="username_display_mode" xml:space="preserve">
+    <value>用户名显示模式</value>
+  </data>
+  <data name="jpg_web_friendly" xml:space="preserve">
+    <value>JPG（适合网页）</value>
+  </data>
+  <data name="png_lossless" xml:space="preserve">
+    <value>PNG（无损）</value>
+  </data>
+  <data name="screenshot_saved" xml:space="preserve">
+    <value>截图已保存！</value>
+  </data>
+  <data name="screenshot" xml:space="preserve">
+    <value>截图</value>
+  </data>
+  <data name="screenshot_format" xml:space="preserve">
+    <value>截图格式</value>
+  </data>
+  <data name="show_cursor_in_screenshots" xml:space="preserve">
+    <value>在截图中显示用户界面</value>
+  </data>
+  <data name="username_display_mode_nickname" xml:space="preserve">
+    <value>优先显示用户名（2005–2022）</value>
+  </data>
+  <data name="username_display_mode_handle" xml:space="preserve">
+    <value>优先显示账号标识（2022 年起）</value>
+  </data>
+  <data name="comment_added" xml:space="preserve">
+    <value>评论已添加。</value>
+  </data>
+  <data name="comment_with" xml:space="preserve">
+    <value>撰写评论…</value>
+  </data>
+  <data name="signed_in" xml:space="preserve">
+    <value>已登录：{0}</value>
+  </data>
+  <data name="signed_out" xml:space="preserve">
+    <value>未登录</value>
+  </data>
+  <data name="google_account" xml:space="preserve">
+    <value>Google 账号</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="search_placeholder" xml:space="preserve">
+    <value>搜索…</value>
+  </data>
+  <data name="view_latest_versions" xml:space="preserve">
+    <value>查看最新版本</value>
+  </data>
+  <data name="report" xml:space="preserve">
+    <value>举报视频</value>
+  </data>
+  <data name="whats_going_on" xml:space="preserve">
+    <value>发生了什么？</value>
+  </data>
+  <data name="report_desc" xml:space="preserve">
+    <value>我们会根据所有社区准则进行审核，因此不必担心选择是否完美。</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="report_success" xml:space="preserve">
+    <value>感谢你的提交。</value>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>说明</value>
+  </data>
+  <data name="report_reason" xml:space="preserve">
+    <value>原因</value>
+  </data>
+  <data name="report_sub_reason" xml:space="preserve">
+    <value>详细原因</value>
+  </data>
+  <data name="windowed" xml:space="preserve">
+    <value>窗口化</value>
+  </data>
+  <data name="borderless" xml:space="preserve">
+    <value>无边框</value>
+  </data>
+  <data name="fullscreen" xml:space="preserve">
+    <value>全屏</value>
+  </data>
+  <data name="vertical_sync" xml:space="preserve">
+    <value>垂直同步</value>
+  </data>
+  <data name="refresh_rate_2x" xml:space="preserve">
+    <value>2 倍刷新率</value>
+  </data>
+  <data name="refresh_rate_4x" xml:space="preserve">
+    <value>4 倍刷新率</value>
+  </data>
+  <data name="refresh_rate_8x" xml:space="preserve">
+    <value>8 倍刷新率</value>
+  </data>
+  <data name="unlimited" xml:space="preserve">
+    <value>基本不受限制</value>
+  </data>
+  <data name="dislike_counter_credits_1" xml:space="preserve">
+    <value>点踩数数据由 </value>
+  </data>
+  <data name="dislike_counter_credits_2" xml:space="preserve">
+    <value>。</value>
+  </data>
+  <data name="always_use_original_audio" xml:space="preserve">
+    <value>始终使用原始音频</value>
+  </data>
+  <data name="no_description" xml:space="preserve">
+    <value>此视频尚未添加说明。</value>
+  </data>
+  <data name="view_version_desc" xml:space="preserve">
+    <value>查看 {0} 的更新日志</value>
+    <comment>view_version_desc</comment>
+  </data>
+  <data name="render_type_automatic" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="render_type_automatic_is_use" xml:space="preserve">
+    <value>自动（{0}）</value>
+  </data>
+  <data name="use_system_cursor" xml:space="preserve">
+    <value>始终使用系统光标</value>
+  </data>
+  <data name="wasapi_label" xml:space="preserve">
+    <value>使用实验性音频模式</value>
+  </data>
+  <data name="wasapi_tooltip" xml:space="preserve">
+    <value>此选项将尝试以低延迟模式初始化音频引擎。</value>
+  </data>
+  <data name="output_device" xml:space="preserve">
+    <value>输出设备</value>
+  </data>
+  <data name="volume" xml:space="preserve">
+    <value>音量</value>
+  </data>
+  <data name="debug" xml:space="preserve">
+    <value>调试</value>
+  </data>
+  <data name="show_log_overlay" xml:space="preserve">
+    <value>显示日志叠加层</value>
+  </data>
+  <data name="bypass_ftb_render_pass" xml:space="preserve">
+    <value>跳过从前到后的渲染通道</value>
+  </data>
+  <data name="gc_mode" xml:space="preserve">
+    <value>垃圾回收模式</value>
+  </data>
+  <data name="clear_all_caches" xml:space="preserve">
+    <value>清除所有缓存</value>
+  </data>
+  <data name="load_from_playlist_id" xml:space="preserve">
+    <value>通过播放列表 ID 或 URL 加载</value>
+  </data>
+  <data name="load_playlist" xml:space="preserve">
+    <value>加载播放列表</value>
+  </data>
+  <data name="playlists" xml:space="preserve">
+    <value>播放列表</value>
+  </data>
+  <data name="previous_video" xml:space="preserve">
+    <value>上一个视频</value>
+  </data>
+  <data name="next_video" xml:space="preserve">
+    <value>下一个视频</value>
+  </data>
+  <data name="hw_acceleration_enabled_note" xml:space="preserve">
+    <value>已启用 GPU 硬件加速。如果遇到问题，请暂时保持硬件加速关闭。</value>
+    <comment>hw_acceleration_enabled_note</comment>
+  </data>
+  <data name="audio_effects" xml:space="preserve">
+    <value>音频效果</value>
+  </data>
+  <data name="reverb" xml:space="preserve">
+    <value>混响</value>
+  </data>
+  <data name="reverb_wet_mix" xml:space="preserve">
+    <value>湿声混合</value>
+  </data>
+  <data name="echo_wet_mix" xml:space="preserve">
+    <value>湿声混合</value>
+  </data>
+  <data name="reverb_stereo_width" xml:space="preserve">
+    <value>立体声宽度</value>
+  </data>
+  <data name="reverb_high_frequency_damping" xml:space="preserve">
+    <value>高频衰减</value>
+  </data>
+  <data name="reverb_room_size" xml:space="preserve">
+    <value>房间大小</value>
+  </data>
+  <data name="audio_effect_rotate_rate" xml:space="preserve">
+    <value>旋转速率</value>
+  </data>
+  <data name="audio_effect_rotate_enabled" xml:space="preserve">
+    <value>3D 旋转效果</value>
+  </data>
+  <data name="echo_dry_mix" xml:space="preserve">
+    <value>干声混合</value>
+  </data>
+  <data name="echo_feedback" xml:space="preserve">
+    <value>反馈</value>
+  </data>
+  <data name="echo_delay" xml:space="preserve">
+    <value>延迟</value>
+  </data>
+  <data name="echo_effect" xml:space="preserve">
+    <value>回声</value>
+  </data>
+  <data name="distortion_effect" xml:space="preserve">
+    <value>失真</value>
+  </data>
+  <data name="distortion_volume" xml:space="preserve">
+    <value>失真音量</value>
+  </data>
+  <data name="bloom" xml:space="preserve">
+    <value>视频泛光强度</value>
+  </data>
+  <data name="chromatic_aberration" xml:space="preserve">
+    <value>色差效果强度</value>
+  </data>
+  <data name="visual_effects" xml:space="preserve">
+    <value>视觉效果</value>
+  </data>
+  <data name="grayscale" xml:space="preserve">
+    <value>视频灰度强度</value>
+  </data>
+  <data name="hue_shift" xml:space="preserve">
+    <value>视频色相偏移</value>
+  </data>
+  <data name="discord_rich_presence" xml:space="preserve">
+    <value>Discord 动态状态</value>
+  </data>
+  <data name="hide_identifiable_information" xml:space="preserve">
+    <value>隐藏视频信息</value>
+  </data>
+  <data name="discord_presence_full" xml:space="preserve">
+    <value>完整</value>
+  </data>
+  <data name="discord_presence_off" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="unsubscribe_desc" xml:space="preserve">
+    <value>确定要取消订阅此频道吗？</value>
+  </data>
+  <data name="subscribe" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="unsubscribe" xml:space="preserve">
+    <value>取消订阅</value>
+  </data>
+  <data name="subscription_removed" xml:space="preserve">
+    <value>已取消订阅。</value>
+  </data>
+  <data name="subscription_added" xml:space="preserve">
+    <value>已订阅。</value>
+  </data>
+  <data name="closed_captions" xml:space="preserve">
+    <value>字幕</value>
+  </data>
+  <data name="summarize_via_gpt" xml:space="preserve">
+    <value>总结视频</value>
+  </data>
+  <data name="gpt_summarize_prompt" xml:space="preserve">
+    <value>{0} 总结此视频</value>
+  </data>
+  <data name="public" xml:space="preserve">
+    <value>公开</value>
+  </data>
+  <data name="unlisted" xml:space="preserve">
+    <value>不公开列出</value>
+  </data>
+  <data name="private" xml:space="preserve">
+    <value>私密</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="save_or_remove" xml:space="preserve">
+    <value>保存或移除</value>
+  </data>
+  <data name="save_location" xml:space="preserve">
+    <value>保存位置</value>
+  </data>
+  <data name="add_new_playlist" xml:space="preserve">
+    <value>新建播放列表</value>
+  </data>
+  <data name="privacy_status" xml:space="preserve">
+    <value>隐私状态</value>
+  </data>
+  <data name="title_placeholder" xml:space="preserve">
+    <value>在此输入标题</value>
+  </data>
+  <data name="title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="video_saved_to_playlist" xml:space="preserve">
+    <value>已将当前视频添加到播放列表 {0}。</value>
+  </data>
+  <data name="video_removed_from_playlist" xml:space="preserve">
+    <value>已将当前视频从播放列表 {0} 中移除。</value>
+  </data>
+  <data name="menu" xml:space="preserve">
+    <value>菜单</value>
+  </data>
+  <data name="exit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="audio_normalization" xml:space="preserve">
+    <value>音频标准化</value>
+  </data>
+  <data name="use_sdl3_host" xml:space="preserve">
+    <value>使用 SDL3 宿主（实验性）</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>退出登录</value>
+  </data>
+  <data name="view_channel" xml:space="preserve">
+    <value>查看频道</value>
+  </data>
+  <data name="video_not_loaded" xml:space="preserve">
+    <value>尚未加载视频！</value>
+  </data>
+  <data name="video_not_loaded_desc" xml:space="preserve">
+    <value>请先加载视频再观看！</value>
+  </data>
+  <data name="my_playlists" xml:space="preserve">
+    <value>我的播放列表</value>
+  </data>
+  <data name="playlist_not_loaded" xml:space="preserve">
+    <value>尚未加载播放列表！</value>
+  </data>
+  <data name="playlist_not_loaded_desc" xml:space="preserve">
+    <value>请先加载播放列表再观看！</value>
+  </data>
+  <data name="exit_options" xml:space="preserve">
+    <value>退出选项</value>
+  </data>
+  <data name="power_off" xml:space="preserve">
+    <value>关闭系统</value>
+  </data>
+  <data name="restart_system" xml:space="preserve">
+    <value>重启系统</value>
+  </data>
+  <data name="audio_quality" xml:space="preserve">
+    <value>音频质量</value>
+  </data>
+  <data name="prefer_high_quality_audio" xml:space="preserve">
+    <value>优先使用高画质</value>
+  </data>
+  <data name="prefer_opus" xml:space="preserve">
+    <value>优先使用 Opus 编码</value>
+  </data>
+  <data name="prefer_mp4a" xml:space="preserve">
+    <value>优先使用 MP4A 编码</value>
+  </data>
+  <data name="low_quality" xml:space="preserve">
+    <value>低质量</value>
+  </data>
+  <data name="close_button_action" xml:space="preserve">
+    <value>按下关闭按钮时的操作</value>
+  </data>
+  <data name="hide_to_tray_icon" xml:space="preserve">
+    <value>最小化到系统托盘</value>
+  </data>
+  <data name="close_app" xml:space="preserve">
+    <value>关闭应用</value>
+  </data>
+  <data name="repeat" xml:space="preserve">
+    <value>切换循环播放</value>
+  </data>
+  <data name="oauth_note" xml:space="preserve">
+    <value>登录时，你可能会看到“Google 尚未验证此应用”的提示页面。请放心继续登录。</value>
+  </data>
+  <data name="system_volume" xml:space="preserve">
+    <value>系统音量</value>
+  </data>
+  <data name="system_volume_with_device" xml:space="preserve">
+    <value>系统音量（{0}）</value>
+  </data>
+  <data name="colour_scheme" xml:space="preserve">
+    <value>应用配色方案</value>
+  </data>
+  <data name="circle" xml:space="preserve">
+    <value>圆形</value>
+  </data>
+  <data name="square" xml:space="preserve">
+    <value>圆角方形</value>
+  </data>
+  <data name="profile_image_shape" xml:space="preserve">
+    <value>头像形状</value>
+  </data>
+  <data name="sort_title" xml:space="preserve">
+    <value>排序方式</value>
+  </data>
+  <data name="sort_top" xml:space="preserve">
+    <value>热门</value>
+  </data>
+  <data name="sort_newest" xml:space="preserve">
+    <value>最新</value>
+  </data>
+  <data name="user_interface" xml:space="preserve">
+    <value>用户界面</value>
+  </data>
+  <data name="no_comments" xml:space="preserve">
+    <value>这里还没有评论…</value>
+  </data>
+  <data name="no_comments_desc" xml:space="preserve">
+    <value>打得不错👍</value>
+  </data>
+  <data name="system_sound_mute" xml:space="preserve">
+    <value>静音系统声音</value>
+  </data>
+  <data name="system_sound_mute_desc" xml:space="preserve">
+    <value>此设置会静音 AX Player、其他应用以及系统的声音。</value>
+  </data>
+  <data name="report_bugs" xml:space="preserve">
+    <value>发送反馈</value>
+  </data>
+  <data name="report_bugs_desc" xml:space="preserve">
+    <value>通过此应用向开发者发送反馈。</value>
+  </data>
+  <data name="discord_not_installed" xml:space="preserve">
+    <value>尚未安装 Discord。请安装 Discord，与朋友分享你的活动！</value>
+  </data>
+  <data name="release_stream" xml:space="preserve">
+    <value>发布通道</value>
+  </data>
+  <data name="release_stream_stable" xml:space="preserve">
+    <value>稳定版</value>
+  </data>
+  <data name="release_stream_beta" xml:space="preserve">
+    <value>每夜构建版（不稳定）</value>
+  </data>
+  <data name="video_quality_with_label" xml:space="preserve">
+    <value>视频画质（{0}）</value>
+  </data>
+  <data name="audio_quality_with_label" xml:space="preserve">
+    <value>音频质量（{0}）</value>
+  </data>
+  <data name="jump_to" xml:space="preserve">
+    <value>跳转到 {0}</value>
+  </data>
+  <data name="edit_playlist" xml:space="preserve">
+    <value>编辑播放列表</value>
+  </data>
+  <data name="apply" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="download_video" xml:space="preserve">
+    <value>下载视频</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="downloading_video_stream" xml:space="preserve">
+    <value>正在下载视频流：{0}</value>
+  </data>
+  <data name="downloading_audio_stream" xml:space="preserve">
+    <value>正在下载音频流：{0}</value>
+  </data>
+  <data name="merging_stream" xml:space="preserve">
+    <value>正在合并媒体流…</value>
+  </data>
+  <data name="download_completed" xml:space="preserve">
+    <value>下载已完成。</value>
+  </data>
+  <data name="ui_font" xml:space="preserve">
+    <value>界面字体</value>
+  </data>
+  <data name="translating" xml:space="preserve">
+    <value>正在翻译…</value>
+  </data>
+  <data name="video_metadata_desc_with_likecount" xml:space="preserve">
+    <value>{0} • {1} 次点赞 • {2} 次观看 • {3}</value>
+  </data>
+  <data name="show_video_metadata_on_window_title" xml:space="preserve">
+    <value>在窗口标题中显示视频元数据</value>
+  </data>
+  <data name="player_control_pin" xml:space="preserve">
+    <value>始终显示播放器控件</value>
+  </data>
+  <data name="karaoke_mode" xml:space="preserve">
+    <value>人声消除（实验性）</value>
+  </data>
+  <data name="chorus_effect" xml:space="preserve">
+    <value>合唱效果</value>
+  </data>
+  <data name="chorus_min_sweep" xml:space="preserve">
+    <value>最小扫频值</value>
+  </data>
+  <data name="chorus_max_sweep" xml:space="preserve">
+    <value>最大扫频值</value>
+  </data>
+  <data name="chorus_rate" xml:space="preserve">
+    <value>速率</value>
+  </data>
+  <data name="sort_relevance" xml:space="preserve">
+    <value>相关度</value>
+  </data>
+  <data name="sort_alphabet" xml:space="preserve">
+    <value>按字母排序（A-Z）</value>
+  </data>
+  <data name="login_to_comment" xml:space="preserve">
+    <value>登录后即可发表评论（菜单 - 设置 - Google 账号）</value>
+  </data>
+  <data name="settings_item_restart_required" xml:space="preserve">
+    <value>更改此设置后，应用将重启以应用更改。</value>
+  </data>
+  <data name="video_settings" xml:space="preserve">
+    <value>视频设置</value>
+  </data>
+  <data name="alsa_exclusive_notice" xml:space="preserve">
+    <value>请注意，你选择的设备使用独占访问驱动程序，因此 AX Player 使用该设备时，你将无法听到其他应用程序的声音。为了正确初始化设备，请先确保没有其他应用正在使用它。如果你刚刚通过其他音频驱动使用过该设备，可能需要重启 AX Player 并稍等片刻，让设备完成反初始化。</value>
+  </data>
+  <data name="sfx_type" xml:space="preserve">
+    <value>叠加层音效类型</value>
+  </data>
+  <data name="sfx_new" xml:space="preserve">
+    <value>新版音效</value>
+  </data>
+  <data name="sfx_legacy" xml:space="preserve">
+    <value>旧版</value>
+  </data>
+  <data name="play_overlay_sfx" xml:space="preserve">
+    <value>播放叠加层音效</value>
+  </data>
+  <data name="closed_captions_bg_opacity" xml:space="preserve">
+    <value>字幕背景不透明度</value>
+  </data>
+  <data name="closed_captions_preview" xml:space="preserve">
+    <value>字幕显示效果预览。</value>
+  </data>
+  <data name="like_button" xml:space="preserve">
+    <value>我喜欢</value>
+  </data>
+  <data name="dislike_button" xml:space="preserve">
+    <value>我不喜欢</value>
+  </data>
+  <data name="app_info" xml:space="preserve">
+    <value>关于 AX Player</value>
+  </data>
+  <data name="yt_handle_view_profile" xml:space="preserve">
+    <value>查看 {0} 的个人资料</value>
+  </data>
+  <data name="hashtag" xml:space="preserve">
+    <value>话题标签 {0}</value>
+  </data>
+  <data name="view_github_profile" xml:space="preserve">
+    <value>查看 GitHub 个人资料</value>
+  </data>
+  <data name="view_more_comments" xml:space="preserve">
+    <value>查看更多评论</value>
+  </data>
+  <data name="updates" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="reflex_hint" xml:space="preserve">
+    <value>通过 NVIDIA GPU 上的 NVIDIA Reflex API 降低延迟。 建议保持开启，仅在遇到问题时关闭。</value>
+  </data>
+  <data name="reflex_notice" xml:space="preserve">
+    <value>Boost 会增加 GPU 功耗，并且在某些情况下可能增加延迟。如果遇到问题，请关闭 Boost。</value>
+  </data>
+  <data name="reflex_off" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="reflex_on" xml:space="preserve">
+    <value>开启</value>
+  </data>
+  <data name="reflex_boost" xml:space="preserve">
+    <value>增强</value>
+  </data>
+  <data name="srv3_notice" xml:space="preserve">
+    <value>此功能仍处于实验阶段，存在许多错误且尚未完成。</value>
+  </data>
+  <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
+    <value>加载视频时重置播放速度</value>
+  </data>
+  <data name="closed_captions_bg_colour" xml:space="preserve">
+    <value>字幕背景颜色</value>
+  </data>
+  <data name="closed_captions_radius" xml:space="preserve">
+    <value>字幕圆角半径</value>
+  </data>
+  <data name="advanced_subtitle_style" xml:space="preserve">
+    <value>使用高级字幕样式</value>
+  </data>
+  <data name="screenshot_quality" xml:space="preserve">
+    <value>截图质量</value>
+  </data>
+  <data name="notifications" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="audio_tracks" xml:space="preserve">
+    <value>音轨</value>
+  </data>
+  <data name="karaoke_vocal_volume" xml:space="preserve">
+    <value>人声音量</value>
+  </data>
+  <data name="eight_bit_effect_enabled" xml:space="preserve">
+    <value>8 位音效</value>
+  </data>
+  <data name="bit_depth" xml:space="preserve">
+    <value>位深度</value>
+  </data>
+  <data name="downsample_ratio" xml:space="preserve">
+    <value>降采样比率</value>
+  </data>
+  <data name="vertical_sync_vrr" xml:space="preserve">
+    <value>垂直同步（VRR 低延迟）</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>正在准备...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>如果失真幅度超过50%，就会导致音质损失！</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>现代的</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>玩家控制器淡出样式</value>
+  </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>寻找条纹波动画</value>
+  </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>使用旧版音频引擎</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>游玩过程中遇到音频问题时，请开启此选项。
+注意：该选项会增加音频延迟。</value>
+  </data>
+</root>

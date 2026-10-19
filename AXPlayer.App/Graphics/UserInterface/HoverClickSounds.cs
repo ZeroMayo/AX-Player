@@ -1,0 +1,88 @@
+﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
+
+#nullable enable
+
+using System.Linq;
+using AXPlayer.App.Config;
+using osu.Framework.Allocation;
+using osu.Framework.Audio;
+using osu.Framework.Audio.Sample;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions;
+using osu.Framework.Input.Events;
+using osu.Framework.Utils;
+using osuTK.Input;
+
+namespace AXPlayer.App.Graphics.UserInterface
+{
+    /// <summary>
+    /// Adds hover and click sounds to a drawable.
+    /// Does not draw anything.
+    /// </summary>
+    public partial class HoverClickSounds : HoverSounds
+    {
+        public new Bindable<bool> Enabled = new Bindable<bool>(true);
+
+        private Sample sampleClick = null!;
+        private Sample sampleClickDisabled = null!;
+
+        private readonly MouseButton[] buttons;
+
+        /// <summary>
+        /// a container which plays sounds on hover and click for any specified <see cref="MouseButton"/>s.
+        /// </summary>
+        /// <param name="sampleSet">Set of click samples to play.</param>
+        /// <param name="buttons">
+        /// Array of button codes which should trigger the click sound.
+        /// If this optional parameter is omitted or set to <code>null</code>, the click sound will only be played on left click.
+        /// </param>
+        public HoverClickSounds(HoverSampleSet sampleSet = HoverSampleSet.Default, MouseButton[]? buttons = null)
+            : base(sampleSet)
+        {
+            this.buttons = buttons ?? new[] { MouseButton.Left };
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(AudioManager audio)
+        {
+            sampleClick = audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-select")
+                          ?? audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-select");
+
+            sampleClickDisabled = audio.Samples.Get($@"UI/{SampleSet.GetDescription()}-select-disabled")
+                                  ?? audio.Samples.Get($@"UI/{HoverSampleSet.Default.GetDescription()}-select-disabled");
+        }
+
+        protected override bool OnClick(ClickEvent e)
+        {
+            if (buttons.Contains(e.Button))
+                PlayClickSample();
+
+            return base.OnClick(e);
+        }
+
+        public override void PlayHoverSample()
+        {
+            if (!Enabled.Value)
+                return;
+
+            base.PlayHoverSample();
+        }
+
+        [Resolved]
+        private AXPlayerConfigManager config { get; set; }
+
+        public void PlayClickSample()
+        {
+            var channel = Enabled.Value ? sampleClick?.GetChannel() : sampleClickDisabled?.GetChannel();
+
+            if (channel != null)
+            {
+                channel.Frequency.Value = 0.99 + RNG.NextDouble(0.02);
+
+                if (config.Get<bool>(AXPlayerSetting.PlayOverlaySFX))
+                    channel.Play();
+            }
+        }
+    }
+}

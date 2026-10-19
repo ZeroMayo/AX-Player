@@ -1,0 +1,941 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aspect_ratio_method" xml:space="preserve">
+    <value>Aspect ratio method</value>
+  </data>
+  <data name="audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="audio_language" xml:space="preserve">
+    <value>Audio tracks</value>
+  </data>
+  <data name="auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="caption_disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="caption_language" xml:space="preserve">
+    <value>Closed caption language</value>
+  </data>
+  <data name="disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="display" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="error_noVideoId" xml:space="preserve">
+    <value>Video ID must not be empty!</value>
+  </data>
+  <data name="fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="frame_limiter" xml:space="preserve">
+    <value>Frame limiter</value>
+  </data>
+  <data name="fullscreen_entered" xml:space="preserve">
+    <value>Press F11 to exit the full screen.</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="google_translate" xml:space="preserve">
+    <value>Google Translate</value>
+  </data>
+  <data name="graphics" xml:space="preserve">
+    <value>Graphics</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="letterbox" xml:space="preserve">
+    <value>Letterbox</value>
+  </data>
+  <data name="load_from_video_id" xml:space="preserve">
+    <value>Load from video or playlist's ID or URL</value>
+  </data>
+  <data name="load_video" xml:space="preserve">
+    <value>Load Video or Playlist</value>
+  </data>
+  <data name="master_volume" xml:space="preserve">
+    <value>Master volume</value>
+  </data>
+  <data name="minimise_on_focus_loss" xml:space="preserve">
+    <value>Minimise video player when switching to another app</value>
+  </data>
+  <data name="prefer_high_quality" xml:space="preserve">
+    <value>Prefer high quality</value>
+  </data>
+  <data name="adjust_pitch_on_speed_change" xml:space="preserve">
+    <value>Adjust pitch on speed change</value>
+  </data>
+  <data name="profile_image_tooltip" xml:space="preserve">
+    <value>{0} • {1} subscribers</value>
+  </data>
+  <data name="screen_mode" xml:space="preserve">
+    <value>Screen mode</value>
+  </data>
+  <data name="screen_resolution" xml:space="preserve">
+    <value>Screen resolution</value>
+  </data>
+  <data name="selected_caption" xml:space="preserve">
+    <value>Selected caption: {0}</value>
+  </data>
+  <data name="selected_caption_auto_gen" xml:space="preserve">
+    <value>Selected caption: {0} (auto-generated)</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="sfx_volume" xml:space="preserve">
+    <value>SFX volume</value>
+  </data>
+  <data name="ui_scaling" xml:space="preserve">
+    <value>UI scaling</value>
+  </data>
+  <data name="use_hardware_acceleration" xml:space="preserve">
+    <value>Use hardware acceleration</value>
+  </data>
+  <data name="video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="video_metadata_desc" xml:space="preserve">
+    <value>{0} • {1} views • {2}</value>
+  </data>
+  <data name="video_metadata_desc_without_channel_name" xml:space="preserve">
+    <value>{0} views  {1}</value>
+  </data>
+  <data name="video_metadata_translate_source" xml:space="preserve">
+    <value>Video metadata translate source</value>
+  </data>
+  <data name="video_quality" xml:space="preserve">
+    <value>Video quality</value>
+  </data>
+  <data name="video_volume" xml:space="preserve">
+    <value>Video volume</value>
+  </data>
+  <data name="comments" xml:space="preserve">
+    <value>Comments ({0})</value>
+  </data>
+  <data name="comments_without_count" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="dim" xml:space="preserve">
+    <value>Video dim level</value>
+  </data>
+  <data name="translate_to" xml:space="preserve">
+    <value>Translate to {0}</value>
+  </data>
+  <data name="translate_view_original" xml:space="preserve">
+    <value>See original (Translated by Google)</value>
+  </data>
+  <data name="comment_reply" xml:space="preserve">
+    <value>{0} (Reply to {1})</value>
+  </data>
+  <data name="running_latest_release" xml:space="preserve">
+    <value>You are running the latest release ({0})</value>
+  </data>
+  <data name="updating" xml:space="preserve">
+    <value>Updating AX Player ({0}%)</value>
+  </data>
+  <data name="restart_required" xml:space="preserve">
+    <value>The update is almost complete. Re-run AX Player to finish the update.</value>
+  </data>
+  <data name="update_failed" xml:space="preserve">
+    <value>Update failed!</value>
+  </data>
+  <data name="checking_update" xml:space="preserve">
+    <value>Checking for update...</value>
+  </data>
+  <data name="check_update" xml:space="preserve">
+    <value>Check for updates</value>
+  </data>
+  <data name="like_count_hidden" xml:space="preserve">
+    <value>Like count hidden by uploader</value>
+  </data>
+  <data name="disabled_by_uploader" xml:space="preserve">
+    <value>Disabled by uploader</value>
+  </data>
+  <data name="common_default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="show_fps" xml:space="preserve">
+    <value>Show FPS</value>
+  </data>
+  <data name="cannot_play_private_videos" xml:space="preserve">
+    <value>Cannot play private videos.</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="playback_speed" xml:space="preserve">
+    <value>Playback speed: {0}</value>
+  </data>
+  <data name="video_quality_8k_warning" xml:space="preserve">
+    <value>Setting the video quality to 8K may cause performance degradation, GPU overload, and driver crashes on some devices.</value>
+  </data>
+  <data name="renderer" xml:space="preserve">
+    <value>Renderer</value>
+  </data>
+  <data name="export_logs" xml:space="preserve">
+    <value>Export logs</value>
+  </data>
+  <data name="logs_export_finished" xml:space="preserve">
+    <value>Exported logs!</value>
+  </data>
+  <data name="revert_to_default" xml:space="preserve">
+    <value>Revert to default</value>
+  </data>
+  <data name="playback_speed_without_value" xml:space="preserve">
+    <value>Playback speed</value>
+  </data>
+  <data name="quick_action" xml:space="preserve">
+    <value>Quick Action</value>
+  </data>
+  <data name="caption_font" xml:space="preserve">
+    <value>Closed caption font</value>
+  </data>
+  <data name="dislike_count_tooltip" xml:space="preserve">
+    <value>Estimated: {0} | Actual: {1}</value>
+  </data>
+  <data name="caption_auto_gen" xml:space="preserve">
+    <value>{0} (auto-generated)</value>
+  </data>
+  <data name="scale_video" xml:space="preserve">
+    <value>Video</value>
+    <comment>scale_video</comment>
+  </data>
+  <data name="scale_everything" xml:space="preserve">
+    <value>Everything</value>
+  </data>
+  <data name="scaling_off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="screen_scaling" xml:space="preserve">
+    <value>Screen scaling</value>
+  </data>
+  <data name="horizontal_position" xml:space="preserve">
+    <value>Horizontal position</value>
+  </data>
+  <data name="vertical_position" xml:space="preserve">
+    <value>Vertical position</value>
+  </data>
+  <data name="horizontal_scale" xml:space="preserve">
+    <value>Horizontal scale</value>
+  </data>
+  <data name="vertical_scale" xml:space="preserve">
+    <value>Vertical scale</value>
+  </data>
+  <data name="thumbnail_dim" xml:space="preserve">
+    <value>Thumbnail dim</value>
+  </data>
+  <data name="shrink_game_to_safe_area" xml:space="preserve">
+    <value>Shrink app to avoid cameras and notches</value>
+  </data>
+  <data name="username_display_mode" xml:space="preserve">
+    <value>Username display mode</value>
+  </data>
+  <data name="jpg_web_friendly" xml:space="preserve">
+    <value>JPG (web-friendly)</value>
+  </data>
+  <data name="png_lossless" xml:space="preserve">
+    <value>PNG (lossless)</value>
+  </data>
+  <data name="screenshot_saved" xml:space="preserve">
+    <value>Screenshot saved!</value>
+  </data>
+  <data name="screenshot" xml:space="preserve">
+    <value>Screenshot</value>
+  </data>
+  <data name="screenshot_format" xml:space="preserve">
+    <value>Screenshot format</value>
+  </data>
+  <data name="show_cursor_in_screenshots" xml:space="preserve">
+    <value>Show user interface in screenshots</value>
+  </data>
+  <data name="username_display_mode_nickname" xml:space="preserve">
+    <value>Prefer display username (2005~2022)</value>
+  </data>
+  <data name="username_display_mode_handle" xml:space="preserve">
+    <value>Prefer display handle (2022~)</value>
+  </data>
+  <data name="comment_added" xml:space="preserve">
+    <value>Comment added.</value>
+  </data>
+  <data name="comment_with" xml:space="preserve">
+    <value>Write comment...</value>
+  </data>
+  <data name="signed_in" xml:space="preserve">
+    <value>Signed in to {0}</value>
+  </data>
+  <data name="signed_out" xml:space="preserve">
+    <value>Not logged in</value>
+  </data>
+  <data name="google_account" xml:space="preserve">
+    <value>Google account</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="search_placeholder" xml:space="preserve">
+    <value>search...</value>
+  </data>
+  <data name="view_latest_versions" xml:space="preserve">
+    <value>View latest versions</value>
+  </data>
+  <data name="report" xml:space="preserve">
+    <value>Report video</value>
+  </data>
+  <data name="whats_going_on" xml:space="preserve">
+    <value>What's going on?</value>
+  </data>
+  <data name="report_desc" xml:space="preserve">
+    <value>We'll check for all Community Guidelines, so don't worry about making the perfect choice.</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="report_success" xml:space="preserve">
+    <value>Thank you for your submission.</value>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="report_reason" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="report_sub_reason" xml:space="preserve">
+    <value>Detailed reason</value>
+  </data>
+  <data name="windowed" xml:space="preserve">
+    <value>Windowed</value>
+  </data>
+  <data name="borderless" xml:space="preserve">
+    <value>Borderless</value>
+  </data>
+  <data name="fullscreen" xml:space="preserve">
+    <value>Fullscreen</value>
+  </data>
+  <data name="vertical_sync" xml:space="preserve">
+    <value>VSync</value>
+  </data>
+  <data name="refresh_rate_2x" xml:space="preserve">
+    <value>2x refresh rate</value>
+  </data>
+  <data name="refresh_rate_4x" xml:space="preserve">
+    <value>4x refresh rate</value>
+  </data>
+  <data name="refresh_rate_8x" xml:space="preserve">
+    <value>8x refresh rate</value>
+  </data>
+  <data name="unlimited" xml:space="preserve">
+    <value>Basically unlimited</value>
+  </data>
+  <data name="dislike_counter_credits_1" xml:space="preserve">
+    <value>Dislike count data is provided by the </value>
+  </data>
+  <data name="dislike_counter_credits_2" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="always_use_original_audio" xml:space="preserve">
+    <value>Always use original audio</value>
+  </data>
+  <data name="no_description" xml:space="preserve">
+    <value>No description has been added to this video.</value>
+  </data>
+  <data name="view_version_desc" xml:space="preserve">
+    <value>View changelog for {0}</value>
+    <comment>view_version_desc</comment>
+  </data>
+  <data name="render_type_automatic" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="render_type_automatic_is_use" xml:space="preserve">
+    <value>Automatic ({0})</value>
+  </data>
+  <data name="use_system_cursor" xml:space="preserve">
+    <value>Always use system cursor</value>
+  </data>
+  <data name="wasapi_label" xml:space="preserve">
+    <value>Use experimental audio mode</value>
+  </data>
+  <data name="wasapi_tooltip" xml:space="preserve">
+    <value>This will attempt to initialise the audio engine in a lower latency mode.</value>
+  </data>
+  <data name="output_device" xml:space="preserve">
+    <value>Output device</value>
+  </data>
+  <data name="volume" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="show_log_overlay" xml:space="preserve">
+    <value>Show log overlay</value>
+  </data>
+  <data name="bypass_ftb_render_pass" xml:space="preserve">
+    <value>Bypass front-to-back render pass</value>
+  </data>
+  <data name="gc_mode" xml:space="preserve">
+    <value>GC mode</value>
+  </data>
+  <data name="clear_all_caches" xml:space="preserve">
+    <value>Clear all caches</value>
+  </data>
+  <data name="load_from_playlist_id" xml:space="preserve">
+    <value>Load from playlist ID or URL</value>
+  </data>
+  <data name="load_playlist" xml:space="preserve">
+    <value>Load Playlist</value>
+  </data>
+  <data name="playlists" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
+  <data name="previous_video" xml:space="preserve">
+    <value>Previous video</value>
+  </data>
+  <data name="next_video" xml:space="preserve">
+    <value>Next video</value>
+  </data>
+  <data name="hw_acceleration_enabled_note" xml:space="preserve">
+    <value>Hardware acceleration via GPU is enabled. If you experience any issues, please keep hardware acceleration disabled for now.</value>
+    <comment>hw_acceleration_enabled_note</comment>
+  </data>
+  <data name="audio_effects" xml:space="preserve">
+    <value>Audio effects</value>
+  </data>
+  <data name="reverb" xml:space="preserve">
+    <value>Reverb</value>
+  </data>
+  <data name="reverb_wet_mix" xml:space="preserve">
+    <value>Wet mix</value>
+  </data>
+  <data name="echo_wet_mix" xml:space="preserve">
+    <value>Wet mix</value>
+  </data>
+  <data name="reverb_stereo_width" xml:space="preserve">
+    <value>Stereo width</value>
+  </data>
+  <data name="reverb_high_frequency_damping" xml:space="preserve">
+    <value>High frequency damping</value>
+  </data>
+  <data name="reverb_room_size" xml:space="preserve">
+    <value>Room size</value>
+  </data>
+  <data name="audio_effect_rotate_rate" xml:space="preserve">
+    <value>Rotate rate</value>
+  </data>
+  <data name="audio_effect_rotate_enabled" xml:space="preserve">
+    <value>3D rotate effect</value>
+  </data>
+  <data name="echo_dry_mix" xml:space="preserve">
+    <value>Dry mix</value>
+  </data>
+  <data name="echo_feedback" xml:space="preserve">
+    <value>Feedback</value>
+  </data>
+  <data name="echo_delay" xml:space="preserve">
+    <value>Delay</value>
+  </data>
+  <data name="echo_effect" xml:space="preserve">
+    <value>Echo</value>
+  </data>
+  <data name="distortion_effect" xml:space="preserve">
+    <value>Distortion</value>
+  </data>
+  <data name="distortion_volume" xml:space="preserve">
+    <value>Distortion volume</value>
+  </data>
+  <data name="bloom" xml:space="preserve">
+    <value>Video bloom level</value>
+  </data>
+  <data name="chromatic_aberration" xml:space="preserve">
+    <value>Chromatic aberration effect strength</value>
+  </data>
+  <data name="visual_effects" xml:space="preserve">
+    <value>Visual effects</value>
+  </data>
+  <data name="grayscale" xml:space="preserve">
+    <value>Video grayscale level</value>
+  </data>
+  <data name="hue_shift" xml:space="preserve">
+    <value>Video hue shift</value>
+  </data>
+  <data name="discord_rich_presence" xml:space="preserve">
+    <value>Discord Rich Presence</value>
+  </data>
+  <data name="hide_identifiable_information" xml:space="preserve">
+    <value>Hide video information</value>
+  </data>
+  <data name="discord_presence_full" xml:space="preserve">
+    <value>Full</value>
+  </data>
+  <data name="discord_presence_off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="unsubscribe_desc" xml:space="preserve">
+    <value>Are you sure you want to unsubscribe this channel?</value>
+  </data>
+  <data name="subscribe" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="unsubscribe" xml:space="preserve">
+    <value>Unsubscribe</value>
+  </data>
+  <data name="subscription_removed" xml:space="preserve">
+    <value>Subscription removed.</value>
+  </data>
+  <data name="subscription_added" xml:space="preserve">
+    <value>Subscription added.</value>
+  </data>
+  <data name="closed_captions" xml:space="preserve">
+    <value>Closed captions</value>
+  </data>
+  <data name="summarize_via_gpt" xml:space="preserve">
+    <value>Summarize video</value>
+  </data>
+  <data name="gpt_summarize_prompt" xml:space="preserve">
+    <value>{0} Summarize this video</value>
+  </data>
+  <data name="public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="unlisted" xml:space="preserve">
+    <value>Unlisted</value>
+  </data>
+  <data name="private" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="save_or_remove" xml:space="preserve">
+    <value>Save or remove</value>
+  </data>
+  <data name="save_location" xml:space="preserve">
+    <value>Save location</value>
+  </data>
+  <data name="add_new_playlist" xml:space="preserve">
+    <value>Add new playlist</value>
+  </data>
+  <data name="privacy_status" xml:space="preserve">
+    <value>Privacy status</value>
+  </data>
+  <data name="title_placeholder" xml:space="preserve">
+    <value>Enter title here</value>
+  </data>
+  <data name="title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="video_saved_to_playlist" xml:space="preserve">
+    <value>Added current video to playlist {0}.</value>
+  </data>
+  <data name="video_removed_from_playlist" xml:space="preserve">
+    <value>Removed current video from playlist {0}.</value>
+  </data>
+  <data name="menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="audio_normalization" xml:space="preserve">
+    <value>Normalize Audio</value>
+  </data>
+  <data name="use_sdl3_host" xml:space="preserve">
+    <value>Use SDL3 host (Experimental)</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="view_channel" xml:space="preserve">
+    <value>View channel</value>
+  </data>
+  <data name="video_not_loaded" xml:space="preserve">
+    <value>video not loaded!</value>
+  </data>
+  <data name="video_not_loaded_desc" xml:space="preserve">
+    <value>please load a video to watch!</value>
+  </data>
+  <data name="my_playlists" xml:space="preserve">
+    <value>My playlists</value>
+  </data>
+  <data name="playlist_not_loaded" xml:space="preserve">
+    <value>playlist not loaded!</value>
+  </data>
+  <data name="playlist_not_loaded_desc" xml:space="preserve">
+    <value>please load a playlist to watch!</value>
+  </data>
+  <data name="exit_options" xml:space="preserve">
+    <value>Exit options</value>
+  </data>
+  <data name="power_off" xml:space="preserve">
+    <value>Power off system</value>
+  </data>
+  <data name="restart_system" xml:space="preserve">
+    <value>Restart system</value>
+  </data>
+  <data name="audio_quality" xml:space="preserve">
+    <value>Audio quality</value>
+  </data>
+  <data name="prefer_high_quality_audio" xml:space="preserve">
+    <value>Prefer high quality</value>
+  </data>
+  <data name="prefer_opus" xml:space="preserve">
+    <value>Prefer opus codecs first</value>
+  </data>
+  <data name="prefer_mp4a" xml:space="preserve">
+    <value>Prefer mp4a codecs first</value>
+  </data>
+  <data name="low_quality" xml:space="preserve">
+    <value>Low quality</value>
+  </data>
+  <data name="close_button_action" xml:space="preserve">
+    <value>Action when the close button is pressed</value>
+  </data>
+  <data name="hide_to_tray_icon" xml:space="preserve">
+    <value>Hide to tray icon</value>
+  </data>
+  <data name="close_app" xml:space="preserve">
+    <value>Close the app</value>
+  </data>
+  <data name="repeat" xml:space="preserve">
+    <value>Repeat On/Off</value>
+  </data>
+  <data name="oauth_note" xml:space="preserve">
+    <value>When you log in, you may see an "Google hasn’t verified this app" screen. Please feel free to log in.</value>
+  </data>
+  <data name="system_volume" xml:space="preserve">
+    <value>System volume</value>
+  </data>
+  <data name="system_volume_with_device" xml:space="preserve">
+    <value>System volume ({0})</value>
+  </data>
+  <data name="colour_scheme" xml:space="preserve">
+    <value>App colour scheme</value>
+  </data>
+  <data name="circle" xml:space="preserve">
+    <value>Circle</value>
+  </data>
+  <data name="square" xml:space="preserve">
+    <value>Rounded square</value>
+  </data>
+  <data name="profile_image_shape" xml:space="preserve">
+    <value>Profile image shape</value>
+  </data>
+  <data name="sort_title" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="sort_top" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="sort_newest" xml:space="preserve">
+    <value>Newest</value>
+  </data>
+  <data name="user_interface" xml:space="preserve">
+    <value>User interface</value>
+  </data>
+  <data name="no_comments" xml:space="preserve">
+    <value>No comments here...</value>
+  </data>
+  <data name="no_comments_desc" xml:space="preserve">
+    <value>well played👍</value>
+  </data>
+  <data name="system_sound_mute" xml:space="preserve">
+    <value>Mute system sounds</value>
+  </data>
+  <data name="system_sound_mute_desc" xml:space="preserve">
+    <value>This setting mutes AX Player sounds and other apps, and system sounds.</value>
+  </data>
+  <data name="report_bugs" xml:space="preserve">
+    <value>Send a feedback</value>
+  </data>
+  <data name="report_bugs_desc" xml:space="preserve">
+    <value>Send a feedback with the app to the developers.</value>
+  </data>
+  <data name="discord_not_installed" xml:space="preserve">
+    <value>Discord is not installed. Please install Discord and share your activities with your friends!</value>
+  </data>
+  <data name="release_stream" xml:space="preserve">
+    <value>Release stream</value>
+  </data>
+  <data name="release_stream_stable" xml:space="preserve">
+    <value>Stable</value>
+  </data>
+  <data name="release_stream_beta" xml:space="preserve">
+    <value>Nightly build (unstable)</value>
+  </data>
+  <data name="video_quality_with_label" xml:space="preserve">
+    <value>Video quality ({0})</value>
+  </data>
+  <data name="audio_quality_with_label" xml:space="preserve">
+    <value>Audio quality ({0})</value>
+  </data>
+  <data name="jump_to" xml:space="preserve">
+    <value>Jump to {0}</value>
+  </data>
+  <data name="edit_playlist" xml:space="preserve">
+    <value>Edit playlist</value>
+  </data>
+  <data name="apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="download_video" xml:space="preserve">
+    <value>Download video</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="downloading_video_stream" xml:space="preserve">
+    <value>Downloading video stream: {0}</value>
+  </data>
+  <data name="downloading_audio_stream" xml:space="preserve">
+    <value>Downloading audio stream: {0}</value>
+  </data>
+  <data name="merging_stream" xml:space="preserve">
+    <value>Merging streams...</value>
+  </data>
+  <data name="download_completed" xml:space="preserve">
+    <value>The download has been completed.</value>
+  </data>
+  <data name="ui_font" xml:space="preserve">
+    <value>UI Font</value>
+  </data>
+  <data name="translating" xml:space="preserve">
+    <value>Translating...</value>
+  </data>
+  <data name="video_metadata_desc_with_likecount" xml:space="preserve">
+    <value>{0} • {1} likes • {2} views • {3}</value>
+  </data>
+  <data name="show_video_metadata_on_window_title" xml:space="preserve">
+    <value>Show video metadata on window title</value>
+  </data>
+  <data name="player_control_pin" xml:space="preserve">
+    <value>Always show player control</value>
+  </data>
+  <data name="karaoke_mode" xml:space="preserve">
+    <value>Vocal Remover (Experimental)</value>
+  </data>
+  <data name="chorus_effect" xml:space="preserve">
+    <value>Chorus</value>
+  </data>
+  <data name="chorus_min_sweep" xml:space="preserve">
+    <value>Minimum sweep</value>
+  </data>
+  <data name="chorus_max_sweep" xml:space="preserve">
+    <value>Maximum sweep</value>
+  </data>
+  <data name="chorus_rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="sort_relevance" xml:space="preserve">
+    <value>Relevance</value>
+  </data>
+  <data name="sort_alphabet" xml:space="preserve">
+    <value>Alphabet (A-Z)</value>
+  </data>
+  <data name="login_to_comment" xml:space="preserve">
+    <value>Log in to send comments (Menu - Settings - Google account)</value>
+  </data>
+  <data name="settings_item_restart_required" xml:space="preserve">
+    <value>If you changes this settings, app will restart and applied.</value>
+  </data>
+  <data name="video_settings" xml:space="preserve">
+    <value>Video Settings</value>
+  </data>
+  <data name="alsa_exclusive_notice" xml:space="preserve">
+    <value>Note that you've selected a device with an exclusive-access driver, which means that you won't be able to hear sounds from other apps while in use by AXPlayer. Also, to initialize it correctly, first ensure it's not being actively used by other applications. You may need to restart AX Player and wait a moment to for it de-initialize if you've just used it through other audio driver.</value>
+  </data>
+  <data name="sfx_type" xml:space="preserve">
+    <value>Overlay SFX Type</value>
+  </data>
+  <data name="sfx_new" xml:space="preserve">
+    <value>New SFX</value>
+  </data>
+  <data name="sfx_legacy" xml:space="preserve">
+    <value>Legacy</value>
+  </data>
+  <data name="play_overlay_sfx" xml:space="preserve">
+    <value>Play Overlay SFX</value>
+  </data>
+  <data name="closed_captions_bg_opacity" xml:space="preserve">
+    <value>Closed captions background opacity</value>
+  </data>
+  <data name="closed_captions_preview" xml:space="preserve">
+    <value>This is how the subtitles appear.</value>
+  </data>
+  <data name="like_button" xml:space="preserve">
+    <value>I like this</value>
+  </data>
+  <data name="dislike_button" xml:space="preserve">
+    <value>I dislike this</value>
+  </data>
+  <data name="app_info" xml:space="preserve">
+    <value>About AX Player</value>
+  </data>
+  <data name="yt_handle_view_profile" xml:space="preserve">
+    <value>View profile for {0}</value>
+  </data>
+  <data name="hashtag" xml:space="preserve">
+    <value>Hashtag {0}</value>
+  </data>
+  <data name="view_github_profile" xml:space="preserve">
+    <value>View GitHub Profile</value>
+  </data>
+  <data name="view_more_comments" xml:space="preserve">
+    <value>View more comments</value>
+  </data>
+  <data name="updates" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="reflex_hint" xml:space="preserve">
+    <value>Reduces latency by leveraging the NVIDIA Reflex API on NVIDIA GPUs.
+Recommended to have On, turn Off only if experiencing issues.</value>
+  </data>
+  <data name="reflex_notice" xml:space="preserve">
+    <value>Boost increases GPU power consumption and may increase latency in some cases. Disable Boost if experiencing issues.</value>
+  </data>
+  <data name="reflex_off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="reflex_on" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="reflex_boost" xml:space="preserve">
+    <value>Boost</value>
+  </data>
+  <data name="srv3_notice" xml:space="preserve">
+    <value>This features are experimental, have many bugs, and are not complete.</value>
+  </data>
+  <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
+    <value>Reset playback speed when loading a video</value>
+  </data>
+  <data name="closed_captions_bg_colour" xml:space="preserve">
+    <value>Closed captions background colour</value>
+  </data>
+  <data name="closed_captions_radius" xml:space="preserve">
+    <value>Closed captions corner radius</value>
+  </data>
+  <data name="advanced_subtitle_style" xml:space="preserve">
+    <value>Use advanced subtitles style</value>
+  </data>
+  <data name="screenshot_quality" xml:space="preserve">
+    <value>Screenshot quality</value>
+  </data>
+  <data name="notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="audio_tracks" xml:space="preserve">
+    <value>Audio tracks</value>
+  </data>
+  <data name="karaoke_vocal_volume" xml:space="preserve">
+    <value>Vocal volume</value>
+  </data>
+  <data name="eight_bit_effect_enabled" xml:space="preserve">
+    <value>8-bit effect</value>
+  </data>
+  <data name="bit_depth" xml:space="preserve">
+    <value>Bit depth</value>
+  </data>
+  <data name="downsample_ratio" xml:space="preserve">
+    <value>Downsample ratio</value>
+  </data>
+  <data name="vertical_sync_vrr" xml:space="preserve">
+    <value>VSync (VRR low latency)</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Preparing...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>If the distortion volume exceeds 50%, sound quality loss will occur!</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>Modern</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>Player controller fade style</value>
+  </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>Seek bar wave animation</value>
+  </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>Use legacy audio mode</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>Use this if you are experiencing audio issues. Note that audio latency will be higher when this is toggled on.</value>
+  </data>
+</root>

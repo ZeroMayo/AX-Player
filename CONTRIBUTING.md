@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thank you for showing interest in the development of NekoPlayer. We aim to provide a good collaborating environment for everyone involved, and as such have decided to list some of the most important things to keep in mind in the process. The guidelines below have been chosen based on past experience.
+Thank you for showing interest in the development of AX Player. We aim to provide a good collaborating environment for everyone involved, and as such have decided to list some of the most important things to keep in mind in the process. The guidelines below have been chosen based on past experience.
 
 ## Table of contents
 
@@ -54,7 +54,7 @@ When in doubt, it's probably best to start with a discussion first. We will esca
 
 While pull requests from unaffiliated contributors are welcome, Reviewing PRs that fall outside of the scope of the roadmap is done on a best-effort basis, so please be aware that it may take a while before a core maintainer gets around to review your change.
 
-The [issue tracker](https://github.com/ZeroMayo/NekoPlayer/issues) should provide plenty of issues to start with. In the case of simple issues, a direct PR is okay. However, if you decide to work on an existing issue which doesn't seem trivial, **please ask us first**. This way we can try to estimate if it is a good fit for you and provide the correct direction on how to address it. In addition, note that while we do not rule out external contributors from working on roadmapped issues, we will generally prefer to handle them ourselves unless they're not very time sensitive.
+The [issue tracker](https://github.com/ZeroMayo/AX-Player/issues) should provide plenty of issues to start with. In the case of simple issues, a direct PR is okay. However, if you decide to work on an existing issue which doesn't seem trivial, **please ask us first**. This way we can try to estimate if it is a good fit for you and provide the correct direction on how to address it. In addition, note that while we do not rule out external contributors from working on roadmapped issues, we will generally prefer to handle them ourselves unless they're not very time sensitive.
 
 If you'd like to propose a subjective change to one of the visual aspects of the app, or there is a bigger task you'd like to work on, but there is no corresponding issue or discussion thread yet for it, **please open a discussion or issue first** to avoid wasted effort.
 
@@ -73,7 +73,7 @@ After you're done with your changes and you wish to open the PR, please observe 
 - Please do not force-push or rebase unless we ask you to.
 - Please do not merge `master` continually if there are no conflicts to resolve. We will do this for you when the change is ready for merge.
 
-We are highly committed to quality when it comes to the NekoPlayer project. This means that contributions from less experienced community members can take multiple rounds of review to get to a mergeable state. We try our utmost best to never conflate a person with the code they authored, and to keep the discussion focused on the code at all times. Please consider our comments and requests a learning experience.
+We are highly committed to quality when it comes to the AX Player project. This means that contributions from less experienced community members can take multiple rounds of review to get to a mergeable state. We try our utmost best to never conflate a person with the code they authored, and to keep the discussion focused on the code at all times. Please consider our comments and requests a learning experience.
 
 If you're uncertain about some part of the codebase or some inner workings of the app and framework, please reach out either by leaving a comment in the relevant issue, discussion, or PR thread. We will try to help you as much as we can.
 

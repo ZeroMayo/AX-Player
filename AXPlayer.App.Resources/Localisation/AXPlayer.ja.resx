@@ -1,0 +1,940 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aspect_ratio_method" xml:space="preserve">
+    <value>アスペクト比法</value>
+  </data>
+  <data name="audio" xml:space="preserve">
+    <value>オーディオ</value>
+  </data>
+  <data name="audio_language" xml:space="preserve">
+    <value>オーディオトラック（使用可能）</value>
+  </data>
+  <data name="auto" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="caption_disabled" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="caption_language" xml:space="preserve">
+    <value>クローズドキャプション言語</value>
+  </data>
+  <data name="disabled" xml:space="preserve">
+    <value>無効</value>
+  </data>
+  <data name="display" xml:space="preserve">
+    <value>ディスプレイ</value>
+  </data>
+  <data name="enabled" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="error_noVideoId" xml:space="preserve">
+    <value>ビデオIDは空白のままにしてはいけません！</value>
+  </data>
+  <data name="fill" xml:space="preserve">
+    <value>フィル</value>
+  </data>
+  <data name="frame_limiter" xml:space="preserve">
+    <value>フレーム リミッタ</value>
+  </data>
+  <data name="fullscreen_entered" xml:space="preserve">
+    <value>全画面を終了するには、F11キーを押します。</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>全般</value>
+  </data>
+  <data name="google_translate" xml:space="preserve">
+    <value>Google翻訳</value>
+  </data>
+  <data name="graphics" xml:space="preserve">
+    <value>グラフィックス</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="letterbox" xml:space="preserve">
+    <value>レターボックス</value>
+  </data>
+  <data name="load_from_video_id" xml:space="preserve">
+    <value>ビデオまたは再生リストの ID または URL からロードします</value>
+  </data>
+  <data name="load_video" xml:space="preserve">
+    <value>ビデオまたは再生リストをロードします</value>
+  </data>
+  <data name="master_volume" xml:space="preserve">
+    <value>マスターボリューム</value>
+  </data>
+  <data name="minimise_on_focus_loss" xml:space="preserve">
+    <value>別のアプリに切り替えるときにビデオプレーヤーを最小限に抑えます</value>
+  </data>
+  <data name="prefer_high_quality" xml:space="preserve">
+    <value>高品質を優先します</value>
+  </data>
+  <data name="adjust_pitch_on_speed_change" xml:space="preserve">
+    <value>変速時ピッチ調整</value>
+  </data>
+  <data name="profile_image_tooltip" xml:space="preserve">
+    <value>{0} • チャンネル登録者数 {1}人</value>
+  </data>
+  <data name="screen_mode" xml:space="preserve">
+    <value>画面モード</value>
+  </data>
+  <data name="screen_resolution" xml:space="preserve">
+    <value>画面解像度</value>
+  </data>
+  <data name="selected_caption" xml:space="preserve">
+    <value>選択されたキャプション:{0}</value>
+  </data>
+  <data name="selected_caption_auto_gen" xml:space="preserve">
+    <value>選択されたキャプション:{0}（自動生成）</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="sfx_volume" xml:space="preserve">
+    <value>音響効果ボリューム</value>
+  </data>
+  <data name="ui_scaling" xml:space="preserve">
+    <value>UIの表示倍率</value>
+  </data>
+  <data name="use_hardware_acceleration" xml:space="preserve">
+    <value>ハードウェア アクセラレーションを使用</value>
+  </data>
+  <data name="video" xml:space="preserve">
+    <value>ビデオ</value>
+  </data>
+  <data name="video_metadata_desc" xml:space="preserve">
+    <value>{0} • {1} 回視聴 • {2}</value>
+  </data>
+  <data name="video_metadata_desc_without_channel_name" xml:space="preserve">
+    <value>{0} 回視聴  {1}</value>
+  </data>
+  <data name="video_metadata_translate_source" xml:space="preserve">
+    <value>ビデオメタデータ変換ソース</value>
+  </data>
+  <data name="video_quality" xml:space="preserve">
+    <value>ビデオ品質</value>
+  </data>
+  <data name="video_volume" xml:space="preserve">
+    <value>ビデオボリューム</value>
+  </data>
+  <data name="comments" xml:space="preserve">
+    <value>コメント ({0})</value>
+  </data>
+  <data name="comments_without_count" xml:space="preserve">
+    <value>コメント</value>
+  </data>
+  <data name="dim" xml:space="preserve">
+    <value>ビデオ暗いレベル</value>
+  </data>
+  <data name="translate_to" xml:space="preserve">
+    <value>{0}に変換します</value>
+  </data>
+  <data name="translate_view_original" xml:space="preserve">
+    <value>原文を見る（Google による翻訳）</value>
+  </data>
+  <data name="comment_reply" xml:space="preserve">
+    <value>{0} （返信先:{1}）</value>
+  </data>
+  <data name="running_latest_release" xml:space="preserve">
+    <value>既に最新版を実行中です ({0})</value>
+  </data>
+  <data name="updating" xml:space="preserve">
+    <value>AX Player アップデート中 ({0}%)</value>
+  </data>
+  <data name="restart_required" xml:space="preserve">
+    <value>アップデートはほぼ完了しています。 AX Playerを再実行してアップデートを完了します。</value>
+  </data>
+  <data name="update_failed" xml:space="preserve">
+    <value>更新に失敗しました！</value>
+  </data>
+  <data name="checking_update" xml:space="preserve">
+    <value>アップデートを確認しています···</value>
+  </data>
+  <data name="check_update" xml:space="preserve">
+    <value>アップデートを確認します</value>
+  </data>
+  <data name="like_count_hidden" xml:space="preserve">
+    <value>アップロード者によって非表示のような数です</value>
+  </data>
+  <data name="disabled_by_uploader" xml:space="preserve">
+    <value>アップロード者によって無効になっています</value>
+  </data>
+  <data name="common_default" xml:space="preserve">
+    <value>デフォルト</value>
+  </data>
+  <data name="show_fps" xml:space="preserve">
+    <value>FPSを表示</value>
+  </data>
+  <data name="cannot_play_private_videos" xml:space="preserve">
+    <value>プライベートビデオを再生できません。</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>遊ぶ</value>
+  </data>
+  <data name="pause" xml:space="preserve">
+    <value>一時停止</value>
+  </data>
+  <data name="playback_speed" xml:space="preserve">
+    <value>再生速度: {0}</value>
+  </data>
+  <data name="video_quality_8k_warning" xml:space="preserve">
+    <value>ビデオ品質を 8K に設定すると、一部のデバイスでパフォーマンスの低下、GPU の過負荷、ドライバーのクラッシュが発生する可能性があります。</value>
+  </data>
+  <data name="renderer" xml:space="preserve">
+    <value>レンダラー</value>
+  </data>
+  <data name="export_logs" xml:space="preserve">
+    <value>ログをエクスポートする</value>
+  </data>
+  <data name="logs_export_finished" xml:space="preserve">
+    <value>ログをエクスポートしました!</value>
+  </data>
+  <data name="revert_to_default" xml:space="preserve">
+    <value>デフォルトに戻す</value>
+  </data>
+  <data name="playback_speed_without_value" xml:space="preserve">
+    <value>再生速度</value>
+  </data>
+  <data name="quick_action" xml:space="preserve">
+    <value>クイックアクション</value>
+  </data>
+  <data name="caption_font" xml:space="preserve">
+    <value>クローズドキャプションフォント</value>
+  </data>
+  <data name="dislike_count_tooltip" xml:space="preserve">
+    <value>推定値：{0} |実際の値：{1}</value>
+  </data>
+  <data name="caption_auto_gen" xml:space="preserve">
+    <value>{0}（自動生成）</value>
+  </data>
+  <data name="scale_video" xml:space="preserve">
+    <value>ビデオ</value>
+    <comment>scale_video</comment>
+  </data>
+  <data name="scale_everything" xml:space="preserve">
+    <value>すべて</value>
+  </data>
+  <data name="scaling_off" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="screen_scaling" xml:space="preserve">
+    <value>画面の拡大縮小</value>
+  </data>
+  <data name="horizontal_position" xml:space="preserve">
+    <value>水平方向の位置</value>
+  </data>
+  <data name="vertical_position" xml:space="preserve">
+    <value>垂直位置</value>
+  </data>
+  <data name="horizontal_scale" xml:space="preserve">
+    <value>水平方向のスケール</value>
+  </data>
+  <data name="vertical_scale" xml:space="preserve">
+    <value>垂直方向のスケール</value>
+  </data>
+  <data name="thumbnail_dim" xml:space="preserve">
+    <value>サムネイルが暗い</value>
+  </data>
+  <data name="shrink_game_to_safe_area" xml:space="preserve">
+    <value>カメラやノッチを避けるためにアプリを縮小する</value>
+  </data>
+  <data name="username_display_mode" xml:space="preserve">
+    <value>ユーザー名表示モード</value>
+  </data>
+  <data name="jpg_web_friendly" xml:space="preserve">
+    <value>JPG (ウェブフレンドリー)</value>
+  </data>
+  <data name="png_lossless" xml:space="preserve">
+    <value>PNG (ロスレス)</value>
+  </data>
+  <data name="screenshot_saved" xml:space="preserve">
+    <value>スクリーンショットを保存しました！</value>
+  </data>
+  <data name="screenshot" xml:space="preserve">
+    <value>スクリーンショット</value>
+  </data>
+  <data name="screenshot_format" xml:space="preserve">
+    <value>スクリーンショットの形式</value>
+  </data>
+  <data name="show_cursor_in_screenshots" xml:space="preserve">
+    <value>スクリーンショットにユーザーインターフェイスを表示する</value>
+  </data>
+  <data name="username_display_mode_nickname" xml:space="preserve">
+    <value>ユーザー名を優先（2005年~2022年）</value>
+  </data>
+  <data name="username_display_mode_handle" xml:space="preserve">
+    <value>ディスプレイハンドルを優先 (2022~)</value>
+  </data>
+  <data name="comment_added" xml:space="preserve">
+    <value>コメントを追加しました。</value>
+  </data>
+  <data name="comment_with" xml:space="preserve">
+    <value>コメント作成···</value>
+  </data>
+  <data name="signed_in" xml:space="preserve">
+    <value>{0} にサインインしました</value>
+  </data>
+  <data name="signed_out" xml:space="preserve">
+    <value>ログインしていません</value>
+  </data>
+  <data name="google_account" xml:space="preserve">
+    <value>Google アカウント</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="search_placeholder" xml:space="preserve">
+    <value>検索...</value>
+  </data>
+  <data name="view_latest_versions" xml:space="preserve">
+    <value>最新バージョンを表示</value>
+  </data>
+  <data name="report" xml:space="preserve">
+    <value>レポートビデオ</value>
+  </data>
+  <data name="whats_going_on" xml:space="preserve">
+    <value>何が起きているのか？</value>
+  </data>
+  <data name="report_desc" xml:space="preserve">
+    <value>すべてのコミュニティガイドラインをチェックしますので、最適な選択を心配する必要はありません。</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>送信</value>
+  </data>
+  <data name="report_success" xml:space="preserve">
+    <value>提出ありがとうございます。</value>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>説明</value>
+  </data>
+  <data name="report_reason" xml:space="preserve">
+    <value>理由：</value>
+  </data>
+  <data name="report_sub_reason" xml:space="preserve">
+    <value>詳細な理由</value>
+  </data>
+  <data name="windowed" xml:space="preserve">
+    <value>ウィンドウ</value>
+  </data>
+  <data name="borderless" xml:space="preserve">
+    <value>ボーダレス</value>
+  </data>
+  <data name="fullscreen" xml:space="preserve">
+    <value>全画面</value>
+  </data>
+  <data name="vertical_sync" xml:space="preserve">
+    <value>バーティカルシンク</value>
+  </data>
+  <data name="refresh_rate_2x" xml:space="preserve">
+    <value>2倍のリフレッシュレート</value>
+  </data>
+  <data name="refresh_rate_4x" xml:space="preserve">
+    <value>4x リフレッシュレート</value>
+  </data>
+  <data name="refresh_rate_8x" xml:space="preserve">
+    <value>8x リフレッシュレート</value>
+  </data>
+  <data name="unlimited" xml:space="preserve">
+    <value>基本的に無制限です</value>
+  </data>
+  <data name="dislike_counter_credits_1" xml:space="preserve">
+    <value>低評価数データは</value>
+  </data>
+  <data name="dislike_counter_credits_2" xml:space="preserve">
+    <value>によって提供されています。</value>
+  </data>
+  <data name="always_use_original_audio" xml:space="preserve">
+    <value>常に元の音声を使用する</value>
+  </data>
+  <data name="no_description" xml:space="preserve">
+    <value>この動画に説明が追加されていません。</value>
+  </data>
+  <data name="view_version_desc" xml:space="preserve">
+    <value>{0}の変更ログを表示します</value>
+    <comment>view_version_desc</comment>
+  </data>
+  <data name="render_type_automatic" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="render_type_automatic_is_use" xml:space="preserve">
+    <value>自動 ({0})</value>
+  </data>
+  <data name="use_system_cursor" xml:space="preserve">
+    <value>常にシステムカーソルを使用します</value>
+  </data>
+  <data name="wasapi_label" xml:space="preserve">
+    <value>実験オーディオモードを使用します</value>
+  </data>
+  <data name="wasapi_tooltip" xml:space="preserve">
+    <value>これにより、低遅延モードでオーディオ エンジンを初期化しようとします。</value>
+  </data>
+  <data name="output_device" xml:space="preserve">
+    <value>出力デバイス</value>
+  </data>
+  <data name="volume" xml:space="preserve">
+    <value>ボリューム</value>
+  </data>
+  <data name="debug" xml:space="preserve">
+    <value>デバッグ</value>
+  </data>
+  <data name="show_log_overlay" xml:space="preserve">
+    <value>ログ オーバーレイ表示</value>
+  </data>
+  <data name="bypass_ftb_render_pass" xml:space="preserve">
+    <value>前面から背面へのレンダー パスをバイパスします</value>
+  </data>
+  <data name="gc_mode" xml:space="preserve">
+    <value>GCモード</value>
+  </data>
+  <data name="clear_all_caches" xml:space="preserve">
+    <value>すべてのキャッシュをクリアします</value>
+  </data>
+  <data name="load_from_playlist_id" xml:space="preserve">
+    <value>プレイリストIDまたはURLからロードします</value>
+  </data>
+  <data name="load_playlist" xml:space="preserve">
+    <value>ロードプレイリスト</value>
+  </data>
+  <data name="playlists" xml:space="preserve">
+    <value>プレイリスト</value>
+  </data>
+  <data name="previous_video" xml:space="preserve">
+    <value>前ビデオ</value>
+  </data>
+  <data name="next_video" xml:space="preserve">
+    <value>次ビデオ</value>
+  </data>
+  <data name="hw_acceleration_enabled_note" xml:space="preserve">
+    <value>GPUによるハードウェアアクセラレーションが有効になっています。 問題が発生した場合は、ハードウェアアクセラレーションを無効にしておきます。</value>
+    <comment>hw_acceleration_enabled_note</comment>
+  </data>
+  <data name="audio_effects" xml:space="preserve">
+    <value>オーディオ効果</value>
+  </data>
+  <data name="reverb" xml:space="preserve">
+    <value>リバーブ</value>
+  </data>
+  <data name="reverb_wet_mix" xml:space="preserve">
+    <value>ウェットミックス</value>
+  </data>
+  <data name="echo_wet_mix" xml:space="preserve">
+    <value>ウェットミックス</value>
+  </data>
+  <data name="reverb_stereo_width" xml:space="preserve">
+    <value>ステレオ プレゼンテーション</value>
+  </data>
+  <data name="reverb_high_frequency_damping" xml:space="preserve">
+    <value>高周波減衰</value>
+  </data>
+  <data name="reverb_room_size" xml:space="preserve">
+    <value>部屋サイズ</value>
+  </data>
+  <data name="audio_effect_rotate_rate" xml:space="preserve">
+    <value>回転速度</value>
+  </data>
+  <data name="audio_effect_rotate_enabled" xml:space="preserve">
+    <value>3次元回転効果</value>
+  </data>
+  <data name="echo_dry_mix" xml:space="preserve">
+    <value>ドライミックス</value>
+  </data>
+  <data name="echo_feedback" xml:space="preserve">
+    <value>フィードバック</value>
+  </data>
+  <data name="echo_delay" xml:space="preserve">
+    <value>遅延</value>
+  </data>
+  <data name="echo_effect" xml:space="preserve">
+    <value>エコ</value>
+  </data>
+  <data name="distortion_effect" xml:space="preserve">
+    <value>ディストーション</value>
+  </data>
+  <data name="distortion_volume" xml:space="preserve">
+    <value>ひずみ量</value>
+  </data>
+  <data name="bloom" xml:space="preserve">
+    <value>ビデオブルームレベル</value>
+  </data>
+  <data name="chromatic_aberration" xml:space="preserve">
+    <value>色収差効果強度</value>
+  </data>
+  <data name="visual_effects" xml:space="preserve">
+    <value>視覚効果</value>
+  </data>
+  <data name="grayscale" xml:space="preserve">
+    <value>ビデオ グレースケール レベル</value>
+  </data>
+  <data name="hue_shift" xml:space="preserve">
+    <value>ビデオ色相シフト</value>
+  </data>
+  <data name="discord_rich_presence" xml:space="preserve">
+    <value>Discord リッチプレゼンス</value>
+  </data>
+  <data name="hide_identifiable_information" xml:space="preserve">
+    <value>ビデオ情報を非表示にします</value>
+  </data>
+  <data name="discord_presence_full" xml:space="preserve">
+    <value>満車</value>
+  </data>
+  <data name="discord_presence_off" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>はい</value>
+  </data>
+  <data name="unsubscribe_desc" xml:space="preserve">
+    <value>このチャンネルを購読解除してもよろしいですか？</value>
+  </data>
+  <data name="subscribe" xml:space="preserve">
+    <value>購読</value>
+  </data>
+  <data name="unsubscribe" xml:space="preserve">
+    <value>登録解除</value>
+  </data>
+  <data name="subscription_removed" xml:space="preserve">
+    <value>サブスクリプションが削除されました。</value>
+  </data>
+  <data name="subscription_added" xml:space="preserve">
+    <value>サブスクリプションが追加されました。</value>
+  </data>
+  <data name="closed_captions" xml:space="preserve">
+    <value>クローズドキャプション</value>
+  </data>
+  <data name="summarize_via_gpt" xml:space="preserve">
+    <value>要約ビデオ</value>
+  </data>
+  <data name="gpt_summarize_prompt" xml:space="preserve">
+    <value>{0} このビデオを要約します</value>
+  </data>
+  <data name="public" xml:space="preserve">
+    <value>パブリック</value>
+  </data>
+  <data name="unlisted" xml:space="preserve">
+    <value>リスト未掲載</value>
+  </data>
+  <data name="private" xml:space="preserve">
+    <value>プライベート</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="save_or_remove" xml:space="preserve">
+    <value>保存または削除します</value>
+  </data>
+  <data name="save_location" xml:space="preserve">
+    <value>保存場所</value>
+  </data>
+  <data name="add_new_playlist" xml:space="preserve">
+    <value>新しい再生リストを追加します</value>
+  </data>
+  <data name="privacy_status" xml:space="preserve">
+    <value>プライバシー ステータス</value>
+  </data>
+  <data name="title_placeholder" xml:space="preserve">
+    <value>ここにタイトルを入力します</value>
+  </data>
+  <data name="title" xml:space="preserve">
+    <value>タイトル</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>作成</value>
+  </data>
+  <data name="video_saved_to_playlist" xml:space="preserve">
+    <value>現在の動画をプレイリスト{0}に追加しました。</value>
+  </data>
+  <data name="video_removed_from_playlist" xml:space="preserve">
+    <value>プレイリスト{0}から現在の動画を削除しました。</value>
+  </data>
+  <data name="menu" xml:space="preserve">
+    <value>メニュー</value>
+  </data>
+  <data name="exit" xml:space="preserve">
+    <value>エグジット</value>
+  </data>
+  <data name="audio_normalization" xml:space="preserve">
+    <value>オーディオ正規化</value>
+  </data>
+  <data name="use_sdl3_host" xml:space="preserve">
+    <value>SDL3ホスト使用（試験的）</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>ログアウト</value>
+  </data>
+  <data name="view_channel" xml:space="preserve">
+    <value>表示チャネル</value>
+  </data>
+  <data name="video_not_loaded" xml:space="preserve">
+    <value>ビデオがロードされていません！</value>
+  </data>
+  <data name="video_not_loaded_desc" xml:space="preserve">
+    <value>ぜひ動画をご覧くださいませ！</value>
+  </data>
+  <data name="my_playlists" xml:space="preserve">
+    <value>マイプレイリスト</value>
+  </data>
+  <data name="playlist_not_loaded" xml:space="preserve">
+    <value>再生リストがロードされていません！</value>
+  </data>
+  <data name="playlist_not_loaded_desc" xml:space="preserve">
+    <value>プレイリストをロードしてご覧いただけます！</value>
+  </data>
+  <data name="exit_options" xml:space="preserve">
+    <value>終了オプション</value>
+  </data>
+  <data name="power_off" xml:space="preserve">
+    <value>電源オフシステム</value>
+  </data>
+  <data name="restart_system" xml:space="preserve">
+    <value>システムを再起動します</value>
+  </data>
+  <data name="audio_quality" xml:space="preserve">
+    <value>音質</value>
+  </data>
+  <data name="prefer_high_quality_audio" xml:space="preserve">
+    <value>高品質を優先します</value>
+  </data>
+  <data name="prefer_opus" xml:space="preserve">
+    <value>opus コーデックを優先します</value>
+  </data>
+  <data name="prefer_mp4a" xml:space="preserve">
+    <value>mp4a コーデックを優先します</value>
+  </data>
+  <data name="low_quality" xml:space="preserve">
+    <value>低品質</value>
+  </data>
+  <data name="close_button_action" xml:space="preserve">
+    <value>閉じるボタンを押したときのアクションです</value>
+  </data>
+  <data name="hide_to_tray_icon" xml:space="preserve">
+    <value>トレイアイコンに非表示にします</value>
+  </data>
+  <data name="close_app" xml:space="preserve">
+    <value>アプリを閉じます</value>
+  </data>
+  <data name="repeat" xml:space="preserve">
+    <value>繰り返します</value>
+  </data>
+  <data name="oauth_note" xml:space="preserve">
+    <value>ログインすると、「Google はこのアプリを検証していません」という画面が表示されることがあります。 ご自由にログインをお願いします。</value>
+  </data>
+  <data name="system_volume" xml:space="preserve">
+    <value>システムボリューム</value>
+  </data>
+  <data name="system_volume_with_device" xml:space="preserve">
+    <value>システムボリューム（{0}）</value>
+  </data>
+  <data name="colour_scheme" xml:space="preserve">
+    <value>アプリケーションカラースキーム</value>
+  </data>
+  <data name="circle" xml:space="preserve">
+    <value>サークル</value>
+  </data>
+  <data name="square" xml:space="preserve">
+    <value>丸型正方形</value>
+  </data>
+  <data name="profile_image_shape" xml:space="preserve">
+    <value>プロファイル画像形状</value>
+  </data>
+  <data name="sort_title" xml:space="preserve">
+    <value>並べ替え</value>
+  </data>
+  <data name="sort_top" xml:space="preserve">
+    <value>人気順</value>
+  </data>
+  <data name="sort_newest" xml:space="preserve">
+    <value>新しい順</value>
+  </data>
+  <data name="user_interface" xml:space="preserve">
+    <value>ユーザ インターフェイス</value>
+  </data>
+  <data name="no_comments" xml:space="preserve">
+    <value>コメントがありません···</value>
+  </data>
+  <data name="no_comments_desc" xml:space="preserve">
+    <value>他に何かありますか？</value>
+  </data>
+  <data name="system_sound_mute" xml:space="preserve">
+    <value>システム音ミュート</value>
+  </data>
+  <data name="system_sound_mute_desc" xml:space="preserve">
+    <value>この設定は、AX Player サウンドやその他のアプリケーション、システムサウンドをミュートします。</value>
+  </data>
+  <data name="report_bugs" xml:space="preserve">
+    <value>フィードバック送信</value>
+  </data>
+  <data name="report_bugs_desc" xml:space="preserve">
+    <value>アプリでフィードバックを開発者に送信します。</value>
+  </data>
+  <data name="discord_not_installed" xml:space="preserve">
+    <value>Discordはインストールされていません。 Discordをインストールして、あなたの活動を友達と共有しましょう！</value>
+  </data>
+  <data name="release_stream" xml:space="preserve">
+    <value>リリースストリーム</value>
+  </data>
+  <data name="release_stream_stable" xml:space="preserve">
+    <value>安定放出</value>
+  </data>
+  <data name="release_stream_beta" xml:space="preserve">
+    <value>夜間ビルド（不安定）</value>
+  </data>
+  <data name="video_quality_with_label" xml:space="preserve">
+    <value>ビデオ品質（{0}）</value>
+  </data>
+  <data name="audio_quality_with_label" xml:space="preserve">
+    <value>音質（{0}）</value>
+  </data>
+  <data name="jump_to" xml:space="preserve">
+    <value>{0}にジャンプします</value>
+  </data>
+  <data name="edit_playlist" xml:space="preserve">
+    <value>編集プレイリスト</value>
+  </data>
+  <data name="apply" xml:space="preserve">
+    <value>適用</value>
+  </data>
+  <data name="download_video" xml:space="preserve">
+    <value>ビデオダウンロード</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="downloading_video_stream" xml:space="preserve">
+    <value>ビデオストリームをダウンロードしています。 {0}</value>
+  </data>
+  <data name="downloading_audio_stream" xml:space="preserve">
+    <value>オーディオストリームをダウンロードしています。 {0}</value>
+  </data>
+  <data name="merging_stream" xml:space="preserve">
+    <value>ストリームをマージしています···</value>
+  </data>
+  <data name="download_completed" xml:space="preserve">
+    <value>ダウンロードが完了しました。</value>
+  </data>
+  <data name="ui_font" xml:space="preserve">
+    <value>ユーザーインターフェースのフォント</value>
+  </data>
+  <data name="translating" xml:space="preserve">
+    <value>翻訳中···</value>
+  </data>
+  <data name="video_metadata_desc_with_likecount" xml:space="preserve">
+    <value>{0} • {1} 好き • {2} 回視聴 • {3}</value>
+  </data>
+  <data name="show_video_metadata_on_window_title" xml:space="preserve">
+    <value>ウィンドウタイトルにビデオメタデータを表示します</value>
+  </data>
+  <data name="player_control_pin" xml:space="preserve">
+    <value>常にプレイヤーのコントロールを表示します</value>
+  </data>
+  <data name="karaoke_mode" xml:space="preserve">
+    <value>カラオケモード（実験用）</value>
+  </data>
+  <data name="chorus_effect" xml:space="preserve">
+    <value>コーラス</value>
+  </data>
+  <data name="chorus_min_sweep" xml:space="preserve">
+    <value>最小スイープ</value>
+  </data>
+  <data name="chorus_max_sweep" xml:space="preserve">
+    <value>最大スイープ</value>
+  </data>
+  <data name="chorus_rate" xml:space="preserve">
+    <value>レート</value>
+  </data>
+  <data name="sort_relevance" xml:space="preserve">
+    <value>関連性</value>
+  </data>
+  <data name="sort_alphabet" xml:space="preserve">
+    <value>アルファベット (A-Z)</value>
+  </data>
+  <data name="login_to_comment" xml:space="preserve">
+    <value>ログインしてコメントを送信します(メニュー - 設定 - Google アカウント)</value>
+  </data>
+  <data name="settings_item_restart_required" xml:space="preserve">
+    <value>この設定を変更すると、アプリが再起動して適用されます。</value>
+  </data>
+  <data name="video_settings" xml:space="preserve">
+    <value>ビデオ設定</value>
+  </data>
+  <data name="alsa_exclusive_notice" xml:space="preserve">
+    <value>AX Playerが使用している間は、他のアプリから音を聞くことができない専用のドライバを使用しているデバイスを選択していることに注意しましょう。 また、正しく初期化するには、まず、他のアプリケーションでアクティブに使用されていないことを確認します。 AX Playerを再起動し、他のオーディオドライバを使用している場合は、しばらく待ってから初期化を解除する必要があります。</value>
+  </data>
+  <data name="sfx_type" xml:space="preserve">
+    <value>オーバーレイ効果音タイプ</value>
+  </data>
+  <data name="sfx_new" xml:space="preserve">
+    <value>新効果音</value>
+  </data>
+  <data name="sfx_legacy" xml:space="preserve">
+    <value>レガシー</value>
+  </data>
+  <data name="play_overlay_sfx" xml:space="preserve">
+    <value>再生オーバーレイ効果音</value>
+  </data>
+  <data name="closed_captions_bg_opacity" xml:space="preserve">
+    <value>クローズドキャプション背景不透明度</value>
+  </data>
+  <data name="closed_captions_preview" xml:space="preserve">
+    <value>字幕はこんな感じです。</value>
+  </data>
+  <data name="like_button" xml:space="preserve">
+    <value>私はこれが好きです</value>
+  </data>
+  <data name="dislike_button" xml:space="preserve">
+    <value>私はこれが嫌いです</value>
+  </data>
+  <data name="app_info" xml:space="preserve">
+    <value>AX Playerについて</value>
+  </data>
+  <data name="yt_handle_view_profile" xml:space="preserve">
+    <value>{0}のプロファイルを表示します</value>
+  </data>
+  <data name="hashtag" xml:space="preserve">
+    <value>ハッシュタグ{0}</value>
+  </data>
+  <data name="view_github_profile" xml:space="preserve">
+    <value>GitHubプロファイルを表示します</value>
+  </data>
+  <data name="view_more_comments" xml:space="preserve">
+    <value>追加コメントを表示します</value>
+  </data>
+  <data name="updates" xml:space="preserve">
+    <value>アップデート</value>
+  </data>
+  <data name="reflex_hint" xml:space="preserve">
+    <value>NVIDIA GPU上のNVIDIA Reflex APIを活用することで、レイテンシを低減します。 On にすることを推奨します。問題が発生している場合のみ Off にしてください。</value>
+  </data>
+  <data name="reflex_notice" xml:space="preserve">
+    <value>Boost は GPU の消費電力を増加させ、場合によっては遅延が増加することがあります。 問題が発生している場合は、Boostを無効にしてください。</value>
+  </data>
+  <data name="reflex_off" xml:space="preserve">
+    <value>無障害の</value>
+  </data>
+  <data name="reflex_on" xml:space="preserve">
+    <value>有効</value>
+  </data>
+  <data name="reflex_boost" xml:space="preserve">
+    <value>強化する</value>
+  </data>
+  <data name="srv3_notice" xml:space="preserve">
+    <value>これらの機能は実験的なもので、不具合が多く、まだ完成していません。</value>
+  </data>
+  <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
+    <value>動画の読み込み時に再生速度をリセットする</value>
+  </data>
+  <data name="closed_captions_bg_colour" xml:space="preserve">
+    <value>クローズドキャプションの背景色</value>
+  </data>
+  <data name="closed_captions_radius" xml:space="preserve">
+    <value>クローズドキャプションの角丸</value>
+  </data>
+  <data name="advanced_subtitle_style" xml:space="preserve">
+    <value>高度な字幕スタイルを使用する</value>
+  </data>
+  <data name="screenshot_quality" xml:space="preserve">
+    <value>スクリーンショットの品質</value>
+  </data>
+  <data name="notifications" xml:space="preserve">
+    <value>お知らせ</value>
+  </data>
+  <data name="audio_tracks" xml:space="preserve">
+    <value>音声トラック</value>
+  </data>
+  <data name="karaoke_vocal_volume" xml:space="preserve">
+    <value>声の大きさ</value>
+  </data>
+  <data name="eight_bit_effect_enabled" xml:space="preserve">
+    <value>8ビットエフェクト</value>
+  </data>
+  <data name="bit_depth" xml:space="preserve">
+    <value>ビット深度</value>
+  </data>
+  <data name="downsample_ratio" xml:space="preserve">
+    <value>ダウンサンプリング比率</value>
+  </data>
+  <data name="vertical_sync_vrr" xml:space="preserve">
+    <value>バーティカルシンク（VRR低遅延）</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>準備中...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>歪み量が50％を超えると、音質の劣化が発生します！</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>現代の</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>プレイヤーコントローラのフェードスタイル</value>
+  </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>バー波アニメーションを探してください</value>
+  </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>従来のオーディオモードを使用</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>オーディオに問題がある場合に使用してください。オンにすると、オーディオの遅延が増加するのでご注意ください。</value>
+  </data>
+</root>

@@ -1,9 +1,0 @@
-﻿extensions: .cs
-// Copyright (c) BoomboxRapsody <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
-// See the LICENCE file in the repository root for full licence text.
-
-extensions:  .xml .config .xsd
-<!--
-Copyright (c) BoomboxRapsody <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
-See the LICENCE file in the repository root for full licence text.
--->

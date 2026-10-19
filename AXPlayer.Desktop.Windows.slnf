@@ -1,0 +1,12 @@
+﻿{
+  "solution": {
+    "path": "AXPlayer.sln",
+    "projects": [
+      "AXPlayer.Desktop.Windows\\AXPlayer.Desktop.Windows.csproj",
+      "AXPlayer.App\\AXPlayer.App.csproj",
+	  "osu-framework\\osu.Framework\\osu.Framework.csproj",
+	  "osu-framework\\osu.Framework.NativeLibs\\osu.Framework.NativeLibs.csproj",
+      "AXPlayer.App.Tests\\AXPlayer.App.Tests.csproj",
+    ]
+  }
+}
