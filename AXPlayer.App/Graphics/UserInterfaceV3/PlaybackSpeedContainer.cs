@@ -14,7 +14,6 @@ using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 
 namespace AXPlayer.App.Graphics.UserInterfaceV3
 {
