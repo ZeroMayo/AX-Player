@@ -706,18 +706,6 @@ namespace NekoPlayer.App.Screens
                                                                                             },
                                                                                             Colour = overlayColourProvider.Content2,
                                                                                         },
-                                                                                        speedBarSlider = new PlaybackSpeedSliderBar
-                                                                                        {
-                                                                                            Width = 200,
-                                                                                            Margin = new MarginPadding
-                                                                                            {
-                                                                                                Top = 6,
-                                                                                            },
-                                                                                            KeyboardStep = 0.05f,
-                                                                                            PlaySamplesOnAdjust = true,
-                                                                                            AlwaysPresent = true,
-                                                                                            Current = { BindTarget = playbackSpeed },
-                                                                                        },
                                                                                         speedText = new ProjectYomiSpriteText
                                                                                         {
                                                                                             Margin = new MarginPadding
@@ -725,7 +713,7 @@ namespace NekoPlayer.App.Screens
                                                                                                 Top = 7
                                                                                             },
                                                                                             AlwaysPresent = true,
-                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold", fixedWidth: true),
+                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold"),
                                                                                             Colour = overlayColourProvider.Content2,
                                                                                         },
                                                                                     }
@@ -797,7 +785,7 @@ namespace NekoPlayer.App.Screens
                                                                                                 Top = 7
                                                                                             },
                                                                                             AlwaysPresent = true,
-                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold", fixedWidth: true),
+                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold"),
                                                                                             Colour = overlayColourProvider.Content2,
                                                                                         },
                                                                                     }

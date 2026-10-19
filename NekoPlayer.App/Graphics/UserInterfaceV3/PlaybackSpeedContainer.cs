@@ -21,12 +21,10 @@ namespace NekoPlayer.App.Graphics.UserInterfaceV3
     {
         public Bindable<double> Current;
 
-        protected override bool OnMouseDown(MouseDownEvent e)
+        protected override bool OnClick(ClickEvent e)
         {
-            if (e.Button == osuTK.Input.MouseButton.Right)
-                this.ShowPopover();
-
-            return base.OnMouseDown(e);
+            this.ShowPopover();
+            return base.OnClick(e);
         }
 
         public Popover GetPopover() => new ProjectYomiPopover(false)
