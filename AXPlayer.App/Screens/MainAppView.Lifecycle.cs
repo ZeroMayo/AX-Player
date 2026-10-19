@@ -196,8 +196,8 @@ namespace AXPlayer.App.Screens
                             {
                                 LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
                                 LargeImageUrl = $"https://youtu.be/{videoData.Id}",
-                                SmallImageText = "NekoPlayer",
-                                SmallImageKey = "nekoplayer_liquidglass_remake_withbg"
+                                SmallImageText = "AX Player",
+                                SmallImageKey = "ax_player"
                             },
                             Buttons =
                             [
@@ -217,7 +217,7 @@ namespace AXPlayer.App.Screens
                             State = AXPlayer_DiscordRPCStrings.IdleString,
                             Assets = new Assets()
                             {
-                                LargeImageKey = "nekoplayer_liquidglass_remake_withbg",
+                                LargeImageKey = "ax_player",
                             },
                         });
                     }
@@ -234,7 +234,7 @@ namespace AXPlayer.App.Screens
                             Timestamps = timestamps,
                             Assets = new Assets()
                             {
-                                LargeImageKey = "nekoplayer_liquidglass_remake_withbg"
+                                LargeImageKey = "ax_player"
                             },
                             Buttons =
                             [
@@ -254,7 +254,7 @@ namespace AXPlayer.App.Screens
                             State = AXPlayer_DiscordRPCStrings.IdleString,
                             Assets = new Assets()
                             {
-                                LargeImageKey = "nekoplayer_liquidglass_remake_withbg",
+                                LargeImageKey = "ax_player",
                             },
                         });
                     }

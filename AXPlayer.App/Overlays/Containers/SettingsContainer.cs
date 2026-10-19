@@ -1021,7 +1021,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 /*
                                                                 new SettingsItemV2(new FormVolumeSliderBar<double>
                                                                 {
-                                                                    Caption = NekoPlayerStrings.MasterVolume,
+                                                                    Caption = 
+                                                                Strings.MasterVolume,
                                                                     Icon = FontAwesome.Solid.VolumeUp,
                                                                     Current = config.GetBindable<double>(FrameworkSetting.VolumeUniversal),
                                                                     DisplayAsPercentage = true,

@@ -260,14 +260,14 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString RunningLatestRelease(string version) => new TranslatableString(getKey(@"running_latest_release"), @"You are running the latest release ({0})", version);
 
         /// <summary>
-        /// "Updating NekoPlayer ({0}%)"
+        /// "Updating AX Player ({0}%)"
         /// </summary>
-        public static LocalisableString DownloadingUpdate(string percentage) => new TranslatableString(getKey(@"updating"), @"Updating NekoPlayer ({0}%)", percentage);
+        public static LocalisableString DownloadingUpdate(string percentage) => new TranslatableString(getKey(@"updating"), @"Updating AX Player ({0}%)", percentage);
 
         /// <summary>
-        /// "The update is almost complete. Re-run NekoPlayer to finish the update."
+        /// "The update is almost complete. Re-run AX Player to finish the update."
         /// </summary>
-        public static LocalisableString RestartRequired => new TranslatableString(getKey(@"restart_required"), "The update is almost complete. Re-run NekoPlayer to finish the update.");
+        public static LocalisableString RestartRequired => new TranslatableString(getKey(@"restart_required"), "The update is almost complete. Re-run AX Player to finish the update.");
 
         /// <summary>
         /// "Update failed!"
@@ -1105,9 +1105,9 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString SystemMute => new TranslatableString(getKey(@"system_sound_mute"), @"Mute system sounds");
 
         /// <summary>
-        /// "This setting mutes NekoPlayer sounds and other apps, and system sounds."
+        /// "This setting mutes AX Player sounds and other apps, and system sounds."
         /// </summary>
-        public static LocalisableString SystemMuteDesc => new TranslatableString(getKey(@"system_sound_mute_desc"), @"This setting mutes NekoPlayer sounds and other apps, and system sounds.");
+        public static LocalisableString SystemMuteDesc => new TranslatableString(getKey(@"system_sound_mute_desc"), @"This setting mutes AX Player sounds and other apps, and system sounds.");
 
         /// <summary>
         /// "Send a feedback"
@@ -1270,9 +1270,9 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString VideoSettings => new TranslatableString(getKey(@"video_settings"), "Video Settings");
 
         /// <summary>
-        /// "Note that you've selected a device with an exclusive-access driver, which means that you won't be able to hear sounds from other apps while in use by AXPlayer. Also, to initialize it correctly, first ensure it's not being actively used by other applications. You may need to restart NekoPlayer and wait a moment to for it de-initialize if you've just used it through other audio driver."
+        /// "Note that you've selected a device with an exclusive-access driver, which means that you won't be able to hear sounds from other apps while in use by AXPlayer. Also, to initialize it correctly, first ensure it's not being actively used by other applications. You may need to restart AX Player and wait a moment to for it de-initialize if you've just used it through other audio driver."
         /// </summary>
-        public static LocalisableString AlsaExclusiveNotice => new TranslatableString(getKey(@"alsa_exclusive_notice"), @"Note that you've selected a device with an exclusive-access driver, which means that you won't be able to hear sounds from other apps while in use by AXPlayer. Also, to initialize it correctly, first ensure it's not being actively used by other applications. You may need to restart NekoPlayer and wait a moment to for it de-initialize if you've just used it through other audio driver.");
+        public static LocalisableString AlsaExclusiveNotice => new TranslatableString(getKey(@"alsa_exclusive_notice"), @"Note that you've selected a device with an exclusive-access driver, which means that you won't be able to hear sounds from other apps while in use by AXPlayer. Also, to initialize it correctly, first ensure it's not being actively used by other applications. You may need to restart AX Player and wait a moment to for it de-initialize if you've just used it through other audio driver.");
 
         /// <summary>
         /// "Overlay SFX Type"
@@ -1315,9 +1315,9 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString DislikeButton => new TranslatableString(getKey(@"dislike_button"), "I dislike this");
 
         /// <summary>
-        /// "About NekoPlayer"
+        /// "About AX Player"
         /// </summary>
-        public static LocalisableString AppInfo => new TranslatableString(getKey(@"app_info"), "About NekoPlayer");
+        public static LocalisableString AppInfo => new TranslatableString(getKey(@"app_info"), "About AX Player");
 
         /// <summary>
         /// "View profile for {0}"
