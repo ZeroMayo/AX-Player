@@ -41,11 +41,6 @@ namespace NekoPlayer.App.Screens
 {
     public partial class MainAppView
     {
-        private partial class PlaybackSpeedSliderBar : RoundedSliderBar<double>
-        {
-            public override LocalisableString TooltipText => NekoPlayerStrings.PlaybackSpeed(Current.Value);
-        }
-
         private RoundedIconButton viewMoreComments;
         private Container viewMoreCommentsContainer;
 

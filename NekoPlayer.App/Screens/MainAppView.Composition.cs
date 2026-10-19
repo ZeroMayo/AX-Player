@@ -49,6 +49,7 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
@@ -234,7 +235,7 @@ namespace NekoPlayer.App.Screens
                     Origin = Anchor.Centre,
                 },
                 new GlobalScrollAdjustsVolume(),
-                userInterfaceContainer = new Container
+                userInterfaceContainer = new PopoverContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
