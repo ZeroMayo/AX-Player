@@ -660,12 +660,13 @@ namespace NekoPlayer.App.Screens
                                                                                 }
                                                                             }
                                                                         },
-                                                                        new Container
+                                                                        new PlaybackSpeedContainer
                                                                         {
                                                                             AutoSizeAxes = Axes.X,
                                                                             Height = 30,
                                                                             Masking = true,
                                                                             CornerRadius = 15,
+                                                                            Current = playbackSpeed.GetBoundCopy(),
                                                                             /*
                                                                             EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
                                                                             {
@@ -724,7 +725,7 @@ namespace NekoPlayer.App.Screens
                                                                                                 Top = 7
                                                                                             },
                                                                                             AlwaysPresent = true,
-                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold"),
+                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold", fixedWidth: true),
                                                                                             Colour = overlayColourProvider.Content2,
                                                                                         },
                                                                                     }
@@ -796,7 +797,7 @@ namespace NekoPlayer.App.Screens
                                                                                                 Top = 7
                                                                                             },
                                                                                             AlwaysPresent = true,
-                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold"),
+                                                                                            Font = NekoPlayerApp.DefaultFont.With(weight: "Bold", fixedWidth: true),
                                                                                             Colour = overlayColourProvider.Content2,
                                                                                         },
                                                                                     }
