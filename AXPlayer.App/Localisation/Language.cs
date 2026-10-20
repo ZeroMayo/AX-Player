@@ -26,6 +26,9 @@ namespace AXPlayer.App.Localisation
         [Description(@"한국어")]
         ko,
 
+        [Description(@"tiếng Việt")]
+        vi,
+
         [Description(@"简体中文")]
         zh,
 

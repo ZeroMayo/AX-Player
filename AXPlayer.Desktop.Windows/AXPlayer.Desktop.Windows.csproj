@@ -14,27 +14,10 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <DotNetCliToolReference Include="Tmds.DBus.Tool" Version="0.7.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" />
-    <PackageReference Include="Velopack" Version="1.2.158" />
+    <PackageReference Include="Velopack" Version="1.2.161" />
   </ItemGroup>
   <ItemGroup Label="Project References">
     <ProjectReference Include="..\AXPlayer.App\AXPlayer.App.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="AXPlayerTrayIconExtraStrings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AXPlayerTrayIconExtraStrings.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="AXPlayerTrayIconExtraStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AXPlayerTrayIconExtraStrings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Update="appIcon.bmp">

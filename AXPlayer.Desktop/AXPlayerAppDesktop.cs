@@ -32,50 +32,12 @@ namespace AXPlayer.Desktop
         {
             base.LoadComplete();
             LoadComponentAsync(trayIconManager = new TrayIconManager(), Add);
-
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-            {
-                trayIconManager.OnHidedToTrayIcon = () =>
-                {
-                    Task.Run(async () =>
-                    {
-                        using (var client = Connection.Session)
-                        {
-                            await client.ConnectAsync();
-                            Console.WriteLine("Client connected");
-
-                            var proxy = client.CreateProxy<IFreeDesktopNotifications>(
-                                "org.freedesktop.Notifications",
-                                FreeDesktopNotificationsInfo.Path
-                            );
-
-                            var notificationId = await ShowNotification(proxy, "AX Player", AXPlayerTrayIconExtraStrings.HidedToTrayIcon);
-                        }
-                    });
-                };
-            }
         }
 
         public override void RequestHideToTrayIcon()
         {
             base.RequestHideToTrayIcon();
             trayIconManager.HideToTrayIcon();
-        }
-
-        private static async Task<uint> ShowNotification(IFreeDesktopNotifications proxy, string title, string desc, uint replaceId = 0)
-        {
-            var notificationId = await proxy.NotifyAsync(
-                "AXPlayer"
-                , replaceId
-                , $"{Directory.GetCurrentDirectory()}/AXPlayer-Icon.png"
-                , title
-                , desc
-                , Array.Empty<string>()
-                , new Dictionary<string, object>{}
-                , 10 * 1000
-            );
-            Console.WriteLine("Created notification {0}", notificationId);
-            return notificationId;
         }
 
         public override MediaSession CreateMediaSession()
