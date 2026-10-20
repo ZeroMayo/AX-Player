@@ -3754,9 +3754,12 @@ namespace AXPlayer.App.Screens
 
             uiLanguage.BindValueChanged(_ =>
             {
-                double intValue = speedTextRolling.Value;
-                speedText.Text = $@"{intValue:0.##}x";
-            });
+                Schedule(() =>
+                {
+                    double intValue = speedTextRolling.Value;
+                    speedText.Text = $@"{intValue:0.##}x";
+                });
+            }, true);
 
             volumeTextRolling.BindValueChanged(volume =>
             {
