@@ -70,7 +70,7 @@ namespace AXPlayer.Desktop
                 , $"{Directory.GetCurrentDirectory()}/AXPlayer-Icon.png"
                 , title
                 , desc
-                , new string[] { }
+                , Array.Empty<string>()
                 , new Dictionary<string, object>{}
                 , 10 * 1000
             );
