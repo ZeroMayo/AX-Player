@@ -239,6 +239,8 @@ namespace AXPlayer.App.Screens
 
         private Bindable<float> captionBGOpacity;
 
+        private Bindable<double> videoDim;
+
         private CancellationTokenSource videoLoadProcess;
 
         private Bindable<Language> uiLanguage;
