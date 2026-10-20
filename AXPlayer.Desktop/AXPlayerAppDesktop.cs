@@ -2,17 +2,13 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using AXPlayer.App;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Updater;
 using AXPlayer.App.Utils;
-using AXPlayer.Desktop.Linux;
 using AXPlayer.Desktop.Updater;
 using osu.Framework;
-using Tmds.DBus;
 
 namespace AXPlayer.Desktop
 {
