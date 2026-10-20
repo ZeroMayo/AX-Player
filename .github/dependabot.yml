@@ -2,9 +2,9 @@ version: 2
 updates:
 - package-ecosystem: nuget
   directories:
-      - /AXPlayer.App
-      - /AXPlayer.Desktop
-      - /AXPlayer.Desktop.Windows
+      - /AXPlayer.App/
+      - /AXPlayer.Desktop/
+      - /AXPlayer.Desktop.Windows/
   schedule:
       interval: daily
   commit-message:
