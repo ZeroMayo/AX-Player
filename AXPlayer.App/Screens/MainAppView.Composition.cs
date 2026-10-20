@@ -442,7 +442,7 @@ namespace AXPlayer.App.Screens
                                                                     RelativeSizeAxes = Axes.Y,
                                                                     AutoSizeAxes = Axes.X,
                                                                     AlwaysPresent = true,
-                                                                    Spacing = new Vector2(8, 0),
+                                                                    Spacing = new Vector2(3, 0),
                                                                     Direction = FillDirection.Horizontal,
                                                                     Children = new Drawable[]
                                                                     {

@@ -51,6 +51,8 @@ namespace AXPlayer.App.Utils
         [Resolved]
         private AXPlayerApp app { get; set; }
 
+        public Action OnHidedToTrayIcon;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -124,6 +126,7 @@ namespace AXPlayer.App.Utils
                 try
                 {
                     activeTrayIcon = window.CreateTrayIcon(icon);
+                    OnHidedToTrayIcon?.Invoke();
                 }
                 catch (PlatformNotSupportedException ex)
                 {
