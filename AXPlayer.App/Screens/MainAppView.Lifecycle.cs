@@ -512,6 +512,16 @@ namespace AXPlayer.App.Screens
                     videoVolume.Value += 0.05;
                     return true;
 
+                case GlobalAction.DecreaseVideoDim:
+                    videoDim.Value -= 0.01;
+                    osd.Display(new VideoDimChangeToast(videoDim.Value));
+                    return true;
+
+                case GlobalAction.IncreaseVideoDim:
+                    videoDim.Value += 0.01;
+                    osd.Display(new VideoDimChangeToast(videoDim.Value));
+                    return true;
+
                 case GlobalAction.DecreasePlaybackSpeed2:
                     playbackSpeed.Value -= 0.01;
                     osd.Display(new SpeedChangeToast(playbackSpeed.Value));

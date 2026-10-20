@@ -836,6 +836,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Regular.Sun,
                                                             Current = appConfig.GetBindable<double>(AXPlayerSetting.VideoDimLevel),
                                                             DisplayAsPercentage = true,
+                                                            KeyboardStep = 0.05f,
                                                         }),
                                                         new SettingsItemV2(hwAccelCheckbox = new FormCheckBox
                                                         {

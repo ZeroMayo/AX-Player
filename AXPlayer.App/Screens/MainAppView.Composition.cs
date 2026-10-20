@@ -63,6 +63,8 @@ namespace AXPlayer.App.Screens
 
             app.RegisterMessage(this);
 
+            videoDim = appConfig.GetBindable<double>(AXPlayerSetting.VideoDimLevel);
+
             videoVolume = config.GetBindable<double>(FrameworkSetting.VolumeMusic);
 
             showVideoMetadataOnWindowTitle = appConfig.GetBindable<bool>(AXPlayerSetting.ShowVideoMetadataOnWindowTitle);

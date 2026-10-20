@@ -120,6 +120,11 @@ namespace AXPlayer.App.Input.Binding
 
             new KeyBinding(new[] { InputKey.Shift, InputKey.S }, GlobalAction.OpenPlaybackSpeedMenu),
             new KeyBinding(new[] { InputKey.Shift, InputKey.V }, GlobalAction.OpenVideoVolumeMenu),
+
+            new KeyBinding(new[] { InputKey.Shift, InputKey.Minus }, GlobalAction.DecreaseVideoDim),
+            new KeyBinding(new[] { InputKey.Shift, InputKey.Plus }, GlobalAction.IncreaseVideoDim),
+            new KeyBinding(new[] { InputKey.Shift, InputKey.KeypadMinus }, GlobalAction.DecreaseVideoDim),
+            new KeyBinding(new[] { InputKey.Shift, InputKey.KeypadPlus }, GlobalAction.IncreaseVideoDim),
         };
     }
 
@@ -197,5 +202,8 @@ namespace AXPlayer.App.Input.Binding
 
         OpenPlaybackSpeedMenu,
         OpenVideoVolumeMenu,
+
+        DecreaseVideoDim,
+        IncreaseVideoDim,
     }
 }
