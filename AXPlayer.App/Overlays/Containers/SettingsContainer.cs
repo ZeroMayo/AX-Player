@@ -1018,16 +1018,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Spacing = new Vector2(0, 2),
                                                             Children = new Drawable[]
                                                             {
-                                                                /*
-                                                                new SettingsItemV2(new FormVolumeSliderBar<double>
-                                                                {
-                                                                    Caption = 
-                                                                Strings.MasterVolume,
-                                                                    Icon = FontAwesome.Solid.VolumeUp,
-                                                                    Current = config.GetBindable<double>(FrameworkSetting.VolumeUniversal),
-                                                                    DisplayAsPercentage = true,
-                                                                }),
-                                                                */
                                                                 new SettingsItemV2(new FormSliderBar<double>
                                                                 {
                                                                     Caption = AXPlayerStrings.VideoVolume,

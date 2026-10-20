@@ -135,6 +135,7 @@ namespace AXPlayer.App.Screens
                 if (isControlVisible == true)
                 {
                     playbackSpeedContainer.HidePopover();
+                    videoVolumeControlContainer.HidePopover();
                     if (appGlobalConfig.Get<PlayerControllerFadeStyle>(AXPlayerSetting.PlayerControllerFadeStyle) == PlayerControllerFadeStyle.Modern)
                     {
                         isControlVisible = false;
