@@ -697,9 +697,7 @@ namespace AXPlayer.App.Screens
 
                     volumeBarBG.Colour = bgColor;
                     volumeIcon.Colour = accentColor;
-
-                    volumeBarSlider.AccentColour = accentColor;
-                    volumeBarSlider.BackgroundColour = bgColor.Lighten(0.5f);
+                    volumeBarExpandIcon.Colour = accentColor;
 
                     volumeText.Colour = accentColor;
 

@@ -544,6 +544,10 @@ namespace AXPlayer.App.Screens
                     playbackSpeedContainer.ShowPopover();
                     return true;
 
+                case GlobalAction.OpenVideoVolumeMenu:
+                    videoVolumeControlContainer.ShowPopover();
+                    return true;
+
                 case GlobalAction.QuitApp:
                     game.AttemptExit();
                     return true;

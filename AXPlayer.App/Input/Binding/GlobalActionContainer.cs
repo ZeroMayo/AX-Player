@@ -119,6 +119,7 @@ namespace AXPlayer.App.Input.Binding
             new KeyBinding(new[] { InputKey.Shift, InputKey.F7 }, GlobalAction.ToggleEightBitEffect),
 
             new KeyBinding(new[] { InputKey.Shift, InputKey.S }, GlobalAction.OpenPlaybackSpeedMenu),
+            new KeyBinding(new[] { InputKey.Shift, InputKey.V }, GlobalAction.OpenVideoVolumeMenu),
         };
     }
 
@@ -194,6 +195,7 @@ namespace AXPlayer.App.Input.Binding
         CycleProfileShape,
         ToggleEightBitEffect,
 
-        OpenPlaybackSpeedMenu
+        OpenPlaybackSpeedMenu,
+        OpenVideoVolumeMenu,
     }
 }

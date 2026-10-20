@@ -190,11 +190,10 @@ namespace AXPlayer.App.Screens
         private Bindable<double> speedTextRolling;
         private Bindable<double> volumeTextRolling;
 
-        private SpriteIcon volumeIcon, speedBarIcon, speedBarExpandIcon;
+        private SpriteIcon volumeIcon, speedBarIcon, speedBarExpandIcon, volumeBarExpandIcon;
 
         private PlaybackSpeedContainer playbackSpeedContainer;
-
-        private RoundedSliderBar<double> volumeBarSlider;
+        private VideoVolumeControlContainer videoVolumeControlContainer;
 
         private LinkFlowContainer playlistAuthor;
 

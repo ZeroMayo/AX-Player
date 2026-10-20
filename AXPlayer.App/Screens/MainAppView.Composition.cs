@@ -9,7 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Apis.YouTube.v3.Data;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics;
@@ -27,6 +26,7 @@ using AXPlayer.App.Overlays.Containers;
 using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Overlays.Volume;
 using AXPlayer.App.Updater;
+using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
@@ -442,7 +442,7 @@ namespace AXPlayer.App.Screens
                                                                     RelativeSizeAxes = Axes.Y,
                                                                     AutoSizeAxes = Axes.X,
                                                                     AlwaysPresent = true,
-                                                                    Spacing = new Vector2(8, 0),
+                                                                    Spacing = new Vector2(3, 0),
                                                                     Direction = FillDirection.Horizontal,
                                                                     Children = new Drawable[]
                                                                     {
@@ -633,144 +633,160 @@ namespace AXPlayer.App.Screens
                                                                                 }
                                                                             }
                                                                         },
-                                                                        playbackSpeedContainer = new PlaybackSpeedContainer
-                                                                        {
-                                                                            AutoSizeAxes = Axes.X,
-                                                                            Height = 30,
-                                                                            Masking = true,
-                                                                            CornerRadius = 15,
-                                                                            Current = playbackSpeed.GetBoundCopy(),
-                                                                            /*
-                                                                            EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
-                                                                            {
-                                                                                Type = osu.Framework.Graphics.Effects.EdgeEffectType.Shadow,
-                                                                                Colour = Color4.Black.Opacity(0.25f),
-                                                                                Offset = new Vector2(0, 2),
-                                                                                Radius = 16,
-                                                                            },
-                                                                            */
-                                                                            Children = new Drawable[]
-                                                                            {
-                                                                                speedBarBG = new Box
-                                                                                {
-                                                                                    RelativeSizeAxes = Axes.Both,
-                                                                                    Colour = overlayColourProvider.Background3,
-                                                                                    Alpha = 1f,
-                                                                                },
-                                                                                new FillFlowContainer
-                                                                                {
-                                                                                    AutoSizeAxes = Axes.Both,
-                                                                                    Spacing = new Vector2(8, 0),
-                                                                                    Direction = FillDirection.Horizontal,
-                                                                                    Padding = new MarginPadding
-                                                                                    {
-                                                                                        Horizontal = 8
-                                                                                    },
-                                                                                    Children = new Drawable[]
-                                                                                    {
-                                                                                        speedBarIcon = new SpriteIcon
-                                                                                        {
-                                                                                            Icon = FontAwesome.Solid.TachometerAlt,
-                                                                                            Width = 16,
-                                                                                            Height = 16,
-                                                                                            Margin = new MarginPadding
-                                                                                            {
-                                                                                                Top = 8,
-                                                                                            },
-                                                                                            Colour = overlayColourProvider.Content2,
-                                                                                        },
-                                                                                        speedText = new ProjectYomiSpriteText
-                                                                                        {
-                                                                                            Margin = new MarginPadding
-                                                                                            {
-                                                                                                Top = 7
-                                                                                            },
-                                                                                            AlwaysPresent = true,
-                                                                                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
-                                                                                            Colour = overlayColourProvider.Content2,
-                                                                                        },
-                                                                                        speedBarExpandIcon = new SpriteIcon
-                                                                                        {
-                                                                                            Icon = FontAwesome.Solid.ChevronUp,
-                                                                                            Width = 12,
-                                                                                            Height = 12,
-                                                                                            Margin = new MarginPadding
-                                                                                            {
-                                                                                                Top = 9,
-                                                                                            },
-                                                                                            Colour = overlayColourProvider.Content2,
-                                                                                        },
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        },
                                                                         new Container
                                                                         {
                                                                             AutoSizeAxes = Axes.X,
                                                                             Height = 30,
-                                                                            Masking = true,
-                                                                            CornerRadius = 15,
-                                                                            /*
-                                                                            EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
-                                                                            {
-                                                                                Type = osu.Framework.Graphics.Effects.EdgeEffectType.Shadow,
-                                                                                Colour = Color4.Black.Opacity(0.25f),
-                                                                                Offset = new Vector2(0, 2),
-                                                                                Radius = 16,
-                                                                            },
-                                                                            */
                                                                             Children = new Drawable[]
                                                                             {
-                                                                                volumeBarBG = new Box
-                                                                                {
-                                                                                    RelativeSizeAxes = Axes.Both,
-                                                                                    Colour = overlayColourProvider.Background3,
-                                                                                    Alpha = 1f,
-                                                                                },
                                                                                 new FillFlowContainer
                                                                                 {
                                                                                     AutoSizeAxes = Axes.Both,
-                                                                                    Spacing = new Vector2(8, 0),
+                                                                                    Spacing = new Vector2(3, 0),
                                                                                     Direction = FillDirection.Horizontal,
-                                                                                    Padding = new MarginPadding
-                                                                                    {
-                                                                                        Horizontal = 8
-                                                                                    },
                                                                                     Children = new Drawable[]
                                                                                     {
-                                                                                        volumeIcon = new SpriteIcon
+                                                                                        playbackSpeedContainer = new PlaybackSpeedContainer
                                                                                         {
-                                                                                            Icon = FontAwesome.Solid.VolumeUp,
-                                                                                            Width = 16,
-                                                                                            Height = 16,
-                                                                                            Margin = new MarginPadding
+                                                                                            AutoSizeAxes = Axes.X,
+                                                                                            Height = 30,
+                                                                                            Masking = true,
+                                                                                            CornerRadius = new CornersInfo(15, 15, AXPlayerApp.UI_CORNER_RADIUS / 3f, AXPlayerApp.UI_CORNER_RADIUS / 3f),
+                                                                                            Current = playbackSpeed.GetBoundCopy(),
+                                                                                            /*
+                                                                                            EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
                                                                                             {
-                                                                                                Top = 8,
+                                                                                                Type = osu.Framework.Graphics.Effects.EdgeEffectType.Shadow,
+                                                                                                Colour = Color4.Black.Opacity(0.25f),
+                                                                                                Offset = new Vector2(0, 2),
+                                                                                                Radius = 16,
                                                                                             },
-                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                            */
+                                                                                            Children = new Drawable[]
+                                                                                            {
+                                                                                                speedBarBG = new Box
+                                                                                                {
+                                                                                                    RelativeSizeAxes = Axes.Both,
+                                                                                                    Colour = overlayColourProvider.Background3,
+                                                                                                    Alpha = 1f,
+                                                                                                },
+                                                                                                new FillFlowContainer
+                                                                                                {
+                                                                                                    AutoSizeAxes = Axes.Both,
+                                                                                                    Spacing = new Vector2(8, 0),
+                                                                                                    Direction = FillDirection.Horizontal,
+                                                                                                    Padding = new MarginPadding
+                                                                                                    {
+                                                                                                        Horizontal = 8
+                                                                                                    },
+                                                                                                    Children = new Drawable[]
+                                                                                                    {
+                                                                                                        speedBarIcon = new SpriteIcon
+                                                                                                        {
+                                                                                                            Icon = FontAwesome.Solid.TachometerAlt,
+                                                                                                            Width = 16,
+                                                                                                            Height = 16,
+                                                                                                            Margin = new MarginPadding
+                                                                                                            {
+                                                                                                                Top = 8,
+                                                                                                            },
+                                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                                        },
+                                                                                                        speedText = new ProjectYomiSpriteText
+                                                                                                        {
+                                                                                                            Margin = new MarginPadding
+                                                                                                            {
+                                                                                                                Top = 7
+                                                                                                            },
+                                                                                                            AlwaysPresent = true,
+                                                                                                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
+                                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                                        },
+                                                                                                        speedBarExpandIcon = new SpriteIcon
+                                                                                                        {
+                                                                                                            Icon = FontAwesome.Solid.ChevronUp,
+                                                                                                            Width = 12,
+                                                                                                            Height = 12,
+                                                                                                            Margin = new MarginPadding
+                                                                                                            {
+                                                                                                                Top = 9,
+                                                                                                            },
+                                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                                        },
+                                                                                                    }
+                                                                                                }
+                                                                                            }
                                                                                         },
-                                                                                        volumeBarSlider = new RoundedSliderBar<double>
+                                                                                        videoVolumeControlContainer = new VideoVolumeControlContainer
                                                                                         {
-                                                                                            Width = 200,
-                                                                                            Margin = new MarginPadding
+                                                                                            AutoSizeAxes = Axes.X,
+                                                                                            Height = 30,
+                                                                                            Masking = true,
+                                                                                            CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS / 3f, AXPlayerApp.UI_CORNER_RADIUS / 3f, 15, 15),
+                                                                                            Current = videoVolume.GetBoundCopy(),
+                                                                                            /*
+                                                                                            EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
                                                                                             {
-                                                                                                Top = 6,
+                                                                                                Type = osu.Framework.Graphics.Effects.EdgeEffectType.Shadow,
+                                                                                                Colour = Color4.Black.Opacity(0.25f),
+                                                                                                Offset = new Vector2(0, 2),
+                                                                                                Radius = 16,
                                                                                             },
-                                                                                            KeyboardStep = 0.05f,
-                                                                                            PlaySamplesOnAdjust = false,
-                                                                                            DisplayAsPercentage = true,
-                                                                                            AlwaysPresent = true,
-                                                                                            Current = videoVolume,
-                                                                                        },
-                                                                                        volumeText = new ProjectYomiSpriteText
-                                                                                        {
-                                                                                            Margin = new MarginPadding
+                                                                                            */
+                                                                                            Children = new Drawable[]
                                                                                             {
-                                                                                                Top = 7
-                                                                                            },
-                                                                                            AlwaysPresent = true,
-                                                                                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
-                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                                volumeBarBG = new Box
+                                                                                                {
+                                                                                                    RelativeSizeAxes = Axes.Both,
+                                                                                                    Colour = overlayColourProvider.Background3,
+                                                                                                    Alpha = 1f,
+                                                                                                },
+                                                                                                new FillFlowContainer
+                                                                                                {
+                                                                                                    AutoSizeAxes = Axes.Both,
+                                                                                                    Spacing = new Vector2(8, 0),
+                                                                                                    Direction = FillDirection.Horizontal,
+                                                                                                    Padding = new MarginPadding
+                                                                                                    {
+                                                                                                        Horizontal = 8
+                                                                                                    },
+                                                                                                    Children = new Drawable[]
+                                                                                                    {
+                                                                                                        volumeIcon = new SpriteIcon
+                                                                                                        {
+                                                                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                                                                            Width = 16,
+                                                                                                            Height = 16,
+                                                                                                            Margin = new MarginPadding
+                                                                                                            {
+                                                                                                                Top = 8,
+                                                                                                            },
+                                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                                        },
+                                                                                                        volumeText = new ProjectYomiSpriteText
+                                                                                                        {
+                                                                                                            Margin = new MarginPadding
+                                                                                                            {
+                                                                                                                Top = 7
+                                                                                                            },
+                                                                                                            AlwaysPresent = true,
+                                                                                                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
+                                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                                        },
+                                                                                                        volumeBarExpandIcon = new SpriteIcon
+                                                                                                        {
+                                                                                                            Icon = FontAwesome.Solid.ChevronUp,
+                                                                                                            Width = 12,
+                                                                                                            Height = 12,
+                                                                                                            Margin = new MarginPadding
+                                                                                                            {
+                                                                                                                Top = 9,
+                                                                                                            },
+                                                                                                            Colour = overlayColourProvider.Content2,
+                                                                                                        },
+                                                                                                    }
+                                                                                                }
+                                                                                            }
                                                                                         },
                                                                                     }
                                                                                 }
