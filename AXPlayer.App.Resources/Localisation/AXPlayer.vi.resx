@@ -1,0 +1,941 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aspect_ratio_method" xml:space="preserve">
+    <value>Phương pháp tỷ lệ khung hình</value>
+  </data>
+  <data name="audio" xml:space="preserve">
+    <value>Âm thanh</value>
+  </data>
+  <data name="audio_language" xml:space="preserve">
+    <value>Các bản âm thanh</value>
+  </data>
+  <data name="auto" xml:space="preserve">
+    <value>Tự động</value>
+  </data>
+  <data name="caption_disabled" xml:space="preserve">
+    <value>Đã tắt</value>
+  </data>
+  <data name="caption_language" xml:space="preserve">
+    <value>Ngôn ngữ phụ đề chi tiết</value>
+  </data>
+  <data name="disabled" xml:space="preserve">
+    <value>Đã tắt</value>
+  </data>
+  <data name="display" xml:space="preserve">
+    <value>Hiển thị</value>
+  </data>
+  <data name="enabled" xml:space="preserve">
+    <value>Đã bật</value>
+  </data>
+  <data name="error_noVideoId" xml:space="preserve">
+    <value>ID video không được để trống!</value>
+  </data>
+  <data name="fill" xml:space="preserve">
+    <value>Lấp đầy</value>
+  </data>
+  <data name="frame_limiter" xml:space="preserve">
+    <value>Giới hạn tốc độ khung hình</value>
+  </data>
+  <data name="fullscreen_entered" xml:space="preserve">
+    <value>Nhấn F11 để thoát chế độ toàn màn hình.</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>Chung</value>
+  </data>
+  <data name="google_translate" xml:space="preserve">
+    <value>Google Dịch</value>
+  </data>
+  <data name="graphics" xml:space="preserve">
+    <value>Đồ họa</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
+  <data name="letterbox" xml:space="preserve">
+    <value>Thêm viền đen</value>
+  </data>
+  <data name="load_from_video_id" xml:space="preserve">
+    <value>Tải bằng ID hoặc URL của video hay danh sách phát</value>
+  </data>
+  <data name="load_video" xml:space="preserve">
+    <value>Tải video hoặc danh sách phát</value>
+  </data>
+  <data name="master_volume" xml:space="preserve">
+    <value>Âm lượng chính</value>
+  </data>
+  <data name="minimise_on_focus_loss" xml:space="preserve">
+    <value>Thu nhỏ trình phát video khi chuyển sang ứng dụng khác</value>
+  </data>
+  <data name="prefer_high_quality" xml:space="preserve">
+    <value>Ưu tiên chất lượng cao</value>
+  </data>
+  <data name="adjust_pitch_on_speed_change" xml:space="preserve">
+    <value>Điều chỉnh cao độ khi thay đổi tốc độ</value>
+  </data>
+  <data name="profile_image_tooltip" xml:space="preserve">
+    <value>{0} • {1} người đăng ký</value>
+  </data>
+  <data name="screen_mode" xml:space="preserve">
+    <value>Chế độ màn hình</value>
+  </data>
+  <data name="screen_resolution" xml:space="preserve">
+    <value>Độ phân giải màn hình</value>
+  </data>
+  <data name="selected_caption" xml:space="preserve">
+    <value>Phụ đề đã chọn: {0}</value>
+  </data>
+  <data name="selected_caption_auto_gen" xml:space="preserve">
+    <value>Phụ đề đã chọn: {0} (được tạo tự động)</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="sfx_volume" xml:space="preserve">
+    <value>Âm lượng hiệu ứng âm thanh</value>
+  </data>
+  <data name="ui_scaling" xml:space="preserve">
+    <value>Tỷ lệ giao diện</value>
+  </data>
+  <data name="use_hardware_acceleration" xml:space="preserve">
+    <value>Sử dụng tăng tốc phần cứng</value>
+  </data>
+  <data name="video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="video_metadata_desc" xml:space="preserve">
+    <value>{0} • {1} lượt xem • {2}</value>
+  </data>
+  <data name="video_metadata_desc_without_channel_name" xml:space="preserve">
+    <value>{0} lượt xem  {1}</value>
+  </data>
+  <data name="video_metadata_translate_source" xml:space="preserve">
+    <value>Nguồn dịch siêu dữ liệu video</value>
+  </data>
+  <data name="video_quality" xml:space="preserve">
+    <value>Chất lượng video</value>
+  </data>
+  <data name="video_volume" xml:space="preserve">
+    <value>Âm lượng video</value>
+  </data>
+  <data name="comments" xml:space="preserve">
+    <value>Bình luận ({0})</value>
+  </data>
+  <data name="comments_without_count" xml:space="preserve">
+    <value>Bình luận</value>
+  </data>
+  <data name="dim" xml:space="preserve">
+    <value>Mức làm tối video</value>
+  </data>
+  <data name="translate_to" xml:space="preserve">
+    <value>Dịch sang {0}</value>
+  </data>
+  <data name="translate_view_original" xml:space="preserve">
+    <value>Xem bản gốc (Được dịch bởi Google)</value>
+  </data>
+  <data name="comment_reply" xml:space="preserve">
+    <value>{0} (Trả lời {1})</value>
+  </data>
+  <data name="running_latest_release" xml:space="preserve">
+    <value>Bạn đang sử dụng bản phát hành mới nhất ({0})</value>
+  </data>
+  <data name="updating" xml:space="preserve">
+    <value>Đang cập nhật AX Player ({0}%)</value>
+  </data>
+  <data name="restart_required" xml:space="preserve">
+    <value>Bản cập nhật gần hoàn tất. Hãy chạy lại AX Player để hoàn tất cập nhật.</value>
+  </data>
+  <data name="update_failed" xml:space="preserve">
+    <value>Cập nhật thất bại!</value>
+  </data>
+  <data name="checking_update" xml:space="preserve">
+    <value>Đang kiểm tra bản cập nhật...</value>
+  </data>
+  <data name="check_update" xml:space="preserve">
+    <value>Kiểm tra bản cập nhật</value>
+  </data>
+  <data name="like_count_hidden" xml:space="preserve">
+    <value>Số lượt thích đã bị người tải lên ẩn</value>
+  </data>
+  <data name="disabled_by_uploader" xml:space="preserve">
+    <value>Đã bị người tải lên tắt</value>
+  </data>
+  <data name="common_default" xml:space="preserve">
+    <value>Mặc định</value>
+  </data>
+  <data name="show_fps" xml:space="preserve">
+    <value>Hiển thị FPS</value>
+  </data>
+  <data name="cannot_play_private_videos" xml:space="preserve">
+    <value>Không thể phát video riêng tư.</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>Phát</value>
+  </data>
+  <data name="pause" xml:space="preserve">
+    <value>Tạm dừng</value>
+  </data>
+  <data name="playback_speed" xml:space="preserve">
+    <value>Tốc độ phát: {0}</value>
+  </data>
+  <data name="video_quality_8k_warning" xml:space="preserve">
+    <value>Đặt chất lượng video ở mức 8K có thể làm giảm hiệu năng, gây quá tải GPU và khiến trình điều khiển gặp sự cố trên một số thiết bị.</value>
+  </data>
+  <data name="renderer" xml:space="preserve">
+    <value>Bộ kết xuất</value>
+  </data>
+  <data name="export_logs" xml:space="preserve">
+    <value>Xuất nhật ký</value>
+  </data>
+  <data name="logs_export_finished" xml:space="preserve">
+    <value>Đã xuất nhật ký!</value>
+  </data>
+  <data name="revert_to_default" xml:space="preserve">
+    <value>Khôi phục mặc định</value>
+  </data>
+  <data name="playback_speed_without_value" xml:space="preserve">
+    <value>Tốc độ phát</value>
+  </data>
+  <data name="quick_action" xml:space="preserve">
+    <value>Thao tác nhanh</value>
+  </data>
+  <data name="caption_font" xml:space="preserve">
+    <value>Phông chữ phụ đề chi tiết</value>
+  </data>
+  <data name="dislike_count_tooltip" xml:space="preserve">
+    <value>Ước tính: {0} | Thực tế: {1}</value>
+  </data>
+  <data name="caption_auto_gen" xml:space="preserve">
+    <value>{0} (được tạo tự động)</value>
+  </data>
+  <data name="scale_video" xml:space="preserve">
+    <value>Video</value>
+    <comment>scale_video</comment>
+  </data>
+  <data name="scale_everything" xml:space="preserve">
+    <value>Toàn bộ</value>
+  </data>
+  <data name="scaling_off" xml:space="preserve">
+    <value>Tắt</value>
+  </data>
+  <data name="screen_scaling" xml:space="preserve">
+    <value>Tỷ lệ màn hình</value>
+  </data>
+  <data name="horizontal_position" xml:space="preserve">
+    <value>Vị trí ngang</value>
+  </data>
+  <data name="vertical_position" xml:space="preserve">
+    <value>Vị trí dọc</value>
+  </data>
+  <data name="horizontal_scale" xml:space="preserve">
+    <value>Tỷ lệ ngang</value>
+  </data>
+  <data name="vertical_scale" xml:space="preserve">
+    <value>Tỷ lệ dọc</value>
+  </data>
+  <data name="thumbnail_dim" xml:space="preserve">
+    <value>Làm tối hình thu nhỏ</value>
+  </data>
+  <data name="shrink_game_to_safe_area" xml:space="preserve">
+    <value>Thu nhỏ ứng dụng để tránh camera và phần khuyết màn hình</value>
+  </data>
+  <data name="username_display_mode" xml:space="preserve">
+    <value>Chế độ hiển thị tên người dùng</value>
+  </data>
+  <data name="jpg_web_friendly" xml:space="preserve">
+    <value>JPG (phù hợp với web)</value>
+  </data>
+  <data name="png_lossless" xml:space="preserve">
+    <value>PNG (không mất dữ liệu)</value>
+  </data>
+  <data name="screenshot_saved" xml:space="preserve">
+    <value>Đã lưu ảnh chụp màn hình!</value>
+  </data>
+  <data name="screenshot" xml:space="preserve">
+    <value>Ảnh chụp màn hình</value>
+  </data>
+  <data name="screenshot_format" xml:space="preserve">
+    <value>Định dạng ảnh chụp màn hình</value>
+  </data>
+  <data name="show_cursor_in_screenshots" xml:space="preserve">
+    <value>Hiển thị giao diện người dùng trong ảnh chụp màn hình</value>
+  </data>
+  <data name="username_display_mode_nickname" xml:space="preserve">
+    <value>Ưu tiên tên hiển thị (2005–2022)</value>
+  </data>
+  <data name="username_display_mode_handle" xml:space="preserve">
+    <value>Ưu tiên tên định danh (từ 2022)</value>
+  </data>
+  <data name="comment_added" xml:space="preserve">
+    <value>Đã thêm bình luận.</value>
+  </data>
+  <data name="comment_with" xml:space="preserve">
+    <value>Viết bình luận...</value>
+  </data>
+  <data name="signed_in" xml:space="preserve">
+    <value>Đã đăng nhập vào {0}</value>
+  </data>
+  <data name="signed_out" xml:space="preserve">
+    <value>Chưa đăng nhập</value>
+  </data>
+  <data name="google_account" xml:space="preserve">
+    <value>Tài khoản Google</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="search_placeholder" xml:space="preserve">
+    <value>tìm kiếm...</value>
+  </data>
+  <data name="view_latest_versions" xml:space="preserve">
+    <value>Xem các phiên bản mới nhất</value>
+  </data>
+  <data name="report" xml:space="preserve">
+    <value>Báo cáo video</value>
+  </data>
+  <data name="whats_going_on" xml:space="preserve">
+    <value>Chuyện gì đang xảy ra?</value>
+  </data>
+  <data name="report_desc" xml:space="preserve">
+    <value>Chúng tôi sẽ kiểm tra theo Nguyên tắc cộng đồng, vì vậy bạn không cần phải chọn thật hoàn hảo.</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>Gửi</value>
+  </data>
+  <data name="report_success" xml:space="preserve">
+    <value>Cảm ơn bạn đã gửi báo cáo.</value>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>Mô tả</value>
+  </data>
+  <data name="report_reason" xml:space="preserve">
+    <value>Lý do</value>
+  </data>
+  <data name="report_sub_reason" xml:space="preserve">
+    <value>Lý do chi tiết</value>
+  </data>
+  <data name="windowed" xml:space="preserve">
+    <value>Có cửa sổ</value>
+  </data>
+  <data name="borderless" xml:space="preserve">
+    <value>Không viền</value>
+  </data>
+  <data name="fullscreen" xml:space="preserve">
+    <value>Toàn màn hình</value>
+  </data>
+  <data name="vertical_sync" xml:space="preserve">
+    <value>Đồng bộ dọc (VSync)</value>
+  </data>
+  <data name="refresh_rate_2x" xml:space="preserve">
+    <value>Tần số làm mới 2x</value>
+  </data>
+  <data name="refresh_rate_4x" xml:space="preserve">
+    <value>Tần số làm mới 4x</value>
+  </data>
+  <data name="refresh_rate_8x" xml:space="preserve">
+    <value>Tần số làm mới 8x</value>
+  </data>
+  <data name="unlimited" xml:space="preserve">
+    <value>Gần như không giới hạn</value>
+  </data>
+  <data name="dislike_counter_credits_1" xml:space="preserve">
+    <value>Dữ liệu số lượt không thích được cung cấp bởi </value>
+  </data>
+  <data name="dislike_counter_credits_2" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="always_use_original_audio" xml:space="preserve">
+    <value>Luôn sử dụng âm thanh gốc</value>
+  </data>
+  <data name="no_description" xml:space="preserve">
+    <value>Video này chưa có mô tả.</value>
+  </data>
+  <data name="view_version_desc" xml:space="preserve">
+    <value>Xem nhật ký thay đổi của {0}</value>
+    <comment>view_version_desc</comment>
+  </data>
+  <data name="render_type_automatic" xml:space="preserve">
+    <value>Tự động</value>
+  </data>
+  <data name="render_type_automatic_is_use" xml:space="preserve">
+    <value>Tự động ({0})</value>
+  </data>
+  <data name="use_system_cursor" xml:space="preserve">
+    <value>Luôn sử dụng con trỏ hệ thống</value>
+  </data>
+  <data name="wasapi_label" xml:space="preserve">
+    <value>Sử dụng chế độ âm thanh thử nghiệm</value>
+  </data>
+  <data name="wasapi_tooltip" xml:space="preserve">
+    <value>Thử khởi tạo hệ thống âm thanh ở chế độ có độ trễ thấp hơn.</value>
+  </data>
+  <data name="output_device" xml:space="preserve">
+    <value>Thiết bị đầu ra</value>
+  </data>
+  <data name="volume" xml:space="preserve">
+    <value>Âm lượng</value>
+  </data>
+  <data name="debug" xml:space="preserve">
+    <value>Gỡ lỗi</value>
+  </data>
+  <data name="show_log_overlay" xml:space="preserve">
+    <value>Hiển thị lớp phủ nhật ký</value>
+  </data>
+  <data name="bypass_ftb_render_pass" xml:space="preserve">
+    <value>Bỏ qua lượt kết xuất từ trước ra sau</value>
+  </data>
+  <data name="gc_mode" xml:space="preserve">
+    <value>Chế độ GC</value>
+  </data>
+  <data name="clear_all_caches" xml:space="preserve">
+    <value>Xóa toàn bộ bộ nhớ đệm</value>
+  </data>
+  <data name="load_from_playlist_id" xml:space="preserve">
+    <value>Tải bằng ID hoặc URL danh sách phát</value>
+  </data>
+  <data name="load_playlist" xml:space="preserve">
+    <value>Tải danh sách phát</value>
+  </data>
+  <data name="playlists" xml:space="preserve">
+    <value>Danh sách phát</value>
+  </data>
+  <data name="previous_video" xml:space="preserve">
+    <value>Video trước</value>
+  </data>
+  <data name="next_video" xml:space="preserve">
+    <value>Video tiếp theo</value>
+  </data>
+  <data name="hw_acceleration_enabled_note" xml:space="preserve">
+    <value>Tăng tốc phần cứng qua GPU đang được bật. Nếu gặp sự cố, vui lòng tạm thời tắt tính năng này.</value>
+    <comment>hw_acceleration_enabled_note</comment>
+  </data>
+  <data name="audio_effects" xml:space="preserve">
+    <value>Hiệu ứng âm thanh</value>
+  </data>
+  <data name="reverb" xml:space="preserve">
+    <value>Âm vang</value>
+  </data>
+  <data name="reverb_wet_mix" xml:space="preserve">
+    <value>Tỷ lệ tín hiệu hiệu ứng</value>
+  </data>
+  <data name="echo_wet_mix" xml:space="preserve">
+    <value>Tỷ lệ tín hiệu hiệu ứng</value>
+  </data>
+  <data name="reverb_stereo_width" xml:space="preserve">
+    <value>Độ rộng stereo</value>
+  </data>
+  <data name="reverb_high_frequency_damping" xml:space="preserve">
+    <value>Giảm âm tần số cao</value>
+  </data>
+  <data name="reverb_room_size" xml:space="preserve">
+    <value>Kích thước phòng</value>
+  </data>
+  <data name="audio_effect_rotate_rate" xml:space="preserve">
+    <value>Tốc độ xoay</value>
+  </data>
+  <data name="audio_effect_rotate_enabled" xml:space="preserve">
+    <value>Hiệu ứng xoay 3D</value>
+  </data>
+  <data name="echo_dry_mix" xml:space="preserve">
+    <value>Tỷ lệ tín hiệu khô</value>
+  </data>
+  <data name="echo_feedback" xml:space="preserve">
+    <value>Hồi tiếp</value>
+  </data>
+  <data name="echo_delay" xml:space="preserve">
+    <value>Độ trễ</value>
+  </data>
+  <data name="echo_effect" xml:space="preserve">
+    <value>Tiếng vọng</value>
+  </data>
+  <data name="distortion_effect" xml:space="preserve">
+    <value>Méo tiếng</value>
+  </data>
+  <data name="distortion_volume" xml:space="preserve">
+    <value>Mức méo tiếng</value>
+  </data>
+  <data name="bloom" xml:space="preserve">
+    <value>Mức phát sáng của video</value>
+  </data>
+  <data name="chromatic_aberration" xml:space="preserve">
+    <value>Cường độ hiệu ứng quang sai màu</value>
+  </data>
+  <data name="visual_effects" xml:space="preserve">
+    <value>Hiệu ứng hình ảnh</value>
+  </data>
+  <data name="grayscale" xml:space="preserve">
+    <value>Mức thang xám của video</value>
+  </data>
+  <data name="hue_shift" xml:space="preserve">
+    <value>Dịch sắc độ video</value>
+  </data>
+  <data name="discord_rich_presence" xml:space="preserve">
+    <value>Trạng thái hoạt động chi tiết trên Discord</value>
+  </data>
+  <data name="hide_identifiable_information" xml:space="preserve">
+    <value>Ẩn thông tin video</value>
+  </data>
+  <data name="discord_presence_full" xml:space="preserve">
+    <value>Đầy đủ</value>
+  </data>
+  <data name="discord_presence_off" xml:space="preserve">
+    <value>Tắt</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Có</value>
+  </data>
+  <data name="unsubscribe_desc" xml:space="preserve">
+    <value>Bạn có chắc muốn hủy đăng ký kênh này không?</value>
+  </data>
+  <data name="subscribe" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="unsubscribe" xml:space="preserve">
+    <value>Hủy đăng ký</value>
+  </data>
+  <data name="subscription_removed" xml:space="preserve">
+    <value>Đã hủy đăng ký.</value>
+  </data>
+  <data name="subscription_added" xml:space="preserve">
+    <value>Đã đăng ký.</value>
+  </data>
+  <data name="closed_captions" xml:space="preserve">
+    <value>Phụ đề chi tiết</value>
+  </data>
+  <data name="summarize_via_gpt" xml:space="preserve">
+    <value>Tóm tắt video</value>
+  </data>
+  <data name="gpt_summarize_prompt" xml:space="preserve">
+    <value>{0} Hãy tóm tắt video này</value>
+  </data>
+  <data name="public" xml:space="preserve">
+    <value>Công khai</value>
+  </data>
+  <data name="unlisted" xml:space="preserve">
+    <value>Không công khai</value>
+  </data>
+  <data name="private" xml:space="preserve">
+    <value>Riêng tư</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>Lưu</value>
+  </data>
+  <data name="save_or_remove" xml:space="preserve">
+    <value>Lưu hoặc xóa</value>
+  </data>
+  <data name="save_location" xml:space="preserve">
+    <value>Vị trí lưu</value>
+  </data>
+  <data name="add_new_playlist" xml:space="preserve">
+    <value>Thêm danh sách phát mới</value>
+  </data>
+  <data name="privacy_status" xml:space="preserve">
+    <value>Trạng thái quyền riêng tư</value>
+  </data>
+  <data name="title_placeholder" xml:space="preserve">
+    <value>Nhập tiêu đề tại đây</value>
+  </data>
+  <data name="title" xml:space="preserve">
+    <value>Tiêu đề</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>Tạo</value>
+  </data>
+  <data name="video_saved_to_playlist" xml:space="preserve">
+    <value>Đã thêm video hiện tại vào danh sách phát {0}.</value>
+  </data>
+  <data name="video_removed_from_playlist" xml:space="preserve">
+    <value>Đã xóa video hiện tại khỏi danh sách phát {0}.</value>
+  </data>
+  <data name="menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="exit" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="audio_normalization" xml:space="preserve">
+    <value>Chuẩn hóa âm thanh</value>
+  </data>
+  <data name="use_sdl3_host" xml:space="preserve">
+    <value>Sử dụng máy chủ SDL3 (Thử nghiệm)</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="view_channel" xml:space="preserve">
+    <value>Xem kênh</value>
+  </data>
+  <data name="video_not_loaded" xml:space="preserve">
+    <value>Chưa tải video!</value>
+  </data>
+  <data name="video_not_loaded_desc" xml:space="preserve">
+    <value>Vui lòng tải video để xem!</value>
+  </data>
+  <data name="my_playlists" xml:space="preserve">
+    <value>Danh sách phát của tôi</value>
+  </data>
+  <data name="playlist_not_loaded" xml:space="preserve">
+    <value>Chưa tải danh sách phát!</value>
+  </data>
+  <data name="playlist_not_loaded_desc" xml:space="preserve">
+    <value>Vui lòng tải danh sách phát để xem!</value>
+  </data>
+  <data name="exit_options" xml:space="preserve">
+    <value>Tùy chọn thoát</value>
+  </data>
+  <data name="power_off" xml:space="preserve">
+    <value>Tắt nguồn hệ thống</value>
+  </data>
+  <data name="restart_system" xml:space="preserve">
+    <value>Khởi động lại hệ thống</value>
+  </data>
+  <data name="audio_quality" xml:space="preserve">
+    <value>Chất lượng âm thanh</value>
+  </data>
+  <data name="prefer_high_quality_audio" xml:space="preserve">
+    <value>Ưu tiên chất lượng cao</value>
+  </data>
+  <data name="prefer_opus" xml:space="preserve">
+    <value>Ưu tiên codec Opus</value>
+  </data>
+  <data name="prefer_mp4a" xml:space="preserve">
+    <value>Ưu tiên codec MP4A</value>
+  </data>
+  <data name="low_quality" xml:space="preserve">
+    <value>Chất lượng thấp</value>
+  </data>
+  <data name="close_button_action" xml:space="preserve">
+    <value>Hành động khi nhấn nút đóng</value>
+  </data>
+  <data name="hide_to_tray_icon" xml:space="preserve">
+    <value>Ẩn vào khay hệ thống</value>
+  </data>
+  <data name="close_app" xml:space="preserve">
+    <value>Đóng ứng dụng</value>
+  </data>
+  <data name="repeat" xml:space="preserve">
+    <value>Bật/tắt lặp lại</value>
+  </data>
+  <data name="oauth_note" xml:space="preserve">
+    <value>Khi đăng nhập, bạn có thể thấy màn hình “Google chưa xác minh ứng dụng này”. Bạn vẫn có thể tiếp tục đăng nhập.</value>
+  </data>
+  <data name="system_volume" xml:space="preserve">
+    <value>Âm lượng hệ thống</value>
+  </data>
+  <data name="system_volume_with_device" xml:space="preserve">
+    <value>Âm lượng hệ thống ({0})</value>
+  </data>
+  <data name="colour_scheme" xml:space="preserve">
+    <value>Bảng màu ứng dụng</value>
+  </data>
+  <data name="circle" xml:space="preserve">
+    <value>Hình tròn</value>
+  </data>
+  <data name="square" xml:space="preserve">
+    <value>Hình vuông bo góc</value>
+  </data>
+  <data name="profile_image_shape" xml:space="preserve">
+    <value>Hình dạng ảnh hồ sơ</value>
+  </data>
+  <data name="sort_title" xml:space="preserve">
+    <value>Sắp xếp theo</value>
+  </data>
+  <data name="sort_top" xml:space="preserve">
+    <value>Hàng đầu</value>
+  </data>
+  <data name="sort_newest" xml:space="preserve">
+    <value>Mới nhất</value>
+  </data>
+  <data name="user_interface" xml:space="preserve">
+    <value>Giao diện người dùng</value>
+  </data>
+  <data name="no_comments" xml:space="preserve">
+    <value>Chưa có bình luận nào...</value>
+  </data>
+  <data name="no_comments_desc" xml:space="preserve">
+    <value>Chơi hay lắm👍</value>
+  </data>
+  <data name="system_sound_mute" xml:space="preserve">
+    <value>Tắt âm thanh hệ thống</value>
+  </data>
+  <data name="system_sound_mute_desc" xml:space="preserve">
+    <value>Cài đặt này tắt âm thanh của AX Player, các ứng dụng khác và âm thanh hệ thống.</value>
+  </data>
+  <data name="report_bugs" xml:space="preserve">
+    <value>Gửi phản hồi</value>
+  </data>
+  <data name="report_bugs_desc" xml:space="preserve">
+    <value>Gửi phản hồi về ứng dụng cho nhà phát triển.</value>
+  </data>
+  <data name="discord_not_installed" xml:space="preserve">
+    <value>Chưa cài đặt Discord. Hãy cài đặt Discord để chia sẻ hoạt động của bạn với bạn bè!</value>
+  </data>
+  <data name="release_stream" xml:space="preserve">
+    <value>Kênh phát hành</value>
+  </data>
+  <data name="release_stream_stable" xml:space="preserve">
+    <value>Ổn định</value>
+  </data>
+  <data name="release_stream_beta" xml:space="preserve">
+    <value>Bản dựng nightly (không ổn định)</value>
+  </data>
+  <data name="video_quality_with_label" xml:space="preserve">
+    <value>Chất lượng video ({0})</value>
+  </data>
+  <data name="audio_quality_with_label" xml:space="preserve">
+    <value>Chất lượng âm thanh ({0})</value>
+  </data>
+  <data name="jump_to" xml:space="preserve">
+    <value>Chuyển đến {0}</value>
+  </data>
+  <data name="edit_playlist" xml:space="preserve">
+    <value>Chỉnh sửa danh sách phát</value>
+  </data>
+  <data name="apply" xml:space="preserve">
+    <value>Áp dụng</value>
+  </data>
+  <data name="download_video" xml:space="preserve">
+    <value>Tải video</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>Tải xuống</value>
+  </data>
+  <data name="downloading_video_stream" xml:space="preserve">
+    <value>Đang tải luồng video: {0}</value>
+  </data>
+  <data name="downloading_audio_stream" xml:space="preserve">
+    <value>Đang tải luồng âm thanh: {0}</value>
+  </data>
+  <data name="merging_stream" xml:space="preserve">
+    <value>Đang ghép các luồng...</value>
+  </data>
+  <data name="download_completed" xml:space="preserve">
+    <value>Đã tải xuống hoàn tất.</value>
+  </data>
+  <data name="ui_font" xml:space="preserve">
+    <value>Phông chữ giao diện</value>
+  </data>
+  <data name="translating" xml:space="preserve">
+    <value>Đang dịch...</value>
+  </data>
+  <data name="video_metadata_desc_with_likecount" xml:space="preserve">
+    <value>{0} • {1} lượt thích • {2} lượt xem • {3}</value>
+  </data>
+  <data name="show_video_metadata_on_window_title" xml:space="preserve">
+    <value>Hiển thị thông tin video trên tiêu đề cửa sổ</value>
+  </data>
+  <data name="player_control_pin" xml:space="preserve">
+    <value>Luôn hiển thị điều khiển trình phát</value>
+  </data>
+  <data name="karaoke_mode" xml:space="preserve">
+    <value>Loại bỏ giọng hát (Thử nghiệm)</value>
+  </data>
+  <data name="chorus_effect" xml:space="preserve">
+    <value>Hiệu ứng hợp xướng</value>
+  </data>
+  <data name="chorus_min_sweep" xml:space="preserve">
+    <value>Mức quét tối thiểu</value>
+  </data>
+  <data name="chorus_max_sweep" xml:space="preserve">
+    <value>Mức quét tối đa</value>
+  </data>
+  <data name="chorus_rate" xml:space="preserve">
+    <value>Tốc độ</value>
+  </data>
+  <data name="sort_relevance" xml:space="preserve">
+    <value>Mức độ liên quan</value>
+  </data>
+  <data name="sort_alphabet" xml:space="preserve">
+    <value>Theo bảng chữ cái (A-Z)</value>
+  </data>
+  <data name="login_to_comment" xml:space="preserve">
+    <value>Đăng nhập để bình luận (Menu - Cài đặt - Tài khoản Google)</value>
+  </data>
+  <data name="settings_item_restart_required" xml:space="preserve">
+    <value>Nếu thay đổi cài đặt này, ứng dụng sẽ khởi động lại để áp dụng.</value>
+  </data>
+  <data name="video_settings" xml:space="preserve">
+    <value>Cài đặt video</value>
+  </data>
+  <data name="alsa_exclusive_notice" xml:space="preserve">
+    <value>Bạn đã chọn thiết bị sử dụng trình điều khiển độc quyền, nghĩa là bạn sẽ không nghe được âm thanh từ ứng dụng khác khi AX Player đang sử dụng thiết bị này. Để khởi tạo đúng cách, hãy đảm bảo thiết bị không được ứng dụng khác sử dụng. Nếu vừa dùng thiết bị qua trình điều khiển âm thanh khác, bạn có thể cần khởi động lại AX Player và chờ một lúc để thiết bị được giải phóng.</value>
+  </data>
+  <data name="sfx_type" xml:space="preserve">
+    <value>Loại hiệu ứng âm thanh lớp phủ</value>
+  </data>
+  <data name="sfx_new" xml:space="preserve">
+    <value>Hiệu ứng âm thanh mới</value>
+  </data>
+  <data name="sfx_legacy" xml:space="preserve">
+    <value>Cũ</value>
+  </data>
+  <data name="play_overlay_sfx" xml:space="preserve">
+    <value>Phát hiệu ứng âm thanh lớp phủ</value>
+  </data>
+  <data name="closed_captions_bg_opacity" xml:space="preserve">
+    <value>Độ mờ nền phụ đề</value>
+  </data>
+  <data name="closed_captions_preview" xml:space="preserve">
+    <value>Đây là cách phụ đề sẽ hiển thị.</value>
+  </data>
+  <data name="like_button" xml:space="preserve">
+    <value>Tôi thích</value>
+  </data>
+  <data name="dislike_button" xml:space="preserve">
+    <value>Tôi không thích</value>
+  </data>
+  <data name="app_info" xml:space="preserve">
+    <value>Thông tin về AX Player</value>
+  </data>
+  <data name="yt_handle_view_profile" xml:space="preserve">
+    <value>Xem hồ sơ của {0}</value>
+  </data>
+  <data name="hashtag" xml:space="preserve">
+    <value>Hashtag {0}</value>
+  </data>
+  <data name="view_github_profile" xml:space="preserve">
+    <value>Xem hồ sơ GitHub</value>
+  </data>
+  <data name="view_more_comments" xml:space="preserve">
+    <value>Xem thêm bình luận</value>
+  </data>
+  <data name="updates" xml:space="preserve">
+    <value>Bản cập nhật</value>
+  </data>
+  <data name="reflex_hint" xml:space="preserve">
+    <value>Giảm độ trễ bằng cách tận dụng API NVIDIA Reflex trên GPU NVIDIA.
+Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</value>
+  </data>
+  <data name="reflex_notice" xml:space="preserve">
+    <value>Boost làm tăng mức tiêu thụ điện của GPU và trong một số trường hợp có thể làm tăng độ trễ. Hãy tắt Boost nếu gặp sự cố.</value>
+  </data>
+  <data name="reflex_off" xml:space="preserve">
+    <value>Tắt</value>
+  </data>
+  <data name="reflex_on" xml:space="preserve">
+    <value>Bật</value>
+  </data>
+  <data name="reflex_boost" xml:space="preserve">
+    <value>Tăng cường</value>
+  </data>
+  <data name="srv3_notice" xml:space="preserve">
+    <value>Tính năng này đang thử nghiệm, còn nhiều lỗi và chưa hoàn thiện.</value>
+  </data>
+  <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
+    <value>Đặt lại tốc độ phát khi tải video</value>
+  </data>
+  <data name="closed_captions_bg_colour" xml:space="preserve">
+    <value>Màu nền phụ đề</value>
+  </data>
+  <data name="closed_captions_radius" xml:space="preserve">
+    <value>Bán kính bo góc phụ đề</value>
+  </data>
+  <data name="advanced_subtitle_style" xml:space="preserve">
+    <value>Sử dụng kiểu phụ đề nâng cao</value>
+  </data>
+  <data name="screenshot_quality" xml:space="preserve">
+    <value>Chất lượng ảnh chụp màn hình</value>
+  </data>
+  <data name="notifications" xml:space="preserve">
+    <value>Thông báo</value>
+  </data>
+  <data name="audio_tracks" xml:space="preserve">
+    <value>Các bản âm thanh</value>
+  </data>
+  <data name="karaoke_vocal_volume" xml:space="preserve">
+    <value>Âm lượng giọng hát</value>
+  </data>
+  <data name="eight_bit_effect_enabled" xml:space="preserve">
+    <value>Hiệu ứng 8-bit</value>
+  </data>
+  <data name="bit_depth" xml:space="preserve">
+    <value>Độ sâu bit</value>
+  </data>
+  <data name="downsample_ratio" xml:space="preserve">
+    <value>Tỷ lệ giảm tần số lấy mẫu</value>
+  </data>
+  <data name="vertical_sync_vrr" xml:space="preserve">
+    <value>VSync (VRR độ trễ thấp)</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Đang chuẩn bị...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>Nếu mức méo tiếng vượt quá 50%, chất lượng âm thanh sẽ giảm!</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>Hiện đại</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>Kiểu mờ dần của bộ điều khiển trình phát</value>
+  </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>Hoạt ảnh sóng trên thanh tua</value>
+  </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>Sử dụng chế độ âm thanh cũ</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>Sử dụng tùy chọn này nếu bạn gặp sự cố âm thanh. Lưu ý rằng độ trễ âm thanh sẽ cao hơn khi bật tùy chọn này.</value>
+  </data>
+</root>

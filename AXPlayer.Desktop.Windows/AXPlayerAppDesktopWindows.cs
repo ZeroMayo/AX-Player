@@ -27,11 +27,6 @@ namespace AXPlayer.Desktop.Windows
         {
             base.LoadComplete();
             LoadComponentAsync(trayIconManager = new TrayIconManager(), Add);
-
-            trayIconManager.OnHidedToTrayIcon = () =>
-            {
-                ToastHelper.ShowToast("AX Player", AXPlayerTrayIconExtraStrings.HidedToTrayIcon);
-            };
         }
 
         public override void RequestHideToTrayIcon()

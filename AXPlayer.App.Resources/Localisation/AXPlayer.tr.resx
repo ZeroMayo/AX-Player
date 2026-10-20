@@ -1,0 +1,940 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="aspect_ratio_method" xml:space="preserve">
+    <value>En-boy oranı yöntemi</value>
+  </data>
+  <data name="audio" xml:space="preserve">
+    <value>Ses</value>
+  </data>
+  <data name="audio_language" xml:space="preserve">
+    <value>Ses parçaları</value>
+  </data>
+  <data name="auto" xml:space="preserve">
+    <value>Otomatik</value>
+  </data>
+  <data name="caption_disabled" xml:space="preserve">
+    <value>Devre dışı</value>
+  </data>
+  <data name="caption_language" xml:space="preserve">
+    <value>Altyazı dili</value>
+  </data>
+  <data name="disabled" xml:space="preserve">
+    <value>Devre dışı</value>
+  </data>
+  <data name="display" xml:space="preserve">
+    <value>Görüntü</value>
+  </data>
+  <data name="enabled" xml:space="preserve">
+    <value>Etkin</value>
+  </data>
+  <data name="error_noVideoId" xml:space="preserve">
+    <value>Video kimliği boş olamaz!</value>
+  </data>
+  <data name="fill" xml:space="preserve">
+    <value>Doldur</value>
+  </data>
+  <data name="frame_limiter" xml:space="preserve">
+    <value>Kare hızı sınırlayıcısı</value>
+  </data>
+  <data name="fullscreen_entered" xml:space="preserve">
+    <value>Tam ekrandan çıkmak için F11 tuşuna basın.</value>
+  </data>
+  <data name="general" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="google_translate" xml:space="preserve">
+    <value>Google Çeviri</value>
+  </data>
+  <data name="graphics" xml:space="preserve">
+    <value>Grafikler</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="letterbox" xml:space="preserve">
+    <value>Sinemaskop</value>
+  </data>
+  <data name="load_from_video_id" xml:space="preserve">
+    <value>Video veya oynatma listesinin kimliğinden ya da URL’sinden yükle</value>
+  </data>
+  <data name="load_video" xml:space="preserve">
+    <value>Video veya oynatma listesi yükle</value>
+  </data>
+  <data name="master_volume" xml:space="preserve">
+    <value>Ana ses düzeyi</value>
+  </data>
+  <data name="minimise_on_focus_loss" xml:space="preserve">
+    <value>Başka bir uygulamaya geçildiğinde video oynatıcıyı simge durumuna küçült</value>
+  </data>
+  <data name="prefer_high_quality" xml:space="preserve">
+    <value>Yüksek kaliteyi tercih et</value>
+  </data>
+  <data name="adjust_pitch_on_speed_change" xml:space="preserve">
+    <value>Hız değiştiğinde perdeyi ayarla</value>
+  </data>
+  <data name="profile_image_tooltip" xml:space="preserve">
+    <value>{0} • {1} abone</value>
+  </data>
+  <data name="screen_mode" xml:space="preserve">
+    <value>Ekran modu</value>
+  </data>
+  <data name="screen_resolution" xml:space="preserve">
+    <value>Ekran çözünürlüğü</value>
+  </data>
+  <data name="selected_caption" xml:space="preserve">
+    <value>Seçili altyazı: {0}</value>
+  </data>
+  <data name="selected_caption_auto_gen" xml:space="preserve">
+    <value>Seçili altyazı: {0} (otomatik oluşturuldu)</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="sfx_volume" xml:space="preserve">
+    <value>SFX ses düzeyi</value>
+  </data>
+  <data name="ui_scaling" xml:space="preserve">
+    <value>Arayüz ölçeklendirmesi</value>
+  </data>
+  <data name="use_hardware_acceleration" xml:space="preserve">
+    <value>Donanım hızlandırmasını kullan</value>
+  </data>
+  <data name="video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="video_metadata_desc" xml:space="preserve">
+    <value>{0} • {1} görüntüleme • {2}</value>
+  </data>
+  <data name="video_metadata_desc_without_channel_name" xml:space="preserve">
+    <value>{0} görüntüleme  {1}</value>
+  </data>
+  <data name="video_metadata_translate_source" xml:space="preserve">
+    <value>Video meta verisi çeviri kaynağı</value>
+  </data>
+  <data name="video_quality" xml:space="preserve">
+    <value>Video kalitesi</value>
+  </data>
+  <data name="video_volume" xml:space="preserve">
+    <value>Video ses düzeyi</value>
+  </data>
+  <data name="comments" xml:space="preserve">
+    <value>Yorumlar ({0})</value>
+  </data>
+  <data name="comments_without_count" xml:space="preserve">
+    <value>Yorumlar</value>
+  </data>
+  <data name="dim" xml:space="preserve">
+    <value>Video karartma düzeyi</value>
+  </data>
+  <data name="translate_to" xml:space="preserve">
+    <value>{0} diline çevir</value>
+  </data>
+  <data name="translate_view_original" xml:space="preserve">
+    <value>Orijinalini gör (Google tarafından çevrildi)</value>
+  </data>
+  <data name="comment_reply" xml:space="preserve">
+    <value>{0} ({1} kullanıcısına yanıt)</value>
+  </data>
+  <data name="running_latest_release" xml:space="preserve">
+    <value>En son sürümü kullanıyorsunuz ({0})</value>
+  </data>
+  <data name="updating" xml:space="preserve">
+    <value>AX Player güncelleniyor (%{0})</value>
+  </data>
+  <data name="restart_required" xml:space="preserve">
+    <value>Güncelleme neredeyse tamamlandı. Güncellemeyi bitirmek için AX Player’ı yeniden başlatın.</value>
+  </data>
+  <data name="update_failed" xml:space="preserve">
+    <value>Güncelleme başarısız!</value>
+  </data>
+  <data name="checking_update" xml:space="preserve">
+    <value>Güncellemeler denetleniyor...</value>
+  </data>
+  <data name="check_update" xml:space="preserve">
+    <value>Güncellemeleri denetle</value>
+  </data>
+  <data name="like_count_hidden" xml:space="preserve">
+    <value>Beğeni sayısı yükleyen tarafından gizlendi</value>
+  </data>
+  <data name="disabled_by_uploader" xml:space="preserve">
+    <value>Yükleyen tarafından devre dışı bırakıldı</value>
+  </data>
+  <data name="common_default" xml:space="preserve">
+    <value>Varsayılan</value>
+  </data>
+  <data name="show_fps" xml:space="preserve">
+    <value>FPS’yi göster</value>
+  </data>
+  <data name="cannot_play_private_videos" xml:space="preserve">
+    <value>Gizli videolar oynatılamaz.</value>
+  </data>
+  <data name="play" xml:space="preserve">
+    <value>Oynat</value>
+  </data>
+  <data name="pause" xml:space="preserve">
+    <value>Duraklat</value>
+  </data>
+  <data name="playback_speed" xml:space="preserve">
+    <value>Oynatma hızı: {0}</value>
+  </data>
+  <data name="video_quality_8k_warning" xml:space="preserve">
+    <value>Video kalitesini 8K olarak ayarlamak bazı cihazlarda performans düşüşüne, GPU aşırı yüklenmesine ve sürücü çökmelerine neden olabilir.</value>
+  </data>
+  <data name="renderer" xml:space="preserve">
+    <value>Görüntü oluşturucu</value>
+  </data>
+  <data name="export_logs" xml:space="preserve">
+    <value>Günlükleri dışa aktar</value>
+  </data>
+  <data name="logs_export_finished" xml:space="preserve">
+    <value>Günlükler dışa aktarıldı!</value>
+  </data>
+  <data name="revert_to_default" xml:space="preserve">
+    <value>Varsayılana döndür</value>
+  </data>
+  <data name="playback_speed_without_value" xml:space="preserve">
+    <value>Oynatma hızı</value>
+  </data>
+  <data name="quick_action" xml:space="preserve">
+    <value>Hızlı işlem</value>
+  </data>
+  <data name="caption_font" xml:space="preserve">
+    <value>Altyazı yazı tipi</value>
+  </data>
+  <data name="dislike_count_tooltip" xml:space="preserve">
+    <value>Tahmini: {0} | Gerçek: {1}</value>
+  </data>
+  <data name="caption_auto_gen" xml:space="preserve">
+    <value>{0} (otomatik oluşturuldu)</value>
+  </data>
+  <data name="scale_video" xml:space="preserve">
+    <value>Video</value>
+    <comment>scale_video</comment>
+  </data>
+  <data name="scale_everything" xml:space="preserve">
+    <value>Her şey</value>
+  </data>
+  <data name="scaling_off" xml:space="preserve">
+    <value>Kapalı</value>
+  </data>
+  <data name="screen_scaling" xml:space="preserve">
+    <value>Ekran ölçeklendirmesi</value>
+  </data>
+  <data name="horizontal_position" xml:space="preserve">
+    <value>Yatay konum</value>
+  </data>
+  <data name="vertical_position" xml:space="preserve">
+    <value>Dikey konum</value>
+  </data>
+  <data name="horizontal_scale" xml:space="preserve">
+    <value>Yatay ölçek</value>
+  </data>
+  <data name="vertical_scale" xml:space="preserve">
+    <value>Dikey ölçek</value>
+  </data>
+  <data name="thumbnail_dim" xml:space="preserve">
+    <value>Küçük resim karartması</value>
+  </data>
+  <data name="shrink_game_to_safe_area" xml:space="preserve">
+    <value>Kamera ve çentiklerden kaçınmak için uygulamayı küçült</value>
+  </data>
+  <data name="username_display_mode" xml:space="preserve">
+    <value>Kullanıcı adı görüntüleme modu</value>
+  </data>
+  <data name="jpg_web_friendly" xml:space="preserve">
+    <value>JPG (web uyumlu)</value>
+  </data>
+  <data name="png_lossless" xml:space="preserve">
+    <value>PNG (kayıpsız)</value>
+  </data>
+  <data name="screenshot_saved" xml:space="preserve">
+    <value>Ekran görüntüsü kaydedildi!</value>
+  </data>
+  <data name="screenshot" xml:space="preserve">
+    <value>Ekran görüntüsü</value>
+  </data>
+  <data name="screenshot_format" xml:space="preserve">
+    <value>Ekran görüntüsü biçimi</value>
+  </data>
+  <data name="show_cursor_in_screenshots" xml:space="preserve">
+    <value>Ekran görüntülerinde kullanıcı arayüzünü göster</value>
+  </data>
+  <data name="username_display_mode_nickname" xml:space="preserve">
+    <value>Görünen kullanıcı adını tercih et (2005–2022)</value>
+  </data>
+  <data name="username_display_mode_handle" xml:space="preserve">
+    <value>Görünen kullanıcı etiketini tercih et (2022 ve sonrası)</value>
+  </data>
+  <data name="comment_added" xml:space="preserve">
+    <value>Yorum eklendi.</value>
+  </data>
+  <data name="comment_with" xml:space="preserve">
+    <value>Yorum yaz...</value>
+  </data>
+  <data name="signed_in" xml:space="preserve">
+    <value>{0} hesabında oturum açıldı</value>
+  </data>
+  <data name="signed_out" xml:space="preserve">
+    <value>Oturum açılmadı</value>
+  </data>
+  <data name="google_account" xml:space="preserve">
+    <value>Google hesabı</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Ara</value>
+  </data>
+  <data name="search_placeholder" xml:space="preserve">
+    <value>ara...</value>
+  </data>
+  <data name="view_latest_versions" xml:space="preserve">
+    <value>En son sürümleri görüntüle</value>
+  </data>
+  <data name="report" xml:space="preserve">
+    <value>Videoyu bildir</value>
+  </data>
+  <data name="whats_going_on" xml:space="preserve">
+    <value>Ne oldu?</value>
+  </data>
+  <data name="report_desc" xml:space="preserve">
+    <value>Topluluk Kuralları açısından inceleme yapacağız; mükemmel seçimi yapmak için endişelenmeyin.</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>Gönder</value>
+  </data>
+  <data name="report_success" xml:space="preserve">
+    <value>Bildiriminiz için teşekkürler.</value>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="report_reason" xml:space="preserve">
+    <value>Neden</value>
+  </data>
+  <data name="report_sub_reason" xml:space="preserve">
+    <value>Ayrıntılı neden</value>
+  </data>
+  <data name="windowed" xml:space="preserve">
+    <value>Pencereli</value>
+  </data>
+  <data name="borderless" xml:space="preserve">
+    <value>Kenarlıksız</value>
+  </data>
+  <data name="fullscreen" xml:space="preserve">
+    <value>Tam ekran</value>
+  </data>
+  <data name="vertical_sync" xml:space="preserve">
+    <value>Dikey eşitleme (VSync)</value>
+  </data>
+  <data name="refresh_rate_2x" xml:space="preserve">
+    <value>2 kat yenileme hızı</value>
+  </data>
+  <data name="refresh_rate_4x" xml:space="preserve">
+    <value>4 kat yenileme hızı</value>
+  </data>
+  <data name="refresh_rate_8x" xml:space="preserve">
+    <value>8 kat yenileme hızı</value>
+  </data>
+  <data name="unlimited" xml:space="preserve">
+    <value>Neredeyse sınırsız</value>
+  </data>
+  <data name="dislike_counter_credits_1" xml:space="preserve">
+    <value>Beğenmeme sayısı verileri şu kaynak tarafından sağlanır: </value>
+  </data>
+  <data name="dislike_counter_credits_2" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="always_use_original_audio" xml:space="preserve">
+    <value>Her zaman orijinal sesi kullan</value>
+  </data>
+  <data name="no_description" xml:space="preserve">
+    <value>Bu videoya açıklama eklenmemiş.</value>
+  </data>
+  <data name="view_version_desc" xml:space="preserve">
+    <value>{0} sürümünün değişiklik günlüğünü görüntüle</value>
+    <comment>view_version_desc</comment>
+  </data>
+  <data name="render_type_automatic" xml:space="preserve">
+    <value>Otomatik</value>
+  </data>
+  <data name="render_type_automatic_is_use" xml:space="preserve">
+    <value>Otomatik ({0})</value>
+  </data>
+  <data name="use_system_cursor" xml:space="preserve">
+    <value>Her zaman sistem imlecini kullan</value>
+  </data>
+  <data name="wasapi_label" xml:space="preserve">
+    <value>Deneysel ses modunu kullan</value>
+  </data>
+  <data name="wasapi_tooltip" xml:space="preserve">
+    <value>Bu seçenek, ses motorunu daha düşük gecikmeli bir modda başlatmayı dener.</value>
+  </data>
+  <data name="output_device" xml:space="preserve">
+    <value>Çıkış aygıtı</value>
+  </data>
+  <data name="volume" xml:space="preserve">
+    <value>Ses düzeyi</value>
+  </data>
+  <data name="debug" xml:space="preserve">
+    <value>Hata ayıklama</value>
+  </data>
+  <data name="show_log_overlay" xml:space="preserve">
+    <value>Günlük katmanını göster</value>
+  </data>
+  <data name="bypass_ftb_render_pass" xml:space="preserve">
+    <value>Önden arkaya oluşturma aşamasını atla</value>
+  </data>
+  <data name="gc_mode" xml:space="preserve">
+    <value>GC modu</value>
+  </data>
+  <data name="clear_all_caches" xml:space="preserve">
+    <value>Tüm önbellekleri temizle</value>
+  </data>
+  <data name="load_from_playlist_id" xml:space="preserve">
+    <value>Oynatma listesi kimliğinden veya URL’sinden yükle</value>
+  </data>
+  <data name="load_playlist" xml:space="preserve">
+    <value>Oynatma listesi yükle</value>
+  </data>
+  <data name="playlists" xml:space="preserve">
+    <value>Oynatma listeleri</value>
+  </data>
+  <data name="previous_video" xml:space="preserve">
+    <value>Önceki video</value>
+  </data>
+  <data name="next_video" xml:space="preserve">
+    <value>Sonraki video</value>
+  </data>
+  <data name="hw_acceleration_enabled_note" xml:space="preserve">
+    <value>GPU üzerinden donanım hızlandırması etkin. Sorun yaşarsanız şimdilik donanım hızlandırmasını devre dışı bırakın.</value>
+    <comment>hw_acceleration_enabled_note</comment>
+  </data>
+  <data name="audio_effects" xml:space="preserve">
+    <value>Ses efektleri</value>
+  </data>
+  <data name="reverb" xml:space="preserve">
+    <value>Yankı (reverb)</value>
+  </data>
+  <data name="reverb_wet_mix" xml:space="preserve">
+    <value>Islak sinyal karışımı</value>
+  </data>
+  <data name="echo_wet_mix" xml:space="preserve">
+    <value>Islak sinyal karışımı</value>
+  </data>
+  <data name="reverb_stereo_width" xml:space="preserve">
+    <value>Stereo genişliği</value>
+  </data>
+  <data name="reverb_high_frequency_damping" xml:space="preserve">
+    <value>Yüksek frekans sönümlemesi</value>
+  </data>
+  <data name="reverb_room_size" xml:space="preserve">
+    <value>Oda boyutu</value>
+  </data>
+  <data name="audio_effect_rotate_rate" xml:space="preserve">
+    <value>Döndürme hızı</value>
+  </data>
+  <data name="audio_effect_rotate_enabled" xml:space="preserve">
+    <value>3B döndürme efekti</value>
+  </data>
+  <data name="echo_dry_mix" xml:space="preserve">
+    <value>Kuru sinyal karışımı</value>
+  </data>
+  <data name="echo_feedback" xml:space="preserve">
+    <value>Geri besleme</value>
+  </data>
+  <data name="echo_delay" xml:space="preserve">
+    <value>Gecikme</value>
+  </data>
+  <data name="echo_effect" xml:space="preserve">
+    <value>Eko</value>
+  </data>
+  <data name="distortion_effect" xml:space="preserve">
+    <value>Bozulma</value>
+  </data>
+  <data name="distortion_volume" xml:space="preserve">
+    <value>Bozulma düzeyi</value>
+  </data>
+  <data name="bloom" xml:space="preserve">
+    <value>Video parıltı düzeyi</value>
+  </data>
+  <data name="chromatic_aberration" xml:space="preserve">
+    <value>Kromatik sapma efekti yoğunluğu</value>
+  </data>
+  <data name="visual_effects" xml:space="preserve">
+    <value>Görsel efektler</value>
+  </data>
+  <data name="grayscale" xml:space="preserve">
+    <value>Video gri tonlama düzeyi</value>
+  </data>
+  <data name="hue_shift" xml:space="preserve">
+    <value>Video renk tonu kaydırması</value>
+  </data>
+  <data name="discord_rich_presence" xml:space="preserve">
+    <value>Discord Rich Presence</value>
+  </data>
+  <data name="hide_identifiable_information" xml:space="preserve">
+    <value>Video bilgilerini gizle</value>
+  </data>
+  <data name="discord_presence_full" xml:space="preserve">
+    <value>Tam</value>
+  </data>
+  <data name="discord_presence_off" xml:space="preserve">
+    <value>Kapalı</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Evet</value>
+  </data>
+  <data name="unsubscribe_desc" xml:space="preserve">
+    <value>Bu kanalın aboneliğini iptal etmek istediğinizden emin misiniz?</value>
+  </data>
+  <data name="subscribe" xml:space="preserve">
+    <value>Abone ol</value>
+  </data>
+  <data name="unsubscribe" xml:space="preserve">
+    <value>Abonelikten çık</value>
+  </data>
+  <data name="subscription_removed" xml:space="preserve">
+    <value>Abonelik kaldırıldı.</value>
+  </data>
+  <data name="subscription_added" xml:space="preserve">
+    <value>Abonelik eklendi.</value>
+  </data>
+  <data name="closed_captions" xml:space="preserve">
+    <value>Altyazılar</value>
+  </data>
+  <data name="summarize_via_gpt" xml:space="preserve">
+    <value>Videoyu özetle</value>
+  </data>
+  <data name="gpt_summarize_prompt" xml:space="preserve">
+    <value>{0} Bu videoyu özetle</value>
+  </data>
+  <data name="public" xml:space="preserve">
+    <value>Herkese açık</value>
+  </data>
+  <data name="unlisted" xml:space="preserve">
+    <value>Liste dışı</value>
+  </data>
+  <data name="private" xml:space="preserve">
+    <value>Gizli</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="save_or_remove" xml:space="preserve">
+    <value>Kaydet veya kaldır</value>
+  </data>
+  <data name="save_location" xml:space="preserve">
+    <value>Kayıt konumu</value>
+  </data>
+  <data name="add_new_playlist" xml:space="preserve">
+    <value>Yeni oynatma listesi ekle</value>
+  </data>
+  <data name="privacy_status" xml:space="preserve">
+    <value>Gizlilik durumu</value>
+  </data>
+  <data name="title_placeholder" xml:space="preserve">
+    <value>Başlığı buraya girin</value>
+  </data>
+  <data name="title" xml:space="preserve">
+    <value>Başlık</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>Oluştur</value>
+  </data>
+  <data name="video_saved_to_playlist" xml:space="preserve">
+    <value>Geçerli video {0} oynatma listesine eklendi.</value>
+  </data>
+  <data name="video_removed_from_playlist" xml:space="preserve">
+    <value>Geçerli video {0} oynatma listesinden kaldırıldı.</value>
+  </data>
+  <data name="menu" xml:space="preserve">
+    <value>Menü</value>
+  </data>
+  <data name="exit" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+  <data name="audio_normalization" xml:space="preserve">
+    <value>Sesi normalleştir</value>
+  </data>
+  <data name="use_sdl3_host" xml:space="preserve">
+    <value>SDL3 ana bilgisayarını kullan (Deneysel)</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>Oturumu kapat</value>
+  </data>
+  <data name="view_channel" xml:space="preserve">
+    <value>Kanalı görüntüle</value>
+  </data>
+  <data name="video_not_loaded" xml:space="preserve">
+    <value>Video yüklenmedi!</value>
+  </data>
+  <data name="video_not_loaded_desc" xml:space="preserve">
+    <value>İzlemek için lütfen bir video yükleyin!</value>
+  </data>
+  <data name="my_playlists" xml:space="preserve">
+    <value>Oynatma listelerim</value>
+  </data>
+  <data name="playlist_not_loaded" xml:space="preserve">
+    <value>Oynatma listesi yüklenmedi!</value>
+  </data>
+  <data name="playlist_not_loaded_desc" xml:space="preserve">
+    <value>İzlemek için lütfen bir oynatma listesi yükleyin!</value>
+  </data>
+  <data name="exit_options" xml:space="preserve">
+    <value>Çıkış seçenekleri</value>
+  </data>
+  <data name="power_off" xml:space="preserve">
+    <value>Sistemi kapat</value>
+  </data>
+  <data name="restart_system" xml:space="preserve">
+    <value>Sistemi yeniden başlat</value>
+  </data>
+  <data name="audio_quality" xml:space="preserve">
+    <value>Ses kalitesi</value>
+  </data>
+  <data name="prefer_high_quality_audio" xml:space="preserve">
+    <value>Yüksek kaliteyi tercih et</value>
+  </data>
+  <data name="prefer_opus" xml:space="preserve">
+    <value>Öncelikle Opus codec bileşenlerini tercih et</value>
+  </data>
+  <data name="prefer_mp4a" xml:space="preserve">
+    <value>Öncelikle MP4A codec bileşenlerini tercih et</value>
+  </data>
+  <data name="low_quality" xml:space="preserve">
+    <value>Düşük kalite</value>
+  </data>
+  <data name="close_button_action" xml:space="preserve">
+    <value>Kapat düğmesine basıldığında yapılacak işlem</value>
+  </data>
+  <data name="hide_to_tray_icon" xml:space="preserve">
+    <value>Sistem tepsisine küçült</value>
+  </data>
+  <data name="close_app" xml:space="preserve">
+    <value>Uygulamayı kapat</value>
+  </data>
+  <data name="repeat" xml:space="preserve">
+    <value>Tekrarı aç/kapat</value>
+  </data>
+  <data name="oauth_note" xml:space="preserve">
+    <value>Oturum açarken “Google bu uygulamayı doğrulamadı” ekranını görebilirsiniz. Güvenle oturum açabilirsiniz.</value>
+  </data>
+  <data name="system_volume" xml:space="preserve">
+    <value>Sistem ses düzeyi</value>
+  </data>
+  <data name="system_volume_with_device" xml:space="preserve">
+    <value>Sistem ses düzeyi ({0})</value>
+  </data>
+  <data name="colour_scheme" xml:space="preserve">
+    <value>Uygulama renk şeması</value>
+  </data>
+  <data name="circle" xml:space="preserve">
+    <value>Daire</value>
+  </data>
+  <data name="square" xml:space="preserve">
+    <value>Yuvarlatılmış kare</value>
+  </data>
+  <data name="profile_image_shape" xml:space="preserve">
+    <value>Profil resmi şekli</value>
+  </data>
+  <data name="sort_title" xml:space="preserve">
+    <value>Sıralama ölçütü</value>
+  </data>
+  <data name="sort_top" xml:space="preserve">
+    <value>En iyi</value>
+  </data>
+  <data name="sort_newest" xml:space="preserve">
+    <value>En yeni</value>
+  </data>
+  <data name="user_interface" xml:space="preserve">
+    <value>Kullanıcı arayüzü</value>
+  </data>
+  <data name="no_comments" xml:space="preserve">
+    <value>Burada yorum yok...</value>
+  </data>
+  <data name="no_comments_desc" xml:space="preserve">
+    <value>Güzel oynadın 👍</value>
+  </data>
+  <data name="system_sound_mute" xml:space="preserve">
+    <value>Sistem seslerini kapat</value>
+  </data>
+  <data name="system_sound_mute_desc" xml:space="preserve">
+    <value>Bu ayar AX Player’ın, diğer uygulamaların ve sistemin seslerini kapatır.</value>
+  </data>
+  <data name="report_bugs" xml:space="preserve">
+    <value>Geri bildirim gönder</value>
+  </data>
+  <data name="report_bugs_desc" xml:space="preserve">
+    <value>Uygulama üzerinden geliştiricilere geri bildirim gönderin.</value>
+  </data>
+  <data name="discord_not_installed" xml:space="preserve">
+    <value>Discord yüklü değil. Lütfen Discord’u yükleyin ve etkinliklerinizi arkadaşlarınızla paylaşın!</value>
+  </data>
+  <data name="release_stream" xml:space="preserve">
+    <value>Sürüm kanalı</value>
+  </data>
+  <data name="release_stream_stable" xml:space="preserve">
+    <value>Kararlı</value>
+  </data>
+  <data name="release_stream_beta" xml:space="preserve">
+    <value>Gecelik derleme (kararsız)</value>
+  </data>
+  <data name="video_quality_with_label" xml:space="preserve">
+    <value>Video kalitesi ({0})</value>
+  </data>
+  <data name="audio_quality_with_label" xml:space="preserve">
+    <value>Ses kalitesi ({0})</value>
+  </data>
+  <data name="jump_to" xml:space="preserve">
+    <value>{0} konumuna atla</value>
+  </data>
+  <data name="edit_playlist" xml:space="preserve">
+    <value>Oynatma listesini düzenle</value>
+  </data>
+  <data name="apply" xml:space="preserve">
+    <value>Uygula</value>
+  </data>
+  <data name="download_video" xml:space="preserve">
+    <value>Videoyu indir</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="downloading_video_stream" xml:space="preserve">
+    <value>Video akışı indiriliyor: {0}</value>
+  </data>
+  <data name="downloading_audio_stream" xml:space="preserve">
+    <value>Ses akışı indiriliyor: {0}</value>
+  </data>
+  <data name="merging_stream" xml:space="preserve">
+    <value>Akışlar birleştiriliyor...</value>
+  </data>
+  <data name="download_completed" xml:space="preserve">
+    <value>İndirme tamamlandı.</value>
+  </data>
+  <data name="ui_font" xml:space="preserve">
+    <value>Arayüz yazı tipi</value>
+  </data>
+  <data name="translating" xml:space="preserve">
+    <value>Çevriliyor...</value>
+  </data>
+  <data name="video_metadata_desc_with_likecount" xml:space="preserve">
+    <value>{0} • {1} beğeni • {2} görüntüleme • {3}</value>
+  </data>
+  <data name="show_video_metadata_on_window_title" xml:space="preserve">
+    <value>Video meta verilerini pencere başlığında göster</value>
+  </data>
+  <data name="player_control_pin" xml:space="preserve">
+    <value>Oynatıcı denetimlerini her zaman göster</value>
+  </data>
+  <data name="karaoke_mode" xml:space="preserve">
+    <value>Vokal kaldırıcı (Deneysel)</value>
+  </data>
+  <data name="chorus_effect" xml:space="preserve">
+    <value>Koro efekti</value>
+  </data>
+  <data name="chorus_min_sweep" xml:space="preserve">
+    <value>Minimum tarama</value>
+  </data>
+  <data name="chorus_max_sweep" xml:space="preserve">
+    <value>Maksimum tarama</value>
+  </data>
+  <data name="chorus_rate" xml:space="preserve">
+    <value>Hız</value>
+  </data>
+  <data name="sort_relevance" xml:space="preserve">
+    <value>Alaka düzeyi</value>
+  </data>
+  <data name="sort_alphabet" xml:space="preserve">
+    <value>Alfabetik (A-Z)</value>
+  </data>
+  <data name="login_to_comment" xml:space="preserve">
+    <value>Yorum göndermek için oturum açın (Menü - Ayarlar - Google hesabı)</value>
+  </data>
+  <data name="settings_item_restart_required" xml:space="preserve">
+    <value>Bu ayarı değiştirirseniz uygulama yeniden başlatılır ve değişiklik uygulanır.</value>
+  </data>
+  <data name="video_settings" xml:space="preserve">
+    <value>Video ayarları</value>
+  </data>
+  <data name="alsa_exclusive_notice" xml:space="preserve">
+    <value>Özel erişimli bir sürücüye sahip bir aygıt seçtiniz. AX Player kullanılırken diğer uygulamalardan ses duyamazsınız. Doğru başlatmak için aygıtın başka uygulamalar tarafından kullanılmadığından emin olun. Aygıtı başka bir ses sürücüsüyle yeni kullandıysanız, devre dışı kalması için AX Player’ı yeniden başlatıp biraz beklemeniz gerekebilir.</value>
+  </data>
+  <data name="sfx_type" xml:space="preserve">
+    <value>Arayüz SFX türü</value>
+  </data>
+  <data name="sfx_new" xml:space="preserve">
+    <value>Yeni SFX</value>
+  </data>
+  <data name="sfx_legacy" xml:space="preserve">
+    <value>Eski</value>
+  </data>
+  <data name="play_overlay_sfx" xml:space="preserve">
+    <value>Arayüz SFX seslerini çal</value>
+  </data>
+  <data name="closed_captions_bg_opacity" xml:space="preserve">
+    <value>Altyazı arka planı opaklığı</value>
+  </data>
+  <data name="closed_captions_preview" xml:space="preserve">
+    <value>Altyazılar bu şekilde görünür.</value>
+  </data>
+  <data name="like_button" xml:space="preserve">
+    <value>Bunu beğendim</value>
+  </data>
+  <data name="dislike_button" xml:space="preserve">
+    <value>Bunu beğenmedim</value>
+  </data>
+  <data name="app_info" xml:space="preserve">
+    <value>AX Player hakkında</value>
+  </data>
+  <data name="yt_handle_view_profile" xml:space="preserve">
+    <value>{0} profilini görüntüle</value>
+  </data>
+  <data name="hashtag" xml:space="preserve">
+    <value>Hashtag {0}</value>
+  </data>
+  <data name="view_github_profile" xml:space="preserve">
+    <value>GitHub profilini görüntüle</value>
+  </data>
+  <data name="view_more_comments" xml:space="preserve">
+    <value>Daha fazla yorum göster</value>
+  </data>
+  <data name="updates" xml:space="preserve">
+    <value>Güncellemeler</value>
+  </data>
+  <data name="reflex_hint" xml:space="preserve">
+    <value>NVIDIA GPU’larda NVIDIA Reflex API’sinden yararlanarak gecikmeyi azaltır. Açık tutulması önerilir; yalnızca sorun yaşarsanız kapatın.</value>
+  </data>
+  <data name="reflex_notice" xml:space="preserve">
+    <value>Boost, GPU güç tüketimini artırabilir ve bazı durumlarda gecikmeyi yükseltebilir. Sorun yaşarsanız Boost’u devre dışı bırakın.</value>
+  </data>
+  <data name="reflex_off" xml:space="preserve">
+    <value>Kapalı</value>
+  </data>
+  <data name="reflex_on" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="reflex_boost" xml:space="preserve">
+    <value>Boost</value>
+  </data>
+  <data name="srv3_notice" xml:space="preserve">
+    <value>Bu özellikler deneyseldir, birçok hata içerir ve tamamlanmamıştır.</value>
+  </data>
+  <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
+    <value>Video yüklenirken oynatma hızını sıfırla</value>
+  </data>
+  <data name="closed_captions_bg_colour" xml:space="preserve">
+    <value>Altyazı arka plan rengi</value>
+  </data>
+  <data name="closed_captions_radius" xml:space="preserve">
+    <value>Altyazı köşe yarıçapı</value>
+  </data>
+  <data name="advanced_subtitle_style" xml:space="preserve">
+    <value>Gelişmiş altyazı stilini kullan</value>
+  </data>
+  <data name="screenshot_quality" xml:space="preserve">
+    <value>Ekran görüntüsü kalitesi</value>
+  </data>
+  <data name="notifications" xml:space="preserve">
+    <value>Bildirimler</value>
+  </data>
+  <data name="audio_tracks" xml:space="preserve">
+    <value>Ses parçaları</value>
+  </data>
+  <data name="karaoke_vocal_volume" xml:space="preserve">
+    <value>Vokal ses düzeyi</value>
+  </data>
+  <data name="eight_bit_effect_enabled" xml:space="preserve">
+    <value>8 bit efekti</value>
+  </data>
+  <data name="bit_depth" xml:space="preserve">
+    <value>Bit derinliği</value>
+  </data>
+  <data name="downsample_ratio" xml:space="preserve">
+    <value>Alt örnekleme oranı</value>
+  </data>
+  <data name="vertical_sync_vrr" xml:space="preserve">
+    <value>Dikey eşitleme (VRR düşük gecikme)</value>
+  </data>
+  <data name="preparing" xml:space="preserve">
+    <value>Hazırlanıyor...</value>
+  </data>
+  <data name="distortion_warning" xml:space="preserve">
+    <value>Bozulma düzeyi %50’yi aşarsa ses kalitesi düşer!</value>
+  </data>
+  <data name="modern" xml:space="preserve">
+    <value>Modern</value>
+  </data>
+  <data name="player_controller_fade_style" xml:space="preserve">
+    <value>Oynatıcı denetleyicisi kaybolma stili</value>
+  </data>
+  <data name="wavy_seekbar" xml:space="preserve">
+    <value>Arama çubuğu dalga animasyonu</value>
+  </data>
+  <data name="legacy_audio_label" xml:space="preserve">
+    <value>Eski ses modunu kullan</value>
+  </data>
+  <data name="legacy_audio_tooltip" xml:space="preserve">
+    <value>Ses sorunları yaşıyorsanız bunu kullanın. Bu seçenek etkinleştirildiğinde ses gecikmesinin artacağını unutmayın.</value>
+  </data>
+</root>
