@@ -88,7 +88,7 @@ namespace AXPlayer.App.Localisation {
         }
         
         /// <summary>
-        ///   Open NekoPlayer과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   Open AX Player과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string OpenApp {
             get {
