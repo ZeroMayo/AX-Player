@@ -15,7 +15,7 @@ namespace AXPlayer.Desktop.Windows
     {
         public static void Main()
         {
-            string gameName = @"NekoPlayer";
+            string gameName = @"AXPlayer";
 
             VelopackApp.Build().Run();
 
@@ -33,7 +33,7 @@ namespace AXPlayer.Desktop.Windows
             };
 
             if (DebugUtils.IsDebugBuild)
-                gameName = "NekoPlayer-development";
+                gameName = "AXPlayer-development";
 
             using (GameHost host = Host.GetSuitableDesktopHost(gameName, hostOptions))
             {
