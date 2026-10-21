@@ -26,8 +26,8 @@ namespace AXPlayer.Desktop.Windows
         public const int MAX_PHYSICAL_GPUS = 64;
         public const int UNICODE_STRING_MAX = 2048;
 
-        public const string APPLICATION_NAME = @"NekoPlayer";
-        public const string PROFILE_NAME = @"NekoPlayer";
+        public const string APPLICATION_NAME = @"AX Player";
+        public const string PROFILE_NAME = @"AX Player";
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate NvStatus EnumPhysicalGPUsDelegate([Out] IntPtr[] gpuHandles, out int gpuCount);
