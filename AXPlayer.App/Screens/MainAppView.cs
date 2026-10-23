@@ -225,7 +225,7 @@ namespace AXPlayer.App.Screens
 
         private ControlBarIconButton repeatButton, pinButton, captionButton, videoSettingsButton, playlistButton, quickLikeButton, quickDislikeButton, quickCommentOpenButton;
 
-        private ProjectYomiSpriteText timeText;
+        private OdometerTimeDisplay timeText;
 
         private Bindable<bool> trayIconVisible;
 
