@@ -25,11 +25,13 @@ namespace AXPlayer.App.Graphics.Sprites
                 {
                     Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                     Text = " / ",
+                    Alpha = 0.45f,
                 },
                 totalTime = new ProjectYomiSpriteText
                 {
                     Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                     Text = "0:00",
+                    Alpha = 0.65f,
                 },
             };
         }
@@ -66,14 +68,17 @@ namespace AXPlayer.App.Graphics.Sprites
             ProjectYomiSpriteText previousText = currentText;
             currentText = createText(text);
             currentText.Y = tickerHeight;
+            currentText.Scale = new osuTK.Vector2(0.96f);
             currentText.Alpha = 0;
             AddInternal(currentText);
 
             previousText.MoveToY(-tickerHeight, animationDuration, Easing.OutCubic)
+                        .ScaleTo(0.96f, animationDuration, Easing.OutCubic)
                         .FadeOut(animationDuration, Easing.OutCubic)
                         .OnComplete(_ => previousText.Expire());
 
             currentText.MoveToY(0, animationDuration, Easing.OutCubic)
+                       .ScaleTo(1, animationDuration, Easing.OutCubic)
                        .FadeIn(animationDuration, Easing.OutCubic);
         }
 
