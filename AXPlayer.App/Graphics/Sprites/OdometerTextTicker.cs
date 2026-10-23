@@ -35,62 +35,120 @@ namespace AXPlayer.App.Graphics.Sprites
             if (currentValue == text)
                 return;
 
-            if (text.Length != characters.Length)
+            int sharedLength = System.Math.Min(text.Length, characters.Length);
+            int oldOffset = characters.Length - sharedLength;
+            int newOffset = text.Length - sharedLength;
+            var newCharacters = new Drawable[text.Length];
+            var retainedCharacters = new HashSet<Drawable>();
+            var newLeadingDigits = new OdometerDigitTicker[newOffset];
+
+            for (int i = 0; i < newOffset; i++)
             {
-                currentValue = text;
-                setCharacters(text);
-            }
-            else
-            {
-                for (int i = 0; i < text.Length; i++)
+                var digitTicker = new OdometerDigitTicker('0')
                 {
-                    if (text[i] == currentValue[i])
-                        continue;
-
-                    if (char.IsDigit(text[i]) && characters[i] is OdometerDigitTicker digitTicker)
-                        digitTicker.SetDigit(text[i]);
-                    else if (characters[i] is ProjectYomiSpriteText characterText)
-                        characterText.Text = text[i].ToString();
-                    else
-                    {
-                        currentValue = text;
-                        setCharacters(text);
-                        break;
-                    }
-                }
-
-                currentValue = text;
+                    Alpha = 0,
+                };
+                newCharacters[i] = newLeadingDigits[i] = digitTicker;
             }
+
+            for (int i = 0; i < sharedLength; i++)
+            {
+                int oldIndex = oldOffset + i;
+                int newIndex = newOffset + i;
+                char oldCharacter = currentValue[oldIndex];
+                char newCharacter = text[newIndex];
+                Drawable oldDrawable = characters[oldIndex];
+
+                if (char.IsDigit(oldCharacter) && char.IsDigit(newCharacter)
+                    && oldDrawable is OdometerDigitTicker digitTicker)
+                {
+                    digitTicker.SetDigit(newCharacter);
+                    newCharacters[newIndex] = digitTicker;
+                    retainedCharacters.Add(digitTicker);
+                }
+                else if (!char.IsDigit(oldCharacter) && !char.IsDigit(newCharacter)
+                         && oldDrawable is Container characterContainer
+                         && characterContainer.Children[0] is ProjectYomiSpriteText characterText)
+                {
+                    if (oldCharacter != newCharacter)
+                        characterText.Text = newCharacter.ToString();
+
+                    newCharacters[newIndex] = characterContainer;
+                    retainedCharacters.Add(characterContainer);
+                }
+                else
+                    newCharacters[newIndex] = createTransitionCharacter(oldCharacter, newCharacter);
+            }
+
+            foreach (Drawable oldCharacter in characters)
+            {
+                if (!retainedCharacters.Contains(oldCharacter))
+                    tickerContent.Remove(oldCharacter, true);
+            }
+
+            for (int i = 0; i < newCharacters.Length; i++)
+            {
+                if (!retainedCharacters.Contains(newCharacters[i]))
+                    tickerContent.Add(newCharacters[i]);
+
+                tickerContent.SetLayoutPosition(newCharacters[i], i);
+            }
+
+            for (int i = 0; i < newLeadingDigits.Length; i++)
+            {
+                newLeadingDigits[i].SetDigit(text[i]);
+                newLeadingDigits[i].FadeIn(animationDuration, Easing.OutExpo);
+            }
+
+            currentValue = text;
+            characters = newCharacters;
         }
 
         private void setCharacters(string text)
         {
             var newCharacters = new List<Drawable>(text.Length);
             foreach (char character in text)
-            {
-                if (char.IsDigit(character))
-                {
-                    newCharacters.Add(new OdometerDigitTicker(character));
-                }
-                else
-                {
-                    newCharacters.Add(new Container
-                    {
-                        AutoSizeAxes = Axes.X,
-                        Height = 30,
-                        Child = new ProjectYomiSpriteText
-                        {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
-                            Text = character.ToString(),
-                        }
-                    });
-                }
-            }
+                newCharacters.Add(createCharacter(character));
 
             characters = newCharacters.ToArray();
             tickerContent.Children = characters;
+        }
+
+        private Drawable createCharacter(char character)
+        {
+            if (char.IsDigit(character))
+                return new OdometerDigitTicker(character);
+
+            return createNonDigitCharacter(character);
+        }
+
+        private Drawable createTransitionCharacter(char previousCharacter, char currentCharacter)
+        {
+            if (!char.IsDigit(currentCharacter))
+                return createNonDigitCharacter(currentCharacter);
+
+            char initialDigit = char.IsDigit(previousCharacter) ? previousCharacter : '0';
+            var digitTicker = new OdometerDigitTicker(initialDigit);
+            if (initialDigit != currentCharacter)
+                digitTicker.SetDigit(currentCharacter);
+
+            return digitTicker;
+        }
+
+        private Drawable createNonDigitCharacter(char character)
+        {
+            return new Container
+            {
+                AutoSizeAxes = Axes.X,
+                Height = tickerHeight,
+                Child = new ProjectYomiSpriteText
+                {
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
+                    Text = character.ToString(),
+                }
+            };
         }
     }
 }
