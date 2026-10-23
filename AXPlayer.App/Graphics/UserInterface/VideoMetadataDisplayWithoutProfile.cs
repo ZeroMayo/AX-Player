@@ -47,7 +47,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private AXPlayerConfigManager appConfig { get; set; }
 
-        private Container content;
+        private Container mainContent;
 
         private Bindable<Localisation.Language> uiLanguage;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
@@ -69,13 +69,13 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
-            content.ScaleTo(0.9f, 2000, Easing.OutQuint);
+            mainContent.ScaleTo(0.9f, 2000, Easing.OutQuint);
             return base.OnMouseDown(e);
         }
 
         protected override void OnMouseUp(MouseUpEvent e)
         {
-            content.ScaleTo(1, 1000, Easing.OutElastic);
+            mainContent.ScaleTo(1, 1000, Easing.OutElastic);
             base.OnMouseUp(e);
         }
 
@@ -91,13 +91,11 @@ namespace AXPlayer.App.Graphics.UserInterface
             InternalChildren = new Drawable[]
             {
                 samples,
-                content = new Container
+                mainContent = new Container
                 {
                     Origin = Anchor.Centre,
                     Anchor = Anchor.Centre,
-                    RelativeSizeAxes = Axes.Both,
-                    Masking = true,
-                    CornerRadius = 15,
+                    AutoSizeAxes = Axes.Both,
                     /*
                     EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
                     {
@@ -111,11 +109,15 @@ namespace AXPlayer.App.Graphics.UserInterface
                     {
                         bgLayer = new Box
                         {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
                             RelativeSizeAxes = Axes.Both,
                             Colour = overlayColourProvider.Background5,
                             Alpha = 1f,
                         },
                         new Container {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
                             AutoSizeAxes = Axes.Both,
                             Children = new Drawable[]
                             {
