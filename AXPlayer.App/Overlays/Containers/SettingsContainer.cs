@@ -483,7 +483,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Padding = new MarginPadding { Horizontal = 30 },
                                                             Text = AXPlayerStrings.ReportBugs,
                                                             TooltipText = AXPlayerStrings.ReportBugsDesc,
-                                                            Action = () => host.OpenUrlExternally("https://boomboxrapsody.featurebase.app/en"),
+                                                            Action = () => host.OpenUrlExternally("https://zeromayo.featurebase.app/"),
                                                         },
                                                         new ProjectYomiSpriteText
                                                         {
