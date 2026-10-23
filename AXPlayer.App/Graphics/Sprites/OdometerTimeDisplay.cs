@@ -165,6 +165,7 @@ namespace AXPlayer.App.Graphics.Sprites
             ProjectYomiSpriteText previousText = currentText;
             currentText = createText(digit);
             currentText.Y = tickerHeight;
+            currentText.Scale = new osuTK.Vector2(0.25f);
             currentText.Alpha = 0;
             AddInternal(currentText);
 
@@ -173,11 +174,13 @@ namespace AXPlayer.App.Graphics.Sprites
                 .TransformTo(nameof(BlurSigma), new osuTK.Vector2(0), animationDuration, Easing.OutCubic);
 
             previousText.MoveToY(-tickerHeight, animationDuration, Easing.OutExpo)
+                        .ScaleTo(0.25f, animationDuration, Easing.OutExpo)
                         .FadeOut(animationDuration, Easing.OutExpo)
                         .OnComplete(_ => previousText.Expire());
 
-            currentText.MoveToY(0, animationDuration, Easing.OutBack)
-                       .FadeIn(animationDuration, Easing.OutBack);
+            currentText.MoveToY(0, animationDuration, Easing.OutExpo)
+                       .ScaleTo(1, animationDuration, Easing.OutExpo)
+                       .FadeIn(animationDuration, Easing.OutExpo);
         }
 
         private ProjectYomiSpriteText createText(char digit)
