@@ -5,14 +5,15 @@
 
 using System;
 using System.Drawing;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
-using Google.Apis.YouTube.v3.Data;
-using Humanizer;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
 using AXPlayer.App.Utils;
+using Google.Apis.YouTube.v3.Data;
+using Humanizer;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
@@ -46,6 +47,8 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private AXPlayerConfigManager appConfig { get; set; }
 
+        private Container content;
+
         private Bindable<Localisation.Language> uiLanguage;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
         private Bindable<VideoMetadataTranslateSource> translationSource = new Bindable<VideoMetadataTranslateSource>();
@@ -64,6 +67,18 @@ namespace AXPlayer.App.Graphics.UserInterface
             desc.Colour = colours.FGColor2;
         }
 
+        protected override bool OnMouseDown(MouseDownEvent e)
+        {
+            content.ScaleTo(0.9f, 2000, Easing.OutQuint);
+            return base.OnMouseDown(e);
+        }
+
+        protected override void OnMouseUp(MouseUpEvent e)
+        {
+            content.ScaleTo(1, 1000, Easing.OutElastic);
+            base.OnMouseUp(e);
+        }
+
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider overlayColourProvider)
         {
@@ -76,53 +91,73 @@ namespace AXPlayer.App.Graphics.UserInterface
             InternalChildren = new Drawable[]
             {
                 samples,
-                bgLayer = new Box
+                content = new Container
                 {
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
-                    Colour = overlayColourProvider.Background5,
-                    Alpha = 1f,
-                },
-                new Container {
-                    AutoSizeAxes = Axes.Both,
+                    Masking = true,
+                    CornerRadius = 15,
+                    /*
+                    EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
+                    {
+                        Type = osu.Framework.Graphics.Effects.EdgeEffectType.Shadow,
+                        Colour = Color4.Black.Opacity(0.25f),
+                        Offset = new Vector2(0, 2),
+                        Radius = 16,
+                    },
+                    */
                     Children = new Drawable[]
                     {
-                        new FillFlowContainer
-                        {
-                            AutoSizeAxes = Axes.Both,
-                            Direction = FillDirection.Vertical,
-                            Padding = new MarginPadding
-                            {
-                                Vertical = 7,
-                                Horizontal = 14,
-                            },
-                            Children = new Drawable[]
-                            {
-                                videoName = new ProjectYomiTextFlowContainer(f =>
-                                {
-                                    f.Font = AXPlayerApp.DefaultFont.With(size: 20, weight: "Black");
-                                })
-                                {
-                                    Colour = overlayColourProvider.Content2,
-                                    AutoSizeAxes = Axes.Both,
-                                    Text = AXPlayerStrings.VideoNotLoaded,
-                                },
-                                desc = new ProjectYomiTextFlowContainer(f =>
-                                {
-                                    f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "SemiBold");
-                                })
-                                {
-                                    Colour = overlayColourProvider.Content2,
-                                    AutoSizeAxes = Axes.Both,
-                                    Text = AXPlayerStrings.VideoNotLoadedDesc,
-                                }
-                            }
-                        },
-                        hover = new Box
+                        bgLayer = new Box
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Colour = Color4.White,
-                            Blending = BlendingParameters.Additive,
-                            Alpha = 0,
+                            Colour = overlayColourProvider.Background5,
+                            Alpha = 1f,
+                        },
+                        new Container {
+                            AutoSizeAxes = Axes.Both,
+                            Children = new Drawable[]
+                            {
+                                new FillFlowContainer
+                                {
+                                    AutoSizeAxes = Axes.Both,
+                                    Direction = FillDirection.Vertical,
+                                    Padding = new MarginPadding
+                                    {
+                                        Vertical = 7,
+                                        Horizontal = 14,
+                                    },
+                                    Children = new Drawable[]
+                                    {
+                                        videoName = new ProjectYomiTextFlowContainer(f =>
+                                        {
+                                            f.Font = AXPlayerApp.DefaultFont.With(size: 20, weight: "Black");
+                                        })
+                                        {
+                                            Colour = overlayColourProvider.Content2,
+                                            AutoSizeAxes = Axes.Both,
+                                            Text = AXPlayerStrings.VideoNotLoaded,
+                                        },
+                                        desc = new ProjectYomiTextFlowContainer(f =>
+                                        {
+                                            f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "SemiBold");
+                                        })
+                                        {
+                                            Colour = overlayColourProvider.Content2,
+                                            AutoSizeAxes = Axes.Both,
+                                            Text = AXPlayerStrings.VideoNotLoadedDesc,
+                                        }
+                                    }
+                                },
+                                hover = new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = Color4.White,
+                                    Blending = BlendingParameters.Additive,
+                                    Alpha = 0,
+                                },
+                            }
                         },
                     }
                 },
