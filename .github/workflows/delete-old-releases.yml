@@ -10,4 +10,5 @@ jobs:
     - uses: Nats-ji/delete-old-releases@v1
       with:
         token: ${{ secrets.GIT_TOKEN }}
-        keep-old-minor-releases: false
+        keep-old-minor-releases: true
+        keep-old-minor-releases-count: 1
