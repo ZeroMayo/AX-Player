@@ -940,4 +940,7 @@
   <data name="version_text" xml:space="preserve">
     <value>Sürüm {0}</value>
   </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>Resmî YouTube API'sinin sınırlamaları nedeniyle en fazla 5 yanıt görüntülenebilir.</value>
+  </data>
 </root>

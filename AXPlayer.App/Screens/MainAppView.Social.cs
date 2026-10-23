@@ -35,6 +35,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using static Google.Apis.YouTube.v3.CommentThreadsResource.ListRequest;
 using Container = osu.Framework.Graphics.Containers.Container;
+using osu.Framework.Graphics.Containers;
 
 namespace AXPlayer.App.Screens
 {
@@ -105,6 +106,22 @@ namespace AXPlayer.App.Screens
                             }
                         };
                     }
+
+                    commentContainer.Add(new CircularContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Children = new Drawable[]
+                        {
+                            new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 16))
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                TextAnchor = Anchor.Centre,
+                                Text = AXPlayerStrings.RepliesLimited,
+                            }
+                        }
+                    });
 
                     for (int i = 0; i < commentThreadListResponse.Items.Count; i++)
                     {

@@ -941,4 +941,7 @@
   <data name="version_text" xml:space="preserve">
     <value>版本 {0}</value>
   </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>由于官方 YouTube API 的限制，最多只能显示 5 条回复。</value>
+  </data>
 </root>

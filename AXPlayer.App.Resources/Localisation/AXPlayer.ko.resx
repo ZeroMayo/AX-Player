@@ -940,4 +940,7 @@
   <data name="version_text" xml:space="preserve">
     <value>버전 {0}</value>
   </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>공식 YouTube API의 한계로 답글은 최대 5개까지 표시됩니다.</value>
+  </data>
 </root>

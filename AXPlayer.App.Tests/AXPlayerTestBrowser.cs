@@ -57,11 +57,14 @@ namespace AXPlayer.App.Tests
 
             onScreenDisplay = new OnScreenDisplay();
             screenshotManager = new ScreenshotManager();
+            notificationOverlay = new PushNotificationOverlay();
 
             onScreenDisplay.BeginTracking(this, frameworkConfig);
             onScreenDisplay.BeginTracking(this, LocalConfig);
 
             loadComponentSingleFile(onScreenDisplay, Add, true);
+
+            loadComponentSingleFile(notificationOverlay, Add, true);
 
             loadComponentSingleFile(screenshotManager, Add, true);
 
@@ -74,6 +77,8 @@ namespace AXPlayer.App.Tests
                 new TestBrowser("AXPlayer"),
             });
         }
+
+        private PushNotificationOverlay notificationOverlay;
 
         [Resolved]
         private FrameworkConfigManager frameworkConfig { get; set; }

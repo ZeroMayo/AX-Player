@@ -940,4 +940,7 @@
   <data name="version_text" xml:space="preserve">
     <value>Versión {0}</value>
   </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>Debido a las limitaciones de la API oficial de YouTube, se pueden mostrar un máximo de 5 respuestas.</value>
+  </data>
 </root>
