@@ -74,6 +74,12 @@ When running locally to do any kind of performance testing, make sure to add `-c
 
 If the build fails, try to restore NuGet packages with `dotnet restore`.
 
+## Translation
+
+To help translate *AX Player*, we no longer accept translation contributions via Crowdin. All translations are now handled using LLMs.
+
+If you would like to add support for a new language, feel free to open a PR. Please note that modifications to existing English and Korean translations are not accepted.
+
 ## Contributing
 
 When it comes to contributing to the project, the two main things you can do to help out are reporting issues and submitting pull requests. Please refer to the [contributing guidelines](CONTRIBUTING.md) to understand how to help in the most effective way possible.

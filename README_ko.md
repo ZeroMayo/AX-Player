@@ -74,6 +74,12 @@ dotnet run --project AXPlayer.Desktop (for Linux and other platform)
 
 빌드가 실패하면 `dotnet restore` 명령어로 NuGet 패키지를 복원해 보세요.
 
+## 번역
+
+*AX Player* 번역을 지원하기 위해, 더 이상 Crowdin을 통한 번역 기여를 받지 않습니다. 모든 번역은 이제 LLM을 사용해 처리됩니다.
+
+새로운 언어 지원을 추가하고 싶으시면 언제든지 PR을 열어주세요. 기존 영어 및 한국어 번역본의 수정본은 허용되지 않음을 알려드립니다.
+
 ## 기여하기
 
 프로젝트에 기여하는 방법으로는 문제를 보고하거나 풀 리퀘스트를 제출하는 두 가지가 있습니다. 가장 효과적으로 도움을 줄 수 있는 방법을 이해하려면 [기여 지침](CONTRIBUTING.md)을 참고해 주세요.
