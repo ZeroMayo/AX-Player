@@ -40,7 +40,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                     Icon = FontAwesome.Solid.TachometerAlt,
                     Caption = AXPlayerStrings.PlaybackSpeedWithoutValue,
                     Current = Current,
-                    LabelFormat = value => $@"{value:0.##}x",
+                    DisplayAsPercentage = true,
                     KeyboardStep = 0.05f,
                 }
             }
