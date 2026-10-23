@@ -120,11 +120,17 @@ namespace AXPlayer.App.Graphics.Sprites
                 }
                 else
                 {
-                    newCharacters.Add(new ProjectYomiSpriteText
+                    newCharacters.Add(new Container
                     {
+                        AutoSizeAxes = Axes.X,
                         Height = 30,
-                        Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
-                        Text = character.ToString(),
+                        Child = new ProjectYomiSpriteText
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
+                            Text = character.ToString(),
+                        }
                     });
                 }
             }
