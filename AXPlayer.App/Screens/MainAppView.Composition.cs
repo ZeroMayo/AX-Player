@@ -695,14 +695,9 @@ namespace AXPlayer.App.Screens
                                                                                                             },
                                                                                                             Colour = overlayColourProvider.Content2,
                                                                                                         },
-                                                                                                        speedText = new ProjectYomiSpriteText
+                                                                                                        speedText = new OdometerTextTicker
                                                                                                         {
-                                                                                                            Margin = new MarginPadding
-                                                                                                            {
-                                                                                                                Top = 7
-                                                                                                            },
                                                                                                             AlwaysPresent = true,
-                                                                                                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                                                                                                             Colour = overlayColourProvider.Content2,
                                                                                                         },
                                                                                                         speedBarExpandIcon = new SpriteIcon
@@ -3735,20 +3730,21 @@ namespace AXPlayer.App.Screens
             playbackSpeed.BindValueChanged(speed =>
             {
                 this.TransformBindableTo(speedTextRolling, speed.NewValue, 400, Easing.OutQuint);
+                speedText.SetText($@"{speed.NewValue:0.##}x");
             }, true);
 
             speedTextRolling.BindValueChanged(speed =>
             {
                 double intValue = speed.NewValue;
-                speedText.Text = $@"{intValue:0.##}x";
+                //speedText.Text = $@"{intValue:0.##}x";
             }, true);
 
             uiLanguage.BindValueChanged(_ =>
             {
                 Schedule(() =>
                 {
-                    double intValue = speedTextRolling.Value;
-                    speedText.Text = $@"{intValue:0.##}x";
+                    double intValue = playbackSpeed.Value;
+                    speedText.SetText($@"{intValue:0.##}x");
                 });
             }, true);
 
