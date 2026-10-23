@@ -938,4 +938,10 @@
     <value>游玩过程中遇到音频问题时，请开启此选项。
 注意：该选项会增加音频延迟。</value>
   </data>
+  <data name="version_text" xml:space="preserve">
+    <value>版本 {0}</value>
+  </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>由于官方 YouTube API 的限制，最多只能显示 5 条回复。</value>
+  </data>
 </root>

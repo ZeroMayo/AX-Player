@@ -937,4 +937,10 @@
   <data name="legacy_audio_tooltip" xml:space="preserve">
     <value>Ses sorunları yaşıyorsanız bunu kullanın. Bu seçenek etkinleştirildiğinde ses gecikmesinin artacağını unutmayın.</value>
   </data>
+  <data name="version_text" xml:space="preserve">
+    <value>Sürüm {0}</value>
+  </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>Resmî YouTube API'sinin sınırlamaları nedeniyle en fazla 5 yanıt görüntülenebilir.</value>
+  </data>
 </root>

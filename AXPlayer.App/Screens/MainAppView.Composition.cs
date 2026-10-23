@@ -828,16 +828,13 @@ namespace AXPlayer.App.Screens
                                                                                     },
                                                                                     Children = new Drawable[]
                                                                                     {
-                                                                                        timeText = new ProjectYomiSpriteText
+                                                                                        timeText = new OdometerTimeDisplay
                                                                                         {
                                                                                             Margin = new MarginPadding
                                                                                             {
                                                                                                 Top = 7
                                                                                             },
-                                                                                            AlwaysPresent = true,
-                                                                                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                                                                                             Colour = overlayColourProvider.Content2,
-                                                                                            Text = "0:00 / 0:00"
                                                                                         },
                                                                                     }
                                                                                 }

@@ -1469,6 +1469,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString LegacyAudioTooltip => new TranslatableString(getKey(@"legacy_audio_tooltip"), @"Use this if you are experiencing audio issues. Note that audio latency will be higher when this is toggled on.");
 
+        /// <summary>
+        /// "Version {0}"
+        /// </summary>
+        public static LocalisableString VersionText(string version) => new TranslatableString(getKey(@"version_text"), "Version {0}", version);
+
+        /// <summary>
+        /// "Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed."
+        /// </summary>
+        public static LocalisableString RepliesLimited => new TranslatableString(getKey(@"limited_replies"), "Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed.");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

@@ -937,4 +937,10 @@
   <data name="legacy_audio_tooltip" xml:space="preserve">
     <value>オーディオに問題がある場合に使用してください。オンにすると、オーディオの遅延が増加するのでご注意ください。</value>
   </data>
+  <data name="version_text" xml:space="preserve">
+    <value>バージョン {0}</value>
+  </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>公式 YouTube API の制限により、表示できる返信は最大 5 件です。</value>
+  </data>
 </root>

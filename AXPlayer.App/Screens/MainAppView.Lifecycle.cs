@@ -1111,7 +1111,7 @@ namespace AXPlayer.App.Screens
                     currentTime = $"{duration.Minutes.ToString("0")}:{duration.Seconds.ToString("00")}";
                 }
 
-                timeText.Text = $"{currentTime} / {totalTimeText}";
+                timeText.SetTime(currentTime, totalTimeText);
 
                 currentVideoSource?.UpdateSeekingState(seekbar.IsDragged);
 

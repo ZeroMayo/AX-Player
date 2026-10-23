@@ -5,11 +5,11 @@ using osu.Framework.Testing;
 
 namespace AXPlayer.App.Tests.Visual
 {
-    public abstract partial class NekoPlayerTestScene : TestScene
+    public abstract partial class AXPlayerTestScene : TestScene
     {
-        protected override ITestSceneTestRunner CreateRunner() => new YouTubePlayerEXTestSceneTestRunner();
+        protected override ITestSceneTestRunner CreateRunner() => new AXPlayerTestSceneTestRunner();
 
-        private partial class YouTubePlayerEXTestSceneTestRunner : AXPlayerAppBase, ITestSceneTestRunner
+        private partial class AXPlayerTestSceneTestRunner : AXPlayerAppBase, ITestSceneTestRunner
         {
             private TestSceneTestRunner.TestRunner runner;
 

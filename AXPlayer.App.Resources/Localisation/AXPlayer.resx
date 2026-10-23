@@ -938,4 +938,10 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="legacy_audio_tooltip" xml:space="preserve">
     <value>Use this if you are experiencing audio issues. Note that audio latency will be higher when this is toggled on.</value>
   </data>
+  <data name="version_text" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="limited_replies" xml:space="preserve">
+    <value>Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed.</value>
+  </data>
 </root>

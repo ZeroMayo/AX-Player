@@ -57,6 +57,8 @@ namespace AXPlayer.App.Overlays.Containers
     {
         private ProjectYomiScrollContainer settingsSections;
 
+        protected Bindable<ReleaseStream> ReleaseStream;
+
         public void ShowSettingsOverlayAtName(string name)
         {
             // wait for load of sections
@@ -189,7 +191,7 @@ namespace AXPlayer.App.Overlays.Containers
 
         public FormButton CheckForUpdatesButton;
 
-        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, captionLangOptions, wasapiExperimentalItem;
+        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, captionLangOptions, wasapiExperimentalItem, releaseStreamSelectorButtonCore;
 
         private FormCheckBox wasapiExperimental;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
@@ -368,6 +370,8 @@ namespace AXPlayer.App.Overlays.Containers
             alwaysUseOriginalAudio = appConfig.GetBindable<bool>(AXPlayerSetting.AlwaysUseOriginalAudio);
             sizeWindowed = config.GetBindable<Size>(FrameworkSetting.WindowedSize);
 
+            ReleaseStream = appConfig.GetBindable<ReleaseStream>(AXPlayerSetting.ReleaseStream);
+
             screenshotFormat = appConfig.GetBindable<ScreenshotFormat>(AXPlayerSetting.ScreenshotFormat);
             window = host.Window;
 
@@ -512,6 +516,11 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Action = () => {
                                                                 OAuthSignInAction.Invoke();
                                                             },
+                                                        }),
+                                                        releaseStreamSelectorButtonCore = new SettingsItemV2(new FormEnumDropdown<ReleaseStream>
+                                                        {
+                                                            Caption = AXPlayerStrings.ReleaseStream,
+                                                            Current = ReleaseStream,
                                                         }),
                                                         checkForUpdatesButtonCore = new SettingsItemV2(CheckForUpdatesButton = new FormButton
                                                         {
@@ -1236,11 +1245,12 @@ namespace AXPlayer.App.Overlays.Containers
 
             if (game.IsDeployedBuild)
             {
+                gameVersion.AddText(AXPlayerStrings.VersionText(string.Empty));
                 gameVersion.AddLink(game.Version, $"https://github.com/ZeroMayo/AX-Player/releases/{game.Version}", tooltipText: AXPlayerStrings.ViewChangelog(game.Version));
             }
             else
             {
-                gameVersion.AddText(game.Version);
+                gameVersion.AddText(AXPlayerStrings.VersionText(game.Version));
             }
 
             madeByText.AddText("made by ");
@@ -1384,7 +1394,7 @@ namespace AXPlayer.App.Overlays.Containers
 
             if (!game.IsDeployedBuild)
             {
-                //releaseStreamSelectorButtonCore.Hide();
+                releaseStreamSelectorButtonCore.Hide();
                 checkForUpdatesButtonCore.Hide();
             }
 
@@ -1593,7 +1603,7 @@ namespace AXPlayer.App.Overlays.Containers
         private readonly BindableBool minimiseOnFocusLossCanBeShown = new BindableBool(true);
         private SettingsItemV2 safeAreaConsiderationsCanBeShown;
 
-        private SettingsItemV2 resolutionFullscreenDropdownCore, resolutionWindowedDropdownCore, displayDropdownCore, minimiseOnFocusLossCheckboxCore, releaseStreamSelectorButtonCore;
+        private SettingsItemV2 resolutionFullscreenDropdownCore, resolutionWindowedDropdownCore, displayDropdownCore, minimiseOnFocusLossCheckboxCore;
 
         private FormDropdown<Size> resolutionFullscreenDropdown = null!;
         private FormDropdown<Size> resolutionWindowedDropdown = null!;
