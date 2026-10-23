@@ -57,7 +57,7 @@ namespace AXPlayer.App.Graphics.Sprites
     internal partial class OdometerTextTicker : Container
     {
         private const float tickerHeight = 30;
-        private const double animationDuration = 250;
+        private const double animationDuration = 500;
 
         private readonly FillFlowContainer tickerContent;
         private string currentValue = "0:00";
@@ -143,8 +143,8 @@ namespace AXPlayer.App.Graphics.Sprites
     internal partial class OdometerDigitTicker : BufferedContainer
     {
         private const float tickerHeight = 30;
-        private const float digitWidth = 12;
-        private const double animationDuration = 250;
+        private const float digitWidth = 9;
+        private const double animationDuration = 500;
 
         private ProjectYomiSpriteText currentText;
 
