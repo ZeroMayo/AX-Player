@@ -168,7 +168,7 @@ namespace AXPlayer.App.Graphics.Sprites
             currentText.Alpha = 0;
             AddInternal(currentText);
 
-            this.TransformTo(nameof(BlurSigma), new osuTK.Vector2(0, 2.5f), 60, Easing.OutCubic)
+            this.TransformTo(nameof(BlurSigma), new osuTK.Vector2(0, 1.5f), 60, Easing.OutCubic)
                 .Then()
                 .TransformTo(nameof(BlurSigma), new osuTK.Vector2(0), animationDuration, Easing.OutCubic);
 
@@ -176,8 +176,8 @@ namespace AXPlayer.App.Graphics.Sprites
                         .FadeOut(animationDuration, Easing.OutExpo)
                         .OnComplete(_ => previousText.Expire());
 
-            currentText.MoveToY(0, animationDuration, Easing.OutExpo)
-                       .FadeIn(animationDuration, Easing.OutExpo);
+            currentText.MoveToY(0, animationDuration, Easing.OutBack)
+                       .FadeIn(animationDuration, Easing.OutBack);
         }
 
         private ProjectYomiSpriteText createText(char digit)
