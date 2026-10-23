@@ -115,7 +115,7 @@ namespace AXPlayer.App.Screens
         private readonly Bindable<SettingsNote.Data?> DistortionVolumeNotice = new Bindable<SettingsNote.Data?>();
 
         private ProjectYomiSpriteText videoLoadingProgress, videoInfoDetails, likeCount, dislikeCount, commentCount, commentsContainerTitle, currentTime, totalTime, volumeText;
-        private ProjectYomiSpriteText speedText;
+        private OdometerTextTicker speedText;
         private LinkFlowContainer videoDescription;
         private FillFlowContainer commentContainer, searchResultContainer, playlistItemsView, myPlaylistItemsView;
 
