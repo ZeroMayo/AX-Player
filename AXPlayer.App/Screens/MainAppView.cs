@@ -186,8 +186,6 @@ namespace AXPlayer.App.Screens
         private Bindable<CaptionFonts> caption_font;
 
         private Bindable<float> scalingBackgroundDim = null!;
-
-        private Bindable<double> speedTextRolling;
         private Bindable<double> volumeTextRolling;
 
         private SpriteIcon volumeIcon, speedBarIcon, speedBarExpandIcon, volumeBarExpandIcon;
