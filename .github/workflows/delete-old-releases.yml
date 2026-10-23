@@ -1,0 +1,12 @@
+name: Delete old releases
+on: workflow_dispatch
+
+jobs:
+  build-macos:
+    name: Delete old releases
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: Nats-ji/delete-old-releases@v1
+      with:
+        token: ${{ secrets.GIT_TOKEN }}
