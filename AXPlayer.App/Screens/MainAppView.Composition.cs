@@ -46,7 +46,6 @@ using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 using YoutubeExplode.Videos.ClosedCaptions;
 using Container = osu.Framework.Graphics.Containers.Container;
 
@@ -57,7 +56,7 @@ namespace AXPlayer.App.Screens
         [BackgroundDependencyLoader]
         private void load(ISampleStore sampleStore, FrameworkConfigManager config, AXPlayerConfigManager appConfig, GameHost host, Storage storage, OverlayColourProvider overlayColourProvider, TextureStore textures, FrameworkDebugConfigManager debugConfig)
         {
-            //speedTextRolling = new Bindable<double>(1);
+            speedTextRolling = new Bindable<double>(1);
             volumeTextRolling = new Bindable<double>(1);
             appliedEffects.Value = new List<InternalShader>();
             window = host.Window;
@@ -3739,23 +3738,20 @@ namespace AXPlayer.App.Screens
 
             playbackSpeed.BindValueChanged(speed =>
             {
-                //this.TransformBindableTo(speedTextRolling, speed.NewValue, 400, Easing.OutQuint);
-                speedText.Text = $@"{speed.NewValue:0.##}x";
+                this.TransformBindableTo(speedTextRolling, speed.NewValue, 400, Easing.OutQuint);
             }, true);
 
-            /*
             speedTextRolling.BindValueChanged(speed =>
             {
                 double intValue = speed.NewValue;
                 speedText.Text = $@"{intValue:0.##}x";
             }, true);
-            */
 
             uiLanguage.BindValueChanged(_ =>
             {
                 Schedule(() =>
                 {
-                    double intValue = playbackSpeed.Value;
+                    double intValue = speedTextRolling.Value;
                     speedText.Text = $@"{intValue:0.##}x";
                 });
             }, true);
