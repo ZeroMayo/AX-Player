@@ -36,6 +36,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using static Google.Apis.YouTube.v3.CommentThreadsResource.ListRequest;
 using Container = osu.Framework.Graphics.Containers.Container;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 
 namespace AXPlayer.App.Screens
 {
@@ -111,14 +112,28 @@ namespace AXPlayer.App.Screens
                     {
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
+                        Masking = true,
                         Children = new Drawable[]
                         {
-                            new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 16))
+                            new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = overlayColourProvider1.Background4,
+                                Alpha = 0.7f,
+                            },
+                            new Container
                             {
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
-                                TextAnchor = Anchor.Centre,
-                                Text = AXPlayerStrings.RepliesLimited,
+                                Padding = new MarginPadding(8),
+                                Child = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 16))
+                                {
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    TextAnchor = Anchor.Centre,
+                                    Text = AXPlayerStrings.RepliesLimited,
+                                    Colour = overlayColourProvider1.Content2,
+                                }
                             }
                         }
                     });
