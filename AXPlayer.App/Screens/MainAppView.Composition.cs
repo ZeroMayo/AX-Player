@@ -46,6 +46,7 @@ using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
+using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
 using YoutubeExplode.Videos.ClosedCaptions;
 using Container = osu.Framework.Graphics.Containers.Container;
 
@@ -765,14 +766,8 @@ namespace AXPlayer.App.Screens
                                                                                                             },
                                                                                                             Colour = overlayColourProvider.Content2,
                                                                                                         },
-                                                                                                        volumeText = new ProjectYomiSpriteText
+                                                                                                        volumeText = new OdometerTextTicker
                                                                                                         {
-                                                                                                            Margin = new MarginPadding
-                                                                                                            {
-                                                                                                                Top = 7
-                                                                                                            },
-                                                                                                            AlwaysPresent = true,
-                                                                                                            Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                                                                                                             Colour = overlayColourProvider.Content2,
                                                                                                         },
                                                                                                         volumeBarExpandIcon = new SpriteIcon
@@ -3491,6 +3486,7 @@ namespace AXPlayer.App.Screens
             videoVolume.BindValueChanged(volume =>
             {
                 this.TransformBindableTo(volumeTextRolling, volume.NewValue, 400, Easing.OutQuint);
+                volumeText.SetText($"{(int)Math.Round(volume.NewValue * 100)}%");
                 if (volume.NewValue > 0.5)
                 {
                     if (!sessionStatics.Get<bool>(Static.IsControlVisible))
@@ -3759,7 +3755,7 @@ namespace AXPlayer.App.Screens
             volumeTextRolling.BindValueChanged(volume =>
             {
                 int intValue = (int)Math.Round(volume.NewValue * 100);
-                volumeText.Text = $"{intValue}%";
+                //volumeText.Text = $"{intValue}%";
             }, true);
 
             reverbEnabled.BindValueChanged(_ =>

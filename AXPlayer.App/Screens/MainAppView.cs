@@ -114,7 +114,8 @@ namespace AXPlayer.App.Screens
         private FormSliderBar<float> DistortionVolumeSlider;
         private readonly Bindable<SettingsNote.Data?> DistortionVolumeNotice = new Bindable<SettingsNote.Data?>();
 
-        private ProjectYomiSpriteText videoLoadingProgress, videoInfoDetails, likeCount, dislikeCount, commentCount, commentsContainerTitle, currentTime, totalTime, volumeText;
+        private ProjectYomiSpriteText videoLoadingProgress, videoInfoDetails, likeCount, dislikeCount, commentCount, commentsContainerTitle, currentTime, totalTime;
+        private OdometerTextTicker volumeText;
         private ProjectYomiSpriteText speedText;
         private LinkFlowContainer videoDescription;
         private FillFlowContainer commentContainer, searchResultContainer, playlistItemsView, myPlaylistItemsView;
