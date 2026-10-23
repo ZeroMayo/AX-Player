@@ -830,10 +830,6 @@ namespace AXPlayer.App.Screens
                                                                                     {
                                                                                         timeText = new OdometerTimeDisplay
                                                                                         {
-                                                                                            Margin = new MarginPadding
-                                                                                            {
-                                                                                                Top = 7
-                                                                                            },
                                                                                             Colour = overlayColourProvider.Content2,
                                                                                         },
                                                                                     }

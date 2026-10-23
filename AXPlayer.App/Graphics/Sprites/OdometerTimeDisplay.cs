@@ -25,12 +25,20 @@ namespace AXPlayer.App.Graphics.Sprites
                 currentTime = new OdometerTextTicker(),
                 separator = new ProjectYomiSpriteText
                 {
+                    Margin = new MarginPadding
+                    {
+                        Top = 7
+                    },
                     Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                     Text = " / ",
                     Alpha = 0.45f,
                 },
                 totalTime = new ProjectYomiSpriteText
                 {
+                    Margin = new MarginPadding
+                    {
+                        Top = 7
+                    },
                     Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                     Text = "0:00",
                     Alpha = 0.65f,
@@ -46,10 +54,10 @@ namespace AXPlayer.App.Graphics.Sprites
         }
     }
 
-    internal partial class OdometerTextTicker : BufferedContainer
+    internal partial class OdometerTextTicker : Container
     {
-        private const float tickerHeight = 22;
-        private const double animationDuration = 180;
+        private const float tickerHeight = 30;
+        private const double animationDuration = 250;
 
         private readonly FillFlowContainer tickerContent;
         private string currentValue = "0:00";
@@ -60,7 +68,6 @@ namespace AXPlayer.App.Graphics.Sprites
             AutoSizeAxes = Axes.X;
             Height = tickerHeight;
             Masking = true;
-            BlurSigma = new osuTK.Vector2(0);
             Child = tickerContent = new FillFlowContainer
             {
                 AutoSizeAxes = Axes.Both,
@@ -100,10 +107,6 @@ namespace AXPlayer.App.Graphics.Sprites
 
                 currentValue = text;
             }
-
-            this.TransformTo(nameof(BlurSigma), new osuTK.Vector2(2.5f), 60, Easing.OutCubic)
-                .Then()
-                .TransformTo(nameof(BlurSigma), new osuTK.Vector2(0), animationDuration, Easing.OutCubic);
         }
 
         private void setCharacters(string text)
@@ -119,6 +122,7 @@ namespace AXPlayer.App.Graphics.Sprites
                 {
                     newCharacters.Add(new ProjectYomiSpriteText
                     {
+                        Height = 30,
                         Font = AXPlayerApp.DefaultFont.With(weight: "Bold"),
                         Text = character.ToString(),
                     });
@@ -130,11 +134,11 @@ namespace AXPlayer.App.Graphics.Sprites
         }
     }
 
-    internal partial class OdometerDigitTicker : Container
+    internal partial class OdometerDigitTicker : BufferedContainer
     {
-        private const float tickerHeight = 22;
+        private const float tickerHeight = 30;
         private const float digitWidth = 12;
-        private const double animationDuration = 180;
+        private const double animationDuration = 250;
 
         private ProjectYomiSpriteText currentText;
 
@@ -158,12 +162,16 @@ namespace AXPlayer.App.Graphics.Sprites
             currentText.Alpha = 0;
             AddInternal(currentText);
 
-            previousText.MoveToY(-tickerHeight, animationDuration, Easing.OutCubic)
-                        .FadeOut(animationDuration, Easing.OutCubic)
+            this.TransformTo(nameof(BlurSigma), new osuTK.Vector2(0, 2.5f), 60, Easing.OutCubic)
+                .Then()
+                .TransformTo(nameof(BlurSigma), new osuTK.Vector2(0), animationDuration, Easing.OutCubic);
+
+            previousText.MoveToY(-tickerHeight, animationDuration, Easing.OutExpo)
+                        .FadeOut(animationDuration, Easing.OutExpo)
                         .OnComplete(_ => previousText.Expire());
 
-            currentText.MoveToY(0, animationDuration, Easing.OutCubic)
-                       .FadeIn(animationDuration, Easing.OutCubic);
+            currentText.MoveToY(0, animationDuration, Easing.OutExpo)
+                       .FadeIn(animationDuration, Easing.OutExpo);
         }
 
         private ProjectYomiSpriteText createText(char digit)
