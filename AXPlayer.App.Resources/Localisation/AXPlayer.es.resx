@@ -937,4 +937,7 @@
   <data name="legacy_audio_tooltip" xml:space="preserve">
     <value>Usa esta opción si tienes problemas con el audio. Ten en cuenta que la latencia del audio será mayor cuando esta opción esté activada.</value>
   </data>
+  <data name="version_text" xml:space="preserve">
+    <value>Versión {0}</value>
+  </data>
 </root>

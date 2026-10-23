@@ -938,4 +938,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="legacy_audio_tooltip" xml:space="preserve">
     <value>Use this if you are experiencing audio issues. Note that audio latency will be higher when this is toggled on.</value>
   </data>
+  <data name="version_text" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
 </root>

@@ -938,4 +938,7 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="legacy_audio_tooltip" xml:space="preserve">
     <value>Sử dụng tùy chọn này nếu bạn gặp sự cố âm thanh. Lưu ý rằng độ trễ âm thanh sẽ cao hơn khi bật tùy chọn này.</value>
   </data>
+  <data name="version_text" xml:space="preserve">
+    <value>Phiên bản {0}</value>
+  </data>
 </root>
