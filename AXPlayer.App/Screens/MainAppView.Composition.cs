@@ -1442,8 +1442,8 @@ namespace AXPlayer.App.Screens
                                 },
                                 commentsContainerTitle = new ProjectYomiSpriteText
                                 {
-                                    Origin = Anchor.TopLeft,
-                                    Anchor = Anchor.TopLeft,
+                                    Origin = Anchor.TopCentre,
+                                    Anchor = Anchor.TopCentre,
                                     Text = AXPlayerStrings.Comments("0"),
                                     Margin = new MarginPadding(16),
                                     Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
@@ -1996,8 +1996,8 @@ namespace AXPlayer.App.Screens
                                 },
                                 new ProjectYomiSpriteText
                                 {
-                                    Origin = Anchor.TopLeft,
-                                    Anchor = Anchor.TopLeft,
+                                    Origin = Anchor.TopCentre,
+                                    Anchor = Anchor.TopCentre,
                                     Text = AXPlayerStrings.Playlists,
                                     Margin = new MarginPadding(16),
                                     Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
@@ -2085,8 +2085,8 @@ namespace AXPlayer.App.Screens
                                 },
                                 new ProjectYomiSpriteText
                                 {
-                                    Origin = Anchor.TopLeft,
-                                    Anchor = Anchor.TopLeft,
+                                    Origin = Anchor.TopCentre,
+                                    Anchor = Anchor.TopCentre,
                                     Text = AXPlayerStrings.MyPlaylists,
                                     Margin = new MarginPadding(16),
                                     Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
@@ -2443,8 +2443,8 @@ namespace AXPlayer.App.Screens
                                 },
                                 new ProjectYomiSpriteText
                                 {
-                                    Origin = Anchor.TopLeft,
-                                    Anchor = Anchor.TopLeft,
+                                    Origin = Anchor.TopCentre,
+                                    Anchor = Anchor.TopCentre,
                                     Text = AXPlayerStrings.AudioEffects,
                                     Margin = new MarginPadding(16),
                                     Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
@@ -2466,45 +2466,65 @@ namespace AXPlayer.App.Screens
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                 },
-                                youtubeChannelMetadataDisplay = new YouTubeChannelMetadataDisplay
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    Margin = new MarginPadding(8),
-                                    Size = new Vector2(0.965f, 1f),
-                                    Height = 60,
-                                    Origin = Anchor.TopLeft,
-                                    Anchor = Anchor.TopLeft,
-                                    AlwaysPresent = true,
-                                },
-                                new ProjectYomiTextFlowContainer(f => f.Font = AXPlayerApp.DefaultFont.With(size: 20))
+                                new FillFlowContainer
                                 {
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
-                                    Origin = Anchor.Centre,
-                                    Anchor = Anchor.Centre,
-                                    TextAnchor = Anchor.Centre,
-                                    AlwaysPresent = true,
-                                    Text = AXPlayerStrings.UnsubscribeDesc,
-                                    Colour = overlayColourProvider.Content2,
-                                },
-                                declineButton = new RoundedAltButton
-                                {
-                                    Enabled = { Value = true },
-                                    Origin = Anchor.BottomLeft,
-                                    Anchor = Anchor.BottomLeft,
-                                    Text = AXPlayerStrings.Cancel,
-                                    Size = new Vector2(200, 40),
-                                    Margin = new MarginPadding(8),
-                                },
-                                acceptButton = new RoundedButton
-                                {
-                                    Enabled = { Value = true },
-                                    Origin = Anchor.BottomRight,
-                                    Anchor = Anchor.BottomRight,
-                                    Text = AXPlayerStrings.Yes,
-                                    Size = new Vector2(200, 40),
-                                    BackgroundColour = colours.RedDark,
-                                    Margin = new MarginPadding(8),
+                                    Direction = FillDirection.Vertical,
+                                    Children = new Drawable[]
+                                    {
+                                        youtubeChannelMetadataDisplay = new YouTubeChannelMetadataDisplay
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            Margin = new MarginPadding(8),
+                                            Size = new Vector2(0.965f, 1f),
+                                            Height = 60,
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            AlwaysPresent = true,
+                                        },
+                                        new ProjectYomiTextFlowContainer(f => f.Font = AXPlayerApp.DefaultFont.With(size: 20))
+                                        {
+                                            RelativeSizeAxes = Axes.X,
+                                            Height = 70,
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            TextAnchor = Anchor.Centre,
+                                            AlwaysPresent = true,
+                                            Text = AXPlayerStrings.UnsubscribeDesc,
+                                            Colour = overlayColourProvider.Content2,
+                                        },
+                                        new FillFlowContainer
+                                        {
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Direction = FillDirection.Horizontal,
+                                            Children = new Drawable[]
+                                            {
+                                                declineButton = new RoundedAltButton
+                                                {
+                                                    Origin = Anchor.TopCentre,
+                                                    Anchor = Anchor.TopCentre,
+                                                    Enabled = { Value = true },
+                                                    Text = AXPlayerStrings.Cancel,
+                                                    Size = new Vector2(200, 40),
+                                                    Margin = new MarginPadding(4),
+                                                },
+                                                acceptButton = new RoundedButton
+                                                {
+                                                    Origin = Anchor.TopCentre,
+                                                    Anchor = Anchor.TopCentre,
+                                                    Enabled = { Value = true },
+                                                    Text = AXPlayerStrings.Yes,
+                                                    Size = new Vector2(200, 40),
+                                                    BackgroundColour = colours.RedDark,
+                                                    Margin = new MarginPadding(4),
+                                                },
+                                            }
+                                        }
+                                    }
                                 },
                             }
                         },
@@ -3097,8 +3117,8 @@ namespace AXPlayer.App.Screens
                                 },
                                 new ProjectYomiSpriteText
                                 {
-                                    Origin = Anchor.TopLeft,
-                                    Anchor = Anchor.TopLeft,
+                                    Origin = Anchor.TopCentre,
+                                    Anchor = Anchor.TopCentre,
                                     Text = AXPlayerStrings.Menu,
                                     Margin = new MarginPadding(16),
                                     Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
@@ -3192,61 +3212,70 @@ namespace AXPlayer.App.Screens
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                 },
-                                new ProjectYomiSpriteText
-                                {
-                                    Origin = Anchor.TopCentre,
-                                    Anchor = Anchor.TopCentre,
-                                    Text = AXPlayerStrings.GoogleAccount,
-                                    Margin = new MarginPadding(16),
-                                    Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
-                                    Colour = overlayColourProvider.Content2,
-                                },
-                                youtubeChannelMetadataDisplay2 = new YouTubeChannelMetadataDisplay
+                                new FillFlowContainer
                                 {
                                     RelativeSizeAxes = Axes.X,
-                                    Margin = new MarginPadding(8),
-                                    Size = new Vector2(0.95f, 1f),
-                                    Height = 60,
-                                    Origin = Anchor.Centre,
-                                    Anchor = Anchor.Centre,
-                                    AlwaysPresent = true,
-                                },
-                                editChannelButton = new IconButton
-                                {
-                                    Enabled = { Value = true },
-                                    Origin = Anchor.CentreRight,
-                                    Anchor = Anchor.CentreRight,
-                                    Size = new Vector2(35, 35),
-                                    IconScale = new Vector2(0.8f),
-                                    Margin = new MarginPadding() { Right = 24 },
-                                    Icon = FontAwesome.Solid.Edit,
-                                    BackgroundColour = overlayColourProvider.Background3,
-                                },
-                                logoutButton = new RoundedAltButton
-                                {
-                                    Enabled = { Value = true },
-                                    Origin = Anchor.BottomLeft,
-                                    Anchor = Anchor.BottomLeft,
-                                    Text = AXPlayerStrings.Logout,
-                                    Size = new Vector2(200, 40),
-                                    Margin = new MarginPadding(16),
-                                    Action = () =>
+                                    AutoSizeAxes = Axes.Y,
+                                    Direction = FillDirection.Vertical,
+                                    Children = new Drawable[]
                                     {
-                                        if (googleOAuth2.SignedIn.Value)
+                                        new ProjectYomiSpriteText
                                         {
-                                            hideOverlays();
-                                            Task.Run(() => googleOAuth2.SignOut());
-                                        }
-                                    },
-                                },
-                                viewChannelButton = new RoundedButton
-                                {
-                                    Enabled = { Value = true },
-                                    Origin = Anchor.BottomRight,
-                                    Anchor = Anchor.BottomRight,
-                                    Text = AXPlayerStrings.ViewChannel,
-                                    Size = new Vector2(200, 40),
-                                    Margin = new MarginPadding(16),
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            Text = AXPlayerStrings.GoogleAccount,
+                                            Margin = new MarginPadding(16),
+                                            Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
+                                            Colour = overlayColourProvider.Content2,
+                                        },
+                                        youtubeChannelMetadataDisplay2 = new YouTubeChannelMetadataDisplay
+                                        {
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            RelativeSizeAxes = Axes.X,
+                                            Margin = new MarginPadding(4),
+                                            Size = new Vector2(0.95f, 1f),
+                                            Height = 60,
+                                            AlwaysPresent = true,
+                                        },
+                                        new FillFlowContainer
+                                        {
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                            Direction = FillDirection.Horizontal,
+                                            Children = new Drawable[]
+                                            {
+                                                logoutButton = new RoundedAltButton
+                                                {
+                                                    Origin = Anchor.TopCentre,
+                                                    Anchor = Anchor.TopCentre,
+                                                    Enabled = { Value = true },
+                                                    Text = AXPlayerStrings.Logout,
+                                                    Size = new Vector2(200, 40),
+                                                    Margin = new MarginPadding(4),
+                                                    Action = () =>
+                                                    {
+                                                        if (googleOAuth2.SignedIn.Value)
+                                                        {
+                                                            hideOverlays();
+                                                            Task.Run(() => googleOAuth2.SignOut());
+                                                        }
+                                                    },
+                                                },
+                                                viewChannelButton = new RoundedButton
+                                                {
+                                                    Origin = Anchor.TopCentre,
+                                                    Anchor = Anchor.TopCentre,
+                                                    Enabled = { Value = true },
+                                                    Text = AXPlayerStrings.ViewChannel,
+                                                    Size = new Vector2(200, 40),
+                                                    Margin = new MarginPadding(4),
+                                                },
+                                            }
+                                        },
+                                    }
                                 },
                             }
                         },
@@ -3362,17 +3391,6 @@ namespace AXPlayer.App.Screens
 
                             if (wth != null)
                                 app.Host.OpenUrlExternally($"https://www.youtube.com/channel/{wth.Id}");
-                        }
-                    };
-
-                    editChannelButton.Action = () =>
-                    {
-                        if (googleOAuth2.SignedIn.Value)
-                        {
-                            hideOverlays();
-
-                            if (wth != null)
-                                app.Host.OpenUrlExternally($"https://studio.youtube.com/channel/{wth.Id}/editing/profile");
                         }
                     };
 
