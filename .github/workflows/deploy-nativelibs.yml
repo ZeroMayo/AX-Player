@@ -1,7 +1,14 @@
 # There is no manual way to call this out to run this on tags via UI.
 # See: https://github.community/t/workflow-dispatch-from-a-tag-in-actions-tab/130561
-on: workflow_dispatch
 name: Deploy - NativeLibs
+
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        description: "the version of NativeLibs"
+        required: true
+        default: "26.0.0"
 
 jobs:
   check-if-tag:
@@ -61,7 +68,7 @@ jobs:
           user: ${{ secrets.NUGET_USER }}
 
       - name: Build NativeLibs
-        run: dotnet pack -c Release AXPlayer.NativeLibs /p:Configuration=Release /p:Version=${{needs.check-if-tag.outputs.version}} /p:GenerateDocumentationFile=true -o ${{steps.artifactsPath.outputs.nuget_artifacts}}
+        run: dotnet pack -c Release AXPlayer.NativeLibs /p:Configuration=Release /p:Version=${{ inputs.VERSION }} /p:GenerateDocumentationFile=true -o ${{steps.artifactsPath.outputs.nuget_artifacts}}
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v7
