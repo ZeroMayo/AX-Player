@@ -8,7 +8,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using osu.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
@@ -18,16 +17,8 @@ using SixLabors.ImageSharp.PixelFormats;
 using SkiaSharp;
 using SkiaSharp.Skottie;
 
-namespace AXPlayer.App.Graphics.Sprites
+namespace AXPlayer.App.Graphics.Sprites.Lottie
 {
-    public enum RepeatMode
-    {
-        Restart,
-        Reverse
-    }
-
-    public sealed record AnimationInfo(string Version, TimeSpan Duration, double FramesPerSecond, double InPoint, double OutPoint);
-
     /// <summary>
     /// A drawable for displaying and controlling Lottie animations using osu!framework.
     /// </summary>
