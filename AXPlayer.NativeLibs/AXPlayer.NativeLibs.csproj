@@ -11,7 +11,7 @@
     <Title>AX Player Libraries</Title>
     <Description>Native libraries for AX Player</Description>
     <PackageId>ZeroMayo.AXPlayer.NativeLibs</PackageId>
-    <PackageTags>osu ax-player game framework libraries</PackageTags>
+    <PackageTags>ax-player game framework libraries</PackageTags>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
   <ItemGroup>
