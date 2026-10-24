@@ -31,12 +31,6 @@
     <None Update="avcodec-63.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="avformat-63.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="avutil-61.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="AXPlayer_Loading.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -49,22 +43,13 @@
     <None Update="libavcodec.so.62">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="libavcodec.so.63">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="libavformat.so.63">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="libavutil.so.60">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="libavutil.so.61">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="libbassloud.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="libswscale.so.10">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="nekoplayer_app.bmp">
@@ -72,36 +57,6 @@
     </None>
     <None Update="nekoplayer_app.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\linux-x64\native\libavcodec.so.63">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\linux-x64\native\libavformat.so.63">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\linux-x64\native\libavutil.so.61">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\linux-x64\native\libbassloud.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\linux-x64\native\libswscale.so.10">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\avcodec-63.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\avformat-63.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\avutil-61.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\bassloud.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\swscale-10.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="swscale-10.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

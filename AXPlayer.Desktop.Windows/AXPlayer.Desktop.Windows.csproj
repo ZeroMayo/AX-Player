@@ -23,12 +23,6 @@
     <None Update="appIcon.bmp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="avcodec-63.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="avformat-63.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="avutil-61.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -44,21 +38,6 @@
     <None Update="avformat-62.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="runtimes\win-x64\native\avcodec-63.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\avformat-63.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\avutil-61.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\swscale-10.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="swscale-10.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="swscale-9.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -67,9 +46,6 @@
     </None>
     <None Update="nekoplayer_app.ico">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="runtimes\win-x64\native\bassloud.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="yt-dlp.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
