@@ -108,35 +108,38 @@ namespace AXPlayer.App.Screens
                         };
                     }
 
-                    commentContainer.Add(new CircularContainer
+                    if (string.IsNullOrEmpty(pageToken))
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Masking = true,
-                        Children = new Drawable[]
+                        commentContainer.Add(new CircularContainer
                         {
-                            new Box
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
+                            Masking = true,
+                            Children = new Drawable[]
                             {
-                                RelativeSizeAxes = Axes.Both,
-                                Colour = overlayColourProvider1.Background4,
-                                Alpha = 0.7f,
-                            },
-                            new Container
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Padding = new MarginPadding(8),
-                                Child = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 16))
+                                new Box
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Colour = overlayColourProvider1.Background4,
+                                    Alpha = 0.7f,
+                                },
+                                new Container
                                 {
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
-                                    TextAnchor = Anchor.Centre,
-                                    Text = AXPlayerStrings.RepliesLimited,
-                                    Colour = overlayColourProvider1.Content2,
+                                    Padding = new MarginPadding(8),
+                                    Child = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 16))
+                                    {
+                                        RelativeSizeAxes = Axes.X,
+                                        AutoSizeAxes = Axes.Y,
+                                        TextAnchor = Anchor.Centre,
+                                        Text = AXPlayerStrings.RepliesLimited,
+                                        Colour = overlayColourProvider1.Content2,
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
 
                     for (int i = 0; i < commentThreadListResponse.Items.Count; i++)
                     {
