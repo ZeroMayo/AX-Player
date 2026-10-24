@@ -15,6 +15,7 @@ using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Shaders;
 using AXPlayer.App.Graphics.Sprites;
+using AXPlayer.App.Graphics.Sprites.Odometer;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Graphics.UserInterfaceV3;
