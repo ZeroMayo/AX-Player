@@ -142,6 +142,9 @@ namespace AXPlayer.App.Overlays.Containers
         [Resolved]
         private AudioManager audio { get; set; }
 
+        [Resolved]
+        private RestartDialogOverlay restartDialogOverlay { get; set; }
+
         protected override void Dispose(bool isDisposing)
         {
             base.Dispose(isDisposing);
@@ -567,14 +570,12 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ColourScheme,
                                                             Current = colourSchemeBindable,
                                                             Icon = FontAwesome.Solid.Palette,
-                                                            HintText = AXPlayerStrings.SettingsItem_RestartRequired,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<UIFont>
                                                         {
                                                             Caption = AXPlayerStrings.UIFont,
                                                             Current = ui_font,
                                                             Icon = FontAwesome.Solid.Font,
-                                                            HintText = AXPlayerStrings.SettingsItem_RestartRequired,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<ProfileImageShape>
                                                         {
@@ -694,7 +695,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                             #pragma warning disable CS0612 // Type or member is obsolete
                                                             .Where(t => t != RendererType.Vulkan && t != RendererType.OpenGLLegacy),
                                                             #pragma warning restore CS0612 // Type or member is obsolete
-                                                            HintText = AXPlayerStrings.SettingsItem_RestartRequired,
                                                         }),
                                                         reflexSettingBase = new SettingsItemV2(reflexSetting = new ReflexDropdown
                                                         {
@@ -1345,10 +1345,7 @@ namespace AXPlayer.App.Overlays.Containers
                 if (r.NewValue == RendererType.Automatic && automaticRendererInUse)
                     return;
 
-                if (game?.RestartAppWhenExited() == true)
-                {
-                    game.AttemptExit();
-                }
+                restartDialogOverlay.OpenOverlay();
             });
 
             latencyModeDropdown.Current.BindValueChanged(mode =>

@@ -943,4 +943,7 @@
   <data name="limited_replies" xml:space="preserve">
     <value>公式 YouTube API の制限により、表示できる返信は最大 5 件です。</value>
   </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>新しい設定の一部を適用するには、再起動が必要です。今すぐ再起動しますか？</value>
+  </data>
 </root>

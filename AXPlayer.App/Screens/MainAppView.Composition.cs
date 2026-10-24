@@ -149,26 +149,17 @@ namespace AXPlayer.App.Screens
 
             use_sdl3.BindValueChanged(_ =>
             {
-                if (game?.RestartAppWhenExited() == true)
-                {
-                    game.AttemptExit();
-                }
+                restartDialogOverlay.OpenOverlay();
             });
 
             colourSchemeBindable.BindValueChanged(_ =>
             {
-                if (game?.RestartAppWhenExited() == true)
-                {
-                    game.AttemptExit();
-                }
+                restartDialogOverlay.OpenOverlay();
             });
 
             ui_font.BindValueChanged(_ =>
             {
-                if (game?.RestartAppWhenExited() == true)
-                {
-                    game.AttemptExit();
-                }
+                restartDialogOverlay.OpenOverlay();
             });
 
             #region The UI Components

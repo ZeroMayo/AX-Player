@@ -1479,6 +1479,11 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString RepliesLimited => new TranslatableString(getKey(@"limited_replies"), "Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed.");
 
+        /// <summary>
+        /// "You need to restart for applying some of the new settings. Restart now?"
+        /// </summary>
+        public static LocalisableString RestartRequiredDialog => new TranslatableString(getKey(@"restart_required_dialog"), "You need to restart for applying some of the new settings. Restart now?");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

@@ -943,4 +943,7 @@
   <data name="limited_replies" xml:space="preserve">
     <value>Resmî YouTube API'sinin sınırlamaları nedeniyle en fazla 5 yanıt görüntülenebilir.</value>
   </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>Yeni ayarlardan bazılarının uygulanabilmesi için yeniden başlatmanız gerekiyor. Şimdi yeniden başlatılsın mı?</value>
+  </data>
 </root>

@@ -943,4 +943,7 @@
   <data name="limited_replies" xml:space="preserve">
     <value>A causa delle limitazioni dell'API ufficiale di YouTube, è possibile visualizzare un massimo di 5 risposte.</value>
   </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>È necessario riavviare per applicare alcune delle nuove impostazioni. Riavviare ora?</value>
+  </data>
 </root>

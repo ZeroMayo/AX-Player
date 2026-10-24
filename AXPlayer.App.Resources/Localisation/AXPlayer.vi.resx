@@ -944,4 +944,7 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="limited_replies" xml:space="preserve">
     <value>Do các hạn chế của API YouTube chính thức, tối đa chỉ có thể hiển thị 5 câu trả lời.</value>
   </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>Bạn cần khởi động lại để áp dụng một số cài đặt mới. Khởi động lại ngay bây giờ?</value>
+  </data>
 </root>

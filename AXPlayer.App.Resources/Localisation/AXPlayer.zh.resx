@@ -944,4 +944,7 @@
   <data name="limited_replies" xml:space="preserve">
     <value>由于官方 YouTube API 的限制，最多只能显示 5 条回复。</value>
   </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>若要应用部分新设置，需要重新启动。现在重新启动吗？</value>
+  </data>
 </root>

@@ -943,4 +943,7 @@
   <data name="limited_replies" xml:space="preserve">
     <value>공식 YouTube API의 한계로 답글은 최대 5개까지 표시됩니다.</value>
   </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>새로 설정한 사항을 적용하려면 다시 시작하셔야 합니다. 지금 다시 시작할까요?</value>
+  </data>
 </root>

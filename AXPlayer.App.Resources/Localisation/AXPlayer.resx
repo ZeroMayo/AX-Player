@@ -944,4 +944,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="limited_replies" xml:space="preserve">
     <value>Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed.</value>
   </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>You need to restart for applying some of the new settings. Restart now?</value>
+  </data>
 </root>

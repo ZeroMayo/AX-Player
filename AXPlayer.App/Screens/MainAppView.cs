@@ -107,6 +107,9 @@ namespace AXPlayer.App.Screens
         [Resolved]
         private AudioManager audio { get; set; } = null!;
 
+        [Resolved]
+        private RestartDialogOverlay restartDialogOverlay { get; set; }
+
         private SmoothFadeInOutContainer videoLoadingProgressBase, muteStateOverlay;
         private AXPlayerLoadingSpinner videoLoadingProgressSpinner;
         private Box videoLoadingProgressBaseBG;
