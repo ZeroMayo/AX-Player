@@ -3831,10 +3831,16 @@ namespace AXPlayer.App.Screens
                 {
                     if (visible.NewValue)
                     {
+                        if (isAnyOverlayOpen.Value)
+                            videoContainer.BlurTo(new Vector2(6));
+
                         userInterfaceContainer.Show();
                     }
                     else
                     {
+                        if (isAnyOverlayOpen.Value)
+                            videoContainer.BlurTo(new Vector2(0));
+
                         userInterfaceContainer.Hide();
                     }
                 });
