@@ -26,9 +26,6 @@
     <None Update="avutil-61.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="AXPlayer_Loading.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="bassloud.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

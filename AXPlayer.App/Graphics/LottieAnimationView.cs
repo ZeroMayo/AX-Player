@@ -6,15 +6,17 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using osu.Framework;
 using osu.Framework.Allocation;
+using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Platform;
 using osuTK;
+using SixLabors.ImageSharp.PixelFormats;
 using SkiaSharp;
 using SkiaSharp.Skottie;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace AXPlayer.App.Graphics
 {
@@ -222,9 +224,12 @@ namespace AXPlayer.App.Graphics
             renderFrame();
         }
 
+        [Resolved]
+        private Game Game { get; set; }
+
         private void loadAnimation(string assetName)
         {
-            using Stream stream = Path.IsPathRooted(assetName) ? File.OpenRead(assetName) : storage.GetStream(assetName);
+            using Stream stream = Game.Resources.GetStream(assetName);
             using var skiaStream = new SKManagedStream(stream);
 
             if (!Animation.TryCreate(skiaStream, out var loadedAnimation) || loadedAnimation == null)
