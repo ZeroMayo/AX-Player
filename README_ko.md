@@ -40,14 +40,14 @@ YouTube API Daily Quota는 매우 빠르게 차버립니다(구글은 10,000단�
 서브모듈을 포함해 저장소를 복제합니다:
 
 ```shell
-git clone --recurse-submodules https://github.com/ZeroMayo/AX-Player
+git clone https://github.com/ZeroMayo/AX-Player
 cd AXPlayer
 ```
 
 `AX Player` 디렉터리 안에서 다음 명령어를 실행해 소스 코드를 최신 커밋으로 업데이트하세요:
 
 ```shell
-git pull --recurse-submodules
+git pull
 ```
 
 ### 빌드하기

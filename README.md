@@ -40,14 +40,14 @@ When working with the codebase, we recommend using an IDE with intelligent code 
 Clone the repository including submodules:
 
 ```shell
-git clone --recurse-submodules https://github.com/ZeroMayo/AX-Player
+git clone https://github.com/ZeroMayo/AX-Player
 cd AX-Player
 ```
 
 To update the source code to the latest commit, run the following command inside the `AX-Player` directory:
 
 ```shell
-git pull --recurse-submodules
+git pull
 ```
 
 ### Building
