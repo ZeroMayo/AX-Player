@@ -37,6 +37,7 @@ using osu.Framework.Threading;
 using Container = osu.Framework.Graphics.Containers.Container;
 using Language = AXPlayer.App.Localisation.Language;
 using OverlayContainer = AXPlayer.App.Graphics.Containers.OverlayContainer;
+using AXPlayer.App.Graphics.Sprites.Odometer;
 
 namespace AXPlayer.App.Screens
 {

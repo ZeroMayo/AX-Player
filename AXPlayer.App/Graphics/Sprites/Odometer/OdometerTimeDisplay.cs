@@ -7,7 +7,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
 
-namespace AXPlayer.App.Graphics.Sprites
+namespace AXPlayer.App.Graphics.Sprites.Odometer
 {
     public partial class OdometerTimeDisplay : FillFlowContainer
     {
