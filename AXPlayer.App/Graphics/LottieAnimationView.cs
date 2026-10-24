@@ -229,8 +229,8 @@ namespace AXPlayer.App.Graphics
 
         private void loadAnimation(string assetName)
         {
-            using Stream stream = Game.Resources.GetStream(assetName);
-            using var skiaStream = new SKManagedStream(stream);
+            using StreamReader stream = new(Game.Resources.GetStream(assetName));
+            using var skiaStream = new SKManagedStream(stream.BaseStream);
 
             if (!Animation.TryCreate(skiaStream, out var loadedAnimation) || loadedAnimation == null)
             {

@@ -7,6 +7,7 @@
     <EmbeddedResource Include="Samples\**\*" />
     <EmbeddedResource Include="Textures\**\*" />
     <EmbeddedResource Include="Shaders\**\*" />
+    <EmbeddedResource Include="Lottie\**\*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0" />
