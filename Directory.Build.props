@@ -7,8 +7,19 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
+  <ItemGroup Label="License">
+    <None Include="$(MSBuildThisFileDirectory)osu-framework.licenseheader">
+      <Link>AXPlayer.licenseheader</Link>
+    </None>
+  </ItemGroup>
   <ItemGroup Label="Resources">
     <EmbeddedResource Include="Resources\**\*.*" />
+  </ItemGroup>
+  <ItemGroup Label="Icon">
+    <None Include="$(MSBuildThisFileDirectory)assets\nupkg icon.png">
+      <Pack>True</Pack>
+      <PackagePath>icon.png</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup Label="Code Analysis">
     <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" PrivateAssets="All" />
@@ -16,4 +27,15 @@
     <!-- Rider compatibility: .globalconfig needs to be explicitly referenced instead of using the global file name. -->
     <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)CodeAnalysis\osu.globalconfig" />
   </ItemGroup>
+  <PropertyGroup Label="NuGet">
+    <Authors>ZeroMayo</Authors>
+    <Company>ZeroMayo</Company>
+    <Copyright>Copyright (c) 2026 ZeroMayo</Copyright>
+    <Product>AX Player</Product>
+    <PackageReleaseNotes>Automated release.</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/ZeroMayo/AX-Player</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ZeroMayo/AX-Player</RepositoryUrl>
+  </PropertyGroup>
 </Project>
