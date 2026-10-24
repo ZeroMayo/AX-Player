@@ -89,7 +89,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Scale = new Vector2(withBox ? 1.5f : 2f),
+                        Scale = new Vector2(withBox ? 1.5f : 2.75f),
                         RelativeSizeAxes = Axes.Both,
                         FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/AXPlayer_Loading.json",
                         AutoPlay = true,
