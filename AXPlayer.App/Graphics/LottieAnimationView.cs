@@ -56,23 +56,21 @@ namespace AXPlayer.App.Graphics
                 if (fileName == value)
                     return;
 
-                fileName = value;
-
-                if (dependenciesLoaded)
+                if (!dependenciesLoaded)
                 {
-                    if (value == null)
-                    {
-                        IsPlaying = false;
-                        Info = null;
-                        Texture = null;
-                        animationTexture = null;
-                        disposeAnimation();
-                    }
-                    else
-                    {
-                        loadAnimation(value);
-                    }
+                    fileName = value;
+                    return;
                 }
+
+                if (value == null)
+                {
+                    fileName = null;
+                    disposeAnimation();
+                    return;
+                }
+
+                loadAnimation(value);
+                fileName = value;
             }
         }
 
@@ -231,28 +229,67 @@ namespace AXPlayer.App.Graphics
             using var skiaStream = new SKManagedStream(stream);
 
             if (!Animation.TryCreate(skiaStream, out var loadedAnimation) || loadedAnimation == null)
+            {
+                loadedAnimation?.Dispose();
                 throw new InvalidOperationException($"Failed to load Lottie animation '{assetName}'.");
+            }
 
-            disposeAnimation();
-            animation = loadedAnimation;
-            repeatsRemaining = RepeatCount;
-            elapsed = 0;
-            isReversed = false;
+            SKBitmap? loadedBitmap = null;
+            Texture? loadedTexture = null;
 
-            int width = Math.Max(1, (int)Math.Ceiling(Math.Min(animation.Size.Width, renderer.MaxTextureSize)));
-            int height = Math.Max(1, (int)Math.Ceiling(Math.Min(animation.Size.Height, renderer.MaxTextureSize)));
+            try
+            {
+                var size = loadedAnimation.Size;
+                var maxDimension = Math.Max(size.Width, size.Height);
 
-            frameBitmap = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Premul));
-            framePixels = new byte[checked(width * height * 4)];
-            animationTexture = renderer.CreateTexture(width, height);
-            animationTexture.BypassTextureUploadQueueing = true;
-            Texture = animationTexture;
+                if (!float.IsFinite(size.Width) || !float.IsFinite(size.Height)
+                    || size.Width <= 0 || size.Height <= 0
+                    || renderer.MaxTextureSize <= 0)
+                    throw new InvalidOperationException($"Lottie animation '{assetName}' has an invalid size.");
 
-            Info = new AnimationInfo(animation.Version, animation.Duration, animation.Fps, animation.InPoint, animation.OutPoint);
-            renderFrame();
+                var scale = Math.Min(1, renderer.MaxTextureSize / maxDimension);
+                int width = Math.Min(renderer.MaxTextureSize, Math.Max(1, (int)Math.Ceiling(size.Width * scale)));
+                int height = Math.Min(renderer.MaxTextureSize, Math.Max(1, (int)Math.Ceiling(size.Height * scale)));
 
-            if (AutoPlay)
-                PlayAnimation();
+                loadedBitmap = new SKBitmap(new SKImageInfo(width, height, SKColorType.Rgba8888, SKAlphaType.Premul));
+                var loadedPixels = new byte[checked(width * height * 4)];
+                loadedTexture = new DisposableTexture(renderer.CreateTexture(width, height));
+                loadedTexture.BypassTextureUploadQueueing = true;
+
+                loadedAnimation.SeekFrameTime(0);
+                renderFrame(loadedAnimation, loadedBitmap, loadedPixels, loadedTexture);
+
+                var previousAnimation = animation;
+                var previousBitmap = frameBitmap;
+                var previousTexture = animationTexture;
+
+                animation = loadedAnimation;
+                frameBitmap = loadedBitmap;
+                framePixels = loadedPixels;
+                animationTexture = loadedTexture;
+                Texture = loadedTexture;
+                Info = new AnimationInfo(loadedAnimation.Version, loadedAnimation.Duration, loadedAnimation.Fps, loadedAnimation.InPoint, loadedAnimation.OutPoint);
+                elapsed = 0;
+                isReversed = false;
+                repeatsRemaining = RepeatCount;
+
+                loadedAnimation = null;
+                loadedBitmap = null;
+                loadedTexture = null;
+
+                previousAnimation?.Dispose();
+                previousBitmap?.Dispose();
+                previousTexture?.Dispose();
+
+                if (AutoPlay)
+                    PlayAnimation();
+            }
+            finally
+            {
+                loadedAnimation?.Dispose();
+                loadedBitmap?.Dispose();
+                loadedTexture?.Dispose();
+            }
         }
 
         private void renderFrame()
@@ -260,6 +297,11 @@ namespace AXPlayer.App.Graphics
             if (animation == null || frameBitmap == null || framePixels == null || animationTexture == null)
                 return;
 
+            renderFrame(animation, frameBitmap, framePixels, animationTexture);
+        }
+
+        private void renderFrame(Animation animation, SKBitmap frameBitmap, byte[] framePixels, Texture animationTexture)
+        {
             using var canvas = new SKCanvas(frameBitmap);
             canvas.Clear(SKColors.Transparent);
             canvas.Save();
@@ -290,6 +332,10 @@ namespace AXPlayer.App.Graphics
 
         private void disposeAnimation()
         {
+            IsPlaying = false;
+            Info = null;
+            Texture = null;
+
             animation?.Dispose();
             animation = null;
 
@@ -297,6 +343,13 @@ namespace AXPlayer.App.Graphics
             frameBitmap = null;
 
             framePixels = null;
+
+            animationTexture?.Dispose();
+            animationTexture = null;
+
+            elapsed = 0;
+            isReversed = false;
+            repeatsRemaining = RepeatCount;
         }
 
         protected override void Dispose(bool isDisposing)
