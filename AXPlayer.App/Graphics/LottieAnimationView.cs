@@ -1,6 +1,9 @@
 // Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+// Original code by quicoli https://github.com/quicoli/LottieSharp
+// Ported by ZeroMayo using AI
+
 #nullable enable
 
 using System;
