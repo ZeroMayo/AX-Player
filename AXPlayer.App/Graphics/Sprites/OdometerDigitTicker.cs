@@ -13,24 +13,29 @@ namespace AXPlayer.App.Graphics.Sprites
         private const double animationDuration = 500;
 
         private ProjectYomiSpriteText currentText;
+        private char currentDigit;
 
         public OdometerDigitTicker(char digit)
         {
             Width = digitWidth;
             Height = tickerHeight;
             Masking = true;
+            currentDigit = digit;
             currentText = createText(digit);
             Child = currentText;
         }
 
         public void SetDigit(char digit)
         {
-            if (currentText.Text == digit.ToString())
+            if (currentDigit == digit)
                 return;
 
+            bool isIncreasing = digit > currentDigit;
+            currentDigit = digit;
+            float direction = isIncreasing ? 1 : -1;
             ProjectYomiSpriteText previousText = currentText;
             currentText = createText(digit);
-            currentText.Y = tickerHeight;
+            currentText.Y = tickerHeight * direction;
             currentText.Scale = new osuTK.Vector2(0.25f);
             currentText.Alpha = 0;
             AddInternal(currentText);
@@ -39,7 +44,7 @@ namespace AXPlayer.App.Graphics.Sprites
                 .Then()
                 .TransformTo(nameof(BlurSigma), new osuTK.Vector2(0), animationDuration, Easing.OutCubic);
 
-            previousText.MoveToY(-tickerHeight, animationDuration, Easing.OutExpo)
+            previousText.MoveToY(-tickerHeight * direction, animationDuration, Easing.OutExpo)
                         .ScaleTo(0.25f, animationDuration, Easing.OutExpo)
                         .FadeOut(animationDuration, Easing.OutExpo)
                         .OnComplete(_ => previousText.Expire());
