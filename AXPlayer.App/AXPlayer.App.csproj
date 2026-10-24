@@ -9,7 +9,7 @@
     <ProjectReference Include="..\AXPlayer.App.Resources\AXPlayer.App.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ZeroMayo.Framework" Version="26.0.0"/>
+    <PackageReference Include="ZeroMayo.Framework" Version="2026.1024.0" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.2" />
     <PackageReference Include="Crypto.AES" Version="1.0.4" />
     <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
@@ -19,10 +19,10 @@
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.77.0.4309" />
     <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="PaletteNet" Version="3.0.1" />
-    <PackageReference Include="SkiaSharp.Skottie" Version="3.119.4" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4" />
-    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="3.119.4" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.4" />
+    <PackageReference Include="SkiaSharp.Skottie" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="4.153.1" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="4.153.1" />
     <PackageReference Include="McEndu.FreeTypeSharp" Version="4.1.5" />
     <PackageReference Include="Sentry" Version="6.12.1" />
     <PackageReference Include="Lazy.Fody" PrivateAssets="all" Version="1.11.0" />
