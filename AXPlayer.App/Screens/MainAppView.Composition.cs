@@ -1442,8 +1442,8 @@ namespace AXPlayer.App.Screens
                                 },
                                 commentsContainerTitle = new ProjectYomiSpriteText
                                 {
-                                    Origin = Anchor.TopCentre,
-                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopLeft,
+                                    Anchor = Anchor.TopLeft,
                                     Text = AXPlayerStrings.Comments("0"),
                                     Margin = new MarginPadding(16),
                                     Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
