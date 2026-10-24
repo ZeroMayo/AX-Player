@@ -74,6 +74,29 @@ When running locally to do any kind of performance testing, make sure to add `-c
 
 If the build fails, try to restore NuGet packages with `dotnet restore`.
 
+### Testing with framework modifications
+
+Sometimes it may be necessary to cross-test changes in [osu-framework](https://github.com/ZeroMayo/osu-framework). This can be quickly achieved using included commands:
+
+Windows:
+
+```ps
+UseLocalFramework.ps1
+```
+
+macOS / Linux:
+
+```ps
+UseLocalFramework.sh
+```
+
+Note that these commands assume you have the relevant project(s) checked out in adjacent directories:
+
+```
+|- AX-Player            // this repository
+|- osu-framework
+```
+
 ## Translation
 
 To help translate *AX Player*, we no longer accept translation contributions via Crowdin. All translations are now handled using LLMs.

@@ -74,6 +74,29 @@ dotnet run --project AXPlayer.Desktop (for Linux and other platform)
 
 빌드가 실패하면 `dotnet restore` 명령어로 NuGet 패키지를 복원해 보세요.
 
+### 프레임워크 수정으로 테스트하기
+
+가끔은 [osu-framework](https://github.com/ZeroMayo/osu-framework) 의 변경 사항을 교차 테스트해야 할 때가 있습니다. 포함된 명령어를 사용하면 이를 빠르게 수행할 수 있습니다:
+
+Windows:
+
+```ps
+UseLocalFramework.ps1
+```
+
+macOS / Linux:
+
+```ps
+UseLocalFramework.sh
+```
+
+이 명령어들은 인접한 디렉터리에 관련 프로젝트가 체크아웃되어 있다고 가정합니다:
+
+```
+|- AX-Player            // 이 저장소
+|- osu-framework
+```
+
 ## 번역
 
 *AX Player* 번역을 지원하기 위해, 더 이상 Crowdin을 통한 번역 기여를 받지 않습니다. 모든 번역은 이제 LLM을 사용해 처리됩니다.
