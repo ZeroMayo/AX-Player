@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.IO;
+using System.Reflection;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;
@@ -20,7 +21,7 @@ namespace AXPlayer.App.Graphics.UserInterface
     /// </summary>
     public partial class AXPlayerLoadingSpinner : VisibilityContainer
     {
-        private readonly TextureAnimation spinner;
+        private readonly LottieAnimationView spinner;
         private readonly Box bg;
 
         protected override bool StartHidden => true;
@@ -84,13 +85,15 @@ namespace AXPlayer.App.Graphics.UserInterface
                         RelativeSizeAxes = Axes.Both,
                         Alpha = withBox ? 0.7f : 0
                     },
-                    spinner = new TextureAnimation
+                    spinner = new LottieAnimationView
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
                         Scale = new Vector2(withBox ? 1f : 1.75f),
                         RelativeSizeAxes = Axes.Both,
-                        Loop = true
+                        FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/AXPlayer_Loading.json",
+                        AutoPlay = true,
+                        RepeatCount = -1,
                     }
                 }
             };
@@ -101,12 +104,6 @@ namespace AXPlayer.App.Graphics.UserInterface
         {
             bg.Colour = inverted ? overlayColourProvider.Background3 : overlayColourProvider.Content2;
             spinner.Colour = inverted ? overlayColourProvider.Content2 : overlayColourProvider.Background3;
-
-            for (int i = 0; i < 279; i++)
-            {
-                var texture = textures.Get($"LoadingSpinner/material3expressive_loadingindicator_{i}");
-                spinner.AddFrame(texture, 16);
-            }
         }
 
         protected override void LoadComplete()
