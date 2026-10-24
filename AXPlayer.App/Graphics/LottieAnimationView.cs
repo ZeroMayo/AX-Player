@@ -7,7 +7,6 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using osu.Framework.Allocation;
-using osu.Framework.Graphics;
 using osu.Framework.Graphics.Rendering;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
