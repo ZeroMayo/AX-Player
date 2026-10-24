@@ -18,7 +18,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SkiaSharp;
 using SkiaSharp.Skottie;
 
-namespace AXPlayer.App.Graphics
+namespace AXPlayer.App.Graphics.Sprites
 {
     public enum RepeatMode
     {
