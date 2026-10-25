@@ -952,4 +952,10 @@
   <data name="change_release_stream_confirmation_info" xml:space="preserve">
     <value>앱 시작에 문제가 있는 경우, 대부분의 경우에는 공식 사이트에서 제공하는 설치 파일을 통해 복구가 가능하답니다.</value>
   </data>
+  <data name="copy_video_url" xml:space="preserve">
+    <value>YouTube 동영상 URL 복사</value>
+  </data>
+  <data name="copied_to_clipboard" xml:space="preserve">
+    <value>클립보드에 복사했습니다.</value>
+  </data>
 </root>

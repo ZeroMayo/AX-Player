@@ -952,4 +952,10 @@
   <data name="change_release_stream_confirmation_info" xml:space="preserve">
     <value>Se riscontri problemi all'avvio dell'app, di solito puoi risolvere la situazione eseguendo il programma di installazione dal sito ufficiale.</value>
   </data>
+  <data name="copy_video_url" xml:space="preserve">
+    <value>Copia l'URL del video di YouTube</value>
+  </data>
+  <data name="copied_to_clipboard" xml:space="preserve">
+    <value>Copiato negli appunti.</value>
+  </data>
 </root>

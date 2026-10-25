@@ -953,4 +953,10 @@
   <data name="change_release_stream_confirmation_info" xml:space="preserve">
     <value>如果启动应用时遇到问题，通常可以通过运行从官网获取的安装程序来进行修复。</value>
   </data>
+  <data name="copy_video_url" xml:space="preserve">
+    <value>复制 YouTube 视频链接</value>
+  </data>
+  <data name="copied_to_clipboard" xml:space="preserve">
+    <value>已复制到剪贴板。</value>
+  </data>
 </root>

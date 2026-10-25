@@ -953,4 +953,10 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="change_release_stream_confirmation_info" xml:space="preserve">
     <value>Nếu bạn gặp sự cố khi khởi chạy ứng dụng, bạn thường có thể chạy trình cài đặt từ trang web chính thức để khắc phục.</value>
   </data>
+  <data name="copy_video_url" xml:space="preserve">
+    <value>Sao chép URL video YouTube</value>
+  </data>
+  <data name="copied_to_clipboard" xml:space="preserve">
+    <value>Đã sao chép vào bộ nhớ tạm.</value>
+  </data>
 </root>
