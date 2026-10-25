@@ -939,6 +939,12 @@ namespace AXPlayer.App.Overlays.Containers
                                                             KeyboardStep = 1,
                                                             LabelFormat = value => $"{value:N0}°"
                                                         }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.VideoFrameInterpolation,
+                                                            Icon = FontAwesome.Solid.Video,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.VideoFrameInterpolation),
+                                                        }),
                                                         new ProjectYomiSpriteText
                                                         {
                                                             Name = "CC Settings",
