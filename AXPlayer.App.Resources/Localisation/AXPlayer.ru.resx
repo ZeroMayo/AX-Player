@@ -953,4 +953,10 @@
   <data name="change_release_stream_confirmation_info" xml:space="preserve">
     <value>Если возникнут проблемы с запуском приложения, для восстановления обычно можно запустить установщик с официального сайта.</value>
   </data>
+  <data name="copy_video_url" xml:space="preserve">
+    <value>Скопировать URL видео YouTube</value>
+  </data>
+  <data name="copied_to_clipboard" xml:space="preserve">
+    <value>Скопировано в буфер обмена.</value>
+  </data>
 </root>

@@ -952,4 +952,10 @@
   <data name="change_release_stream_confirmation_info" xml:space="preserve">
     <value>Uygulamayı başlatırken sorun yaşarsanız, genellikle resmi siteden yükleyiciyi çalıştırarak durumu düzeltebilirsiniz.</value>
   </data>
+  <data name="copy_video_url" xml:space="preserve">
+    <value>YouTube video URL'sini kopyala</value>
+  </data>
+  <data name="copied_to_clipboard" xml:space="preserve">
+    <value>Panoya kopyalandı.</value>
+  </data>
 </root>

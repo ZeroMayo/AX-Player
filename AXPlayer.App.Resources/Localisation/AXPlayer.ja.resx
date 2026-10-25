@@ -952,4 +952,10 @@
   <data name="change_release_stream_confirmation_info" xml:space="preserve">
     <value>アプリの起動時に問題が発生した場合は、公式サイトからインストーラーを実行することで、通常は復旧できます。</value>
   </data>
+  <data name="copy_video_url" xml:space="preserve">
+    <value>YouTube 動画の URL をコピー</value>
+  </data>
+  <data name="copied_to_clipboard" xml:space="preserve">
+    <value>クリップボードにコピーしました。</value>
+  </data>
 </root>
