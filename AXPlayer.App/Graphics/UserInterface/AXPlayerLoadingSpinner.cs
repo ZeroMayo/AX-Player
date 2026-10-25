@@ -3,6 +3,7 @@
 
 using System.IO;
 using System.Reflection;
+using AXPlayer.App.Graphics.Sprites.Lottie;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Animations;

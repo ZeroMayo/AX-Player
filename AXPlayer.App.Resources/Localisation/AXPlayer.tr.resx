@@ -737,7 +737,7 @@
     <value>Kararlı</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>Gecelik derleme (kararsız)</value>
+    <value>Beta sürümü (kararsız)</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>Video kalitesi ({0})</value>
@@ -942,5 +942,14 @@
   </data>
   <data name="limited_replies" xml:space="preserve">
     <value>Resmî YouTube API'sinin sınırlamaları nedeniyle en fazla 5 yanıt görüntülenebilir.</value>
+  </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>Yeni ayarlardan bazılarının uygulanabilmesi için yeniden başlatmanız gerekiyor. Şimdi yeniden başlatılsın mı?</value>
+  </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>Uygulamanın potansiyel olarak kararsız bir sürümünü çalıştırmak istediğinizden emin misiniz?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>Uygulamayı başlatırken sorun yaşarsanız, genellikle resmi siteden yükleyiciyi çalıştırarak durumu düzeltebilirsiniz.</value>
   </data>
 </root>

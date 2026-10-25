@@ -134,8 +134,8 @@ namespace AXPlayer.App.Overlays
                             },
                             titleText = new ProjectYomiSpriteText
                             {
-                                Origin = Anchor.TopLeft,
-                                Anchor = Anchor.TopLeft,
+                                Origin = Anchor.TopCentre,
+                                Anchor = Anchor.TopCentre,
                                 Text = AXPlayerStrings.Notifications,
                                 Margin = new MarginPadding(2),
                                 Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),

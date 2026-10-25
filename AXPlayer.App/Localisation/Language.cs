@@ -29,6 +29,9 @@ namespace AXPlayer.App.Localisation
         [Description(@"Türkçe")]
         tr,
 
+        [Description(@"русский")]
+        ru,
+
         [Description(@"tiếng Việt")]
         vi,
 

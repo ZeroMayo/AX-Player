@@ -737,7 +737,7 @@
     <value>Stabile</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>Build nightly (instabile)</value>
+    <value>Versione beta (instabile)</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>Qualità video ({0})</value>
@@ -942,5 +942,14 @@
   </data>
   <data name="limited_replies" xml:space="preserve">
     <value>A causa delle limitazioni dell'API ufficiale di YouTube, è possibile visualizzare un massimo di 5 risposte.</value>
+  </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>È necessario riavviare per applicare alcune delle nuove impostazioni. Riavviare ora?</value>
+  </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>Sei sicuro di voler eseguire una versione potenzialmente instabile dell'app?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>Se riscontri problemi all'avvio dell'app, di solito puoi risolvere la situazione eseguendo il programma di installazione dal sito ufficiale.</value>
   </data>
 </root>

@@ -57,7 +57,7 @@ namespace AXPlayer.App.Overlays.Containers
     {
         private ProjectYomiScrollContainer settingsSections;
 
-        protected Bindable<ReleaseStream> ReleaseStream;
+        private Bindable<ReleaseStream> configReleaseStream;
 
         public void ShowSettingsOverlayAtName(string name)
         {
@@ -134,6 +134,23 @@ namespace AXPlayer.App.Overlays.Containers
         public SettingsItemV2 VideoQualitySettingsCore, AudioQualitySettingsCore;
         private FormEnumDropdown<LatencyMode>? reflexSetting;
 
+        [Resolved]
+        private PopupDialogOverlay popupDialogOverlay { get; set; }
+
+        private void releaseStreamChanged(ValueChangedEvent<ReleaseStream> stream)
+        {
+            switch (stream.NewValue)
+            {
+                case ReleaseStream.Stable:
+                    configReleaseStream.Value = stream.NewValue;
+                    break;
+
+                default:
+                    popupDialogOverlay.ShowDialog(AXPlayerStrings.ChangeReleaseStreamConfirmation, AXPlayerStrings.ChangeReleaseStreamConfirmationInfo, () => configReleaseStream.Value = stream.NewValue, () => releaseStreamDropdown.Current.Value = stream.OldValue);
+                    break;
+            }
+        }
+
         private void onAudioDeviceChanged(string _)
         {
             updateAudioDeviceItems();
@@ -141,6 +158,9 @@ namespace AXPlayer.App.Overlays.Containers
 
         [Resolved]
         private AudioManager audio { get; set; }
+
+        [Resolved]
+        private RestartDialogOverlay restartDialogOverlay { get; set; }
 
         protected override void Dispose(bool isDisposing)
         {
@@ -195,6 +215,8 @@ namespace AXPlayer.App.Overlays.Containers
 
         private FormCheckBox wasapiExperimental;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
+
+        private FormEnumDropdown<ReleaseStream> releaseStreamDropdown;
 
         private Bindable<UIFont> ui_font;
         private Bindable<CaptionFonts> caption_font;
@@ -370,7 +392,7 @@ namespace AXPlayer.App.Overlays.Containers
             alwaysUseOriginalAudio = appConfig.GetBindable<bool>(AXPlayerSetting.AlwaysUseOriginalAudio);
             sizeWindowed = config.GetBindable<Size>(FrameworkSetting.WindowedSize);
 
-            ReleaseStream = appConfig.GetBindable<ReleaseStream>(AXPlayerSetting.ReleaseStream);
+            configReleaseStream = appConfig.GetBindable<ReleaseStream>(AXPlayerSetting.ReleaseStream);
 
             screenshotFormat = appConfig.GetBindable<ScreenshotFormat>(AXPlayerSetting.ScreenshotFormat);
             window = host.Window;
@@ -517,10 +539,10 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 OAuthSignInAction.Invoke();
                                                             },
                                                         }),
-                                                        releaseStreamSelectorButtonCore = new SettingsItemV2(new FormEnumDropdown<ReleaseStream>
+                                                        releaseStreamSelectorButtonCore = new SettingsItemV2(releaseStreamDropdown = new FormEnumDropdown<ReleaseStream>
                                                         {
                                                             Caption = AXPlayerStrings.ReleaseStream,
-                                                            Current = ReleaseStream,
+                                                            Current = { Value = configReleaseStream.Value },
                                                         }),
                                                         checkForUpdatesButtonCore = new SettingsItemV2(CheckForUpdatesButton = new FormButton
                                                         {
@@ -567,14 +589,12 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ColourScheme,
                                                             Current = colourSchemeBindable,
                                                             Icon = FontAwesome.Solid.Palette,
-                                                            HintText = AXPlayerStrings.SettingsItem_RestartRequired,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<UIFont>
                                                         {
                                                             Caption = AXPlayerStrings.UIFont,
                                                             Current = ui_font,
                                                             Icon = FontAwesome.Solid.Font,
-                                                            HintText = AXPlayerStrings.SettingsItem_RestartRequired,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<ProfileImageShape>
                                                         {
@@ -694,7 +714,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                             #pragma warning disable CS0612 // Type or member is obsolete
                                                             .Where(t => t != RendererType.Vulkan && t != RendererType.OpenGLLegacy),
                                                             #pragma warning restore CS0612 // Type or member is obsolete
-                                                            HintText = AXPlayerStrings.SettingsItem_RestartRequired,
                                                         }),
                                                         reflexSettingBase = new SettingsItemV2(reflexSetting = new ReflexDropdown
                                                         {
@@ -1229,6 +1248,8 @@ namespace AXPlayer.App.Overlays.Containers
                 wasapiExperimentalItem.Hide();
             }
 
+            releaseStreamDropdown.Current.BindValueChanged(releaseStreamChanged);
+
             wasapiExperimental.Current.ValueChanged += _ => onAudioDeviceChanged(string.Empty);
 
             VideoQualitySettingsCore.Hide();
@@ -1345,10 +1366,7 @@ namespace AXPlayer.App.Overlays.Containers
                 if (r.NewValue == RendererType.Automatic && automaticRendererInUse)
                     return;
 
-                if (game?.RestartAppWhenExited() == true)
-                {
-                    game.AttemptExit();
-                }
+                restartDialogOverlay.OpenDialog();
             });
 
             latencyModeDropdown.Current.BindValueChanged(mode =>

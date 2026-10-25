@@ -737,7 +737,7 @@
     <value>稳定版</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>每夜构建版（不稳定）</value>
+    <value>Beta 版本（不稳定）</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>视频画质（{0}）</value>
@@ -943,5 +943,14 @@
   </data>
   <data name="limited_replies" xml:space="preserve">
     <value>由于官方 YouTube API 的限制，最多只能显示 5 条回复。</value>
+  </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>若要应用部分新设置，需要重新启动。现在重新启动吗？</value>
+  </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>您确定要运行该应用的一个可能不稳定的版本吗？</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>如果启动应用时遇到问题，通常可以通过运行从官网获取的安装程序来进行修复。</value>
   </data>
 </root>

@@ -737,7 +737,7 @@
     <value>Stable</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>Nightly build (unstable)</value>
+    <value>Beta build (unstable)</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>Video quality ({0})</value>
@@ -943,5 +943,14 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   </data>
   <data name="limited_replies" xml:space="preserve">
     <value>Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed.</value>
+  </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>You need to restart for applying some of the new settings. Restart now?</value>
+  </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>Are you sure you want to run a potentially unstable version of the app?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>If you run into issues starting the app, you can usually run the installer from the official site to recover.</value>
   </data>
 </root>
