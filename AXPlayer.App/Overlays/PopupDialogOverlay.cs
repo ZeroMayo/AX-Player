@@ -59,7 +59,7 @@ namespace AXPlayer.App.Overlays
             }
         }
 
-        private Container overlayFadeContainer;
+        private OverlayFadeContainer overlayFadeContainer;
 
         private IDisposable? duckOperation;
 
@@ -232,6 +232,15 @@ namespace AXPlayer.App.Overlays
                     {
                         HideOverlay();
                         okPressedAction?.Invoke();
+                    }
+                };
+
+                overlayFadeContainer.ClickAction = _ =>
+                {
+                    if (IsOpened.Value)
+                    {
+                        HideOverlay();
+                        cancelPressedAction?.Invoke();
                     }
                 };
 
