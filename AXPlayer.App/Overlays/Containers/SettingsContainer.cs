@@ -1412,7 +1412,7 @@ namespace AXPlayer.App.Overlays.Containers
 
             if (!game.IsDeployedBuild)
             {
-                //releaseStreamSelectorButtonCore.Hide();
+                releaseStreamSelectorButtonCore.Hide();
                 checkForUpdatesButtonCore.Hide();
             }
 
