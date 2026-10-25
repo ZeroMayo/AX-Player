@@ -737,7 +737,7 @@
     <value>Stabile</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>Build nightly (instabile)</value>
+    <value>Versione beta (instabile)</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>Qualità video ({0})</value>

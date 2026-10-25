@@ -1135,9 +1135,9 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString Stable => new TranslatableString(getKey(@"release_stream_stable"), @"Stable");
 
         /// <summary>
-        /// "Nightly build (unstable)"
+        /// "Beta build (unstable)"
         /// </summary>
-        public static LocalisableString Beta => new TranslatableString(getKey(@"release_stream_beta"), @"Nightly build (unstable)");
+        public static LocalisableString Beta => new TranslatableString(getKey(@"release_stream_beta"), @"Beta build (unstable)");
 
         /// <summary>
         /// "Video quality ({0})"

@@ -737,7 +737,7 @@
     <value>安定放出</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>夜間ビルド（不安定）</value>
+    <value>ベータビルド（不安定）</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>ビデオ品質（{0}）</value>

@@ -737,7 +737,7 @@
     <value>Ổn định</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>Bản dựng nightly (không ổn định)</value>
+    <value>Bản dựng thử nghiệm (không ổn định)</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>Chất lượng video ({0})</value>

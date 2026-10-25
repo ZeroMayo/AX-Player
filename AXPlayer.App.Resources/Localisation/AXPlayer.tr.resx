@@ -737,7 +737,7 @@
     <value>Kararlı</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>Gecelik derleme (kararsız)</value>
+    <value>Beta sürümü (kararsız)</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>Video kalitesi ({0})</value>
