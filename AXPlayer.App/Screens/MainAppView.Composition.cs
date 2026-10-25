@@ -2962,6 +2962,7 @@ namespace AXPlayer.App.Screens
                                                                     Toast toast = new Toast(AXPlayerStrings.General, AXPlayerStrings.CopiedToClipboard);
 
                                                                     onScreenDisplay.Display(toast);
+                                                                    hideOverlayContainer(menuOverlay);
                                                                 }
                                                             },
                                                         },
