@@ -737,7 +737,7 @@
     <value>안정 빌드</value>
   </data>
   <data name="release_stream_beta" xml:space="preserve">
-    <value>Nightly 빌드 (불안정)</value>
+    <value>베타 빌드 (불안정)</value>
   </data>
   <data name="video_quality_with_label" xml:space="preserve">
     <value>동영상 화질 ({0})</value>
@@ -942,5 +942,14 @@
   </data>
   <data name="limited_replies" xml:space="preserve">
     <value>공식 YouTube API의 한계로 답글은 최대 5개까지 표시됩니다.</value>
+  </data>
+  <data name="restart_required_dialog" xml:space="preserve">
+    <value>새로 설정한 사항을 적용하려면 다시 시작하셔야 합니다. 지금 다시 시작할까요?</value>
+  </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>불안정할 수도 있는 버전의 앱을 구동할까요?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>앱 시작에 문제가 있는 경우, 대부분의 경우에는 공식 사이트에서 제공하는 설치 파일을 통해 복구가 가능하답니다.</value>
   </data>
 </root>

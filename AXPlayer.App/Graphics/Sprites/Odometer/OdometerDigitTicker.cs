@@ -4,7 +4,7 @@
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 
-namespace AXPlayer.App.Graphics.Sprites
+namespace AXPlayer.App.Graphics.Sprites.Odometer
 {
     public partial class OdometerDigitTicker : BufferedContainer
     {

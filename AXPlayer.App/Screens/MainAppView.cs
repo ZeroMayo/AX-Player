@@ -37,6 +37,7 @@ using osu.Framework.Threading;
 using Container = osu.Framework.Graphics.Containers.Container;
 using Language = AXPlayer.App.Localisation.Language;
 using OverlayContainer = AXPlayer.App.Graphics.Containers.OverlayContainer;
+using AXPlayer.App.Graphics.Sprites.Odometer;
 
 namespace AXPlayer.App.Screens
 {
@@ -57,7 +58,7 @@ namespace AXPlayer.App.Screens
         private SettingsContainer settingsContainer;
         private OverlayContainer loadVideoContainer, videoDescriptionContainer, commentsContainer, searchContainer, reportAbuseOverlay, loadPlaylistContainer, unsubscribeDialog, addPlaylistOverlay, videoSaveLocationOverlay, myChannelDialog, editPlaylistOverlay, downloadReadyContainer, downloadOverlay, downloadCompletedOverlay;
         private SideOverlayContainer playlistOverlay, audioEffectsOverlay, menuOverlay, myPlaylistsOverlay, exitOptions;
-        private IconButton menuOverlayShow, editChannelButton;
+        private IconButton menuOverlayShow;
         private MenuButtonItem loadBtnOverlayShow, settingsOverlayShowBtn, commentOpenButton, searchOpenButton, reportOpenButton, playlistOpenButton, audioEffectsOpenButton, saveVideoOpenButton, newPlaylistOpenButton, myPlaylistsOpenButton;
         private VideoMetadataDisplayWithoutProfile videoMetadataDisplay;
         private VideoMetadataDisplay videoMetadataDisplayDetails;
@@ -105,6 +106,9 @@ namespace AXPlayer.App.Screens
 
         [Resolved]
         private AudioManager audio { get; set; } = null!;
+
+        [Resolved]
+        private RestartDialogOverlay restartDialogOverlay { get; set; }
 
         private SmoothFadeInOutContainer videoLoadingProgressBase, muteStateOverlay;
         private AXPlayerLoadingSpinner videoLoadingProgressSpinner;

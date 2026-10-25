@@ -1140,9 +1140,9 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString Stable => new TranslatableString(getKey(@"release_stream_stable"), @"Stable");
 
         /// <summary>
-        /// "Nightly build (unstable)"
+        /// "Beta build (unstable)"
         /// </summary>
-        public static LocalisableString Beta => new TranslatableString(getKey(@"release_stream_beta"), @"Nightly build (unstable)");
+        public static LocalisableString Beta => new TranslatableString(getKey(@"release_stream_beta"), @"Beta build (unstable)");
 
         /// <summary>
         /// "Video quality ({0})"
@@ -1483,6 +1483,21 @@ namespace AXPlayer.App.Localisation
         /// "Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed."
         /// </summary>
         public static LocalisableString RepliesLimited => new TranslatableString(getKey(@"limited_replies"), "Due to limitations of the official YouTube API, a maximum of 5 replies can be displayed.");
+
+        /// <summary>
+        /// "You need to restart for applying some of the new settings. Restart now?"
+        /// </summary>
+        public static LocalisableString RestartRequiredDialog => new TranslatableString(getKey(@"restart_required_dialog"), "You need to restart for applying some of the new settings. Restart now?");
+
+        /// <summary>
+        /// "Are you sure you want to run a potentially unstable version of the app?"
+        /// </summary>
+        public static LocalisableString ChangeReleaseStreamConfirmation => new TranslatableString(getKey(@"change_release_stream_confirmation"), @"Are you sure you want to run a potentially unstable version of the app?");
+
+        /// <summary>
+        /// "If you run into issues starting the app, you can usually run the installer from the official site to recover."
+        /// </summary>
+        public static LocalisableString ChangeReleaseStreamConfirmationInfo => new TranslatableString(getKey(@"change_release_stream_confirmation_info"), @"If you run into issues starting the app, you can usually run the installer from the official site to recover.");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
