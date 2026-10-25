@@ -5,13 +5,13 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using Google.Apis.YouTube.v3.Data;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Shaders;
 using AXPlayer.App.Graphics.Sprites;
+using AXPlayer.App.Graphics.Sprites.Odometer;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Graphics.UserInterfaceV3;
@@ -21,6 +21,7 @@ using AXPlayer.App.Online;
 using AXPlayer.App.Overlays;
 using AXPlayer.App.Overlays.Containers;
 using AXPlayer.App.Utils;
+using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Sample;
@@ -33,11 +34,11 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Video;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Localisation;
+using osu.Framework.Platform;
 using osu.Framework.Threading;
 using Container = osu.Framework.Graphics.Containers.Container;
 using Language = AXPlayer.App.Localisation.Language;
 using OverlayContainer = AXPlayer.App.Graphics.Containers.OverlayContainer;
-using AXPlayer.App.Graphics.Sprites.Odometer;
 
 namespace AXPlayer.App.Screens
 {
@@ -59,7 +60,7 @@ namespace AXPlayer.App.Screens
         private OverlayContainer loadVideoContainer, videoDescriptionContainer, commentsContainer, searchContainer, reportAbuseOverlay, loadPlaylistContainer, unsubscribeDialog, addPlaylistOverlay, videoSaveLocationOverlay, myChannelDialog, editPlaylistOverlay, downloadReadyContainer, downloadOverlay, downloadCompletedOverlay;
         private SideOverlayContainer playlistOverlay, audioEffectsOverlay, menuOverlay, myPlaylistsOverlay, exitOptions;
         private IconButton menuOverlayShow;
-        private MenuButtonItem loadBtnOverlayShow, settingsOverlayShowBtn, commentOpenButton, searchOpenButton, reportOpenButton, playlistOpenButton, audioEffectsOpenButton, saveVideoOpenButton, newPlaylistOpenButton, myPlaylistsOpenButton;
+        private MenuButtonItem loadBtnOverlayShow, settingsOverlayShowBtn, commentOpenButton, searchOpenButton, reportOpenButton, playlistOpenButton, audioEffectsOpenButton, saveVideoOpenButton, newPlaylistOpenButton, myPlaylistsOpenButton, copyVideoUrlButton;
         private VideoMetadataDisplayWithoutProfile videoMetadataDisplay;
         private VideoMetadataDisplay videoMetadataDisplayDetails;
         private RoundedButtonContainer commentOpenButtonDetails, likeButton;
@@ -109,6 +110,9 @@ namespace AXPlayer.App.Screens
 
         [Resolved]
         private RestartDialogOverlay restartDialogOverlay { get; set; }
+
+        [Resolved]
+        private Clipboard clipboard { get; set; } = null!;
 
         private SmoothFadeInOutContainer videoLoadingProgressBase, muteStateOverlay;
         private AXPlayerLoadingSpinner videoLoadingProgressSpinner;

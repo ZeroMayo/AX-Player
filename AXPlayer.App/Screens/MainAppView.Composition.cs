@@ -48,6 +48,7 @@ using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
 using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
+using Vortice.Win32;
 using YoutubeExplode.Videos.ClosedCaptions;
 using Container = osu.Framework.Graphics.Containers.Container;
 
@@ -2940,6 +2941,29 @@ namespace AXPlayer.App.Screens
                                                             Text = AXPlayerStrings.CommentsWithoutCount,
                                                             Hotkey = new Hotkey(GlobalAction.OpenComments),
                                                             RoundCorner = new CornersInfo(8, 8, 8, 8),
+                                                        },
+                                                        copyVideoUrlButton = new MenuButtonItem
+                                                        {
+                                                            Enabled = { Value = false },
+                                                            Origin = Anchor.TopRight,
+                                                            Anchor = Anchor.TopRight,
+                                                            Size = new Vector2(1, 45),
+                                                            RelativeSizeAxes = Axes.X,
+                                                            Icon = FontAwesome.Regular.Clipboard,
+                                                            IconScale = new Vector2(1.2f),
+                                                            Text = AXPlayerStrings.CopyVideoURL,
+                                                            RoundCorner = new CornersInfo(8, 8, 8, 8),
+                                                            Action = () =>
+                                                            {
+                                                                if (videoUrl != null)
+                                                                {
+                                                                    clipboard.SetText(videoUrl);
+
+                                                                    Toast toast = new Toast(AXPlayerStrings.General, AXPlayerStrings.CopiedToClipboard);
+
+                                                                    onScreenDisplay.Display(toast);
+                                                                }
+                                                            },
                                                         },
                                                         searchOpenButton = new MenuButtonItem
                                                         {

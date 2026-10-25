@@ -319,6 +319,8 @@ namespace AXPlayer.App.Screens
                             videoUrl = $"https://youtube.com/watch?v={this.videoId}";
                         }
 
+                        copyVideoUrlButton.Enabled.Value = true;
+
                         downloadSubtitles();
 
                         if (loadType == LoadType.Full)

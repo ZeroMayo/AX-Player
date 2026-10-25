@@ -1494,6 +1494,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString ChangeReleaseStreamConfirmationInfo => new TranslatableString(getKey(@"change_release_stream_confirmation_info"), @"If you run into issues starting the app, you can usually run the installer from the official site to recover.");
 
+        /// <summary>
+        /// "Copy YouTube video URL"
+        /// </summary>
+        public static LocalisableString CopyVideoURL => new TranslatableString(getKey(@"copy_video_url"), "Copy YouTube video URL");
+
+        /// <summary>
+        /// "Copied to clipboard."
+        /// </summary>
+        public static LocalisableString CopiedToClipboard => new TranslatableString(getKey(@"copied_to_clipboard"), "Copied to clipboard.");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }
