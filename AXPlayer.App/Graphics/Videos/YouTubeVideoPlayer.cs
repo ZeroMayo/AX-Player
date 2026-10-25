@@ -103,10 +103,8 @@ namespace AXPlayer.App.Graphics.Videos
         private ClosedCaptionContainer closedCaption = null!;
         private Bindable<AspectRatioMethod> aspectRatioMethod = null!;
         private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift = null!;
-        private Bindable<bool> videoFrameInterpolationEnabled = null!;
 
         private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift = null!;
-        private VideoFrameInterpolationContainer frameInterpolation = null!;
 
         private Bindable<bool> useNewSubtitlesFeature = null!;
 
@@ -152,7 +150,6 @@ namespace AXPlayer.App.Graphics.Videos
             videoGrayscaleLevel = config.GetBindable<float>(AXPlayerSetting.VideoGrayscaleLevel);
             videoHueShift = config.GetBindable<float>(AXPlayerSetting.VideoHueShift);
             chromaticAberrationStrength = config.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength);
-            videoFrameInterpolationEnabled = config.GetBindable<bool>(AXPlayerSetting.VideoFrameInterpolation);
             useNewSubtitlesFeature = config.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
             playbackSpeed = new Bindable<double>(1);
@@ -212,17 +209,13 @@ namespace AXPlayer.App.Graphics.Videos
                                                             RelativeSizeAxes = Axes.Both,
                                                             Colour = Color4.Black,
                                                         },
-                                                        frameInterpolation = new VideoFrameInterpolationContainer
+                                                        video = new Video(fileName_Video, false)
                                                         {
                                                             RelativeSizeAxes = Axes.Both,
-                                                            Child = video = new Video(fileName_Video, false)
-                                                            {
-                                                                RelativeSizeAxes = Axes.Both,
-                                                                FillMode = FillMode.Fit,
-                                                                Anchor = Anchor.Centre,
-                                                                Origin = Anchor.Centre,
-                                                                Clock = framedClock,
-                                                            }
+                                                            FillMode = FillMode.Fit,
+                                                            Anchor = Anchor.Centre,
+                                                            Origin = Anchor.Centre,
+                                                            Clock = framedClock,
                                                         }
                                                     }
                                                 }
@@ -300,11 +293,6 @@ namespace AXPlayer.App.Graphics.Videos
                 hueShift.Strength = value.NewValue / 360;
             }, true);
 
-            videoFrameInterpolationEnabled.BindValueChanged(value =>
-            {
-                frameInterpolation.Enabled = value.NewValue;
-            }, true);
-
             //drawableTrack.Completed += trackCompleted;
         }
 
@@ -335,7 +323,6 @@ namespace AXPlayer.App.Graphics.Videos
         {
             uiLanguage.UnbindEvents();
             uiVisible.UnbindEvents();
-            videoFrameInterpolationEnabled.UnbindEvents();
             mediaSession?.UnregisterControlEvents();
             mediaSession?.DeleteMediaSession();
 
@@ -417,7 +404,6 @@ namespace AXPlayer.App.Graphics.Videos
 
             drawableTrack.Seek(targetPosition);
             video.Seek(targetPosition);
-            frameInterpolation.ResetHistory();
             mediaSession?.UpdateTimestamp(videoData, targetPosition);
         }
 
