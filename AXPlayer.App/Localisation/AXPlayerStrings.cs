@@ -1484,6 +1484,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString RestartRequiredDialog => new TranslatableString(getKey(@"restart_required_dialog"), "You need to restart for applying some of the new settings. Restart now?");
 
+        /// <summary>
+        /// "Are you sure you want to run a potentially unstable version of the app?"
+        /// </summary>
+        public static LocalisableString ChangeReleaseStreamConfirmation => new TranslatableString(getKey(@"change_release_stream_confirmation"), @"Are you sure you want to run a potentially unstable version of the app?");
+
+        /// <summary>
+        /// "If you run into issues starting the app, you can usually run the installer from the official site to recover."
+        /// </summary>
+        public static LocalisableString ChangeReleaseStreamConfirmationInfo => new TranslatableString(getKey(@"change_release_stream_confirmation_info"), @"If you run into issues starting the app, you can usually run the installer from the official site to recover.");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

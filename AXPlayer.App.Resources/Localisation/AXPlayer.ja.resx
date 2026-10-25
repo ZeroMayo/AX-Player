@@ -946,4 +946,10 @@
   <data name="restart_required_dialog" xml:space="preserve">
     <value>新しい設定の一部を適用するには、再起動が必要です。今すぐ再起動しますか？</value>
   </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>動作が不安定になる可能性があるバージョンのアプリを実行してもよろしいですか？</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>アプリの起動時に問題が発生した場合は、公式サイトからインストーラーを実行することで、通常は復旧できます。</value>
+  </data>
 </root>

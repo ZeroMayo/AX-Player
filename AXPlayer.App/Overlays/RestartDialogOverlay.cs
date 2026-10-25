@@ -166,7 +166,7 @@ namespace AXPlayer.App.Overlays
             overlayContainer.ScaleTo(0.9f);
             overlayContainer.FadeOut();
 
-            acceptButton.BackgroundColour = colours.RedDark;
+            acceptButton.BackgroundColour = overlayColourProvider.Background3;
 
             acceptButton.Action = () =>
             {
@@ -189,7 +189,7 @@ namespace AXPlayer.App.Overlays
 
         public Bindable<bool> IsOpened = new Bindable<bool>(false);
 
-        public void OpenOverlay()
+        public void OpenDialog()
         {
             if (IsOpened.Value == false)
             {
@@ -217,7 +217,7 @@ namespace AXPlayer.App.Overlays
             }
         }
 
-        public void HideOverlay()
+        private void HideOverlay()
         {
             if (IsOpened.Value == true)
             {

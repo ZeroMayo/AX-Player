@@ -126,6 +126,7 @@ namespace AXPlayer.App
         public MediaSession MediaSession;
 
         private RestartDialogOverlay restartDialogOverlay;
+        private PopupDialogOverlay popupDialogOverlay;
 
         private Bindable<CloseButtonAction> closeButtonAction;
 
@@ -191,6 +192,7 @@ namespace AXPlayer.App
             screenshotManager = new ScreenshotManager();
             notificationOverlay = new PushNotificationOverlay();
             restartDialogOverlay = new RestartDialogOverlay();
+            popupDialogOverlay = new PopupDialogOverlay();
 
             onScreenDisplay.BeginTracking(this, frameworkConfig);
             onScreenDisplay.BeginTracking(this, LocalConfig);
@@ -198,6 +200,7 @@ namespace AXPlayer.App
 
             loadComponentSingleFile(onScreenDisplay, topMostOverlayContent.Add, true);
             loadComponentSingleFile(notificationOverlay, overlayContainer.Add, true);
+            loadComponentSingleFile(popupDialogOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(restartDialogOverlay, topMostOverlayContent.Add, true);
 
             loadComponentSingleFile(screenshotManager, Add, true);

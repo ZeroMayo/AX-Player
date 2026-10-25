@@ -947,4 +947,10 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="restart_required_dialog" xml:space="preserve">
     <value>Bạn cần khởi động lại để áp dụng một số cài đặt mới. Khởi động lại ngay bây giờ?</value>
   </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn chạy một phiên bản ứng dụng có khả năng không ổn định không?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>Nếu bạn gặp sự cố khi khởi chạy ứng dụng, bạn thường có thể chạy trình cài đặt từ trang web chính thức để khắc phục.</value>
+  </data>
 </root>

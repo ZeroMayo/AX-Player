@@ -149,17 +149,17 @@ namespace AXPlayer.App.Screens
 
             use_sdl3.BindValueChanged(_ =>
             {
-                restartDialogOverlay.OpenOverlay();
+                restartDialogOverlay.OpenDialog();
             });
 
             colourSchemeBindable.BindValueChanged(_ =>
             {
-                restartDialogOverlay.OpenOverlay();
+                restartDialogOverlay.OpenDialog();
             });
 
             ui_font.BindValueChanged(_ =>
             {
-                restartDialogOverlay.OpenOverlay();
+                restartDialogOverlay.OpenDialog();
             });
 
             #region The UI Components

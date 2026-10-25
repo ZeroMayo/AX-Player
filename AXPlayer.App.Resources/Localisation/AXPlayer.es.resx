@@ -946,4 +946,10 @@
   <data name="restart_required_dialog" xml:space="preserve">
     <value>Es necesario reiniciar para aplicar algunos de los nuevos ajustes. ¿Reiniciar ahora?</value>
   </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>¿Estás seguro de que quieres ejecutar una versión potencialmente inestable de la aplicación?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>Si tienes problemas al iniciar la aplicación, por lo general puedes ejecutar el instalador desde el sitio oficial para solucionar el inconveniente.</value>
+  </data>
 </root>

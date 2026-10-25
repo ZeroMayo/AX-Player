@@ -946,4 +946,10 @@
   <data name="restart_required_dialog" xml:space="preserve">
     <value>È necessario riavviare per applicare alcune delle nuove impostazioni. Riavviare ora?</value>
   </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>Sei sicuro di voler eseguire una versione potenzialmente instabile dell'app?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>Se riscontri problemi all'avvio dell'app, di solito puoi risolvere la situazione eseguendo il programma di installazione dal sito ufficiale.</value>
+  </data>
 </root>

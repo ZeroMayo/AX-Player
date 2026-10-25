@@ -946,4 +946,10 @@
   <data name="restart_required_dialog" xml:space="preserve">
     <value>Yeni ayarlardan bazılarının uygulanabilmesi için yeniden başlatmanız gerekiyor. Şimdi yeniden başlatılsın mı?</value>
   </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>Uygulamanın potansiyel olarak kararsız bir sürümünü çalıştırmak istediğinizden emin misiniz?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>Uygulamayı başlatırken sorun yaşarsanız, genellikle resmi siteden yükleyiciyi çalıştırarak durumu düzeltebilirsiniz.</value>
+  </data>
 </root>

@@ -947,4 +947,10 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="restart_required_dialog" xml:space="preserve">
     <value>You need to restart for applying some of the new settings. Restart now?</value>
   </data>
+  <data name="change_release_stream_confirmation" xml:space="preserve">
+    <value>Are you sure you want to run a potentially unstable version of the app?</value>
+  </data>
+  <data name="change_release_stream_confirmation_info" xml:space="preserve">
+    <value>If you run into issues starting the app, you can usually run the installer from the official site to recover.</value>
+  </data>
 </root>
