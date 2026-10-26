@@ -716,6 +716,10 @@ namespace AXPlayer.App.Screens
                     videoSettingsButton.AccentColor = accentColor;
                     videoSettingsButton.BackgroundColour = bgColor;
 
+                    takeScreenshotButton.IconObject.FadeColour(accentColor);
+                    takeScreenshotButton.AccentColor = accentColor;
+                    takeScreenshotButton.BackgroundColour = bgColor;
+
                     playlistButton.IconObject.FadeColour(accentColor);
                     playlistButton.AccentColor = accentColor;
                     playlistButton.BackgroundColour = bgColor;
