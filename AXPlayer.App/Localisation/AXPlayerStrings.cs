@@ -1524,6 +1524,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString ExportingLogs => new TranslatableString(getKey(@"exporting_logs"), "Exporting logs...");
 
+        /// <summary>
+        /// "Restart later"
+        /// </summary>
+        public static LocalisableString RestartLater => new TranslatableString(getKey(@"restart_later"), "Restart later");
+
+        /// <summary>
+        /// "Restart now"
+        /// </summary>
+        public static LocalisableString RestartNow => new TranslatableString(getKey(@"restart_now"), "Restart now");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

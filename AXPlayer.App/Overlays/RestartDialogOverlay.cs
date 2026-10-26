@@ -121,7 +121,7 @@ namespace AXPlayer.App.Overlays
                                         Origin = Anchor.TopCentre,
                                         Anchor = Anchor.TopCentre,
                                         Enabled = { Value = true },
-                                        Text = AXPlayerStrings.Cancel,
+                                        Text = AXPlayerStrings.RestartLater,
                                         Size = new Vector2(200, 40),
                                         Margin = new MarginPadding() { Top = 4, Horizontal = 4 },
                                         Action = () =>
@@ -134,7 +134,7 @@ namespace AXPlayer.App.Overlays
                                         Origin = Anchor.TopCentre,
                                         Anchor = Anchor.TopCentre,
                                         Enabled = { Value = true },
-                                        Text = AXPlayerStrings.Yes,
+                                        Text = AXPlayerStrings.RestartNow,
                                         Size = new Vector2(200, 40),
                                         Margin = new MarginPadding() { Top = 4, Horizontal = 4 },
                                     },
