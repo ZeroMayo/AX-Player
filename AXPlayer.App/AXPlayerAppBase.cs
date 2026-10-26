@@ -107,7 +107,7 @@ namespace AXPlayer.App
                 }
                 case RuntimeInfo.Platform.Linux:
                 {
-                    return "ffmpeg";
+                    return "ffmpeg"; //linux uses global ffmpeg
                 }
                 default:
                 {
@@ -126,7 +126,7 @@ namespace AXPlayer.App
                 }
                 case RuntimeInfo.Platform.Linux:
                 {
-                    return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/yt-dlp_linux";
+                    return "yt-dlp"; //linux uses global yt-dlp
                 }
                 default:
                 {

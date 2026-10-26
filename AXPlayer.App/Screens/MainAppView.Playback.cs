@@ -135,22 +135,35 @@ namespace AXPlayer.App.Screens
         //we need to download subtitles to preload subtitles
         private async void downloadSubtitles()
         {
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
-                return; //crashs on appimage state
-
             if (string.IsNullOrEmpty(videoUrl))
                 return;
 
-            string args = $"--sub-langs all --write-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o \"%(id)s.%(ext)s\" -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}";
-
-            ProcessStartInfo processStartInfo = new ProcessStartInfo(app.GetYtDlpPath(), args)
+            if (RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
             {
-                CreateNoWindow = true
-            };
+                string args = $"--sub-langs all --write-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o \"%(id)s.%(ext)s\" -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}";
 
-            using (Process process = Process.Start(processStartInfo))
+                ProcessStartInfo processStartInfo = new ProcessStartInfo(app.GetYtDlpPath(), args)
+                {
+                    CreateNoWindow = true
+                };
+
+                using (Process process = Process.Start(processStartInfo))
+                {
+                    await process.WaitForExitAsync();
+                }
+            } else if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
             {
-                await process.WaitForExitAsync();
+                string args = $"-c \"yt-dlp --sub-langs all --write-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o \"%(id)s.%(ext)s\" -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}\"";
+
+                ProcessStartInfo processStartInfo = new ProcessStartInfo("bash", args)
+                {
+                    CreateNoWindow = true
+                };
+
+                using (Process process = Process.Start(processStartInfo))
+                {
+                    await process.WaitForExitAsync();
+                }
             }
         }
 
