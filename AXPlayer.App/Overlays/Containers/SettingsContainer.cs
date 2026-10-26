@@ -630,12 +630,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
-                                                            Caption = AXPlayerStrings.UseSystemCursor,
-                                                            Icon = FontAwesome.Solid.MousePointer,
-                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.UseSystemCursor),
-                                                        }),
-                                                        new SettingsItemV2(new FormCheckBox
-                                                        {
                                                             Caption = AXPlayerStrings.PlayOverlaySFX,
                                                             Icon = FontAwesome.Solid.VolumeUp,
                                                             Current = playOverlaySFX,
