@@ -17,7 +17,7 @@ using osuTK.Graphics;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
-    public partial class TimestampButton : ProjectYomiClickableContainer
+    public partial class TimestampButton : ProjectYomiClickableContainer, IHasLineBaseHeight
     {
         private string text;
         public Action<double> TimestampClicked;
@@ -116,5 +116,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
             return base.OnClick(e);
         }
+
+        public float LineBaseHeight => 15.5f;
     }
 }

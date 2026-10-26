@@ -11,6 +11,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
@@ -22,7 +23,7 @@ using YoutubeExplode.Videos;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
-    public partial class UrlRedirectDisplay : ProjectYomiClickableContainer
+    public partial class UrlRedirectDisplay : ProjectYomiClickableContainer, IHasLineBaseHeight
     {
         private string url;
 
@@ -225,5 +226,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
             return base.OnClick(e);
         }
+
+        public float LineBaseHeight => 15.5f;
     }
 }
