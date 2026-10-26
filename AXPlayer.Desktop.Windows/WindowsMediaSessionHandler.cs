@@ -100,7 +100,7 @@ namespace AXPlayer.Desktop.Windows
                     smtc.PlaybackStatus = playing ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused;
                     smtc.DisplayUpdater.Update();
                 }
-                catch (Exception e)
+                catch (ArgumentNullException e)
                 {
                     Logger.Error(e, e.GetDescription());
                 }
