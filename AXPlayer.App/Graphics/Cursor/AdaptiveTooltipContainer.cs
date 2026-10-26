@@ -70,11 +70,11 @@ namespace AXPlayer.App.Graphics.Cursor
 
                 if (IsPresent)
                 {
-                    AutoSizeDuration = 250;
+                    tooltip.AutoSizeDuration = 250;
                     background.FlashColour(new Color4(0.4f, 0.4f, 0.4f, 1f), 1000, Easing.OutQuint);
                 }
                 else
-                    AutoSizeDuration = 0;
+                    tooltip.AutoSizeDuration = 0;
 
                 lastContent = content;
             }
@@ -82,14 +82,13 @@ namespace AXPlayer.App.Graphics.Cursor
             public AdaptiveTooltip(ScreenshotManager screenshotManager)
             {
                 ScreenshotManager = screenshotManager;
-                AutoSizeEasing = Easing.OutQuint;
-
-                Masking = true;
-                CornerRadius = 13;
                 Children = new Drawable[]
                 {
                     tooltip = new Container
                     {
+                        AutoSizeEasing = Easing.OutQuint,
+                        Masking = true,
+                        CornerRadius = 13,
                         AutoSizeAxes = Axes.Both,
                         Children = new Drawable[] {
                             background = new Box
