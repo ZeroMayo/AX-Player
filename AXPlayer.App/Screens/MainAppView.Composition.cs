@@ -3387,7 +3387,7 @@ namespace AXPlayer.App.Screens
                         if (popupDialogOverlay.IsOpened.Value)
                         {
                             popupDialogOverlay.HideDialog();
-                            host.Window.Flash();
+                            //host.Window.Flash();
                             host.Window.Raise();
                         }
                     });
