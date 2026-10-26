@@ -97,15 +97,18 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         public void UpdateLoginState()
         {
-            if (googleOAuth2.SignedIn.Value)
+            Schedule(() =>
             {
-                profileImage.FadeIn(250);
-                profileImage.UpdateProfileImage(yt_api.GetMineChannel().Id);
-            }
-            else
-            {
-                profileImage.FadeOut(250);
-            }
+                if (googleOAuth2.SignedIn.Value)
+                {
+                    profileImage.FadeIn(250);
+                    profileImage.UpdateProfileImage(yt_api.GetMineChannel().Id);
+                }
+                else
+                {
+                    profileImage.FadeOut(250);
+                }
+            });
         }
 
         [Resolved]
