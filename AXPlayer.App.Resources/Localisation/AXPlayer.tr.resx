@@ -958,4 +958,31 @@
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>Panoya kopyalandı.</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>Altyazılarda akıcı animasyon</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>Günlükler dışa aktarılıyor...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>Dosya Gezgini'nde aç</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>Daha sonra yeniden başlat</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>Şimdi yeniden başlat</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>Ekran görüntüsü {0} konumuna kaydedildi.</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>Ekran görüntüsü al</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>Kimlik doğrulaması bekleniyor...</value>
+  </data>
 </root>

@@ -958,4 +958,31 @@
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>クリップボードにコピーしました。</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>字幕のアニメーションを滑らかにする</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>ログをエクスポートしています...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>エクスプローラーで開く</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>後で再起動</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>今すぐ再起動</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>スクリーンショットを {0} に保存しました。</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>スクリーンショットを撮る</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>認証を待っています...</value>
+  </data>
 </root>

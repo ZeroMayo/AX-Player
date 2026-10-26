@@ -959,4 +959,31 @@
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>Скопировано в буфер обмена.</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>Плавная анимация субтитров</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>Экспорт журналов...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>Открыть в проводнике</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>Перезапустить позже</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>Перезапустить сейчас</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>Снимок экрана сохранён в {0}.</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>Сделать снимок экрана</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>Ожидание аутентификации...</value>
+  </data>
 </root>

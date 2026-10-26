@@ -959,4 +959,31 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>Đã sao chép vào bộ nhớ tạm.</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>Hoạt ảnh phụ đề mượt mà</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>Đang xuất nhật ký...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>Mở trong File Explorer</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>Khởi động lại sau</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>Khởi động lại ngay</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>Đã lưu ảnh chụp màn hình vào {0}.</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>Chụp ảnh màn hình</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>Đang chờ xác thực...</value>
+  </data>
 </root>

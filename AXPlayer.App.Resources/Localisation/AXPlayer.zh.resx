@@ -959,4 +959,31 @@
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>已复制到剪贴板。</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>字幕平滑动画</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>正在导出日志...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>在文件资源管理器中打开</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>稍后重新启动</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>立即重新启动</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>屏幕截图已保存到 {0}。</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>截屏</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>正在等待身份验证...</value>
+  </data>
 </root>
