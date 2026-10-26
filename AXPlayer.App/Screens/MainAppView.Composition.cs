@@ -3384,7 +3384,12 @@ namespace AXPlayer.App.Screens
                 {
                     Schedule(() =>
                     {
-                        popupDialogOverlay.HideDialog();
+                        if (popupDialogOverlay.IsOpened.Value)
+                        {
+                            popupDialogOverlay.HideDialog();
+                            host.Window.Flash();
+                            host.Window.Raise();
+                        }
                     });
 
                     GetReportReasons();
