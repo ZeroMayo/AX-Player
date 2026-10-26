@@ -561,6 +561,20 @@ namespace AXPlayer.App.Screens
                                                                                                 ShowSettingsOverlayAtName("Video Settings");
                                                                                             }
                                                                                         },
+                                                                                        takeScreenshotButton = new ControlBarIconButton(false)
+                                                                                        {
+                                                                                            Width = 50,
+                                                                                            Enabled = { Value = true },
+                                                                                            Icon = FontAwesome.Solid.Camera,
+                                                                                            TooltipText = AXPlayerStrings.TakeScreenshot,
+                                                                                            IconColour = overlayColourProvider.Content2,
+                                                                                            BackgroundColour = overlayColourProvider.Background3,
+                                                                                            IconScale = new Vector2(0.85f),
+                                                                                            ClickAction = _ =>
+                                                                                            {
+                                                                                                screenshotManager.TakeScreenshot();
+                                                                                            }
+                                                                                        },
                                                                                         playlistButton = new ControlBarIconButton(false)
                                                                                         {
                                                                                             Width = 50,
@@ -3320,6 +3334,7 @@ namespace AXPlayer.App.Screens
             playPause.SetEnabledValue2(true);
             captionButton.SetEnabledValue2(true);
             videoSettingsButton.SetEnabledValue2(true);
+            takeScreenshotButton.SetEnabledValue2(true);
             playlistButton.SetEnabledValue2(true);
             quickCommentOpenButton.SetEnabledValue2(true);
 

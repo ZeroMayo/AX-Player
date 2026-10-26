@@ -1539,6 +1539,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString ClosedCaptionsSmoothAnimation => new TranslatableString(getKey(@"closed_captions_smooth_animation"), "Closed captions smooth animation");
 
+        /// <summary>
+        /// "Take screenshot"
+        /// </summary>
+        public static LocalisableString TakeScreenshot => new TranslatableString(getKey(@"take_screenshot"), "Take screenshot");
+
+        /// <summary>
+        /// "Screenshot saved to {0}."
+        /// </summary>
+        public static LocalisableString ScreenshotSavedWithFilePath(string filePath) => new TranslatableString(getKey(@"screenshot_saved_with_file_path"), "Screenshot saved to {0}.", filePath);
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

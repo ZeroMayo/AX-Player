@@ -60,6 +60,12 @@ namespace AXPlayer.App.Graphics
         [Resolved]
         private PushNotificationOverlay pushNotificationOverlay { get; set; } = null!;
 
+        [Resolved]
+        private PopupDialogOverlay popupDialogOverlay { get; set; } = null!;
+
+        [Resolved]
+        private RestartDialogOverlay restartDialogOverlay { get; set; } = null!;
+
         private Storage storage = null!;
 
         private Sample? shutter;
@@ -87,6 +93,12 @@ namespace AXPlayer.App.Graphics
             return false;
         }
 
+        public void TakeScreenshot()
+        {
+            shutter?.Play();
+            TakeScreenshotAsync().FireAndForget();
+        }
+
         public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e)
         {
         }
@@ -106,6 +118,8 @@ namespace AXPlayer.App.Graphics
                 {
                     cursorVisibility.Value = false;
                     Schedule(() => onScreenDisplay.Hide());
+                    Schedule(() => popupDialogOverlay.Hide());
+                    Schedule(() => restartDialogOverlay.Hide());
 
                     // We need to wait for at most 3 draw nodes to be drawn, following which we can be assured at least one DrawNode has been generated/drawn with the set value
                     const int frames_to_wait = 3;
@@ -195,9 +209,21 @@ namespace AXPlayer.App.Graphics
                     });
                     */
 
+                    /*
                     Toast toast = new Toast(AXPlayerStrings.ScreenshotSaved, filename);
 
                     onScreenDisplay.Display(toast);
+                    */
+
+                    Schedule(() =>
+                    {
+                        popupDialogOverlay.ShowDialog(
+                            AXPlayerStrings.TakeScreenshot,
+                            AXPlayerStrings.ScreenshotSavedWithFilePath(filename),
+                            AXPlayerStrings.OpenInFileExplorer,
+                            AXPlayerStrings.Close,
+                            okPressedAction: () => storage.PresentFileExternally(filename));
+                    });
 
                     storage.PresentFileExternally(filename);
                 }
@@ -207,6 +233,8 @@ namespace AXPlayer.App.Graphics
                 if (Interlocked.Decrement(ref screenShotTasks) == 0)
                 {
                     cursorVisibility.Value = true;
+                    Schedule(() => popupDialogOverlay.Show());
+                    Schedule(() => restartDialogOverlay.Show());
                     Schedule(() => onScreenDisplay.Show());
                 }
             }

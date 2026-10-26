@@ -236,7 +236,7 @@ namespace AXPlayer.App.Screens
         protected T GetShaderByType<T>() where T : InternalShader, new()
             => shaderManager.LocalInternalShader<T>();
 
-        private ControlBarIconButton repeatButton, pinButton, captionButton, videoSettingsButton, playlistButton, quickLikeButton, quickDislikeButton, quickCommentOpenButton;
+        private ControlBarIconButton repeatButton, pinButton, captionButton, videoSettingsButton, playlistButton, quickLikeButton, quickDislikeButton, quickCommentOpenButton, takeScreenshotButton;
 
         private OdometerTimeDisplay timeText;
 
