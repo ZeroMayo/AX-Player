@@ -1535,9 +1535,9 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString RestartNow => new TranslatableString(getKey(@"restart_now"), "Restart now");
 
         /// <summary>
-        /// "Closed caption smooth animation"
+        /// "Closed captions smooth animation"
         /// </summary>
-        public static LocalisableString ClosedCaptionSmoothAnimation => new TranslatableString(getKey(@"closed_caption_smooth_animation"), "Closed caption smooth animation");
+        public static LocalisableString ClosedCaptionsSmoothAnimation => new TranslatableString(getKey(@"closed_captions_smooth_animation"), "Closed captions smooth animation");
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

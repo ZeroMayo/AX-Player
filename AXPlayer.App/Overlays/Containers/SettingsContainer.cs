@@ -1023,7 +1023,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
-                                                            Caption = AXPlayerStrings.ClosedCaptionSmoothAnimation,
+                                                            Caption = AXPlayerStrings.ClosedCaptionsSmoothAnimation,
                                                             Icon = FontAwesome.Solid.ClosedCaptioning,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation),
                                                         }),
