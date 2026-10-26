@@ -23,7 +23,6 @@ using AXPlayer.App.Input;
 using AXPlayer.App.Input.Binding;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
-using AXPlayer.App.Overlays;
 using AXPlayer.App.Overlays.Containers;
 using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Overlays.Volume;
@@ -48,8 +47,6 @@ using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
-using SixLabors.ImageSharp.Metadata.Profiles.Iptc;
-using Vortice.Win32;
 using YoutubeExplode.Videos.ClosedCaptions;
 using Container = osu.Framework.Graphics.Containers.Container;
 
