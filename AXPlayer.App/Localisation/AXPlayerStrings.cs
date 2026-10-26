@@ -1504,6 +1504,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString CopiedToClipboard => new TranslatableString(getKey(@"copied_to_clipboard"), "Copied to clipboard.");
 
+        /// <summary>
+        /// "Open in File Explorer"
+        /// </summary>
+        public static LocalisableString OpenInFileExplorer => new TranslatableString(getKey(@"open_in_file_explorer"), "Open in File Explorer");
+
+        /// <summary>
+        /// "Close"
+        /// </summary>
+        public static LocalisableString Close => new TranslatableString(getKey(@"general_close"), "Close");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

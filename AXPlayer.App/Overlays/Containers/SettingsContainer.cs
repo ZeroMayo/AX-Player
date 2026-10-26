@@ -6,10 +6,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
-using FFmpeg.AutoGen;
 using AXPlayer.App.Config;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Caption;
@@ -22,6 +22,7 @@ using AXPlayer.App.Input.Binding;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Utils;
+using FFmpeg.AutoGen;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
@@ -107,10 +108,13 @@ namespace AXPlayer.App.Overlays.Containers
 
             Schedule(() =>
             {
-                ToastBase toast = new ToastWithIcon(AXPlayerStrings.General, AXPlayerStrings.LogsExportFinished, FontAwesome.Regular.ListAlt);
-
-                onScreenDisplay.Display(toast);
-                exportStorage.PresentFileExternally(archive_filename);
+                popupDialogOverlay.ShowDialog(
+                        AXPlayerStrings.ExportLogs,
+                        AXPlayerStrings.LogsExportFinished,
+                        AXPlayerStrings.OpenInFileExplorer,
+                        AXPlayerStrings.Close,
+                        () => exportStorage.PresentFileExternally(archive_filename));
+                
             });
         }
 #nullable disable
@@ -146,7 +150,13 @@ namespace AXPlayer.App.Overlays.Containers
                     break;
 
                 default:
-                    popupDialogOverlay.ShowDialog(AXPlayerStrings.ChangeReleaseStreamConfirmation, AXPlayerStrings.ChangeReleaseStreamConfirmationInfo, () => configReleaseStream.Value = stream.NewValue, () => releaseStreamDropdown.Current.Value = stream.OldValue);
+                    popupDialogOverlay.ShowDialog(
+                        AXPlayerStrings.ChangeReleaseStreamConfirmation,
+                        AXPlayerStrings.ChangeReleaseStreamConfirmationInfo,
+                        AXPlayerStrings.Yes,
+                        AXPlayerStrings.Cancel,
+                        () => configReleaseStream.Value = stream.NewValue,
+                        () => releaseStreamDropdown.Current.Value = stream.OldValue);
                     break;
             }
         }

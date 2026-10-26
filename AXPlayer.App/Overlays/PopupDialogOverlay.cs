@@ -198,20 +198,15 @@ namespace AXPlayer.App.Overlays
 
         public Bindable<bool> IsOpened = new Bindable<bool>(false);
 
-        public void ShowDialog(LocalisableString title, LocalisableString bodyText, Action okPressedAction, Action cancelPressedAction)
+        public void ShowDialog(LocalisableString title, LocalisableString bodyText, LocalisableString okButtonText, LocalisableString cancelButtonText, Action? okPressedAction = null, Action? cancelPressedAction = null)
         {
             if (IsOpened.Value == false)
             {
+                acceptButton.Text = okButtonText;
+                cancelButton.Text = cancelButtonText;
                 titleText.Text = title;
                 this.bodyText.Text = bodyText;
                 IsOpened.Value = true;
-
-                duckOperation = game.Duck(new DuckParameters
-                {
-                    DuckVolumeTo = 1,
-                    DuckDuration = 100,
-                    RestoreDuration = 100,
-                });
 
                 if (playOverlaySFX.Value)
                     overlayShowSample.Play();
@@ -260,8 +255,6 @@ namespace AXPlayer.App.Overlays
             if (IsOpened.Value == true)
             {
                 IsOpened.Value = false;
-
-                duckOperation?.Dispose();
 
                 if (playOverlaySFX.Value)
                     overlayHideSample.Play();
