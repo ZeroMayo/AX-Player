@@ -225,7 +225,7 @@ namespace AXPlayer.App.Graphics
                             okPressedAction: () => storage.PresentFileExternally(filename));
                     });
 
-                    storage.PresentFileExternally(filename);
+                    //storage.PresentFileExternally(filename);
                 }
             }
             finally
