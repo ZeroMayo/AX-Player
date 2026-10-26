@@ -81,6 +81,11 @@ namespace AXPlayer.App.Overlays.Containers
 #nullable enable
         private void exportLogs()
         {
+            Schedule(() =>
+            {
+                exportLogButton.Text = AXPlayerStrings.ExportingLogs;
+                exportLogButton.Enabled.Value = false;
+            });
             const string archive_filename = "compressed-logs.zip";
 
             try
@@ -108,6 +113,8 @@ namespace AXPlayer.App.Overlays.Containers
 
             Schedule(() =>
             {
+                exportLogButton.Text = AXPlayerStrings.ExportLogs;
+                exportLogButton.Enabled.Value = true;
                 popupDialogOverlay.ShowDialog(
                         AXPlayerStrings.ExportLogs,
                         AXPlayerStrings.LogsExportFinished,
@@ -282,6 +289,8 @@ namespace AXPlayer.App.Overlays.Containers
 
         private Bindable<WindowMode> windowMode = null!;
         private Bindable<LocalisableString> updateInfomationText;
+
+        private SettingsButtonV2 exportLogButton;
 
         private Bindable<float> scalingPositionX = null!;
         private Bindable<float> scalingPositionY = null!;
@@ -503,7 +512,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Padding = new MarginPadding { Horizontal = 30, Bottom = 12 },
                                                             Colour = overlayColourProvider.Content2,
                                                         },
-                                                        new SettingsButtonV2
+                                                        exportLogButton = new SettingsButtonV2
                                                         {
                                                             Padding = new MarginPadding { Horizontal = 30 },
                                                             Text = AXPlayerStrings.ExportLogs,
