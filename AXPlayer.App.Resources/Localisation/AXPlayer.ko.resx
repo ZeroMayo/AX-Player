@@ -958,4 +958,31 @@
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>클립보드에 복사했습니다.</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>자막 애니메이션 부드럽게</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>로그 내보내는 중...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>파일 탐색기에서 열기</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>나중에 다시 시작</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>지금 다시 시작</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>스크린샷을 {0}에 저장했습니다.</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>스크린샷 찍기</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>인증 대기 중...</value>
+  </data>
 </root>

@@ -958,4 +958,31 @@
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>Copiato negli appunti.</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>Animazione fluida dei sottotitoli</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>Esportazione dei log...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>Apri in Esplora file</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>Riavvia più tardi</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>Riavvia ora</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>Screenshot salvato in {0}.</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>Scatta uno screenshot</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>In attesa di autenticazione...</value>
+  </data>
 </root>

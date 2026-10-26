@@ -958,4 +958,31 @@
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>Copiado al portapapeles.</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>Animación fluida de los subtítulos</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>Exportando registros...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>Abrir en el Explorador de archivos</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>Reiniciar más tarde</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>Reiniciar ahora</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>Captura de pantalla guardada en {0}.</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>Hacer una captura de pantalla</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>Esperando la autenticación...</value>
+  </data>
 </root>

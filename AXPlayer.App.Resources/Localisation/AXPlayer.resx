@@ -959,4 +959,31 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="copied_to_clipboard" xml:space="preserve">
     <value>Copied to clipboard.</value>
   </data>
+  <data name="closed_captions_smooth_animation" xml:space="preserve">
+    <value>Closed captions smooth animation</value>
+  </data>
+  <data name="exporting_logs" xml:space="preserve">
+    <value>Exporting logs...</value>
+  </data>
+  <data name="general_close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="open_in_file_explorer" xml:space="preserve">
+    <value>Open in File Explorer</value>
+  </data>
+  <data name="restart_later" xml:space="preserve">
+    <value>Restart later</value>
+  </data>
+  <data name="restart_now" xml:space="preserve">
+    <value>Restart now</value>
+  </data>
+  <data name="screenshot_saved_with_file_path" xml:space="preserve">
+    <value>Screenshot saved to {0}.</value>
+  </data>
+  <data name="take_screenshot" xml:space="preserve">
+    <value>Take screenshot</value>
+  </data>
+  <data name="waiting_for_authentication" xml:space="preserve">
+    <value>Waiting for authentication...</value>
+  </data>
 </root>
