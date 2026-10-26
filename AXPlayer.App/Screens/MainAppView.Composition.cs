@@ -3382,7 +3382,10 @@ namespace AXPlayer.App.Screens
             {
                 if (loginBool.NewValue)
                 {
-                    popupDialogOverlay.HideDialog();
+                    Schedule(() =>
+                    {
+                        popupDialogOverlay.HideDialog();
+                    });
 
                     GetReportReasons();
 
