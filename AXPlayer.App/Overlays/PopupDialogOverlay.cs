@@ -37,6 +37,8 @@ namespace AXPlayer.App.Overlays
         private RoundedButton acceptButton;
         private RoundedAltButton cancelButton;
 
+        private FillFlowContainer actionButtons;
+
         [Resolved]
         private AXPlayerConfigManager appGlobalConfig { get; set; }
 
@@ -119,7 +121,7 @@ namespace AXPlayer.App.Overlays
                                 Origin = Anchor.TopCentre,
                                 Anchor = Anchor.TopCentre,
                             },
-                            new FillFlowContainer
+                            actionButtons = new FillFlowContainer
                             {
                                 Origin = Anchor.TopCentre,
                                 Anchor = Anchor.TopCentre,
@@ -198,7 +200,7 @@ namespace AXPlayer.App.Overlays
 
         public Bindable<bool> IsOpened = new Bindable<bool>(false);
 
-        public void ShowDialog(LocalisableString title, LocalisableString bodyText, LocalisableString okButtonText, LocalisableString cancelButtonText, Action? okPressedAction = null, Action? cancelPressedAction = null)
+        public void ShowDialog(LocalisableString title, LocalisableString bodyText, LocalisableString okButtonText, LocalisableString cancelButtonText, bool showActionButtons = true, Action? okPressedAction = null, Action? cancelPressedAction = null)
         {
             if (IsOpened.Value == false)
             {
@@ -207,6 +209,11 @@ namespace AXPlayer.App.Overlays
                 titleText.Text = title;
                 this.bodyText.Text = bodyText;
                 IsOpened.Value = true;
+
+                if (showActionButtons)
+                    actionButtons.Show();
+                else
+                    actionButtons.Hide();
 
                 if (playOverlaySFX.Value)
                     overlayShowSample.Play();

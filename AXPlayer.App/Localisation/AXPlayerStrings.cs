@@ -1514,6 +1514,11 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString Close => new TranslatableString(getKey(@"general_close"), "Close");
 
+        /// <summary>
+        /// "Waiting for authentication..."
+        /// </summary>
+        public static LocalisableString WaitingForAuthentication => new TranslatableString(getKey(@"waiting_for_authentication"), "Waiting for authentication...");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

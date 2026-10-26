@@ -113,7 +113,7 @@ namespace AXPlayer.App.Overlays.Containers
                         AXPlayerStrings.LogsExportFinished,
                         AXPlayerStrings.OpenInFileExplorer,
                         AXPlayerStrings.Close,
-                        () => exportStorage.PresentFileExternally(archive_filename));
+                        okPressedAction: () => exportStorage.PresentFileExternally(archive_filename));
                 
             });
         }
@@ -155,8 +155,8 @@ namespace AXPlayer.App.Overlays.Containers
                         AXPlayerStrings.ChangeReleaseStreamConfirmationInfo,
                         AXPlayerStrings.Yes,
                         AXPlayerStrings.Cancel,
-                        () => configReleaseStream.Value = stream.NewValue,
-                        () => releaseStreamDropdown.Current.Value = stream.OldValue);
+                        okPressedAction: () => configReleaseStream.Value = stream.NewValue,
+                        cancelPressedAction: () => releaseStreamDropdown.Current.Value = stream.OldValue);
                     break;
             }
         }

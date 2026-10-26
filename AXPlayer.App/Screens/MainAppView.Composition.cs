@@ -23,6 +23,7 @@ using AXPlayer.App.Input;
 using AXPlayer.App.Input.Binding;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
+using AXPlayer.App.Overlays;
 using AXPlayer.App.Overlays.Containers;
 using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Overlays.Volume;
@@ -940,6 +941,16 @@ namespace AXPlayer.App.Screens
                            {
                                 if (!googleOAuth2.SignedIn.Value)
                                 {
+                                   Schedule(() =>
+                                    {
+                                        popupDialogOverlay.ShowDialog(
+                                                AXPlayerStrings.GoogleAccount,
+                                                AXPlayerStrings.WaitingForAuthentication,
+                                                AXPlayerStrings.Yes,
+                                                AXPlayerStrings.Cancel,
+                                                showActionButtons: false);
+
+                                    });
                                     Task.Run(() => googleOAuth2.SignIn());
                                 }
                                 else
@@ -3371,6 +3382,8 @@ namespace AXPlayer.App.Screens
             {
                 if (loginBool.NewValue)
                 {
+                    popupDialogOverlay.HideDialog();
+
                     GetReportReasons();
 
                     localeBindable.BindValueChanged(locale =>
