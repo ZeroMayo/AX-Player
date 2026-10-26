@@ -97,8 +97,11 @@ namespace AXPlayer.Desktop.Windows
             {
                 try
                 {
-                    smtc.PlaybackStatus = playing ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused;
-                    smtc.DisplayUpdater.Update();
+                    if (IsLoaded)
+                    {
+                        smtc.PlaybackStatus = playing ? MediaPlaybackStatus.Playing : MediaPlaybackStatus.Paused;
+                        smtc.DisplayUpdater.Update();
+                    }
                 }
                 catch (ArgumentNullException e)
                 {
