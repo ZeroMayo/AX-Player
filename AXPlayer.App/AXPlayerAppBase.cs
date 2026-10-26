@@ -56,7 +56,7 @@ namespace AXPlayer.App
 
         protected override Container<Drawable> Content => content;
 
-        private Container content;
+        protected AdaptiveTooltipContainer content;
 
         protected bool LoadFailed { get; set; }
 

@@ -194,6 +194,8 @@ namespace AXPlayer.App
             restartDialogOverlay = new RestartDialogOverlay();
             popupDialogOverlay = new PopupDialogOverlay();
 
+            content.ScreenshotManager = screenshotManager;
+
             onScreenDisplay.BeginTracking(this, frameworkConfig);
             onScreenDisplay.BeginTracking(this, LocalConfig);
             onScreenDisplay.BeginTracking(this, AudioEffectsConfig);

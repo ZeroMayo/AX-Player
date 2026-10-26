@@ -1,22 +1,35 @@
 ﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osuTK;
-using osuTK.Graphics;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
-using osu.Framework.Graphics.Containers;
+using osu.Framework.Logging;
+using osuTK;
+using osuTK.Graphics;
 
 namespace AXPlayer.App.Graphics.Cursor
 {
     public partial class AdaptiveTooltipContainer : TooltipContainer
     {
-        protected override ITooltip CreateTooltip() => new AdaptiveTooltip();
+        private AdaptiveTooltip tooltip;
+
+        protected override ITooltip CreateTooltip() => tooltip = new AdaptiveTooltip(ScreenshotManager);
+
+        public ScreenshotManager ScreenshotManager {
+            get;
+            set
+            {
+                field = value;
+                tooltip.ScreenshotManager = value;
+            }
+        }
 
         public AdaptiveTooltipContainer(CursorContainer cursor)
             : base(cursor)
@@ -27,10 +40,23 @@ namespace AXPlayer.App.Graphics.Cursor
 
         public partial class AdaptiveTooltip : Tooltip
         {
+            private readonly IBindable<bool> screenshotCursorVisibility = new Bindable<bool>(true);
+            public override bool IsPresent => screenshotCursorVisibility.Value && base.IsPresent;
+
             private const float max_width = 500;
 
             private readonly Box background;
             private readonly TextFlowContainer text;
+            private readonly Container tooltip;
+            public ScreenshotManager ScreenshotManager
+            {
+                get;
+                set
+                {
+                    field = value;
+                    SetScreenshotManager(value);
+                }
+            }
             private bool instantMovement = true;
 
             private LocalisableString lastContent;
@@ -53,31 +79,38 @@ namespace AXPlayer.App.Graphics.Cursor
                 lastContent = content;
             }
 
-            public AdaptiveTooltip()
+            public AdaptiveTooltip(ScreenshotManager screenshotManager)
             {
+                ScreenshotManager = screenshotManager;
                 AutoSizeEasing = Easing.OutQuint;
 
                 Masking = true;
                 CornerRadius = 13;
                 Children = new Drawable[]
                 {
-                    background = new Box
+                    tooltip = new Container
                     {
-                        RelativeSizeAxes = Axes.Both,
-                    },
-                    text = new TextFlowContainer(f =>
-                    {
-                        f.Font = AXPlayerApp.DefaultFont;
-                    })
-                    {
-                        Margin = new MarginPadding(5),
-                        Padding = new MarginPadding()
-                        {
-                            Horizontal = 5,
-                        },
                         AutoSizeAxes = Axes.Both,
-                        MaximumSize = new Vector2(max_width, float.PositiveInfinity),
-                    }
+                        Children = new Drawable[] {
+                            background = new Box
+                            {
+                                RelativeSizeAxes = Axes.Both,
+                            },
+                            text = new TextFlowContainer(f =>
+                            {
+                                f.Font = AXPlayerApp.DefaultFont;
+                            })
+                            {
+                                Margin = new MarginPadding(5),
+                                Padding = new MarginPadding()
+                                {
+                                    Horizontal = 5,
+                                },
+                                AutoSizeAxes = Axes.Both,
+                                MaximumSize = new Vector2(max_width, float.PositiveInfinity),
+                            }
+                        }
+                    },
                 };
             }
 
@@ -86,6 +119,24 @@ namespace AXPlayer.App.Graphics.Cursor
             {
                 background.Colour = overlayColourProvider.Background3;
                 text.Colour = overlayColourProvider.Content2;
+
+                screenshotCursorVisibility.BindValueChanged(cursor =>
+                {
+                    Schedule(() =>
+                    {
+                        if (cursor.NewValue)
+                            tooltip.Show();
+                        else
+                            tooltip.Hide();
+                    });
+                }, true);
+            }
+
+            public void SetScreenshotManager(ScreenshotManager screenshotManager)
+            {
+                Logger.Log($"[AdaptiveTooltipContainer] screenshotManager binded to {ScreenshotManager}");
+                if (screenshotManager != null)
+                    screenshotCursorVisibility.BindTo(screenshotManager.CursorVisibility);
             }
 
             protected override void PopIn()
