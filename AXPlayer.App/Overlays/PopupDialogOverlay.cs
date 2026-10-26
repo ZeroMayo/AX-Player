@@ -73,7 +73,7 @@ namespace AXPlayer.App.Overlays
             Add(overlayFadeContainer = new OverlayFadeContainer
             {
                 RelativeSizeAxes = Axes.Both,
-                ClickAction = _ => HideOverlay(),
+                ClickAction = _ => HideDialog(),
                 Child = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -138,7 +138,7 @@ namespace AXPlayer.App.Overlays
                                         Margin = new MarginPadding() { Top = 4, Horizontal = 4 },
                                         Action = () =>
                                         {
-                                            HideOverlay();
+                                            HideDialog();
                                         }
                                     },
                                     acceptButton = new RoundedButton
@@ -151,7 +151,7 @@ namespace AXPlayer.App.Overlays
                                         Margin = new MarginPadding() { Top = 4, Horizontal = 4 },
                                         Action = () =>
                                         {
-                                            HideOverlay();
+                                            HideDialog();
                                         }
                                     },
                                 }
@@ -225,7 +225,7 @@ namespace AXPlayer.App.Overlays
                 {
                     if (IsOpened.Value)
                     {
-                        HideOverlay();
+                        HideDialog();
                         okPressedAction?.Invoke();
                     }
                 };
@@ -234,7 +234,7 @@ namespace AXPlayer.App.Overlays
                 {
                     if (IsOpened.Value)
                     {
-                        HideOverlay();
+                        HideDialog();
                         cancelPressedAction?.Invoke();
                     }
                 };
@@ -243,14 +243,14 @@ namespace AXPlayer.App.Overlays
                 {
                     if (IsOpened.Value)
                     {
-                        HideOverlay();
+                        HideDialog();
                         cancelPressedAction?.Invoke();
                     }
                 };
             }
         }
 
-        private void HideOverlay()
+        public void HideDialog()
         {
             if (IsOpened.Value == true)
             {
