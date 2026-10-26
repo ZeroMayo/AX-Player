@@ -6,7 +6,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Threading.Tasks;
@@ -20,7 +19,6 @@ using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Graphics.UserInterfaceV3;
 using AXPlayer.App.Input.Binding;
 using AXPlayer.App.Localisation;
-using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Utils;
 using FFmpeg.AutoGen;
 using osu.Framework;
@@ -1022,6 +1020,12 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius),
                                                             KeyboardStep = 1,
                                                             LabelFormat = value => $"{value}px"
+                                                        }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.ClosedCaptionSmoothAnimation,
+                                                            Icon = FontAwesome.Solid.ClosedCaptioning,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation),
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {

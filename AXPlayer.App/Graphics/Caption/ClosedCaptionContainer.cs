@@ -105,7 +105,7 @@ namespace AXPlayer.App.Graphics.Caption
                 : Srv3CaptionTrack.Parse(srv3Xml);
         }
 
-        private Bindable<bool> controlsVisibleState = null!;
+        private Bindable<bool> controlsVisibleState = null!, smoothCaptionAnimation = null!;
         private Action<SpriteText> textCreationParameters;
         private Action<SpriteText> shadowOptions;
         private Bindable<float> captionBGOpacity;
@@ -122,6 +122,7 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGOpacity = config.GetBindable<float>(AXPlayerSetting.CaptionBGOpacity);
             captionBGColor = config.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor);
             captionBGRadius = config.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius);
+            smoothCaptionAnimation = config.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation);
 
             Add(captionContainer = new Container
             {
@@ -174,6 +175,17 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGRadius.BindValueChanged(corner =>
             {
                 captionContainer.CornerRadius = new CornersInfo(corner.NewValue);
+            }, true);
+
+            smoothCaptionAnimation.BindValueChanged(enabled =>
+            {
+                if (enabled.NewValue)
+                {
+                    captionContainer.AutoSizeDuration = 350;
+                } else
+                {
+                    captionContainer.AutoSizeDuration = 0;
+                }
             }, true);
 
             captionFont.BindValueChanged(v =>
@@ -250,7 +262,7 @@ namespace AXPlayer.App.Graphics.Caption
 
         public void UpdateControlsVisibleState(bool state)
         {
-            this.TransformBindableTo(bottomMargin, state ? 55 : 0, 500, state ? Easing.OutQuint : Easing.InOutCubic);
+            this.TransformBindableTo(bottomMargin, state ? 55 : 0, smoothCaptionAnimation.Value ? 500 : 0, state ? Easing.OutQuint : Easing.InOutCubic);
         }
 
         protected override void Update()
@@ -278,11 +290,18 @@ namespace AXPlayer.App.Graphics.Caption
                     if (cue != null)
                     {
                         renderSrv3Cue(cue);
-                        captionContainer.FadeIn(150, Easing.OutQuart);
+
+                        if (smoothCaptionAnimation.Value)
+                            captionContainer.FadeIn(150, Easing.OutQuart);
+                        else
+                            captionContainer.FadeIn();
                     }
                     else
                     {
-                        captionContainer.FadeOut(150, Easing.OutQuart);
+                        if (smoothCaptionAnimation.Value)
+                            captionContainer.FadeOut(150, Easing.OutQuart);
+                        else
+                            captionContainer.FadeOut();
                     }
 
                     return;
@@ -308,17 +327,27 @@ namespace AXPlayer.App.Graphics.Caption
                             textCreationParameters?.Invoke(text);
                             shadowOptions?.Invoke(text);
                         });
-                        captionContainer.FadeIn(150, Easing.OutQuart);
+
+                        if (smoothCaptionAnimation.Value)
+                            captionContainer.FadeIn(150, Easing.OutQuart);
+                        else
+                            captionContainer.FadeIn();
                     }
                     else
                     {
-                        captionContainer.FadeOut(150, Easing.OutQuart);
+                        if (smoothCaptionAnimation.Value)
+                            captionContainer.FadeOut(150, Easing.OutQuart);
+                        else
+                            captionContainer.FadeOut();
                     }
                 }
             }
             catch
             {
-                captionContainer.FadeOut(150, Easing.OutQuart);
+                if (smoothCaptionAnimation.Value)
+                    captionContainer.FadeOut(150, Easing.OutQuart);
+                else
+                    captionContainer.FadeOut();
             }
         }
 

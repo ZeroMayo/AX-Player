@@ -97,6 +97,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.WavySeekBar, true);
 
             SetDefault(AXPlayerSetting.Version, string.Empty);
+            SetDefault(AXPlayerSetting.SmoothCaptionAnimation, true);
         }
 
         public AXPlayerConfigManager(Storage storage, IDictionary<AXPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
@@ -188,5 +189,6 @@ namespace AXPlayer.App.Config
         PlayerControllerFadeStyle,
         WavySeekBar,
         Version,
+        SmoothCaptionAnimation,
     }
 }

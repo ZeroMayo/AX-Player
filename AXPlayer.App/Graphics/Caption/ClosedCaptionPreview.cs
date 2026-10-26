@@ -27,6 +27,7 @@ namespace AXPlayer.App.Graphics.Caption
         private Action<SpriteText> textCreationParameters;
         private Action<SpriteText> shadowOptions;
         private Bindable<int> captionBGRadius;
+        private Bindable<bool> smoothCaptionAnimation;
 
         [BackgroundDependencyLoader]
         private void load(AXPlayerConfigManager config, SessionStatics sessionStatics, TextureStore textureStore)
@@ -35,6 +36,7 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGOpacity = config.GetBindable<float>(AXPlayerSetting.CaptionBGOpacity);
             captionBGColor = config.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor);
             captionBGRadius = config.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius);
+            smoothCaptionAnimation = config.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation);
 
             captionContainer = new Container
             {
@@ -107,6 +109,18 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGColor.BindValueChanged(colour =>
             {
                 bg.Colour = colour.NewValue;
+            }, true);
+
+            smoothCaptionAnimation.BindValueChanged(enabled =>
+            {
+                if (enabled.NewValue)
+                {
+                    captionContainer.AutoSizeDuration = 350;
+                }
+                else
+                {
+                    captionContainer.AutoSizeDuration = 0;
+                }
             }, true);
 
             captionFont.BindValueChanged(v =>
