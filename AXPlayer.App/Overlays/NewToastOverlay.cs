@@ -32,7 +32,7 @@ namespace AXPlayer.App.Overlays
             {
                 Width = 250,
                 AutoSizeAxes = Axes.Y,
-                Origin = Anchor.Centre,
+                Origin = Anchor.BottomCentre,
                 Anchor = Anchor.BottomCentre,
                 Margin = new MarginPadding(32),
                 Masking = true,

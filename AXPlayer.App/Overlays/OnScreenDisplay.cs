@@ -27,9 +27,6 @@ namespace AXPlayer.App.Overlays
     {
         private readonly BufferedContainer box;
 
-        private const float height = 65;
-
-        private Bindable<bool> controlsVisibleState = null!;
         private Bindable<bool> videoPlaying = null!;
 
         public OnScreenDisplay()
@@ -44,7 +41,7 @@ namespace AXPlayer.App.Overlays
                 box = new BufferedContainer
                 {
                     AutoSizeAxes = Axes.Both,
-                    Origin = Anchor.Centre,
+                    Origin = Anchor.BottomCentre,
                     Anchor = Anchor.BottomCentre,
                     Margin = new MarginPadding(32),
                     Masking = true,
@@ -59,7 +56,6 @@ namespace AXPlayer.App.Overlays
         {
             box.ScaleTo(0.8f);
             box.FadeOut();
-            controlsVisibleState = sessionStatics.GetBindable<bool>(Static.IsControlVisible);
             isAnyOverlayOpen = sessionStatics.GetBindable<bool>(Static.IsAnyOverlayOpen);
             videoPlaying = sessionStatics.GetBindable<bool>(Static.IsVideoPlaying);
 
