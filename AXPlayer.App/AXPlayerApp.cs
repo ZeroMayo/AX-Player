@@ -83,7 +83,7 @@ namespace AXPlayer.App
         private PushNotificationOverlay notificationOverlay;
         private ScreenshotManager screenshotManager;
 
-        private Online.DiscordRPC discord_rpc;
+        private Online.DiscordRPCClient discord_rpc;
 
         private VolumeOverlay volume;
 
@@ -127,6 +127,8 @@ namespace AXPlayer.App
 
         private RestartDialogOverlay restartDialogOverlay;
         private PopupDialogOverlay popupDialogOverlay;
+        private NewToastOverlay newToastOverlay;
+        private LoadingOverlay loadingOverlay;
 
         private Bindable<CloseButtonAction> closeButtonAction;
 
@@ -189,10 +191,12 @@ namespace AXPlayer.App
             loadComponentSingleFile(volume = new VolumeOverlay(), leftFloatingOverlayContent.Add, true);
 
             onScreenDisplay = new OnScreenDisplay();
+            loadingOverlay = new LoadingOverlay();
             screenshotManager = new ScreenshotManager();
             notificationOverlay = new PushNotificationOverlay();
             restartDialogOverlay = new RestartDialogOverlay();
             popupDialogOverlay = new PopupDialogOverlay();
+            newToastOverlay = new NewToastOverlay();
 
             content.ScreenshotManager = screenshotManager;
 
@@ -200,15 +204,17 @@ namespace AXPlayer.App
             onScreenDisplay.BeginTracking(this, LocalConfig);
             onScreenDisplay.BeginTracking(this, AudioEffectsConfig);
 
+            loadComponentSingleFile(loadingOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(onScreenDisplay, topMostOverlayContent.Add, true);
             loadComponentSingleFile(notificationOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(popupDialogOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(restartDialogOverlay, topMostOverlayContent.Add, true);
+            loadComponentSingleFile(newToastOverlay, topMostOverlayContent.Add, true);
 
             loadComponentSingleFile(screenshotManager, Add, true);
 
             if (RuntimeInfo.IsDesktop)
-                loadComponentSingleFile(discord_rpc = new Online.DiscordRPC(), Add, true);
+                loadComponentSingleFile(discord_rpc = new Online.DiscordRPCClient(), Add, true);
 
             loadComponentSingleFile(fpsCounter = new FPSCounter
             {

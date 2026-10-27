@@ -223,7 +223,7 @@ namespace AXPlayer.App.Screens
 
 #nullable enable
         [Resolved(canBeNull: true)]
-        private Online.DiscordRPC? discordRPC { get; set; }
+        private Online.DiscordRPCClient? discordRPC { get; set; }
 #nullable disable
 
         //effects
@@ -267,6 +267,9 @@ namespace AXPlayer.App.Screens
 
         [Resolved]
         private PushNotificationOverlay notificationOverlay { get; set; }
+
+        [Resolved]
+        private NewToastOverlay newToastOverlay { get; set; }
 
     }
 }

@@ -8,16 +8,18 @@ using osu.Framework.Logging;
 
 namespace AXPlayer.App.Online
 {
-    public partial class DiscordRPC : CompositeDrawable
+    public partial class DiscordRPCClient : CompositeDrawable
     {
         public const string DISCORD_APP_ID = "1474920449442840586";
-        public static DiscordRpcClient client;
+        private static DiscordRpcClient client;
 
         [BackgroundDependencyLoader]
         private void load()
         {
             // Create the client and setup some basic events
             client = new DiscordRpcClient(DISCORD_APP_ID, -1);
+
+            client.Logger = new DiscordRPCLogger();
 
             client.OnReady += (sender, e) =>
             {

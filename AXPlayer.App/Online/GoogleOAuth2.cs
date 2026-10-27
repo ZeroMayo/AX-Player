@@ -119,7 +119,7 @@ namespace AXPlayer.App.Online
         {
             UserCredential credential;
 
-            string credPath = (isTestClient_static || DebugUtils.IsDebugBuild) ? @"NekoPlayer-development/OAuth2" : @"NekoPlayer/OAuth2";
+            string credPath = (isTestClient_static || DebugUtils.IsDebugBuild) ? @"AXPlayer-development/OAuth2" : @"AXPlayer/OAuth2";
             credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 getAuthConfig(),
                 new[] { Google.Apis.YouTube.v3.YouTubeService.Scope.YoutubeForceSsl },

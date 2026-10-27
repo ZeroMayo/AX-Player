@@ -91,6 +91,7 @@ namespace AXPlayer.App.Overlays
                 Anchor = Anchor.Centre,
                 Masking = true,
                 CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS),
+                BlurSigma = new Vector2(15),
                 Children = new Drawable[]
                 {
                     new OverlayBackground

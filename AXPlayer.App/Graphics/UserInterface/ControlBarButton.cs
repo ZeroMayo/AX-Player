@@ -40,7 +40,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
                 if (!enabledValue)
                 {
-                    Background.FadeColour(value);
+                    Background.FadeColour(value, 500);
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 accentColor = value;
 
                 if (enabledValue) {
-                    Background.FadeColour(value);
+                    Background.FadeColour(value, 500);
                 }
             }
         }

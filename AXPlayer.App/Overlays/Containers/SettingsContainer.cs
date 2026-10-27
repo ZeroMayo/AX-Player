@@ -1670,6 +1670,6 @@ namespace AXPlayer.App.Overlays.Containers
         private SettingsItemV2 systemMuteSwitchBase;
 
         [Resolved(canBeNull: true)]
-        private Online.DiscordRPC? discordRPC { get; set; }
+        private Online.DiscordRPCClient? discordRPC { get; set; }
     }
 }

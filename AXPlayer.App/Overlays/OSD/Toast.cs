@@ -1,14 +1,14 @@
 ﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using AXPlayer.App.Graphics;
+using AXPlayer.App.Graphics.UserInterface;
+using osu.Framework.Allocation;
 using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
-using AXPlayer.App.Graphics.Sprites;
-using AXPlayer.App.Graphics;
-using osu.Framework.Allocation;
 
 namespace AXPlayer.App.Overlays.OSD
 {
@@ -19,19 +19,18 @@ namespace AXPlayer.App.Overlays.OSD
         /// </summary>
         public LocalisableString ExtraText
         {
-            get => extraText.Text;
-            set => extraText.Text = value.ToUpper();
+            set => ExtraSpriteText.Text = value.ToUpper();
         }
 
-        private const int toast_minimum_width = 600;
+        private const int toast_minimum_height = 100;
 
         private readonly Container content;
         private readonly Box background;
 
         protected override Container<Drawable> Content => content;
 
-        protected readonly ProjectYomiSpriteText ValueSpriteText;
-        private readonly ProjectYomiSpriteText extraText, descriptionText;
+        protected readonly ProjectYomiTextFlowContainer ExtraSpriteText;
+        private readonly ProjectYomiTextFlowContainer valueSpriteText, descriptionText;
 
         [Resolved]
         private OverlayColourProvider overlayColourProvider { get; set; } = null!;
@@ -42,8 +41,7 @@ namespace AXPlayer.App.Overlays.OSD
             Origin = Anchor.Centre;
 
             // A toast's height is decided (and transformed) by the containing OnScreenDisplay.
-            RelativeSizeAxes = Axes.Y;
-            AutoSizeAxes = Axes.X;
+            AutoSizeAxes = Axes.Both;
 
             InternalChildren = new Drawable[]
             {
@@ -51,12 +49,13 @@ namespace AXPlayer.App.Overlays.OSD
                 {
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
-                    Width = toast_minimum_width
+                    Height = toast_minimum_height,
+                    Width = 250,
                 },
                 background = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Alpha = 1f
+                    Alpha = 0.8f
                 },
                 content = new Container
                 {
@@ -64,42 +63,51 @@ namespace AXPlayer.App.Overlays.OSD
                     Origin = Anchor.Centre,
                     RelativeSizeAxes = Axes.Both,
                 },
-                descriptionText = new ProjectYomiSpriteText
+                new FillFlowContainer
                 {
-                    Padding = new MarginPadding { Horizontal = 22, Vertical = 15 },
-                    Name = "Description",
-                    Font = AXPlayerApp.DefaultFont.With(size: 20, weight: "ExtraBold"),
-                    Anchor = Anchor.TopLeft,
-                    Origin = Anchor.TopLeft,
-                    Text = description
-                },
-                ValueSpriteText = new ProjectYomiSpriteText
-                {
-                    Font = AXPlayerApp.DefaultFont.With(size: 24, weight: "Light"),
-                    Padding = new MarginPadding { Horizontal = 22, Vertical = 15 },
-                    Name = "Value",
-                    Anchor = Anchor.CentreRight,
-                    Origin = Anchor.CentreRight,
-                    Text = value
-                },
-                extraText = new ProjectYomiSpriteText
-                {
-                    Anchor = Anchor.BottomLeft,
-                    Origin = Anchor.BottomLeft,
-                    Name = "Extra Text",
-                    Margin = new MarginPadding { Bottom = 15, Horizontal = 22 },
-                    Font = AXPlayerApp.DefaultFont.With(size: 12, weight: "Bold"),
-                },
+                    AutoSizeAxes = Axes.Both,
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.TopCentre,
+                    Direction = FillDirection.Vertical,
+                    Spacing = new osuTK.Vector2(0, 8),
+                    Padding = new MarginPadding(16),
+                    Children = new Drawable[]
+                    {
+                        descriptionText = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 20, weight: "ExtraBold"))
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Name = "Description",
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Text = description
+                        },
+                        valueSpriteText = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 24, weight: "Light"))
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Name = "Value",
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Text = value
+                        },
+                        ExtraSpriteText = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 12, weight: "Bold"))
+                        {
+                            AutoSizeAxes = Axes.Both,
+                            Anchor = Anchor.TopCentre,
+                            Origin = Anchor.TopCentre,
+                            Name = "Extra Text",
+                        },
+                    }
+                }
             };
         }
 
         [BackgroundDependencyLoader]
         private void load()
         {
-            descriptionText.Origin = descriptionText.Anchor = (string.IsNullOrEmpty(extraText.Text.ToString())) ? Anchor.CentreLeft : Anchor.TopLeft;
-            descriptionText.Colour = ValueSpriteText.Colour = overlayColourProvider.Content2;
-            background.Colour = overlayColourProvider.Background4;
-            extraText.Colour = overlayColourProvider.Background1;
+            //descriptionText.Origin = descriptionText.Anchor = (string.IsNullOrEmpty(extraText.Text.ToString())) ? Anchor.CentreLeft : Anchor.TopLeft;
+            descriptionText.Colour = valueSpriteText.Colour = overlayColourProvider.Content2;
+            background.Colour = overlayColourProvider.Background5;
+            ExtraSpriteText.Colour = overlayColourProvider.Background1;
         }
     }
 }

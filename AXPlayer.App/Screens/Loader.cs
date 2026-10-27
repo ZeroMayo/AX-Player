@@ -12,6 +12,7 @@ using osu.Framework.Graphics.Shaders;
 using osu.Framework.Screens;
 using osu.Framework.Threading;
 using AXPlayer.App.Graphics.UserInterface;
+using AXPlayer.App.Overlays;
 
 namespace AXPlayer.App.Screens
 {
@@ -28,6 +29,9 @@ namespace AXPlayer.App.Screens
         private AXPlayerLoadingSpinner spinner;
         private ScheduledDelegate spinnerShow;
 
+        [Resolved]
+        private LoadingOverlay loadingOverlay { get; set; }
+
         protected virtual AXPlayerScreen CreateLoadableScreen() => new MainAppView();
 
         protected virtual ShaderPrecompiler CreateShaderPrecompiler() => new ShaderPrecompiler();
@@ -36,15 +40,7 @@ namespace AXPlayer.App.Screens
         {
             base.OnEntering(e);
 
-            LoadComponentAsync(spinner = new AXPlayerLoadingSpinner(true, true)
-            {
-                Anchor = Anchor.Centre,
-                Origin = Anchor.Centre,
-            }, _ =>
-            {
-                AddInternal(spinner);
-                spinnerShow = Scheduler.AddDelayed(spinner.Show, 200);
-            });
+            spinnerShow = Scheduler.AddDelayed(loadingOverlay.Show, 200);
 
             LoadComponentAsync(precompiler = CreateShaderPrecompiler(), AddInternal);
 
@@ -63,9 +59,9 @@ namespace AXPlayer.App.Screens
 
             spinnerShow?.Cancel();
 
-            if (spinner.State.Value == Visibility.Visible)
+            if (loadingOverlay.State.Value == Visibility.Visible)
             {
-                spinner.Hide();
+                loadingOverlay.Hide();
                 this.Push(loadableScreen);
             }
             else

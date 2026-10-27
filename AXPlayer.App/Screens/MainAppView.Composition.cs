@@ -57,6 +57,7 @@ namespace AXPlayer.App.Screens
         [BackgroundDependencyLoader]
         private void load(ISampleStore sampleStore, FrameworkConfigManager config, AXPlayerConfigManager appConfig, GameHost host, Storage storage, OverlayColourProvider overlayColourProvider, TextureStore textures, FrameworkDebugConfigManager debugConfig)
         {
+            AlwaysPresent = true;
             speedTextRolling = new Bindable<double>(1);
             volumeTextRolling = new Bindable<double>(1);
             appliedEffects.Value = new List<InternalShader>();
@@ -159,6 +160,50 @@ namespace AXPlayer.App.Screens
             ui_font.BindValueChanged(_ =>
             {
                 restartDialogOverlay.OpenDialog();
+            });
+
+            LoadComponentAsync(settingsContainer = new SettingsContainer
+            {
+                OAuthSignInAction = () =>
+                {
+                    if (!googleOAuth2.SignedIn.Value)
+                    {
+                        Schedule(() =>
+                        {
+                            popupDialogOverlay.ShowDialog(
+                                    AXPlayerStrings.GoogleAccount,
+                                    AXPlayerStrings.WaitingForAuthentication,
+                                    AXPlayerStrings.Yes,
+                                    AXPlayerStrings.Cancel,
+                                    showActionButtons: false);
+
+                        });
+                        Task.Run(() => googleOAuth2.SignIn());
+                    }
+                    else
+                    {
+                        hideOverlays();
+                        showOverlayContainer(myChannelDialog);
+                    }
+                },
+                CheckUpdateAction = () =>
+                {
+                    if (game.UpdateManager is NoActionUpdateManager)
+                    {
+                        host.OpenUrlExternally(@"https://github.com/ZeroMayo/AX-Player/releases");
+                    }
+                    else
+                    {
+                        if (game.RestartRequired.Value != true)
+                            checkForUpdates().FireAndForget();
+                        else
+                            game.RestartAction.Invoke();
+                    }
+                },
+                CloseOverlayAction = () =>
+                {
+                    hideOverlayContainer(settingsContainer);
+                }
             });
 
             #region The UI Components
@@ -946,49 +991,7 @@ namespace AXPlayer.App.Screens
                                 },
                             }
                         },
-                        settingsContainer = new SettingsContainer
-                        {
-                           OAuthSignInAction = () =>
-                           {
-                                if (!googleOAuth2.SignedIn.Value)
-                                {
-                                   Schedule(() =>
-                                    {
-                                        popupDialogOverlay.ShowDialog(
-                                                AXPlayerStrings.GoogleAccount,
-                                                AXPlayerStrings.WaitingForAuthentication,
-                                                AXPlayerStrings.Yes,
-                                                AXPlayerStrings.Cancel,
-                                                showActionButtons: false);
-
-                                    });
-                                    Task.Run(() => googleOAuth2.SignIn());
-                                }
-                                else
-                                {
-                                    hideOverlays();
-                                    showOverlayContainer(myChannelDialog);
-                                }
-                           },
-                           CheckUpdateAction = () =>
-                           {
-                                if (game.UpdateManager is NoActionUpdateManager)
-                                {
-                                    host.OpenUrlExternally(@"https://github.com/ZeroMayo/AX-Player/releases");
-                                }
-                                else
-                                {
-                                    if (game.RestartRequired.Value != true)
-                                        checkForUpdates().FireAndForget();
-                                    else
-                                        game.RestartAction.Invoke();
-                                }
-                           },
-                           CloseOverlayAction = () =>
-                           {
-                               hideOverlayContainer(settingsContainer);
-                           }
-                        },
+                        settingsContainer,
                         videoDescriptionContainer = new BottomOverlayContainer
                         {
                             Size = new Vector2(0.7f),
@@ -1517,7 +1520,6 @@ namespace AXPlayer.App.Screens
                                                 if (string.IsNullOrEmpty(commentTextBox.Text))
                                                     return;
 
-                                                //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.CommentAdded, FontAwesome.Regular.Comment);
                                                 api.SendComment(videoId, commentTextBox.Text);
 
                                                 Scheduler.AddDelayed(() => updateComments(videoId), 2000);
@@ -1525,7 +1527,8 @@ namespace AXPlayer.App.Screens
                                                 //Schedule(() => onScreenDisplay.Display(toast));
                                                 Schedule(() =>
                                                 {
-                                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                                                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                                                    newToastOverlay.ShowToast(AXPlayerStrings.CommentAdded);
                                                 });
 
                                                 commentTextBox.Text = string.Empty;
@@ -2981,9 +2984,13 @@ namespace AXPlayer.App.Screens
                                                                 {
                                                                     clipboard.SetText(videoUrl);
 
+                                                                    /*
                                                                     Toast toast = new Toast(AXPlayerStrings.General, AXPlayerStrings.CopiedToClipboard);
 
                                                                     onScreenDisplay.Display(toast);
+                                                                    */
+
+                                                                    newToastOverlay.ShowToast(AXPlayerStrings.CopiedToClipboard);
                                                                     hideOverlayContainer(menuOverlay);
                                                                 }
                                                             },
@@ -3343,25 +3350,6 @@ namespace AXPlayer.App.Screens
 
             thumbnailContainer.BlurTo(Vector2.Divide(new Vector2(10, 10), 1));
 
-            RegisterOverlayContainer(loadVideoContainer);
-            overlayFadeContainer.Hide();
-            RegisterOverlayContainer(settingsContainer);
-            RegisterOverlayContainer(videoDescriptionContainer);
-            RegisterOverlayContainer(commentsContainer);
-            RegisterOverlayContainer(searchContainer);
-            RegisterOverlayContainer(reportAbuseOverlay);
-            RegisterOverlayContainer(playlistOverlay);
-            RegisterOverlayContainer(loadPlaylistContainer);
-            RegisterOverlayContainer(audioEffectsOverlay);
-            RegisterOverlayContainer(unsubscribeDialog);
-            RegisterOverlayContainer(videoSaveLocationOverlay);
-            RegisterOverlayContainer(addPlaylistOverlay);
-            RegisterOverlayContainer(menuOverlay);
-            RegisterOverlayContainer(myChannelDialog);
-            RegisterOverlayContainer(myPlaylistsOverlay);
-            RegisterOverlayContainer(exitOptions);
-            RegisterOverlayContainer(editPlaylistOverlay);
-
             DistortionVolume.BindValueChanged(value =>
             {
                 if (value.NewValue > 0.5f)
@@ -3634,7 +3622,7 @@ namespace AXPlayer.App.Screens
                             {
                                 Schedule(() =>
                                 {
-                                    ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, lang.NewValue.Name, FontAwesome.Solid.ClosedCaptioning);
+                                    ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, lang.NewValue.Name);
 
                                     onScreenDisplay.Display(toast);
                                 });
@@ -3692,7 +3680,7 @@ namespace AXPlayer.App.Screens
                                 {
                                     try
                                     {
-                                        ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                        ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                         onScreenDisplay.Display(toast);
                                     }
                                     catch (Exception e)
@@ -3754,7 +3742,7 @@ namespace AXPlayer.App.Screens
                                 {
                                     try
                                     {
-                                        ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                        ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                         onScreenDisplay.Display(toast);
                                     }
                                     catch (Exception e)
@@ -3794,6 +3782,11 @@ namespace AXPlayer.App.Screens
                     showControls();
                 }
             }, true);
+
+            videoPlaying.BindValueChanged(value =>
+            {
+                updatePresence(discordRichPresence.Value);
+            });
 
             playbackSpeed.BindValueChanged(speed =>
             {

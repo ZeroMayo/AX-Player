@@ -44,7 +44,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 bgColor = value;
 
-                bg.FadeColour(value);
+                bg.FadeColour(value, 500);
             }
         }
 
@@ -57,7 +57,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 accentColor = value;
 
-                spinner.FadeColour(value);
+                spinner.FadeColour(value, 500);
             }
         }
 

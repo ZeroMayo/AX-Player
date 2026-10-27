@@ -45,18 +45,18 @@ namespace AXPlayer.App.Overlays.OSD
             {
                 new Container
                 {
-                    Anchor = Anchor.BottomRight,
-                    Origin = Anchor.BottomRight,
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
                     Margin = new MarginPadding { Bottom = lights_bottom_margin },
                     Children = new Drawable[]
                     {
                         optionLights = new FillFlowContainer<OptionLight>
                         {
-                            Margin = new MarginPadding { Bottom = 5, Right = 22 },
+                            Margin = new MarginPadding { Bottom = 5 },
                             Spacing = new Vector2(5, 0),
                             Direction = FillDirection.Horizontal,
-                            Anchor = Anchor.CentreRight,
-                            Origin = Anchor.CentreRight,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
                             AutoSizeAxes = Axes.Both
                         },
                     }
@@ -77,7 +77,7 @@ namespace AXPlayer.App.Overlays.OSD
                     break;
             }
 
-            ValueSpriteText.Padding = optionCount > 0 ? new MarginPadding { Horizontal = 22, Bottom = 16 } : new MarginPadding { Horizontal = 22, Vertical = 15 };
+            ExtraSpriteText.Padding = optionCount > 0 ? new MarginPadding { Bottom = 16 } : new MarginPadding();
 
             for (int i = 0; i < optionCount; i++)
                 optionLights.Add(new OptionLight { Glowing = i == selectedOption });
@@ -178,7 +178,7 @@ namespace AXPlayer.App.Overlays.OSD
                 fill.Colour = idleColour = overlayColourProvider.Background1;
                 glowingColour = overlayColourProvider.Content2;
 
-                Size = new Vector2(10, 10);
+                Size = new Vector2(30, 10);
 
                 Masking = true;
 

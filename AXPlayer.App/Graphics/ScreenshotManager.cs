@@ -66,6 +66,9 @@ namespace AXPlayer.App.Graphics
         [Resolved]
         private RestartDialogOverlay restartDialogOverlay { get; set; } = null!;
 
+        [Resolved]
+        private NewToastOverlay newToastOverlay { get; set; } = null!;
+
         private Storage storage = null!;
 
         private Sample? shutter;
@@ -117,6 +120,7 @@ namespace AXPlayer.App.Graphics
                 if (!captureMenuCursor)
                 {
                     cursorVisibility.Value = false;
+                    Schedule(() => newToastOverlay.Hide());
                     Schedule(() => onScreenDisplay.Hide());
                     Schedule(() => popupDialogOverlay.Hide());
                     Schedule(() => restartDialogOverlay.Hide());
@@ -233,6 +237,7 @@ namespace AXPlayer.App.Graphics
                 if (Interlocked.Decrement(ref screenShotTasks) == 0)
                 {
                     cursorVisibility.Value = true;
+                    Schedule(() => newToastOverlay.Show());
                     Schedule(() => popupDialogOverlay.Show());
                     Schedule(() => restartDialogOverlay.Show());
                     Schedule(() => onScreenDisplay.Show());
@@ -249,13 +254,13 @@ namespace AXPlayer.App.Graphics
                 DateTime dt = DateTime.Now;
                 string fileExt = format.ToString().ToLowerInvariant();
 
-                string withoutIndex = $"NekoPlayer_{dt:yyyy-MM-dd_HH-mm-ss}.{fileExt}";
+                string withoutIndex = $"AXPlayer_{dt:yyyy-MM-dd_HH-mm-ss}.{fileExt}";
                 if (!storage.Exists(withoutIndex))
                     return (withoutIndex, storage.GetStream(withoutIndex, FileAccess.Write, FileMode.Create));
 
                 for (ulong i = 1; i < ulong.MaxValue; i++)
                 {
-                    string indexedName = $"NekoPlayer_{dt:yyyy-MM-dd_HH-mm-ss}-{i}.{fileExt}";
+                    string indexedName = $"AXPlayer_{dt:yyyy-MM-dd_HH-mm-ss}-{i}.{fileExt}";
                     if (!storage.Exists(indexedName))
                         return (indexedName, storage.GetStream(indexedName, FileAccess.Write, FileMode.Create));
                 }

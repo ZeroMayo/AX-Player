@@ -3,14 +3,13 @@
 
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Localisation;
-using osu.Framework.Graphics.Sprites;
 
 namespace AXPlayer.App.Overlays.OSD
 {
-    public partial class VideoDimChangeToast : ToastWithIcon
+    public partial class VideoDimChangeToast : Toast
     {
         public VideoDimChangeToast(double newValue)
-            : base(AXPlayerStrings.VideoDimLevel, newValue.ToStandardFormattedString(5, true), FontAwesome.Solid.Sun)
+            : base(AXPlayerStrings.VideoDimLevel, newValue.ToStandardFormattedString(5, true))
         {
         }
     }

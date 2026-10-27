@@ -33,6 +33,7 @@ using osuTK.Graphics;
 using YoutubeExplode.Converter;
 using YoutubeExplode.Videos.ClosedCaptions;
 using YoutubeExplode.Videos.Streams;
+using static AXPlayer.App.Graphics.Videos.YouTubeVideoPlayer.KeyBindingAnimations;
 using Language = AXPlayer.App.Localisation.Language;
 
 namespace AXPlayer.App.Screens
@@ -69,6 +70,11 @@ namespace AXPlayer.App.Screens
             {
                 setPlaybackSpeed(speed.NewValue);
             }, true);
+
+            currentVideoSource.OnSeekAction = () =>
+            {
+                updatePresence(discordRichPresence.Value);
+            };
 
             if (timestampInURL(videoUrl))
                 Schedule(() => seekTo(parseTimestampFromURL(videoUrl)));
@@ -214,7 +220,8 @@ namespace AXPlayer.App.Screens
                     {
                         Schedule(() =>
                         {
-                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, AXPlayerStrings.NoVideoIdError, AXPlayerStrings.General));
+                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, AXPlayerStrings.NoVideoIdError, AXPlayerStrings.General));
+                            newToastOverlay.ShowToast(AXPlayerStrings.NoVideoIdError);
                         });
                         /*
                         ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.NoVideoIdError, FontAwesome.Solid.MinusCircle);
@@ -702,7 +709,7 @@ namespace AXPlayer.App.Screens
 
                                                 try
                                                 {
-                                                    ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                                    ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                                     onScreenDisplay.Display(toast);
                                                 }
                                                 catch (Exception e)
@@ -1075,7 +1082,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 try
                                                 {
-                                                    ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                                    ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                                     onScreenDisplay.Display(toast);
                                                 }
                                                 catch (Exception e)

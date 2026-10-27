@@ -675,73 +675,73 @@ namespace AXPlayer.App.Screens
 
                     videoLoadingProgressSpinner.AccentColor = accentColor;
                     videoLoadingProgressSpinner.BackgroundColour = bgColor;
-                    videoLoadingProgressBaseBG.Colour = bgColor;
+                    videoLoadingProgressBaseBG.FadeColour(bgColor, 500);
 
                     prevVideoButton.AccentColor = accentColor;
                     prevVideoButton.BackgroundColour = bgColor;
-                    prevVideoButton.IconObject.FadeColour(accentColor);
+                    prevVideoButton.IconObject.FadeColour(accentColor, 500);
 
                     nextVideoButton.AccentColor = accentColor;
                     nextVideoButton.BackgroundColour = bgColor;
-                    nextVideoButton.IconObject.FadeColour(accentColor);
+                    nextVideoButton.IconObject.FadeColour(accentColor, 500);
 
                     playPause.AccentColor = accentColor;
                     playPause.BackgroundColour = bgColor;
 
                     if (currentVideoSource != null)
-                        playPause.IconObject.FadeColour(currentVideoSource.IsPlaying() ? bgColor : accentColor);
+                        playPause.IconObject.FadeColour(currentVideoSource.IsPlaying() ? bgColor : accentColor, 500);
                     else
-                        playPause.IconObject.FadeColour(accentColor);
+                        playPause.IconObject.FadeColour(accentColor, 500);
 
-                    speedBarBG.Colour = bgColor;
-                    speedBarIcon.Colour = accentColor;
-                    speedBarExpandIcon.Colour = accentColor;
+                    speedBarBG.FadeColour(bgColor, 500);
+                    speedBarIcon.FadeColour(accentColor, 500);
+                    speedBarExpandIcon.FadeColour(accentColor, 500);
 
-                    repeatButton.IconObject.FadeColour(repeat.Value ? bgColor : accentColor);
+                    repeatButton.IconObject.FadeColour(repeat.Value ? bgColor : accentColor, 500);
                     repeatButton.AccentColor = accentColor;
                     repeatButton.BackgroundColour = bgColor;
 
-                    quickLikeButton.IconObject.FadeColour(currentVideoLikeOrDislike == VideosResource.RateRequest.RatingEnum.Like ? bgColor : accentColor, 250, Easing.OutQuint);
+                    quickLikeButton.IconObject.FadeColour(currentVideoLikeOrDislike == VideosResource.RateRequest.RatingEnum.Like ? bgColor : accentColor, 500, Easing.OutQuint);
                     quickLikeButton.AccentColor = accentColor;
                     quickLikeButton.BackgroundColour = bgColor;
-                    quickDislikeButton.IconObject.FadeColour(currentVideoLikeOrDislike == VideosResource.RateRequest.RatingEnum.Dislike ? bgColor : accentColor, 250, Easing.OutQuint);
+                    quickDislikeButton.IconObject.FadeColour(currentVideoLikeOrDislike == VideosResource.RateRequest.RatingEnum.Dislike ? bgColor : accentColor, 500, Easing.OutQuint);
                     quickDislikeButton.AccentColor = accentColor;
                     quickDislikeButton.BackgroundColour = bgColor;
 
-                    quickCommentOpenButton.IconObject.FadeColour(accentColor);
+                    quickCommentOpenButton.IconObject.FadeColour(accentColor, 500);
                     quickCommentOpenButton.AccentColor = accentColor;
                     quickCommentOpenButton.BackgroundColour = bgColor;
 
-                    videoSettingsButton.IconObject.FadeColour(accentColor);
+                    videoSettingsButton.IconObject.FadeColour(accentColor, 500);
                     videoSettingsButton.AccentColor = accentColor;
                     videoSettingsButton.BackgroundColour = bgColor;
 
-                    takeScreenshotButton.IconObject.FadeColour(accentColor);
+                    takeScreenshotButton.IconObject.FadeColour(accentColor, 500);
                     takeScreenshotButton.AccentColor = accentColor;
                     takeScreenshotButton.BackgroundColour = bgColor;
 
-                    playlistButton.IconObject.FadeColour(accentColor);
+                    playlistButton.IconObject.FadeColour(accentColor, 500);
                     playlistButton.AccentColor = accentColor;
                     playlistButton.BackgroundColour = bgColor;
 
-                    captionButton.IconObject.FadeColour(captionEnabled.Value ? bgColor : accentColor);
+                    captionButton.IconObject.FadeColour(captionEnabled.Value ? bgColor : accentColor, 500);
                     captionButton.AccentColor = accentColor;
                     captionButton.BackgroundColour = bgColor;
 
-                    pinButton.IconObject.FadeColour(alwaysShowControl.Value ? bgColor : accentColor);
+                    pinButton.IconObject.FadeColour(alwaysShowControl.Value ? bgColor : accentColor, 500);
                     pinButton.AccentColor = accentColor;
                     pinButton.BackgroundColour = bgColor;
 
-                    speedText.Colour = accentColor;
+                    speedText.FadeColour(accentColor, 500);
 
-                    volumeBarBG.Colour = bgColor;
-                    volumeIcon.Colour = accentColor;
-                    volumeBarExpandIcon.Colour = accentColor;
+                    volumeBarBG.FadeColour(bgColor, 500);
+                    volumeIcon.FadeColour(accentColor, 500);
+                    volumeBarExpandIcon.FadeColour(accentColor, 500);
 
-                    volumeText.Colour = accentColor;
+                    volumeText.FadeColour(accentColor, 500);
 
-                    timeBG.Colour = bgColor;
-                    timeText.Colour = accentColor;
+                    timeBG.FadeColour(bgColor, 500);
+                    timeText.FadeColour(accentColor, 500);
 
                     menuOverlayShow.BackgroundColour = bgColor;
                     menuOverlayShow.IconColour = accentColor;
@@ -875,7 +875,8 @@ namespace AXPlayer.App.Screens
                                     */
                                     Schedule(() =>
                                     {
-                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignOutAlt, Color4.Red, AXPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                        //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignOutAlt, Color4.Red, AXPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                        newToastOverlay.ShowToast(AXPlayerStrings.SubscriptionRemoved);
                                     });
                                     Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
                                 };
@@ -899,7 +900,8 @@ namespace AXPlayer.App.Screens
                                 */
                                 Schedule(() =>
                                 {
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignInAlt, Color4.Green, AXPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignInAlt, Color4.Green, AXPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                    newToastOverlay.ShowToast(AXPlayerStrings.SubscriptionAdded);
                                 });
                                 Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
                             }
@@ -913,7 +915,8 @@ namespace AXPlayer.App.Screens
 
                         Schedule(() =>
                         {
-                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, AXPlayerStrings.ReportSuccess, AXPlayerStrings.Report));
+                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, AXPlayerStrings.ReportSuccess, AXPlayerStrings.Report));
+                            newToastOverlay.ShowToast(AXPlayerStrings.ReportSuccess);
                         });
                         //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Report, NekoPlayerStrings.ReportSuccess, FontAwesome.Solid.CheckCircle);
                         api.ReportAbuse(videoId, reportReason.Current.Value.Id, (reportReason.Current.Value.ContainsSecondaryReasons ? reportSubReason.Current.Value.Id : null), (!string.IsNullOrEmpty(reportComment.Current.Value) ? reportComment.Current.Value : null));
@@ -940,7 +943,8 @@ namespace AXPlayer.App.Screens
                         //Schedule(() => onScreenDisplay.Display(toast));
                         Schedule(() =>
                         {
-                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                            newToastOverlay.ShowToast(AXPlayerStrings.CommentAdded);
                         });
 
                         commentTextBox.Text = string.Empty;

@@ -62,9 +62,9 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public void ApplyColours(VideoMetadataDisplayWithoutProfileColours colours)
         {
-            bgLayer.Colour = colours.BGColor;
-            videoName.Colour = colours.FGColor;
-            desc.Colour = colours.FGColor2;
+            bgLayer.FadeColour(colours.BGColor, 500);
+            videoName.FadeColour(colours.FGColor, 500);
+            desc.FadeColour(colours.FGColor2, 500);
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
