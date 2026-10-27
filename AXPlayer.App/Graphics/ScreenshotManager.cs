@@ -254,13 +254,13 @@ namespace AXPlayer.App.Graphics
                 DateTime dt = DateTime.Now;
                 string fileExt = format.ToString().ToLowerInvariant();
 
-                string withoutIndex = $"NekoPlayer_{dt:yyyy-MM-dd_HH-mm-ss}.{fileExt}";
+                string withoutIndex = $"AXPlayer_{dt:yyyy-MM-dd_HH-mm-ss}.{fileExt}";
                 if (!storage.Exists(withoutIndex))
                     return (withoutIndex, storage.GetStream(withoutIndex, FileAccess.Write, FileMode.Create));
 
                 for (ulong i = 1; i < ulong.MaxValue; i++)
                 {
-                    string indexedName = $"NekoPlayer_{dt:yyyy-MM-dd_HH-mm-ss}-{i}.{fileExt}";
+                    string indexedName = $"AXPlayer_{dt:yyyy-MM-dd_HH-mm-ss}-{i}.{fileExt}";
                     if (!storage.Exists(indexedName))
                         return (indexedName, storage.GetStream(indexedName, FileAccess.Write, FileMode.Create));
                 }

@@ -43,8 +43,7 @@ namespace AXPlayer.App.Overlays.OSD
             Origin = Anchor.Centre;
 
             // A toast's height is decided (and transformed) by the containing OnScreenDisplay.
-            RelativeSizeAxes = Axes.X;
-            AutoSizeAxes = Axes.Y;
+            AutoSizeAxes = Axes.Both;
 
             InternalChildren = new Drawable[]
             {
@@ -68,8 +67,7 @@ namespace AXPlayer.App.Overlays.OSD
                 },
                 new FillFlowContainer
                 {
-                    RelativeSizeAxes = Axes.X,
-                    AutoSizeAxes = Axes.Y,
+                    AutoSizeAxes = Axes.Both,
                     Anchor = Anchor.TopCentre,
                     Origin = Anchor.TopCentre,
                     Direction = FillDirection.Vertical,
