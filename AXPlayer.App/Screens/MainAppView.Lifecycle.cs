@@ -185,6 +185,7 @@ namespace AXPlayer.App.Screens
                     {
                         discordRPC?.UpdatePresence(new RichPresence()
                         {
+                            Name = "YouTube",
                             Type = activityType,
                             Details = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128),
                             State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),

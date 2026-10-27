@@ -12,7 +12,7 @@
     <PackageReference Include="ZeroMayo.Framework" Version="2026.1024.1" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.2" />
     <PackageReference Include="Crypto.AES" Version="1.0.4" />
-    <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
+    <PackageReference Include="ZeroMayo.DiscordRichPresence" Version="26.0.2" />
     <PackageReference Include="Google.Apis.Auth" Version="1.77.0" />
     <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.74.0.1869" />
     <PackageReference Include="SharpCompress" Version="0.50.7" />
