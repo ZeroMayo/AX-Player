@@ -3,7 +3,6 @@
 
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Localisation;
-using osu.Framework.Graphics.Sprites;
 
 namespace AXPlayer.App.Overlays.OSD
 {

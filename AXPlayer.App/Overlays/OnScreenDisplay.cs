@@ -5,22 +5,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using AXPlayer.App.Config;
-using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Overlays.OSD;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Configuration.Tracking;
-using osu.Framework.Development;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Transforms;
 using osu.Framework.Threading;
 using osuTK;
-using osuTK.Graphics;
 
 namespace AXPlayer.App.Overlays
 {
@@ -49,7 +44,7 @@ namespace AXPlayer.App.Overlays
                 box = new BufferedContainer
                 {
                     AutoSizeAxes = Axes.Both,
-                    Origin = Anchor.BottomCentre,
+                    Origin = Anchor.Centre,
                     Anchor = Anchor.BottomCentre,
                     Margin = new MarginPadding(32),
                     Masking = true,

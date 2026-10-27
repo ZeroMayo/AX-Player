@@ -2,7 +2,6 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using AXPlayer.App.Graphics;
-using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.UserInterface;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.LocalisationExtensions;
@@ -10,7 +9,6 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AXPlayer.App.Overlays.OSD
 {

@@ -1,28 +1,17 @@
 ﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
-using AXPlayer.App.Config;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
-using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.UserInterface;
-using AXPlayer.App.Graphics.UserInterfaceV2;
-using AXPlayer.App.Localisation;
-using osu.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
-using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Transforms;
 using osu.Framework.Localisation;
 using osu.Framework.Threading;
 using osuTK;
-using osuTK.Graphics;
-using static AXPlayer.App.AXPlayerApp;
 using OverlayContainer = AXPlayer.App.Graphics.Containers.OverlayContainer;
 
 namespace AXPlayer.App.Overlays
@@ -43,7 +32,7 @@ namespace AXPlayer.App.Overlays
             {
                 Width = 250,
                 AutoSizeAxes = Axes.Y,
-                Origin = Anchor.BottomCentre,
+                Origin = Anchor.Centre,
                 Anchor = Anchor.BottomCentre,
                 Margin = new MarginPadding(32),
                 Masking = true,
