@@ -6,10 +6,10 @@ using osu.Framework.Graphics.Sprites;
 
 namespace AXPlayer.App.Overlays.OSD
 {
-    public partial class SpeedChangeToast : ToastWithIcon
+    public partial class SpeedChangeToast : Toast
     {
         public SpeedChangeToast(double newSpeed)
-            : base(AXPlayerStrings.PlaybackSpeedWithoutValue, $@"{newSpeed:0.##}x", FontAwesome.Solid.TachometerAlt)
+            : base(AXPlayerStrings.PlaybackSpeedWithoutValue, $@"{newSpeed:0.##}x")
         {
         }
     }

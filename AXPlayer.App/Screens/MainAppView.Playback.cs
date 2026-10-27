@@ -702,7 +702,7 @@ namespace AXPlayer.App.Screens
 
                                                 try
                                                 {
-                                                    ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                                    ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                                     onScreenDisplay.Display(toast);
                                                 }
                                                 catch (Exception e)
@@ -1075,7 +1075,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 try
                                                 {
-                                                    ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                                    ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                                     onScreenDisplay.Display(toast);
                                                 }
                                                 catch (Exception e)

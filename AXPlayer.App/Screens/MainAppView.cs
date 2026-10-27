@@ -268,5 +268,8 @@ namespace AXPlayer.App.Screens
         [Resolved]
         private PushNotificationOverlay notificationOverlay { get; set; }
 
+        [Resolved]
+        private NewToastOverlay newToastOverlay { get; set; }
+
     }
 }

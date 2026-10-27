@@ -66,6 +66,9 @@ namespace AXPlayer.App.Graphics
         [Resolved]
         private RestartDialogOverlay restartDialogOverlay { get; set; } = null!;
 
+        [Resolved]
+        private NewToastOverlay newToastOverlay { get; set; } = null!;
+
         private Storage storage = null!;
 
         private Sample? shutter;
@@ -117,6 +120,7 @@ namespace AXPlayer.App.Graphics
                 if (!captureMenuCursor)
                 {
                     cursorVisibility.Value = false;
+                    Schedule(() => newToastOverlay.Hide());
                     Schedule(() => onScreenDisplay.Hide());
                     Schedule(() => popupDialogOverlay.Hide());
                     Schedule(() => restartDialogOverlay.Hide());
@@ -233,6 +237,7 @@ namespace AXPlayer.App.Graphics
                 if (Interlocked.Decrement(ref screenShotTasks) == 0)
                 {
                     cursorVisibility.Value = true;
+                    Schedule(() => newToastOverlay.Show());
                     Schedule(() => popupDialogOverlay.Show());
                     Schedule(() => restartDialogOverlay.Show());
                     Schedule(() => onScreenDisplay.Show());

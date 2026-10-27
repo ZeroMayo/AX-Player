@@ -1517,7 +1517,6 @@ namespace AXPlayer.App.Screens
                                                 if (string.IsNullOrEmpty(commentTextBox.Text))
                                                     return;
 
-                                                //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.CommentAdded, FontAwesome.Regular.Comment);
                                                 api.SendComment(videoId, commentTextBox.Text);
 
                                                 Scheduler.AddDelayed(() => updateComments(videoId), 2000);
@@ -3634,7 +3633,7 @@ namespace AXPlayer.App.Screens
                             {
                                 Schedule(() =>
                                 {
-                                    ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, lang.NewValue.Name, FontAwesome.Solid.ClosedCaptioning);
+                                    ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, lang.NewValue.Name);
 
                                     onScreenDisplay.Display(toast);
                                 });
@@ -3692,7 +3691,7 @@ namespace AXPlayer.App.Screens
                                 {
                                     try
                                     {
-                                        ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                        ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                         onScreenDisplay.Display(toast);
                                     }
                                     catch (Exception e)
@@ -3754,7 +3753,7 @@ namespace AXPlayer.App.Screens
                                 {
                                     try
                                     {
-                                        ToastBase toast = new ToastWithIcon(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name, FontAwesome.Solid.ClosedCaptioning);
+                                        ToastBase toast = new Toast(AXPlayerStrings.CaptionLanguage, settingsContainer.CaptionLangDropdown.Current.Value.Name);
                                         onScreenDisplay.Display(toast);
                                     }
                                     catch (Exception e)

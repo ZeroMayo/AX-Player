@@ -6,6 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AXPlayer.App.Config;
+using AXPlayer.App.Graphics.Containers;
+using AXPlayer.App.Overlays.OSD;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
@@ -18,8 +21,6 @@ using osu.Framework.Graphics.Transforms;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Graphics;
-using AXPlayer.App.Config;
-using AXPlayer.App.Overlays.OSD;
 
 namespace AXPlayer.App.Overlays
 {
@@ -40,20 +41,19 @@ namespace AXPlayer.App.Overlays
         {
             AlwaysPresent = true;
             RelativeSizeAxes = Axes.Both;
+            Anchor = Anchor.Centre;
+            Origin = Anchor.Centre;
 
             Children = new Drawable[]
             {
                 box = new BufferedContainer
                 {
-                    Origin = Anchor.Centre,
-                    RelativePositionAxes = Axes.Both,
-                    Position = new Vector2(0.5f, 0.07f),
+                    AutoSizeAxes = Axes.Both,
+                    Origin = Anchor.BottomCentre,
+                    Anchor = Anchor.BottomCentre,
+                    Margin = new MarginPadding(32),
                     Masking = true,
-                    AutoSizeAxes = Axes.X,
-                    Height = height,
-                    Alpha = 0,
-                    CornerRadius = height / 2,
-                    Scale = new Vector2(0.9f),
+                    CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS),
                     BlurSigma = new Vector2(15),
                 },
             };
@@ -62,6 +62,8 @@ namespace AXPlayer.App.Overlays
         [BackgroundDependencyLoader]
         private void load(SessionStatics sessionStatics)
         {
+            box.ScaleTo(0.8f);
+            box.FadeOut();
             controlsVisibleState = sessionStatics.GetBindable<bool>(Static.IsControlVisible);
             isAnyOverlayOpen = sessionStatics.GetBindable<bool>(Static.IsAnyOverlayOpen);
             videoPlaying = sessionStatics.GetBindable<bool>(Static.IsVideoPlaying);
@@ -151,7 +153,7 @@ namespace AXPlayer.App.Overlays
                 toDisplay.Animate(
                     b => b.BlurTo(new Vector2(15), 250, Easing.OutQuint),
                     b => b.FadeOutFromOne(250, Easing.OutQuint),
-                    b => b.ScaleTo(.9f, 250, Easing.OutQuint)
+                    b => b.ScaleTo(0.8f, 250, Easing.OutQuint)
                 );
             }, videoPlaying.Value ? 1250 : 1500);
         }

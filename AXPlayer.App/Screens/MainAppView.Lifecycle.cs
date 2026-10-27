@@ -491,17 +491,20 @@ namespace AXPlayer.App.Screens
 
                 case GlobalAction.DecreasePlaybackSpeed:
                     playbackSpeed.Value -= 0.05;
-                    osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    //osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(playbackSpeed.Value));
                     return true;
 
                 case GlobalAction.ResetPlaybackSpeed:
                     playbackSpeed.Value = 1;
-                    osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    //osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(playbackSpeed.Value));
                     return true;
 
                 case GlobalAction.IncreasePlaybackSpeed:
                     playbackSpeed.Value += 0.05;
-                    osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    //osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(playbackSpeed.Value));
                     return true;
 
                 case GlobalAction.DecreaseVideoVolume:
@@ -524,12 +527,12 @@ namespace AXPlayer.App.Screens
 
                 case GlobalAction.DecreasePlaybackSpeed2:
                     playbackSpeed.Value -= 0.01;
-                    osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(playbackSpeed.Value));
                     return true;
 
                 case GlobalAction.IncreasePlaybackSpeed2:
                     playbackSpeed.Value += 0.01;
-                    osd.Display(new SpeedChangeToast(playbackSpeed.Value));
+                    newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(playbackSpeed.Value));
                     return true;
             }
 

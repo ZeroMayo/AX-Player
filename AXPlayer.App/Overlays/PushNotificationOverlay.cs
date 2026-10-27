@@ -169,6 +169,7 @@ namespace AXPlayer.App.Overlays
                 Anchor = Anchor.TopRight,
                 AutoSizeDuration = 400,
                 AutoSizeEasing = Easing.OutQuint,
+                BlurSigma = new Vector2(15),
                 Children = new Drawable[]
                 {
                     bg = new Box
