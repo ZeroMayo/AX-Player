@@ -33,6 +33,7 @@ using osuTK.Graphics;
 using YoutubeExplode.Converter;
 using YoutubeExplode.Videos.ClosedCaptions;
 using YoutubeExplode.Videos.Streams;
+using static AXPlayer.App.Graphics.Videos.YouTubeVideoPlayer.KeyBindingAnimations;
 using Language = AXPlayer.App.Localisation.Language;
 
 namespace AXPlayer.App.Screens
@@ -69,6 +70,11 @@ namespace AXPlayer.App.Screens
             {
                 setPlaybackSpeed(speed.NewValue);
             }, true);
+
+            currentVideoSource.OnSeekAction = () =>
+            {
+                updatePresence(discordRichPresence.Value);
+            };
 
             if (timestampInURL(videoUrl))
                 Schedule(() => seekTo(parseTimestampFromURL(videoUrl)));

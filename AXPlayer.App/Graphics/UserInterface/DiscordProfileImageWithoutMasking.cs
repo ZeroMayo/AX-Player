@@ -26,7 +26,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         private TextureStore textureStore { get; set; }
 
         [Resolved]
-        private Online.DiscordRPC api { get; set; }
+        private Online.DiscordRPCClient api { get; set; }
 
         public DiscordProfileImageWithoutMasking(float size = 30)
         {

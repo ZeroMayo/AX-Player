@@ -108,7 +108,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
         }
 
         [Resolved]
-        private Online.DiscordRPC discordRPC { get; set; }
+        private Online.DiscordRPCClient discordRPC { get; set; }
 
         [Resolved]
         private YouTubeAPI yt_api { get; set; }

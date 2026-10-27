@@ -83,7 +83,7 @@ namespace AXPlayer.App
         private PushNotificationOverlay notificationOverlay;
         private ScreenshotManager screenshotManager;
 
-        private Online.DiscordRPC discord_rpc;
+        private Online.DiscordRPCClient discord_rpc;
 
         private VolumeOverlay volume;
 
@@ -214,7 +214,7 @@ namespace AXPlayer.App
             loadComponentSingleFile(screenshotManager, Add, true);
 
             if (RuntimeInfo.IsDesktop)
-                loadComponentSingleFile(discord_rpc = new Online.DiscordRPC(), Add, true);
+                loadComponentSingleFile(discord_rpc = new Online.DiscordRPCClient(), Add, true);
 
             loadComponentSingleFile(fpsCounter = new FPSCounter
             {

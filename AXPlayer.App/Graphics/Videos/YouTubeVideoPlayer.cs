@@ -57,6 +57,8 @@ namespace AXPlayer.App.Graphics.Videos
 
         public Action? OnVideoCompleted = null!;
 
+        public Action? OnSeekAction = null!;
+
         private MediaSessionControls mediaSessionControls = null!;
 
         [Resolved]
@@ -405,6 +407,7 @@ namespace AXPlayer.App.Graphics.Videos
             drawableTrack.Seek(targetPosition);
             video.Seek(targetPosition);
             mediaSession?.UpdateTimestamp(videoData, targetPosition);
+            Schedule(() => OnSeekAction?.Invoke());
         }
 
         public void FastForward10Sec()

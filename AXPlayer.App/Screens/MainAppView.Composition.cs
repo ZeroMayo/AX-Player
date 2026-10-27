@@ -3783,6 +3783,11 @@ namespace AXPlayer.App.Screens
                 }
             }, true);
 
+            videoPlaying.BindValueChanged(value =>
+            {
+                updatePresence(discordRichPresence.Value);
+            });
+
             playbackSpeed.BindValueChanged(speed =>
             {
                 this.TransformBindableTo(speedTextRolling, speed.NewValue, 400, Easing.OutQuint);

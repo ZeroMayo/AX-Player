@@ -6,9 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DiscordRPC;
-using Google.Apis.YouTube.v3;
-using Google.Apis.YouTube.v3.Data;
+using System.Xml;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.UserInterface;
@@ -20,6 +18,9 @@ using AXPlayer.App.Online;
 using AXPlayer.App.Overlays;
 using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Updater;
+using DiscordRPC;
+using Google.Apis.YouTube.v3;
+using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
@@ -32,6 +33,7 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osuTK;
 using osuTK.Input;
+using static Sentry.MeasurementUnit;
 using OverlayContainer = AXPlayer.App.Graphics.Containers.OverlayContainer;
 
 namespace AXPlayer.App.Screens
@@ -145,128 +147,180 @@ namespace AXPlayer.App.Screens
 
         private void updatePresence(DiscordRichPresenceMode mode)
         {
-            Timestamps timestamps = Timestamps.Now;
-            ActivityType activityType = ActivityType.Watching;
-
-            string state = AXPlayer_DiscordRPCStrings.WatchingVideo;
-            string buttonLabel = AXPlayer_DiscordRPCStrings.WatchOnYouTube;
-
-            try
+            Task.Run(async () =>
             {
-                if (videoData != null)
+                DateTime startTime = DateTime.UtcNow;
+                DateTime endTime = DateTime.UtcNow;
+
+                Schedule(() =>
                 {
-                    //state = api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId));
-                    if (trayIconVisible.Value)
+                    if (currentVideoSource != null && videoData != null)
                     {
-                        state = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? AXPlayer_DiscordRPCStrings.ListeningMusic : AXPlayer_DiscordRPCStrings.ListeningOnBackground;
-                        activityType = ActivityType.Listening;
+                        startTime = DateTime.UtcNow - TimeSpan.FromSeconds(currentVideoSource.VideoProgress.Value);
+                        endTime = startTime + XmlConvert.ToTimeSpan(videoData.ContentDetails.Duration);
                     }
-                    else
-                    {
-                        state = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? AXPlayer_DiscordRPCStrings.ListeningMusic : AXPlayer_DiscordRPCStrings.WatchingVideo;
-                        activityType = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? ActivityType.Listening : ActivityType.Watching;
-                    }
-                    buttonLabel = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? AXPlayer_DiscordRPCStrings.ListenOnYouTube : AXPlayer_DiscordRPCStrings.WatchOnYouTube;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, e.GetDescription());
-                state = AXPlayer_DiscordRPCStrings.WatchingVideo;
-                activityType = ActivityType.Watching;
-                buttonLabel = AXPlayer_DiscordRPCStrings.WatchOnYouTube;
-            }
+                });
 
-            switch (mode)
-            {
-                case DiscordRichPresenceMode.Full:
+                Timestamps timestamps = Timestamps.Now;
+                ActivityType activityType = ActivityType.Watching;
+
+                string state = AXPlayer_DiscordRPCStrings.WatchingVideo;
+                string buttonLabel = AXPlayer_DiscordRPCStrings.WatchOnYouTube;
+
+                /*
+                try
                 {
                     if (videoData != null)
                     {
-                        discordRPC?.UpdatePresence(new RichPresence()
+                        //state = api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId));
+                        if (trayIconVisible.Value)
                         {
-                            Name = "YouTube",
-                            Type = activityType,
-                            Details = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128),
-                            State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),
-                            Timestamps = timestamps,
-                            StatusDisplay = StatusDisplayType.Details,
-                            StateUrl = $"https://www.youtube.com/channel/{api.GetChannel(videoData.Snippet.ChannelId).Id}",
-                            DetailsUrl = $"https://youtu.be/{videoData.Id}",
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
-                                LargeImageUrl = $"https://youtu.be/{videoData.Id}",
-                                SmallImageText = "AX Player",
-                                SmallImageKey = "ax_player_new"
-                            },
-                            Buttons =
-                            [
-                                new DiscordRPC.Button
-                                {
-                                    Label = buttonLabel,
-                                    Url = $"https://youtu.be/{videoData.Id}",
-                                }
-                            ]
-                        });
-                    }
-                    else
-                    {
-                        discordRPC?.UpdatePresence(new RichPresence()
+                            state = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? AXPlayer_DiscordRPCStrings.ListeningMusic : AXPlayer_DiscordRPCStrings.ListeningOnBackground;
+                            activityType = ActivityType.Listening;
+                        }
+                        else
                         {
-                            Type = activityType,
-                            State = AXPlayer_DiscordRPCStrings.IdleString,
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = "ax_player_new",
-                            },
-                        });
+                            state = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? AXPlayer_DiscordRPCStrings.ListeningMusic : AXPlayer_DiscordRPCStrings.WatchingVideo;
+                            activityType = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? ActivityType.Listening : ActivityType.Watching;
+                        }
+                        buttonLabel = videoData.TopicDetails.TopicCategories.Contains("https://en.wikipedia.org/wiki/Music") ? AXPlayer_DiscordRPCStrings.ListenOnYouTube : AXPlayer_DiscordRPCStrings.WatchOnYouTube;
                     }
-                    break;
                 }
-                case DiscordRichPresenceMode.Limited:
+                catch (Exception e)
                 {
-                    if (videoData != null)
-                    {
-                        discordRPC?.UpdatePresence(new RichPresence()
-                        {
-                            Type = activityType,
-                            State = state,
-                            Timestamps = timestamps,
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = "ax_player_new"
-                            },
-                            Buttons =
-                            [
-                                new DiscordRPC.Button
-                                {
-                                    Label = buttonLabel,
-                                    Url = $"https://youtu.be/{videoData.Id}",
-                                }
-                            ]
-                        });
-                    }
-                    else
-                    {
-                        discordRPC?.UpdatePresence(new RichPresence()
-                        {
-                            Type = activityType,
-                            State = AXPlayer_DiscordRPCStrings.IdleString,
-                            Assets = new Assets()
-                            {
-                                LargeImageKey = "ax_player_new",
-                            },
-                        });
-                    }
-                    break;
+                    Logger.Error(e, e.GetDescription());
+                    state = AXPlayer_DiscordRPCStrings.WatchingVideo;
+                    activityType = ActivityType.Watching;
+                    buttonLabel = AXPlayer_DiscordRPCStrings.WatchOnYouTube;
                 }
-                case DiscordRichPresenceMode.Off:
+                */
+
+                switch (mode)
                 {
-                    discordRPC?.ClearPresence();
-                    break;
+                    case DiscordRichPresenceMode.Full:
+                    {
+                        if (videoData != null)
+                        {
+                            if (videoPlaying.Value)
+                            {
+                                discordRPC?.UpdatePresence(new RichPresence()
+                                {
+                                    Name = "YouTube",
+                                    Type = activityType,
+                                    Details = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128),
+                                    State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),
+                                    StatusDisplay = StatusDisplayType.Details,
+                                    StateUrl = $"https://www.youtube.com/channel/{api.GetChannel(videoData.Snippet.ChannelId).Id}",
+                                    DetailsUrl = $"https://youtu.be/{videoData.Id}",
+                                    Assets = new Assets()
+                                    {
+                                        LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
+                                        LargeImageUrl = $"https://youtu.be/{videoData.Id}",
+                                        SmallImageText = "AX Player",
+                                        SmallImageKey = "ax_player_new"
+                                    },
+                                    Timestamps = new Timestamps()
+                                    {
+                                        Start = startTime,
+                                        End = endTime // End 값이 들어가야 프로그레스 바(남은 시간) 형태로 표시됩니다.
+                                    },
+                                    Buttons =
+                                    [
+                                        new DiscordRPC.Button
+                                        {
+                                            Label = buttonLabel,
+                                            Url = $"https://youtu.be/{videoData.Id}",
+                                        }
+                                    ]
+                                });
+                            }
+                            else
+                            {
+                                discordRPC?.UpdatePresence(new RichPresence()
+                                {
+                                    Name = "YouTube",
+                                    Type = activityType,
+                                    Details = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128),
+                                    State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),
+                                    StatusDisplay = StatusDisplayType.Details,
+                                    StateUrl = $"https://www.youtube.com/channel/{api.GetChannel(videoData.Snippet.ChannelId).Id}",
+                                    DetailsUrl = $"https://youtu.be/{videoData.Id}",
+                                    Assets = new Assets()
+                                    {
+                                        LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
+                                        LargeImageUrl = $"https://youtu.be/{videoData.Id}",
+                                        SmallImageText = "AX Player",
+                                        SmallImageKey = "ax_player_new"
+                                    },
+                                    Buttons =
+                                    [
+                                        new DiscordRPC.Button
+                                        {
+                                            Label = buttonLabel,
+                                            Url = $"https://youtu.be/{videoData.Id}",
+                                        }
+                                    ]
+                                });
+                            }
+                        }
+                        else
+                        {
+                            discordRPC?.UpdatePresence(new RichPresence()
+                            {
+                                Type = activityType,
+                                State = AXPlayer_DiscordRPCStrings.IdleString,
+                                Assets = new Assets()
+                                {
+                                    LargeImageKey = "ax_player_new",
+                                },
+                            });
+                        }
+                        break;
+                    }
+                    case DiscordRichPresenceMode.Limited:
+                    {
+                        if (videoData != null)
+                        {
+                            discordRPC?.UpdatePresence(new RichPresence()
+                            {
+                                Type = activityType,
+                                State = state,
+                                Timestamps = timestamps,
+                                Assets = new Assets()
+                                {
+                                    LargeImageKey = "ax_player_new"
+                                },
+                                Buttons =
+                                [
+                                    new DiscordRPC.Button
+                                    {
+                                        Label = buttonLabel,
+                                        Url = $"https://youtu.be/{videoData.Id}",
+                                    }
+                                ]
+                            });
+                        }
+                        else
+                        {
+                            discordRPC?.UpdatePresence(new RichPresence()
+                            {
+                                Type = activityType,
+                                State = AXPlayer_DiscordRPCStrings.IdleString,
+                                Assets = new Assets()
+                                {
+                                    LargeImageKey = "ax_player_new",
+                                },
+                            });
+                        }
+                        break;
+                    }
+                    case DiscordRichPresenceMode.Off:
+                    {
+                        discordRPC?.ClearPresence();
+                        break;
+                    }
                 }
-            }
+            });
         }
 
         protected override void LoadComplete()
@@ -476,6 +530,7 @@ namespace AXPlayer.App.Screens
                 double target = currentVideoSource.VideoProgress.MaxValue * (digit / 10.0);
 
                 currentVideoSource?.SeekTo(target * 1000);
+                //updatePresence(discordRichPresence.Value);
                 showControls();
             }
 
@@ -485,6 +540,7 @@ namespace AXPlayer.App.Screens
                 double target = currentVideoSource.VideoProgress.MaxValue * (digit / 10.0);
 
                 currentVideoSource?.SeekTo(target * 1000);
+                //updatePresence(discordRichPresence.Value);
                 showControls();
             }
 
@@ -504,10 +560,12 @@ namespace AXPlayer.App.Screens
 
                 case GlobalAction.FastForward_10sec:
                     currentVideoSource?.FastForward10Sec();
+                    //updatePresence(discordRichPresence.Value);
                     return true;
 
                 case GlobalAction.FastRewind_10sec:
                     currentVideoSource?.FastRewind10Sec();
+                    //updatePresence(discordRichPresence.Value);
                     return true;
 
                 case GlobalAction.DecreasePlaybackSpeed:
@@ -785,6 +843,7 @@ namespace AXPlayer.App.Screens
                         else
                             currentVideoSource.Play(true);
                     }
+                    //updatePresence(discordRichPresence.Value);
                     showControls();
                     return true;
 
