@@ -384,7 +384,7 @@ namespace AXPlayer.App.Overlays.Containers
         private BindableBool wasapi;
 
         [BackgroundDependencyLoader]
-        private void load(OverlayColourProvider overlayColourProvider, TextureStore textures, ProjectYomiColour colours, FrameworkDebugConfigManager debugConfig, FrameworkConfigManager config, Storage storage, AXPlayerConfigManager appConfig)
+        private async void load(OverlayColourProvider overlayColourProvider, TextureStore textures, ProjectYomiColour colours, FrameworkDebugConfigManager debugConfig, FrameworkConfigManager config, Storage storage, AXPlayerConfigManager appConfig)
         {
             wasapi = audio.UseExperimentalWasapi;
             videoVolume = config.GetBindable<double>(FrameworkSetting.VolumeMusic);

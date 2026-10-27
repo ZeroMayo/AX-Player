@@ -55,8 +55,9 @@ namespace AXPlayer.App.Screens
     public partial class MainAppView
     {
         [BackgroundDependencyLoader]
-        private void load(ISampleStore sampleStore, FrameworkConfigManager config, AXPlayerConfigManager appConfig, GameHost host, Storage storage, OverlayColourProvider overlayColourProvider, TextureStore textures, FrameworkDebugConfigManager debugConfig)
+        private async void load(ISampleStore sampleStore, FrameworkConfigManager config, AXPlayerConfigManager appConfig, GameHost host, Storage storage, OverlayColourProvider overlayColourProvider, TextureStore textures, FrameworkDebugConfigManager debugConfig)
         {
+            AlwaysPresent = true;
             speedTextRolling = new Bindable<double>(1);
             volumeTextRolling = new Bindable<double>(1);
             appliedEffects.Value = new List<InternalShader>();

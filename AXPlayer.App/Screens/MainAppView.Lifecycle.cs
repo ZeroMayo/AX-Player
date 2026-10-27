@@ -436,6 +436,7 @@ namespace AXPlayer.App.Screens
 
         public void RegisterOverlayContainer(OverlayContainer overlayContainer)
         {
+            overlayContainer.IsVisible = false;
             overlayContainer.Hide();
             overlayContainers.Add(overlayContainer);
         }
