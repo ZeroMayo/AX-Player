@@ -257,24 +257,31 @@ namespace AXPlayer.App.Screens
                     {
                         if (videoData != null)
                         {
-                            discordRPC?.UpdatePresence(new RichPresence()
+                            if (videoPlaying.Value)
                             {
-                                Type = activityType,
-                                State = state,
-                                Timestamps = timestamps,
-                                Assets = new Assets()
+                                discordRPC?.UpdatePresence(new RichPresence()
                                 {
-                                    LargeImageKey = "ax_player_new"
-                                },
-                                Buttons =
-                                [
-                                    new DiscordRPC.Button
+                                    Type = activityType,
+                                    State = state,
+                                    Timestamps = timestamps,
+                                    Assets = new Assets()
+                                    {
+                                        LargeImageKey = "ax_player_new"
+                                    },
+                                    Buttons =
+                                    [
+                                        new DiscordRPC.Button
                                     {
                                         Label = buttonLabel,
                                         Url = $"https://youtu.be/{videoData.Id}",
                                     }
-                                ]
-                            });
+                                    ]
+                                });
+                            }
+                            else
+                            {
+                                discordRPC?.ClearPresence();
+                            }
                         }
                         else
                         {
