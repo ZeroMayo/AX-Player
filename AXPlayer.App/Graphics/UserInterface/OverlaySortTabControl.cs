@@ -75,8 +75,8 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 {
                                     Type = osu.Framework.Graphics.Effects.EdgeEffectType.Shadow,
                                     Colour = Color4.Black.Opacity(0.25f),
-                                    Offset = new Vector2(0, 8),
-                                    Radius = 64,
+                                    Offset = new Vector2(0, 2),
+                                    Radius = 16,
                                 },
                                 Children = new Drawable[]
                                 {
