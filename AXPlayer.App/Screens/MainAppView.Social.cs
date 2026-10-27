@@ -875,7 +875,8 @@ namespace AXPlayer.App.Screens
                                     */
                                     Schedule(() =>
                                     {
-                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignOutAlt, Color4.Red, AXPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                        //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignOutAlt, Color4.Red, AXPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                        newToastOverlay.ShowToast(AXPlayerStrings.SubscriptionRemoved);
                                     });
                                     Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
                                 };
@@ -899,7 +900,8 @@ namespace AXPlayer.App.Screens
                                 */
                                 Schedule(() =>
                                 {
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignInAlt, Color4.Green, AXPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignInAlt, Color4.Green, AXPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                    newToastOverlay.ShowToast(AXPlayerStrings.SubscriptionAdded);
                                 });
                                 Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
                             }
@@ -913,7 +915,8 @@ namespace AXPlayer.App.Screens
 
                         Schedule(() =>
                         {
-                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, AXPlayerStrings.ReportSuccess, AXPlayerStrings.Report));
+                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, AXPlayerStrings.ReportSuccess, AXPlayerStrings.Report));
+                            newToastOverlay.ShowToast(AXPlayerStrings.ReportSuccess);
                         });
                         //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Report, NekoPlayerStrings.ReportSuccess, FontAwesome.Solid.CheckCircle);
                         api.ReportAbuse(videoId, reportReason.Current.Value.Id, (reportReason.Current.Value.ContainsSecondaryReasons ? reportSubReason.Current.Value.Id : null), (!string.IsNullOrEmpty(reportComment.Current.Value) ? reportComment.Current.Value : null));
@@ -940,7 +943,8 @@ namespace AXPlayer.App.Screens
                         //Schedule(() => onScreenDisplay.Display(toast));
                         Schedule(() =>
                         {
-                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                            newToastOverlay.ShowToast(AXPlayerStrings.CommentAdded);
                         });
 
                         commentTextBox.Text = string.Empty;

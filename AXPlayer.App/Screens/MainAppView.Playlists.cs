@@ -127,7 +127,8 @@ namespace AXPlayer.App.Screens
                 */
                 Schedule(() =>
                 {
-                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Green, AXPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
+                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Green, AXPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
+                    newToastOverlay.ShowToast(AXPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title));
                 });
 
                 await Task.Delay(1000);
@@ -157,7 +158,8 @@ namespace AXPlayer.App.Screens
                 */
                 Schedule(() =>
                 {
-                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Red, AXPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
+                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Red, AXPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
+                    newToastOverlay.ShowToast(AXPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title));
                 });
 
                 await Task.Delay(1000);

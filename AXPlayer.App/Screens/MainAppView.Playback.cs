@@ -214,7 +214,8 @@ namespace AXPlayer.App.Screens
                     {
                         Schedule(() =>
                         {
-                            notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, AXPlayerStrings.NoVideoIdError, AXPlayerStrings.General));
+                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, AXPlayerStrings.NoVideoIdError, AXPlayerStrings.General));
+                            newToastOverlay.ShowToast(AXPlayerStrings.NoVideoIdError);
                         });
                         /*
                         ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.NoVideoIdError, FontAwesome.Solid.MinusCircle);

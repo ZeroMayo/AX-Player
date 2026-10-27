@@ -1524,7 +1524,8 @@ namespace AXPlayer.App.Screens
                                                 //Schedule(() => onScreenDisplay.Display(toast));
                                                 Schedule(() =>
                                                 {
-                                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                                                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                                                    newToastOverlay.ShowToast(AXPlayerStrings.CommentAdded);
                                                 });
 
                                                 commentTextBox.Text = string.Empty;
@@ -2980,9 +2981,13 @@ namespace AXPlayer.App.Screens
                                                                 {
                                                                     clipboard.SetText(videoUrl);
 
+                                                                    /*
                                                                     Toast toast = new Toast(AXPlayerStrings.General, AXPlayerStrings.CopiedToClipboard);
 
                                                                     onScreenDisplay.Display(toast);
+                                                                    */
+
+                                                                    newToastOverlay.ShowToast(AXPlayerStrings.CopiedToClipboard);
                                                                     hideOverlayContainer(menuOverlay);
                                                                 }
                                                             },
