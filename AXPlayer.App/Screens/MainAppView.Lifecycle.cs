@@ -272,6 +272,25 @@ namespace AXPlayer.App.Screens
         {
             base.LoadComplete();
 
+            RegisterOverlayContainer(loadVideoContainer);
+            overlayFadeContainer.Hide();
+            RegisterOverlayContainer(settingsContainer);
+            RegisterOverlayContainer(videoDescriptionContainer);
+            RegisterOverlayContainer(commentsContainer);
+            RegisterOverlayContainer(searchContainer);
+            RegisterOverlayContainer(reportAbuseOverlay);
+            RegisterOverlayContainer(playlistOverlay);
+            RegisterOverlayContainer(loadPlaylistContainer);
+            RegisterOverlayContainer(audioEffectsOverlay);
+            RegisterOverlayContainer(unsubscribeDialog);
+            RegisterOverlayContainer(videoSaveLocationOverlay);
+            RegisterOverlayContainer(addPlaylistOverlay);
+            RegisterOverlayContainer(menuOverlay);
+            RegisterOverlayContainer(myChannelDialog);
+            RegisterOverlayContainer(myPlaylistsOverlay);
+            RegisterOverlayContainer(exitOptions);
+            RegisterOverlayContainer(editPlaylistOverlay);
+
             ghostIcon.Loop(t =>
                 t.MoveToY(-10, 2000, Easing.InOutSine)
                  .Then()

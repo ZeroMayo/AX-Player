@@ -128,6 +128,7 @@ namespace AXPlayer.App
         private RestartDialogOverlay restartDialogOverlay;
         private PopupDialogOverlay popupDialogOverlay;
         private NewToastOverlay newToastOverlay;
+        private LoadingOverlay loadingOverlay;
 
         private Bindable<CloseButtonAction> closeButtonAction;
 
@@ -190,6 +191,7 @@ namespace AXPlayer.App
             loadComponentSingleFile(volume = new VolumeOverlay(), leftFloatingOverlayContent.Add, true);
 
             onScreenDisplay = new OnScreenDisplay();
+            loadingOverlay = new LoadingOverlay();
             screenshotManager = new ScreenshotManager();
             notificationOverlay = new PushNotificationOverlay();
             restartDialogOverlay = new RestartDialogOverlay();
@@ -202,6 +204,7 @@ namespace AXPlayer.App
             onScreenDisplay.BeginTracking(this, LocalConfig);
             onScreenDisplay.BeginTracking(this, AudioEffectsConfig);
 
+            loadComponentSingleFile(loadingOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(onScreenDisplay, topMostOverlayContent.Add, true);
             loadComponentSingleFile(notificationOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(popupDialogOverlay, overlayContainer.Add, true);

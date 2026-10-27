@@ -55,7 +55,7 @@ namespace AXPlayer.App.Screens
     public partial class MainAppView
     {
         [BackgroundDependencyLoader]
-        private async void load(ISampleStore sampleStore, FrameworkConfigManager config, AXPlayerConfigManager appConfig, GameHost host, Storage storage, OverlayColourProvider overlayColourProvider, TextureStore textures, FrameworkDebugConfigManager debugConfig)
+        private void load(ISampleStore sampleStore, FrameworkConfigManager config, AXPlayerConfigManager appConfig, GameHost host, Storage storage, OverlayColourProvider overlayColourProvider, TextureStore textures, FrameworkDebugConfigManager debugConfig)
         {
             AlwaysPresent = true;
             speedTextRolling = new Bindable<double>(1);
@@ -160,6 +160,50 @@ namespace AXPlayer.App.Screens
             ui_font.BindValueChanged(_ =>
             {
                 restartDialogOverlay.OpenDialog();
+            });
+
+            LoadComponentAsync(settingsContainer = new SettingsContainer
+            {
+                OAuthSignInAction = () =>
+                {
+                    if (!googleOAuth2.SignedIn.Value)
+                    {
+                        Schedule(() =>
+                        {
+                            popupDialogOverlay.ShowDialog(
+                                    AXPlayerStrings.GoogleAccount,
+                                    AXPlayerStrings.WaitingForAuthentication,
+                                    AXPlayerStrings.Yes,
+                                    AXPlayerStrings.Cancel,
+                                    showActionButtons: false);
+
+                        });
+                        Task.Run(() => googleOAuth2.SignIn());
+                    }
+                    else
+                    {
+                        hideOverlays();
+                        showOverlayContainer(myChannelDialog);
+                    }
+                },
+                CheckUpdateAction = () =>
+                {
+                    if (game.UpdateManager is NoActionUpdateManager)
+                    {
+                        host.OpenUrlExternally(@"https://github.com/ZeroMayo/AX-Player/releases");
+                    }
+                    else
+                    {
+                        if (game.RestartRequired.Value != true)
+                            checkForUpdates().FireAndForget();
+                        else
+                            game.RestartAction.Invoke();
+                    }
+                },
+                CloseOverlayAction = () =>
+                {
+                    hideOverlayContainer(settingsContainer);
+                }
             });
 
             #region The UI Components
@@ -947,49 +991,7 @@ namespace AXPlayer.App.Screens
                                 },
                             }
                         },
-                        settingsContainer = new SettingsContainer
-                        {
-                           OAuthSignInAction = () =>
-                           {
-                                if (!googleOAuth2.SignedIn.Value)
-                                {
-                                   Schedule(() =>
-                                    {
-                                        popupDialogOverlay.ShowDialog(
-                                                AXPlayerStrings.GoogleAccount,
-                                                AXPlayerStrings.WaitingForAuthentication,
-                                                AXPlayerStrings.Yes,
-                                                AXPlayerStrings.Cancel,
-                                                showActionButtons: false);
-
-                                    });
-                                    Task.Run(() => googleOAuth2.SignIn());
-                                }
-                                else
-                                {
-                                    hideOverlays();
-                                    showOverlayContainer(myChannelDialog);
-                                }
-                           },
-                           CheckUpdateAction = () =>
-                           {
-                                if (game.UpdateManager is NoActionUpdateManager)
-                                {
-                                    host.OpenUrlExternally(@"https://github.com/ZeroMayo/AX-Player/releases");
-                                }
-                                else
-                                {
-                                    if (game.RestartRequired.Value != true)
-                                        checkForUpdates().FireAndForget();
-                                    else
-                                        game.RestartAction.Invoke();
-                                }
-                           },
-                           CloseOverlayAction = () =>
-                           {
-                               hideOverlayContainer(settingsContainer);
-                           }
-                        },
+                        settingsContainer,
                         videoDescriptionContainer = new BottomOverlayContainer
                         {
                             Size = new Vector2(0.7f),
@@ -3347,25 +3349,6 @@ namespace AXPlayer.App.Screens
             quickDislikeButton.SetCornerRadius(new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS / 3f, AXPlayerApp.UI_CORNER_RADIUS / 3f, 15, 15));
 
             thumbnailContainer.BlurTo(Vector2.Divide(new Vector2(10, 10), 1));
-
-            RegisterOverlayContainer(loadVideoContainer);
-            overlayFadeContainer.Hide();
-            RegisterOverlayContainer(settingsContainer);
-            RegisterOverlayContainer(videoDescriptionContainer);
-            RegisterOverlayContainer(commentsContainer);
-            RegisterOverlayContainer(searchContainer);
-            RegisterOverlayContainer(reportAbuseOverlay);
-            RegisterOverlayContainer(playlistOverlay);
-            RegisterOverlayContainer(loadPlaylistContainer);
-            RegisterOverlayContainer(audioEffectsOverlay);
-            RegisterOverlayContainer(unsubscribeDialog);
-            RegisterOverlayContainer(videoSaveLocationOverlay);
-            RegisterOverlayContainer(addPlaylistOverlay);
-            RegisterOverlayContainer(menuOverlay);
-            RegisterOverlayContainer(myChannelDialog);
-            RegisterOverlayContainer(myPlaylistsOverlay);
-            RegisterOverlayContainer(exitOptions);
-            RegisterOverlayContainer(editPlaylistOverlay);
 
             DistortionVolume.BindValueChanged(value =>
             {
