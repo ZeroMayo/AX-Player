@@ -30,7 +30,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         public Color4 BackgroundColour
         {
             get => Background.Colour;
-            set => Background.FadeColour(value);
+            set => Background.FadeColour(value, 500);
         }
 
         private Color4? flashColour;

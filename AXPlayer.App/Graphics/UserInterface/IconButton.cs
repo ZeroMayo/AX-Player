@@ -25,7 +25,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             set
             {
                 iconColour = value;
-                icon.FadeColour(value);
+                icon.FadeColour(value, 500);
             }
         }
 

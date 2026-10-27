@@ -63,8 +63,8 @@ namespace AXPlayer.App.Graphics.UserInterface
             set
             {
                 accentColour = value;
-                LeftBox.Colour = value;
-                Nub.Colour = value;
+                LeftBox.FadeColour(value, 500);
+                Nub.FadeColour(value, 500);
             }
         }
 
@@ -76,7 +76,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             set
             {
                 backgroundColour = value;
-                RightBox.Colour = value;
+                RightBox.FadeColour(value, 500);
             }
         }
 
