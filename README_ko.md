@@ -2,7 +2,7 @@
 
 <h1 align="center">AX Player</h1>
 <p align="center"><img width="250" alt="AX Player Logo" src="assets/AXPlayer-Icon.png"></p>
-<p align="center">YouTube 동영상 플레이어의 미래.</p>
+<p align="center">디자인과 창의성에 중점을 둔 새로운 시대의 YouTube 동영상 플레이어</p>
 <p align="center">이 앱의 일부 리소스(samples)는 <a href="https://github.com/ppy/osu-resources">ppy/osu-resources</a>를 사용하고 있습니다.</p>
 
 <p align="center">
