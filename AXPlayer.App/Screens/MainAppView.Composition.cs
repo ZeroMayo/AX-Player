@@ -3896,6 +3896,7 @@ namespace AXPlayer.App.Screens
                         if (isAnyOverlayOpen.Value)
                             videoContainer.BlurTo(new Vector2(6));
 
+                        videoScalingContainer.Show();
                         userInterfaceContainer.Show();
                     }
                     else
@@ -3903,6 +3904,7 @@ namespace AXPlayer.App.Screens
                         if (isAnyOverlayOpen.Value)
                             videoContainer.BlurTo(new Vector2(0));
 
+                        videoScalingContainer.Hide();
                         userInterfaceContainer.Hide();
                     }
                 });
