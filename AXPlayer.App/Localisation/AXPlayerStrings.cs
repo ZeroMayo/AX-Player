@@ -1549,6 +1549,11 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString ScreenshotSavedWithFilePath(string filePath) => new TranslatableString(getKey(@"screenshot_saved_with_file_path"), "Screenshot saved to {0}.", filePath);
 
+        /// <summary>
+        /// "Only video infomation"
+        /// </summary>
+        public static LocalisableString DiscordPresenceVideoInfoOnly => new TranslatableString(getKey(@"discord_presence_video_info_only"), @"Only video infomation");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

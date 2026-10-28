@@ -288,6 +288,49 @@ namespace AXPlayer.App.Screens
                         }
                         break;
                     }
+                    case DiscordRichPresenceMode.VideoInfoOnly:
+                    {
+                        if (videoData != null)
+                        {
+                            if (videoPlaying.Value)
+                            {
+                                discordRPC?.UpdatePresence(new RichPresence()
+                                {
+                                    Name = "YouTube",
+                                    Type = activityType,
+                                    Details = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128),
+                                    State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),
+                                    StatusDisplay = StatusDisplayType.Details,
+                                    StateUrl = $"https://www.youtube.com/channel/{api.GetChannel(videoData.Snippet.ChannelId).Id}",
+                                    DetailsUrl = $"https://youtu.be/{videoData.Id}",
+                                    Assets = new Assets()
+                                    {
+                                        LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
+                                        LargeImageUrl = $"https://youtu.be/{videoData.Id}",
+                                        SmallImageText = "AX Player",
+                                        SmallImageKey = "ax_player_new"
+                                    },
+                                    Buttons =
+                                    [
+                                        new DiscordRPC.Button
+                                        {
+                                            Label = buttonLabel,
+                                            Url = $"https://youtu.be/{videoData.Id}",
+                                        }
+                                    ]
+                                });
+                            }
+                            else
+                            {
+                                discordRPC?.ClearPresence();
+                            }
+                        }
+                        else
+                        {
+                            discordRPC?.ClearPresence();
+                        }
+                        break;
+                    }
                     case DiscordRichPresenceMode.Limited:
                     {
                         if (videoData != null)
@@ -306,10 +349,10 @@ namespace AXPlayer.App.Screens
                                     Buttons =
                                     [
                                         new DiscordRPC.Button
-                                    {
-                                        Label = buttonLabel,
-                                        Url = $"https://youtu.be/{videoData.Id}",
-                                    }
+                                        {
+                                            Label = buttonLabel,
+                                            Url = $"https://youtu.be/{videoData.Id}",
+                                        }
                                     ]
                                 });
                             }

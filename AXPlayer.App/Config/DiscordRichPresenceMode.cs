@@ -14,6 +14,9 @@ namespace AXPlayer.App.Config
         [LocalisableDescription(typeof(AXPlayerStrings), nameof(AXPlayerStrings.HideIdentifiableInformation))]
         Limited,
 
+        [LocalisableDescription(typeof(AXPlayerStrings), nameof(AXPlayerStrings.DiscordPresenceVideoInfoOnly))]
+        VideoInfoOnly,
+
         [LocalisableDescription(typeof(AXPlayerStrings), nameof(AXPlayerStrings.DiscordPresenceFull))]
         Full
     }
