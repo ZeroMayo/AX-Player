@@ -210,36 +210,72 @@ namespace AXPlayer.App.Screens
                         {
                             if (videoPlaying.Value)
                             {
-                                discordRPC?.UpdatePresence(new RichPresence()
+                                if (playbackSpeed.Value == 1)
                                 {
-                                    Name = "YouTube",
-                                    Type = activityType,
-                                    Details = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128),
-                                    State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),
-                                    StatusDisplay = StatusDisplayType.Details,
-                                    StateUrl = $"https://www.youtube.com/channel/{api.GetChannel(videoData.Snippet.ChannelId).Id}",
-                                    DetailsUrl = $"https://youtu.be/{videoData.Id}",
-                                    Assets = new Assets()
+                                    discordRPC?.UpdatePresence(new RichPresence()
                                     {
-                                        LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
-                                        LargeImageUrl = $"https://youtu.be/{videoData.Id}",
-                                        SmallImageText = "AX Player",
-                                        SmallImageKey = "ax_player_new"
-                                    },
-                                    Timestamps = new Timestamps()
-                                    {
-                                        Start = startTime,
-                                        End = endTime // End 값이 들어가야 프로그레스 바(남은 시간) 형태로 표시됩니다.
-                                    },
-                                    Buttons =
-                                    [
-                                        new DiscordRPC.Button
+                                        Name = "YouTube",
+                                        Type = activityType,
+                                        Details = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128),
+                                        State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),
+                                        StatusDisplay = StatusDisplayType.Details,
+                                        StateUrl = $"https://www.youtube.com/channel/{api.GetChannel(videoData.Snippet.ChannelId).Id}",
+                                        DetailsUrl = $"https://youtu.be/{videoData.Id}",
+                                        Assets = new Assets()
                                         {
-                                            Label = buttonLabel,
-                                            Url = $"https://youtu.be/{videoData.Id}",
-                                        }
-                                    ]
-                                });
+                                            LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
+                                            LargeImageUrl = $"https://youtu.be/{videoData.Id}",
+                                            SmallImageText = "AX Player",
+                                            SmallImageKey = "ax_player_new"
+                                        },
+                                        Timestamps = new Timestamps()
+                                        {
+                                            Start = startTime,
+                                            End = endTime // End 값이 들어가야 프로그레스 바(남은 시간) 형태로 표시됩니다.
+                                        },
+                                        Buttons =
+                                        [
+                                            new DiscordRPC.Button
+                                            {
+                                                Label = buttonLabel,
+                                                Url = $"https://youtu.be/{videoData.Id}",
+                                            }
+                                        ]
+                                    });
+                                }
+                                else
+                                {
+                                    discordRPC?.UpdatePresence(new RichPresence()
+                                    {
+                                        Name = "YouTube",
+                                        Type = activityType,
+                                        Details = $"{TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 128)} ({$@"{playbackSpeed.Value:0.##}x"} speed)",
+                                        State = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 128),
+                                        StatusDisplay = StatusDisplayType.Details,
+                                        StateUrl = $"https://www.youtube.com/channel/{api.GetChannel(videoData.Snippet.ChannelId).Id}",
+                                        DetailsUrl = $"https://youtu.be/{videoData.Id}",
+                                        Assets = new Assets()
+                                        {
+                                            LargeImageKey = videoData.Snippet.Thumbnails.High.Url,
+                                            LargeImageUrl = $"https://youtu.be/{videoData.Id}",
+                                            SmallImageText = "AX Player",
+                                            SmallImageKey = "ax_player_new"
+                                        },
+                                        Timestamps = new Timestamps()
+                                        {
+                                            Start = startTime,
+                                            End = endTime // End 값이 들어가야 프로그레스 바(남은 시간) 형태로 표시됩니다.
+                                        },
+                                        Buttons =
+                                        [
+                                            new DiscordRPC.Button
+                                            {
+                                                Label = buttonLabel,
+                                                Url = $"https://youtu.be/{videoData.Id}",
+                                            }
+                                        ]
+                                    });
+                                }
                             }
                             else
                             {
