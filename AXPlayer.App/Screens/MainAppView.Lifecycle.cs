@@ -156,8 +156,15 @@ namespace AXPlayer.App.Screens
                 {
                     if (currentVideoSource != null && videoData != null)
                     {
-                        startTime = DateTime.UtcNow - TimeSpan.FromSeconds(currentVideoSource.VideoProgress.Value);
-                        endTime = startTime + XmlConvert.ToTimeSpan(videoData.ContentDetails.Duration);
+                        double playbackSpeedValue = playbackSpeed.Value;
+
+                        if (playbackSpeedValue <= 0) playbackSpeedValue = 1.0;
+
+                        TimeSpan realTimePassed = TimeSpan.FromSeconds(currentVideoSource.VideoProgress.Value / playbackSpeedValue);
+                        TimeSpan realTimeRemaining = TimeSpan.FromSeconds((XmlConvert.ToTimeSpan(videoData.ContentDetails.Duration).TotalSeconds - currentVideoSource.VideoProgress.Value) / playbackSpeedValue);
+
+                        startTime = DateTime.UtcNow - realTimePassed;
+                        endTime = DateTime.UtcNow + realTimeRemaining;
                     }
                 });
 
