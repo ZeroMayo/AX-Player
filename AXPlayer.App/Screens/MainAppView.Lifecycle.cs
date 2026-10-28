@@ -241,15 +241,7 @@ namespace AXPlayer.App.Screens
                         }
                         else
                         {
-                            discordRPC?.UpdatePresence(new RichPresence()
-                            {
-                                Type = activityType,
-                                State = AXPlayer_DiscordRPCStrings.IdleString,
-                                Assets = new Assets()
-                                {
-                                    LargeImageKey = "ax_player_new",
-                                },
-                            });
+                            discordRPC?.ClearPresence();
                         }
                         break;
                     }
@@ -285,15 +277,7 @@ namespace AXPlayer.App.Screens
                         }
                         else
                         {
-                            discordRPC?.UpdatePresence(new RichPresence()
-                            {
-                                Type = activityType,
-                                State = AXPlayer_DiscordRPCStrings.IdleString,
-                                Assets = new Assets()
-                                {
-                                    LargeImageKey = "ax_player_new",
-                                },
-                            });
+                            discordRPC?.ClearPresence();
                         }
                         break;
                     }
