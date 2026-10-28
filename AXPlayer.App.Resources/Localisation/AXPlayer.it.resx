@@ -538,6 +538,9 @@
   <data name="discord_presence_off" xml:space="preserve">
     <value>Disattivato</value>
   </data>
+  <data name="discord_presence_video_info_only" xml:space="preserve">
+    <value>Solo informazioni sul video</value>
+  </data>
   <data name="cancel" xml:space="preserve">
     <value>Annulla</value>
   </data>
