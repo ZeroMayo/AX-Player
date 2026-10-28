@@ -2,7 +2,7 @@
 
 <h1 align="center">AX Player</h1>
 <p align="center"><img width="250" alt="AX Player Logo" src="assets/AXPlayer-Icon.png"></p>
-<p align="center">A new era of YouTube Video Player with a focus on design and creativity.</p>
+<p align="center">The future of YouTube Video Player.</p>
 <p align="center">Some resources(samples) in this app are using <a href="https://github.com/ppy/osu-resources">ppy/osu-resources</a>.</p>
 
 <p align="center">
