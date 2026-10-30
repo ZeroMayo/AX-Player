@@ -47,6 +47,12 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             set => header.CornerType = value;
         }
 
+        public bool DynamicCornerType
+        {
+            get => header.DynamicCornerType;
+            set => header.DynamicCornerType = value;
+        }
+
         public IconUsage Icon
         {
             get => header.Icon;
@@ -146,7 +152,19 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 }
             }
 
-            public FormControlCornerType CornerType { get; set; }
+            public FormControlCornerType CornerType
+            {
+                get;
+                set
+                {
+                    field = value;
+
+                    if (background != null)
+                        background.CornerType = value;
+                }
+            }
+
+            public bool DynamicCornerType { get; set; }
 
             public Hotkey Hotkey
             {
@@ -205,7 +223,10 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
                 Foreground.Children = new Drawable[]
                 {
-                    background = new FormControlBackground(CornerType),
+                    background = new FormControlBackground(CornerType)
+                    {
+                        DynamicCornerType = DynamicCornerType,
+                    },
                     new Container
                     {
                         RelativeSizeAxes = Axes.X,

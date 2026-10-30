@@ -43,6 +43,20 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             }
         }
 
+        private FormControlCornerType cornerType;
+
+        public FormControlCornerType CornerType
+        {
+            get => cornerType;
+            set
+            {
+                cornerType = value;
+                updateStyle();
+            }
+        }
+
+        public bool DynamicCornerType = false;
+
         public bool IsCheckbox;
 
         [Resolved]
@@ -145,6 +159,26 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            if (DynamicCornerType)
+            {
+                switch (cornerType)
+                {
+                    case FormControlCornerType.Top:
+                        this.TransformTo(nameof(CornerRadius), new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS, 8), 250, Easing.OutQuint);
+                        break;
+                    case FormControlCornerType.Center:
+                        this.TransformTo(nameof(CornerRadius), new CornersInfo(8, 8, 8, 8), 250, Easing.OutQuint);
+                        break;
+                    case FormControlCornerType.Bottom:
+                        this.TransformTo(nameof(CornerRadius), new CornersInfo(8, AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS), 250, Easing.OutQuint);
+                        break;
+                    case FormControlCornerType.None:
+                    default:
+                        this.TransformTo(nameof(CornerRadius), new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS), 250, Easing.OutQuint);
+                        break;
+                }
             }
 
             this.TransformTo(nameof(BorderColour), colour, 250, Easing.OutQuint);

@@ -38,7 +38,28 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
         /// </summary>
         public LocalisableString HintText { get; init; }
 
-        public FormControlCornerType CornerType { get; init; }
+        public FormControlCornerType CornerType {
+            get;
+            set
+            {
+                field = value;
+
+                if (background != null)
+                    background.CornerType = value;
+            }
+        }
+
+        public bool DynamicCornerType
+        {
+            get;
+            set
+            {
+                field = value;
+
+                if (background != null)
+                    background.DynamicCornerType = value;
+            }
+        }
 
         public IconUsage Icon { get; set; }
 
@@ -62,7 +83,8 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             {
                 background = new FormControlBackground(CornerType)
                 {
-                    IsCheckbox = true
+                    IsCheckbox = true,
+                    DynamicCornerType = DynamicCornerType,
                 },
                 new Container
                 {

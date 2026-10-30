@@ -2234,12 +2234,12 @@ namespace AXPlayer.App.Screens
                                                     Spacing = new Vector2(4),
                                                     Children = new Drawable[]
                                                     {
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(reverbToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ReverbEffect,
                                                             Current = reverbEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleReverbEffect),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            DynamicCornerType = true,
                                                         }),
                                                         reverbSettings = new FillFlowContainer
                                                         {
@@ -2278,12 +2278,12 @@ namespace AXPlayer.App.Screens
                                                                 }),
                                                             }
                                                         },
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(rotateToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.RotateParameters_Enabled,
                                                             Current = rotateEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleRotateEffect),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            DynamicCornerType = true,
                                                         }),
                                                         rotateSettings = new FillFlowContainer
                                                         {
@@ -2303,12 +2303,12 @@ namespace AXPlayer.App.Screens
                                                                 }),
                                                             }
                                                         },
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(echoToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.EchoEffect,
                                                             Current = echoEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleEchoEffect),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            DynamicCornerType = true,
                                                         }),
                                                         echoSettings = new FillFlowContainer
                                                         {
@@ -2348,12 +2348,12 @@ namespace AXPlayer.App.Screens
                                                                 }),
                                                             }
                                                         },
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(distortionToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.DistortionEffect,
                                                             Current = distortionEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleDistortionEffect),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            DynamicCornerType = true,
                                                         }),
                                                         distortionSettings = new FillFlowContainer
                                                         {
@@ -2376,12 +2376,12 @@ namespace AXPlayer.App.Screens
                                                                 },
                                                             }
                                                         },
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(karaokeToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.KaraokeMode,
                                                             Current = karaokeEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleKaraokeEffect),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            DynamicCornerType = true,
                                                         }),
                                                         karaokeSettings = new FillFlowContainer
                                                         {
@@ -2401,12 +2401,12 @@ namespace AXPlayer.App.Screens
                                                                 }),
                                                             }
                                                         },
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(chorusToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ChorusEffect,
                                                             Current = chorusEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleChorusEffect),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            DynamicCornerType = true,
                                                         }),
                                                         chorusSettings = new FillFlowContainer
                                                         {
@@ -2458,12 +2458,12 @@ namespace AXPlayer.App.Screens
                                                                 }),
                                                             }
                                                         },
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(eightBitToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.EightBitEffectEnabled,
                                                             Current = eightBitEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleEightBitEffect),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            DynamicCornerType = true,
                                                         }),
                                                         eightBitSettings = new FillFlowContainer
                                                         {
@@ -3971,42 +3971,49 @@ namespace AXPlayer.App.Screens
                         reverbSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     reverbSettings.AutoSizeAxes = reverbEnabled.Value != false ? Axes.Y : Axes.None;
+                    reverbToggle.CornerType = reverbEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
 
                     //rotate
                     if (rotateEnabled.Value == false)
                         rotateSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     rotateSettings.AutoSizeAxes = rotateEnabled.Value != false ? Axes.Y : Axes.None;
+                    rotateToggle.CornerType = rotateEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
 
                     //echo
                     if (echoEnabled.Value == false)
                         echoSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     echoSettings.AutoSizeAxes = echoEnabled.Value != false ? Axes.Y : Axes.None;
+                    echoToggle.CornerType = echoEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
 
                     //distortion
                     if (distortionEnabled.Value == false)
                         distortionSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     distortionSettings.AutoSizeAxes = distortionEnabled.Value != false ? Axes.Y : Axes.None;
+                    distortionToggle.CornerType = distortionEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
 
                     //distortion
                     if (karaokeEnabled.Value == false)
                         karaokeSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     karaokeSettings.AutoSizeAxes = karaokeEnabled.Value != false ? Axes.Y : Axes.None;
+                    karaokeToggle.CornerType = karaokeEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
 
                     //chorus
                     if (chorusEnabled.Value == false)
                         chorusSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     chorusSettings.AutoSizeAxes = chorusEnabled.Value != false ? Axes.Y : Axes.None;
+                    chorusToggle.CornerType = chorusEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
 
                     //8-bit
                     if (eightBitEnabled.Value == false)
                         eightBitSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     eightBitSettings.AutoSizeAxes = eightBitEnabled.Value != false ? Axes.Y : Axes.None;
+                    eightBitToggle.CornerType = eightBitEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
                 }
                 catch
                 {

@@ -169,6 +169,8 @@ namespace AXPlayer.App.Screens
 
         private ProjectYomiTextFlowContainer debugInfo;
 
+        private FormCheckBox reverbToggle, rotateToggle, echoToggle, distortionToggle, karaokeToggle, chorusToggle, eightBitToggle;
+
         private BufferedContainer videoScalingContainer;
 
         private Box likeButtonBackground, dislikeButtonBackground, likeButtonBackgroundSelected, dislikeButtonBackgroundSelected, speedBarBG, volumeBarBG, timeBG, speedBarBGGradient, volumeBarBGGradient, timeBGGradient;

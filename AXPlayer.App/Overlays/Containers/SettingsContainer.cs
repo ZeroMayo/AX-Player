@@ -133,6 +133,8 @@ namespace AXPlayer.App.Overlays.Containers
         private Bindable<AspectRatioMethod> aspectRatioMethod;
         private Bindable<bool> fpsDisplay;
 
+        private FormEnumDropdown<ScalingMode> ScreenScaling;
+
         private FormGoogleOAuthButton login;
 
         public Action OAuthSignInAction;
@@ -554,7 +556,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.GoogleAccount,
                                                             Text = AXPlayerStrings.SignedOut,
                                                             Icon = FontAwesome.Brands.Google,
-                                                            CornerType = FormControlCornerType.Center,
+                                                            CornerType = game.IsDeployedBuild ? FormControlCornerType.Center : FormControlCornerType.Bottom,
                                                             Action = () => {
                                                                 OAuthSignInAction.Invoke();
                                                             },
@@ -768,13 +770,14 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Hotkey = new Hotkey(GlobalAction.ToggleFPSDisplay),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
-                                                        new SettingsItemV2(new FormEnumDropdown<ScalingMode>
+                                                        new SettingsItemV2(ScreenScaling = new FormEnumDropdown<ScalingMode>
                                                         {
                                                             Caption = AXPlayerStrings.ScreenScaling,
                                                             Icon = FontAwesome.Solid.WindowMaximize,
                                                             Current = appConfig.GetBindable<ScalingMode>(AXPlayerSetting.Scaling),
                                                             Hotkey = new Hotkey(GlobalAction.CycleScalingMode),
                                                             CornerType = FormControlCornerType.Bottom,
+                                                            DynamicCornerType = true,
                                                         })
                                                         {
                                                             Keywords = new[] { "scale", "letterbox" },
@@ -795,7 +798,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Icon = FontAwesome.Solid.RulerHorizontal,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
-                                                                    CornerType = FormControlCornerType.Top,
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 })
                                                                 {
                                                                     Keywords = new[] { "screen", "scaling" },
@@ -1612,6 +1615,7 @@ namespace AXPlayer.App.Overlays.Containers
                         scalingSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     scalingSettings.AutoSizeAxes = scalingMode.Value != ScalingMode.Off ? Axes.Y : Axes.None;
+                    ScreenScaling.CornerType = scalingMode.Value != ScalingMode.Off ? FormControlCornerType.Center : FormControlCornerType.Bottom;
 
                     foreach (SettingsItemV2 item in scalingSettings)
                     {
