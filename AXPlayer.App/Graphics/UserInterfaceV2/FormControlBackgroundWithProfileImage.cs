@@ -137,7 +137,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         private void flash(Colour4 flashColour, double duration)
         {
-            flashLayer.Colour = ColourInfo.GradientHorizontal(flashColour.Opacity(0), flashColour);
+            flashLayer.Colour = flashColour;
             flashLayer.FadeOutFromOne(duration, Easing.OutQuint);
         }
 
