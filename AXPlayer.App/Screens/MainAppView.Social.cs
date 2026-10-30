@@ -675,29 +675,29 @@ namespace AXPlayer.App.Screens
 
                     videoLoadingProgressSpinner.AccentColor = accentColor;
                     videoLoadingProgressSpinner.BackgroundColour = bgColor;
-                    videoLoadingProgressBaseBG.FadeColour(bgColor, 500);
+                    videoLoadingProgressBaseBG.FadeColour(bgColor, 500, Easing.OutQuint);
 
                     prevVideoButton.AccentColor = accentColor;
                     prevVideoButton.BackgroundColour = bgColor;
-                    prevVideoButton.IconObject.FadeColour(accentColor, 500);
+                    prevVideoButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
 
                     nextVideoButton.AccentColor = accentColor;
                     nextVideoButton.BackgroundColour = bgColor;
-                    nextVideoButton.IconObject.FadeColour(accentColor, 500);
+                    nextVideoButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
 
                     playPause.AccentColor = accentColor;
                     playPause.BackgroundColour = bgColor;
 
                     if (currentVideoSource != null)
-                        playPause.IconObject.FadeColour(currentVideoSource.IsPlaying() ? bgColor : accentColor, 500);
+                        playPause.IconObject.FadeColour(currentVideoSource.IsPlaying() ? bgColor : accentColor, 500, Easing.OutQuint);
                     else
-                        playPause.IconObject.FadeColour(accentColor, 500);
+                        playPause.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
 
-                    speedBarBG.FadeColour(bgColor, 500);
-                    speedBarIcon.FadeColour(accentColor, 500);
-                    speedBarExpandIcon.FadeColour(accentColor, 500);
+                    speedBarBG.FadeColour(bgColor, 500, Easing.OutQuint);
+                    speedBarIcon.FadeColour(accentColor, 500, Easing.OutQuint);
+                    speedBarExpandIcon.FadeColour(accentColor, 500, Easing.OutQuint);
 
-                    repeatButton.IconObject.FadeColour(repeat.Value ? bgColor : accentColor, 500);
+                    repeatButton.IconObject.FadeColour(repeat.Value ? bgColor : accentColor, 500, Easing.OutQuint);
                     repeatButton.AccentColor = accentColor;
                     repeatButton.BackgroundColour = bgColor;
 
@@ -708,40 +708,40 @@ namespace AXPlayer.App.Screens
                     quickDislikeButton.AccentColor = accentColor;
                     quickDislikeButton.BackgroundColour = bgColor;
 
-                    quickCommentOpenButton.IconObject.FadeColour(accentColor, 500);
+                    quickCommentOpenButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
                     quickCommentOpenButton.AccentColor = accentColor;
                     quickCommentOpenButton.BackgroundColour = bgColor;
 
-                    videoSettingsButton.IconObject.FadeColour(accentColor, 500);
+                    videoSettingsButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
                     videoSettingsButton.AccentColor = accentColor;
                     videoSettingsButton.BackgroundColour = bgColor;
 
-                    takeScreenshotButton.IconObject.FadeColour(accentColor, 500);
+                    takeScreenshotButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
                     takeScreenshotButton.AccentColor = accentColor;
                     takeScreenshotButton.BackgroundColour = bgColor;
 
-                    playlistButton.IconObject.FadeColour(accentColor, 500);
+                    playlistButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
                     playlistButton.AccentColor = accentColor;
                     playlistButton.BackgroundColour = bgColor;
 
-                    captionButton.IconObject.FadeColour(captionEnabled.Value ? bgColor : accentColor, 500);
+                    captionButton.IconObject.FadeColour(captionEnabled.Value ? bgColor : accentColor, 500, Easing.OutQuint);
                     captionButton.AccentColor = accentColor;
                     captionButton.BackgroundColour = bgColor;
 
-                    pinButton.IconObject.FadeColour(alwaysShowControl.Value ? bgColor : accentColor, 500);
+                    pinButton.IconObject.FadeColour(alwaysShowControl.Value ? bgColor : accentColor, 500, Easing.OutQuint);
                     pinButton.AccentColor = accentColor;
                     pinButton.BackgroundColour = bgColor;
 
-                    speedText.FadeColour(accentColor, 500);
+                    speedText.FadeColour(accentColor, 500, Easing.OutQuint);
 
-                    volumeBarBG.FadeColour(bgColor, 500);
-                    volumeIcon.FadeColour(accentColor, 500);
-                    volumeBarExpandIcon.FadeColour(accentColor, 500);
+                    volumeBarBG.FadeColour(bgColor, 500, Easing.OutQuint);
+                    volumeIcon.FadeColour(accentColor, 500, Easing.OutQuint);
+                    volumeBarExpandIcon.FadeColour(accentColor, 500, Easing.OutQuint);
 
-                    volumeText.FadeColour(accentColor, 500);
+                    volumeText.FadeColour(accentColor, 500, Easing.OutQuint);
 
-                    timeBG.FadeColour(bgColor, 500);
-                    timeText.FadeColour(accentColor, 500);
+                    timeBG.FadeColour(bgColor, 500, Easing.OutQuint);
+                    timeText.FadeColour(accentColor, 500, Easing.OutQuint);
 
                     menuOverlayShow.BackgroundColour = bgColor;
                     menuOverlayShow.IconColour = accentColor;

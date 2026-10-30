@@ -36,7 +36,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         private ProjectYomiTextFlowContainer desc;
         public Action<VideoMetadataDisplayWithoutProfile> ClickEvent;
 
-        private Box bgLayer, hover;
+        private Box bgLayer, hover, bgLayer2;
 
         [Resolved]
         private YouTubeAPI api { get; set; }
@@ -62,9 +62,12 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public void ApplyColours(VideoMetadataDisplayWithoutProfileColours colours)
         {
-            bgLayer.FadeColour(colours.BGColor, 500);
-            videoName.FadeColour(colours.FGColor, 500);
-            desc.FadeColour(colours.FGColor2, 500);
+            bgLayer.FadeColour(colours.BGColor, 500, Easing.OutQuint);
+            videoName.FadeColour(colours.FGColor, 500, Easing.OutQuint);
+            desc.FadeColour(colours.FGColor2, 500, Easing.OutQuint);
+
+            bgLayer2.FadeColour(ColourInfo.GradientHorizontal(colours.FGColor, colours.BGColor), 500, Easing.OutQuint);
+            bgLayer2.FadeTo(0.2f, 500, Easing.OutQuint);
         }
 
         protected override bool OnMouseDown(MouseDownEvent e)
@@ -114,6 +117,14 @@ namespace AXPlayer.App.Graphics.UserInterface
                             RelativeSizeAxes = Axes.Both,
                             Colour = overlayColourProvider.Background5,
                             Alpha = 1f,
+                        },
+                        bgLayer2 = new Box
+                        {
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = overlayColourProvider.Background5,
+                            Alpha = 0f,
                         },
                         new Container {
                             Anchor = Anchor.Centre,
