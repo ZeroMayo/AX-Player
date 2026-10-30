@@ -3,7 +3,10 @@
 
 #nullable disable
 
+using AXPlayer.App.Graphics.Containers;
+using AXPlayer.App.Graphics.Sprites;
 using osu.Framework.Allocation;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -12,8 +15,6 @@ using osu.Framework.Input.Events;
 using osu.Framework.Localisation;
 using osuTK;
 using osuTK.Graphics;
-using AXPlayer.App.Graphics.Containers;
-using AXPlayer.App.Graphics.Sprites;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
@@ -76,7 +77,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             }
         }
 
-        private Box hover, disabledOverlay;
+        private Box bg, disabledOverlay;
 
         private HotkeyDisplay hotkeyDisplay;
 
@@ -113,18 +114,11 @@ namespace AXPlayer.App.Graphics.UserInterface
                             RelativeSizeAxes = Axes.Both,
                             Children = new Drawable[]
                             {
-                                new Box
+                                bg = new Box
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Colour = overlayColourProvider.Background4,
+                                    Colour = overlayColourProvider.Background4.Darken(0.1f),
                                     Alpha = 1f,
-                                },
-                                hover = new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = Color4.White,
-                                    Blending = BlendingParameters.Additive,
-                                    Alpha = 0,
                                 },
                                 new Container {
                                     RelativeSizeAxes = Axes.Both,
@@ -189,10 +183,13 @@ namespace AXPlayer.App.Graphics.UserInterface
         protected override bool OnHover(HoverEvent e)
         {
             if (Action != null)
-                hover.FadeTo(0.1f, 500, Easing.OutQuint);
+                bg.FadeColour(colourProvider.Background3.Darken(0.1f), 250, Easing.OutQuint);
 
             return base.OnHover(e);
         }
+
+        [Resolved]
+        private OverlayColourProvider colourProvider { get; set; } = null!;
 
         protected override bool OnMouseDown(MouseDownEvent e)
         {
@@ -211,7 +208,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             base.OnHoverLost(e);
 
             if (Action != null)
-                hover.FadeOut(500, Easing.OutQuint);
+                bg.FadeColour(colourProvider.Background4.Darken(0.1f), 500, Easing.OutQuint);
         }
 
         protected override void LoadComplete()
