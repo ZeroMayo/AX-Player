@@ -64,7 +64,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         private FormDropdownHeader header = null!;
 
-        private const float header_menu_spacing = 5;
+        private const float header_menu_spacing = 2;
 
         [BackgroundDependencyLoader]
         private void load()
@@ -436,9 +436,9 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             {
                 ItemsContainer.Padding = new MarginPadding(9);
 
-                MaskingContainer.CornerRadius = AXPlayerApp.UI_CORNER_RADIUS / 1.5f;
+                MaskingContainer.CornerRadius = 8f;
                 MaskingContainer.BorderThickness = FormControlBackground.BORDER_THICKNESS;
-                MaskingContainer.BorderColour = colourProvider.Highlight1;
+                MaskingContainer.BorderColour = colourProvider.Background3;
             }
 
             protected override void AnimateOpen()

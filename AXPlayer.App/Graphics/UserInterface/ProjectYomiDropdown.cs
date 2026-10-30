@@ -80,9 +80,9 @@ namespace AXPlayer.App.Graphics.UserInterface
             [BackgroundDependencyLoader(true)]
             private void load(OverlayColourProvider? colourProvider, ProjectYomiColour colours, AudioManager audio)
             {
-                BackgroundColour = colourProvider?.Background5 ?? Color4.Black;
-                HoverColour = colourProvider?.Light4 ?? colours.PinkDarker;
-                SelectionColour = colourProvider?.Background3 ?? colours.PinkDarker.Opacity(0.5f);
+                BackgroundColour = colourProvider?.Background3.Darken(0.1f) ?? Color4.Black;
+                HoverColour = colourProvider?.Background2.Darken(0.1f) ?? colours.PinkDarker;
+                SelectionColour = colourProvider?.Background1.Darken(0.1f) ?? colours.PinkDarker.Opacity(0.5f);
 
                 sampleOpen = audio.Samples.Get(@"UI/dropdown-open");
                 sampleClose = audio.Samples.Get(@"UI/dropdown-close");
@@ -279,7 +279,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     [BackgroundDependencyLoader(true)]
                     private void load(OverlayColourProvider? colourProvider)
                     {
-                        Chevron.Colour = colourProvider?.Background5 ?? Color4.Black;
+                        Chevron.Colour = colourProvider?.Content2.Darken(0.1f) ?? Color4.Black;
                     }
 
                     private bool hovering;
