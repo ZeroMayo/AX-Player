@@ -112,12 +112,12 @@ namespace AXPlayer.App.Screens
                 if (appGlobalConfig.Get<PlayerControllerFadeStyle>(AXPlayerSetting.PlayerControllerFadeStyle) == PlayerControllerFadeStyle.Modern)
                 {
                     isControlVisible = true;
-                    uiContainer.FadeInFromZero(500, Easing.OutQuint);
-                    uiGradientContainer.FadeInFromZero(500, Easing.OutQuint);
-                    uiContainer.BlurTo(new Vector2(0), 500, Easing.OutQuint);
+                    uiContainer.FadeInFromZero(250, Easing.OutQuint);
+                    uiGradientContainer.FadeInFromZero(250, Easing.OutQuint);
+                    uiContainer.BlurTo(new Vector2(0), 250, Easing.OutQuint);
                     sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = true;
-                    bottomUIContainer.MoveToY(0, 500, Easing.OutQuint);
-                    topUIContainer.MoveToY(0, 500, Easing.OutQuint);
+                    bottomUIContainer.MoveToY(0, 250, Easing.OutQuint);
+                    topUIContainer.MoveToY(0, 250, Easing.OutQuint);
                 }
                 else
                 {
@@ -140,23 +140,23 @@ namespace AXPlayer.App.Screens
                     if (appGlobalConfig.Get<PlayerControllerFadeStyle>(AXPlayerSetting.PlayerControllerFadeStyle) == PlayerControllerFadeStyle.Modern)
                     {
                         isControlVisible = false;
-                        uiContainer.FadeOutFromOne(250, Easing.InCubic);
-                        uiGradientContainer.FadeOutFromOne(250, Easing.InCubic);
-                        uiContainer.BlurTo(new Vector2(8), 250, Easing.InCubic);
+                        uiContainer.FadeOutFromOne(150, Easing.InCubic);
+                        uiGradientContainer.FadeOutFromOne(150, Easing.InCubic);
+                        uiContainer.BlurTo(new Vector2(8), 150, Easing.InCubic);
                         sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
-                        bottomUIContainer.MoveToY(30, 250, Easing.InCubic);
-                        topUIContainer.MoveToY(-30, 250, Easing.InCubic);
+                        bottomUIContainer.MoveToY(30, 150, Easing.InCubic);
+                        topUIContainer.MoveToY(-30, 150, Easing.InCubic);
                     }
                     else
                     {
                         isControlVisible = false;
-                        uiContainer.FadeOutFromOne(250);
-                        uiGradientContainer.FadeOutFromOne(250);
+                        uiContainer.FadeOutFromOne(150);
+                        uiGradientContainer.FadeOutFromOne(150);
                         sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
                     }
 
                     if (videoVolume.Value == 0)
-                        Scheduler.AddDelayed(() => muteStateOverlay.Show(), 250);
+                        Scheduler.AddDelayed(() => muteStateOverlay.Show(), 150);
                 }
             }
         }
