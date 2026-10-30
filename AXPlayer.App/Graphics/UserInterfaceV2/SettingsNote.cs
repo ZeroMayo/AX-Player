@@ -38,7 +38,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             {
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                Padding = new MarginPadding { Top = 5, Bottom = 5 },
+                Padding = new MarginPadding { Top = 5, Bottom = 2 },
                 Child = new Container
                 {
                     RelativeSizeAxes = Axes.X,
