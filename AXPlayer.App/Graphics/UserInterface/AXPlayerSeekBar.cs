@@ -153,7 +153,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                         Height = track_height,
                                         Blending = BlendingParameters.Additive,
                                         Colour = ColourInfo.GradientHorizontal(accentColour, accentColour.Opacity(0)),
-                                        Alpha = 0.8f,
+                                        Alpha = 0.3f,
                                     },
                                 },
                              },
