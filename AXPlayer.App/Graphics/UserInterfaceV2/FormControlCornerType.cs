@@ -9,6 +9,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 {
     public enum FormControlCornerType
     {
+        None,
         Top,
         Center,
         Bottom,
