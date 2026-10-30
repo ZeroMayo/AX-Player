@@ -10,6 +10,7 @@ using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.UserInterface;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Extensions.ObjectExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
@@ -438,7 +439,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
                 MaskingContainer.CornerRadius = 8f;
                 MaskingContainer.BorderThickness = FormControlBackground.BORDER_THICKNESS;
-                MaskingContainer.BorderColour = colourProvider.Background3;
+                MaskingContainer.BorderColour = colourProvider.Background3.Darken(0.1f);
             }
 
             protected override void AnimateOpen()
