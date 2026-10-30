@@ -171,7 +171,7 @@ namespace AXPlayer.App.Screens
 
         private BufferedContainer videoScalingContainer;
 
-        private Box likeButtonBackground, dislikeButtonBackground, likeButtonBackgroundSelected, dislikeButtonBackgroundSelected, speedBarBG, volumeBarBG, timeBG;
+        private Box likeButtonBackground, dislikeButtonBackground, likeButtonBackgroundSelected, dislikeButtonBackgroundSelected, speedBarBG, volumeBarBG, timeBG, speedBarBGGradient, volumeBarBGGradient, timeBGGradient;
 
         private FillFlowContainer likeButtonForeground, dislikeButtonForeground;
 

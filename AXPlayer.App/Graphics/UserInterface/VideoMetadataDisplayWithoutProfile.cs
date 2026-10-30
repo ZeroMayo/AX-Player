@@ -120,9 +120,10 @@ namespace AXPlayer.App.Graphics.UserInterface
                         },
                         bgLayer2 = new Box
                         {
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
                             RelativeSizeAxes = Axes.Both,
+                            Size = new Vector2(0.5f, 1),
                             Colour = overlayColourProvider.Background5,
                             Alpha = 0f,
                         },

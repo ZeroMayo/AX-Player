@@ -9,9 +9,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using Google.Apis.YouTube.v3;
-using Google.Apis.YouTube.v3.Data;
-using Humanizer;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics;
@@ -21,11 +18,17 @@ using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
 using AXPlayer.App.Utils;
+using Google.Apis.YouTube.v3;
+using Google.Apis.YouTube.v3.Data;
+using Humanizer;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Logging;
 using osu.Framework.Threading;
@@ -35,8 +38,6 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using static Google.Apis.YouTube.v3.CommentThreadsResource.ListRequest;
 using Container = osu.Framework.Graphics.Containers.Container;
-using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Shapes;
 
 namespace AXPlayer.App.Screens
 {
@@ -696,6 +697,9 @@ namespace AXPlayer.App.Screens
                     speedBarBG.FadeColour(bgColor, 500, Easing.OutQuint);
                     speedBarIcon.FadeColour(accentColor, 500, Easing.OutQuint);
                     speedBarExpandIcon.FadeColour(accentColor, 500, Easing.OutQuint);
+                    speedBarBGGradient.Colour = ColourInfo.GradientVertical(bgColor.Darken(1f).Opacity(0f), bgColor.Darken(1f));
+
+                    speedText.FadeColour(accentColor, 500, Easing.OutQuint);
 
                     repeatButton.IconObject.FadeColour(repeat.Value ? bgColor : accentColor, 500, Easing.OutQuint);
                     repeatButton.AccentColor = accentColor;
@@ -732,16 +736,16 @@ namespace AXPlayer.App.Screens
                     pinButton.AccentColor = accentColor;
                     pinButton.BackgroundColour = bgColor;
 
-                    speedText.FadeColour(accentColor, 500, Easing.OutQuint);
-
                     volumeBarBG.FadeColour(bgColor, 500, Easing.OutQuint);
                     volumeIcon.FadeColour(accentColor, 500, Easing.OutQuint);
                     volumeBarExpandIcon.FadeColour(accentColor, 500, Easing.OutQuint);
+                    volumeBarBGGradient.Colour = ColourInfo.GradientVertical(bgColor.Darken(1f).Opacity(0f), bgColor.Darken(1f));
 
                     volumeText.FadeColour(accentColor, 500, Easing.OutQuint);
 
                     timeBG.FadeColour(bgColor, 500, Easing.OutQuint);
                     timeText.FadeColour(accentColor, 500, Easing.OutQuint);
+                    timeBGGradient.Colour = ColourInfo.GradientVertical(bgColor.Darken(1f).Opacity(0f), bgColor.Darken(1f));
 
                     menuOverlayShow.BackgroundColour = bgColor;
                     menuOverlayShow.IconColour = accentColor;

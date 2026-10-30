@@ -9,6 +9,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
@@ -114,7 +115,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         public double DisabledFadeDuration { get; set; } = 200;
 
         protected Box Hover;
-        protected Box Background;
+        protected Box Background, BackgroundGradient;
         protected SpriteText SpriteText;
         private readonly Container content;
 
@@ -190,6 +191,14 @@ namespace AXPlayer.App.Graphics.UserInterface
                         RelativeSizeAxes = Axes.Both,
                         Alpha = transparentBackground ? 0 : 1,
                     },
+                    BackgroundGradient = new Box
+                    {
+                        Anchor = Anchor.BottomCentre,
+                        Origin = Anchor.BottomCentre,
+                        RelativeSizeAxes = Axes.Both,
+                        Size = new Vector2(1, 0.75f),
+                        Alpha = transparentBackground ? 0 : 0.3f,
+                    },
                     ForegroundContent = new Container
                     {
                         Origin = Anchor.Centre,
@@ -224,6 +233,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         private void load(OverlayColourProvider overlayColourProvider)
         {
             Background.Colour = bgColor = overlayColourProvider.Background3;
+            BackgroundGradient.Colour = ColourInfo.GradientVertical(overlayColourProvider.Background3.Darken(1f).Opacity(0f), overlayColourProvider.Background3.Darken(1f));
             accentColor = SpriteText.Colour = overlayColourProvider.Content2;
         }
 

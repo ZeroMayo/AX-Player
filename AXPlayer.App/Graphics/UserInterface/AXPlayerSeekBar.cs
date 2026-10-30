@@ -5,16 +5,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Net.Http;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Apis.YouTube.v3.Data;
+using AXPlayer.App.Config;
 using AXPlayer.App.Utils;
+using Google.Apis.YouTube.v3.Data;
+using Newtonsoft.Json.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Shapes;
@@ -25,7 +28,6 @@ using PaletteNet;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Vector2 = osuTK.Vector2;
-using AXPlayer.App.Config;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
@@ -34,7 +36,7 @@ namespace AXPlayer.App.Graphics.UserInterface
     {
         protected readonly AXPlayerSeekBar.SliderNub Nub;
         protected readonly Path LeftBox;
-        protected readonly Box RightBox;
+        protected readonly Box RightBox, RightBoxGradient;
         protected readonly Container LeftBoxContainer;
         protected readonly Container RightBoxContainer;
         private readonly Container nubContainer;
@@ -63,8 +65,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             set
             {
                 accentColour = value;
-                LeftBox.FadeColour(value, 500, Easing.OutQuint);
-                Nub.FadeColour(value, 500, Easing.OutQuint);
+                updateColours();
             }
         }
 
@@ -76,7 +77,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             set
             {
                 backgroundColour = value;
-                RightBox.FadeColour(value, 500, Easing.OutQuint);
+                updateColours();
             }
         }
 
@@ -146,6 +147,13 @@ namespace AXPlayer.App.Graphics.UserInterface
                                         Colour = backgroundColour,
                                         RelativeSizeAxes = Axes.X,
                                     },
+                                    RightBoxGradient = new Box
+                                    {
+                                        Width = 50,
+                                        Height = track_height,
+                                        Colour = ColourInfo.GradientHorizontal(accentColour, backgroundColour),
+                                        Alpha = 0.5f,
+                                    },
                                 },
                              },
                         },
@@ -187,6 +195,15 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 this.TransformBindableTo(amplitudeAnimated, what.NewValue && IsPlaying.Value ? 3.5f : 0f, 400, Easing.OutQuint);
             }, true);
+        }
+
+        private void updateColours()
+        {
+            LeftBox.FadeColour(accentColour, 500, Easing.OutQuint);
+            Nub.FadeColour(accentColour, 500, Easing.OutQuint);
+            RightBox.FadeColour(backgroundColour, 500, Easing.OutQuint);
+
+            RightBoxGradient.FadeColour(ColourInfo.GradientHorizontal(accentColour, backgroundColour), 500, Easing.OutQuint);
         }
 
         [Resolved]

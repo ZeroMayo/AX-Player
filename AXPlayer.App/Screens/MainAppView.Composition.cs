@@ -723,6 +723,15 @@ namespace AXPlayer.App.Screens
                                                                                                     Colour = overlayColourProvider.Background3,
                                                                                                     Alpha = 1f,
                                                                                                 },
+                                                                                                speedBarBGGradient = new Box
+                                                                                                {
+                                                                                                    Anchor = Anchor.BottomCentre,
+                                                                                                    Origin = Anchor.BottomCentre,
+                                                                                                    RelativeSizeAxes = Axes.Both,
+                                                                                                    Size = new Vector2(1, 0.75f),
+                                                                                                    Alpha = 0.3f,
+                                                                                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background3.Darken(1f).Opacity(0f), overlayColourProvider.Background3.Darken(1f)),
+                                                                                                },
                                                                                                 new FillFlowContainer
                                                                                                 {
                                                                                                     AutoSizeAxes = Axes.Both,
@@ -788,6 +797,15 @@ namespace AXPlayer.App.Screens
                                                                                                     RelativeSizeAxes = Axes.Both,
                                                                                                     Colour = overlayColourProvider.Background3,
                                                                                                     Alpha = 1f,
+                                                                                                },
+                                                                                                volumeBarBGGradient = new Box
+                                                                                                {
+                                                                                                    Anchor = Anchor.BottomCentre,
+                                                                                                    Origin = Anchor.BottomCentre,
+                                                                                                    RelativeSizeAxes = Axes.Both,
+                                                                                                    Size = new Vector2(1, 0.75f),
+                                                                                                    Alpha = 0.3f,
+                                                                                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background3.Darken(1f).Opacity(0f), overlayColourProvider.Background3.Darken(1f)),
                                                                                                 },
                                                                                                 new FillFlowContainer
                                                                                                 {
@@ -856,6 +874,15 @@ namespace AXPlayer.App.Screens
                                                                                     RelativeSizeAxes = Axes.Both,
                                                                                     Colour = overlayColourProvider.Background3,
                                                                                     Alpha = 1f,
+                                                                                },
+                                                                                timeBGGradient = new Box
+                                                                                {
+                                                                                    Anchor = Anchor.BottomCentre,
+                                                                                    Origin = Anchor.BottomCentre,
+                                                                                    RelativeSizeAxes = Axes.Both,
+                                                                                    Size = new Vector2(1, 0.75f),
+                                                                                    Alpha = 0.3f,
+                                                                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background3.Darken(1f).Opacity(0f), overlayColourProvider.Background3.Darken(1f)),
                                                                                 },
                                                                                 new FillFlowContainer
                                                                                 {
