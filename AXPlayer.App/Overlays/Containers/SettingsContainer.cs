@@ -484,7 +484,7 @@ namespace AXPlayer.App.Overlays.Containers
                                     RelativeSizeAxes = Axes.Both,
                                     Padding = new MarginPadding
                                     {
-                                        Horizontal = 16,
+                                        Horizontal = 4,
                                     },
                                     Children = new Drawable[] {
                                         settingsSections = new ProjectYomiScrollContainer
