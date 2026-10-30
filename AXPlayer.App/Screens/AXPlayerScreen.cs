@@ -14,18 +14,18 @@ namespace AXPlayer.App.Screens
 
         public virtual bool CursorVisible => true;
 
-        public override void OnSuspending(ScreenTransitionEvent e)
+        public override void OnEntering(ScreenTransitionEvent e)
         {
-            base.OnSuspending(e);
+            base.OnEntering(e);
             this.FadeOut(250, Easing.OutQuint);
             this.ScaleTo(0.9f, 250, Easing.OutQuint);
         }
 
-        public override void OnResuming(ScreenTransitionEvent e)
+        public override bool OnExiting(ScreenExitEvent e)
         {
-            base.OnResuming(e);
             this.FadeIn(250, Easing.OutQuint);
             this.ScaleTo(1.1f).Then().ScaleTo(1f, 250, Easing.OutQuint);
+            return base.OnExiting(e);
         }
     }
 }
