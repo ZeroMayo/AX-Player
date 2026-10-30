@@ -74,6 +74,9 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 case FormControlCornerType.Bottom:
                     CornerRadius = new CornersInfo(8, AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS);
                     break;
+                default:
+                    CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS);
+                    break;
             }
 
             BorderThickness = BORDER_THICKNESS;
