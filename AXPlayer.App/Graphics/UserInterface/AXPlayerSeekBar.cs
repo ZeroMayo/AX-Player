@@ -151,8 +151,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     {
                                         Width = 50,
                                         Height = track_height,
-                                        Colour = ColourInfo.GradientHorizontal(accentColour, backgroundColour),
-                                        Alpha = 0.5f,
+                                        Blending = BlendingParameters.Additive,
+                                        Colour = ColourInfo.GradientHorizontal(accentColour, accentColour.Opacity(0)),
+                                        Alpha = 0.8f,
                                     },
                                 },
                              },
@@ -203,7 +204,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             Nub.FadeColour(accentColour, 500, Easing.OutQuint);
             RightBox.FadeColour(backgroundColour, 500, Easing.OutQuint);
 
-            RightBoxGradient.FadeColour(ColourInfo.GradientHorizontal(accentColour, backgroundColour), 500, Easing.OutQuint);
+            RightBoxGradient.FadeColour(ColourInfo.GradientHorizontal(accentColour, accentColour.Opacity(0)), 500, Easing.OutQuint);
         }
 
         [Resolved]
