@@ -40,6 +40,12 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             set => header.HintText = value;
         }
 
+        public FormControlCornerType CornerType
+        {
+            get => header.CornerType;
+            set => header.CornerType = value;
+        }
+
         public IconUsage Icon
         {
             get => header.Icon;
@@ -139,6 +145,8 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 }
             }
 
+            public FormControlCornerType CornerType { get; set; }
+
             public Hotkey Hotkey
             {
                 get => hotkey;
@@ -196,7 +204,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
                 Foreground.Children = new Drawable[]
                 {
-                    background = new FormControlBackgroundWithDiscordProfileImage(),
+                    background = new FormControlBackgroundWithDiscordProfileImage(CornerType),
                     new Container
                     {
                         RelativeSizeAxes = Axes.X,

@@ -537,12 +537,14 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.CloseButtonAction,
                                                             Current = closeButtonAction,
                                                             Icon = FontAwesome.Regular.WindowClose,
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         new SettingsItemV2(discordRichPresenceDropdown = new FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode>
                                                         {
                                                             Caption = AXPlayerStrings.DiscordRichPresence,
                                                             Current = discordRichPresence,
                                                             Icon = FontAwesome.Brands.Discord,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             Note = { BindTarget = discordNotInstalledNote },
@@ -552,6 +554,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.GoogleAccount,
                                                             Text = AXPlayerStrings.SignedOut,
                                                             Icon = FontAwesome.Brands.Google,
+                                                            CornerType = FormControlCornerType.Center,
                                                             Action = () => {
                                                                 OAuthSignInAction.Invoke();
                                                             },
@@ -560,6 +563,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.ReleaseStream,
                                                             Current = { Value = configReleaseStream.Value },
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         checkForUpdatesButtonCore = new SettingsItemV2(CheckForUpdatesButton = new FormButton
                                                         {
@@ -570,6 +574,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Action = () => {
                                                                 CheckUpdateAction.Invoke();
                                                             },
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -585,6 +590,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = game.CurrentLanguage,
                                                             Icon = FontAwesome.Solid.Language,
                                                             AlwaysShowSearchBar = true,
+                                                            CornerType = FormControlCornerType.Top,
                                                         })
                                                         {
                                                             ShowRevertToDefaultButton = false,
@@ -594,30 +600,35 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.UsernameDisplayMode,
                                                             Current = usernameDisplayMode,
                                                             Icon = FontAwesome.Solid.User,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<VideoMetadataDisplayAlignment>
                                                         {
                                                             Caption = VideoMetadataDisplayAlignmentStrings.VideoMetadataDisplayAlignmentSetting,
                                                             Current = videoMetadataDisplayAlignment,
                                                             Icon = FontAwesome.Solid.List,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<OverlayColourScheme>
                                                         {
                                                             Caption = AXPlayerStrings.ColourScheme,
                                                             Current = colourSchemeBindable,
                                                             Icon = FontAwesome.Solid.Palette,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<UIFont>
                                                         {
                                                             Caption = AXPlayerStrings.UIFont,
                                                             Current = ui_font,
                                                             Icon = FontAwesome.Solid.Font,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<ProfileImageShape>
                                                         {
                                                             Caption = AXPlayerStrings.ProfileImageShape,
                                                             Current = profileImageShape,
                                                             Icon = FontAwesome.Solid.Shapes,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
@@ -627,30 +638,35 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.UIScale),
                                                             KeyboardStep = 0.01f,
                                                             LabelFormat = v => $@"{v:0.##}x",
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.PlayOverlaySFX,
                                                             Icon = FontAwesome.Solid.VolumeUp,
                                                             Current = playOverlaySFX,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<SFXType>
                                                         {
                                                             Caption = AXPlayerStrings.SFXType,
                                                             Icon = FontAwesome.Solid.VolumeUp,
                                                             Current = overlaySFXType,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<PlayerControllerFadeStyle>
                                                         {
                                                             Caption = AXPlayerStrings.PlayerControllerFadeStyle,
                                                             Icon = FontAwesome.Solid.Eye,
                                                             Current = appConfig.GetBindable<PlayerControllerFadeStyle>(AXPlayerSetting.PlayerControllerFadeStyle),
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.WavySeekbar,
                                                             Icon = FontAwesome.Solid.SlidersH,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.WavySeekBar),
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -665,7 +681,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.FrameLimiter,
                                                             Icon = FontAwesome.Solid.SlidersH,
                                                             Current = frameSyncMode,
-                                                            Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F7 }))
+                                                            Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F7 })),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         windowModeDropdownSettings = new SettingsItemV2(windowModeDropdown = new WindowModeDropdown
                                                         {
@@ -673,7 +690,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Regular.WindowMaximize,
                                                             Items = window?.SupportedWindowModes,
                                                             Current = windowMode,
-                                                            Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.F11 }))
+                                                            Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.F11 })),
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             CanBeShown = { Value = window?.SupportedWindowModes.Count() > 1 },
@@ -684,6 +702,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Regular.WindowMaximize,
                                                             Items = window?.Displays,
                                                             Current = currentDisplay,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             CanBeShown = { BindTarget = displayDropdownCanBeShown }
@@ -693,7 +712,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ScreenResolution,
                                                             Icon = FontAwesome.Regular.WindowMaximize,
                                                             ItemSource = resolutionsFullscreen,
-                                                            Current = sizeFullscreen
+                                                            Current = sizeFullscreen,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             ShowRevertToDefaultButton = false,
@@ -704,7 +724,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ScreenResolution,
                                                             Icon = FontAwesome.Regular.WindowMaximize,
                                                             ItemSource = resolutionsWindowed,
-                                                            Current = windowedResolution
+                                                            Current = windowedResolution,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             ShowRevertToDefaultButton = false,
@@ -715,6 +736,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.MinimiseOnFocusLoss,
                                                             Icon = FontAwesome.Regular.WindowMinimize,
                                                             Current = config.GetBindable<bool>(FrameworkSetting.MinimiseOnFocusLossInFullscreen),
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new RendererSettingsDropdown
                                                         {
@@ -725,6 +747,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             #pragma warning disable CS0612 // Type or member is obsolete
                                                             .Where(t => t != RendererType.Vulkan && t != RendererType.OpenGLLegacy),
                                                             #pragma warning restore CS0612 // Type or member is obsolete
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         reflexSettingBase = new SettingsItemV2(reflexSetting = new ReflexDropdown
                                                         {
@@ -732,6 +755,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Bolt,
                                                             Current = reflexMode,
                                                             HintText = AXPlayerStrings.ReflexHint,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             Note = { BindTarget = reflexNotice }
@@ -742,6 +766,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Bolt,
                                                             Current = fpsDisplay,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleFPSDisplay),
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<ScalingMode>
                                                         {
@@ -749,6 +774,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.WindowMaximize,
                                                             Current = appConfig.GetBindable<ScalingMode>(AXPlayerSetting.Scaling),
                                                             Hotkey = new Hotkey(GlobalAction.CycleScalingMode),
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         })
                                                         {
                                                             Keywords = new[] { "scale", "letterbox" },
@@ -769,6 +795,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Icon = FontAwesome.Solid.RulerHorizontal,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Top,
                                                                 })
                                                                 {
                                                                     Keywords = new[] { "screen", "scaling" },
@@ -780,6 +807,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Icon = FontAwesome.Solid.RulerVertical,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 })
                                                                 {
                                                                     Keywords = new[] { "screen", "scaling" },
@@ -791,6 +819,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Current = scalingSizeX,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 })
                                                                 {
                                                                     Keywords = new[] { "screen", "scaling" },
@@ -802,6 +831,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Current = scalingSizeY,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 })
                                                                 {
                                                                     Keywords = new[] { "screen", "scaling" },
@@ -813,6 +843,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Current = scalingBackgroundDim,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 })
                                                             }
                                                         },
@@ -829,6 +860,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ScreenshotFormat,
                                                             Icon = FontAwesome.Solid.WindowMaximize,
                                                             Current = screenshotFormat,
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         screenshotOptions = new FillFlowContainer
                                                         {
@@ -845,6 +877,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Icon = FontAwesome.Solid.SlidersH,
                                                                     Current = appConfig.GetBindable<int>(AXPlayerSetting.ScreenshotQuality),
                                                                     LabelFormat = value => $"{value}%",
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                             }
                                                         },
@@ -852,7 +885,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.ShowCursorInScreenshots,
                                                             Icon = FontAwesome.Solid.MousePointer,
-                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.ScreenshotCaptureMenuCursor)
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.ScreenshotCaptureMenuCursor),
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -868,6 +902,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.WindowMaximize,
                                                             Current = aspectRatioMethod,
                                                             Hotkey = new Hotkey(GlobalAction.CycleAspectRatio),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<double>
                                                         {
@@ -876,11 +911,13 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<double>(AXPlayerSetting.VideoDimLevel),
                                                             DisplayAsPercentage = true,
                                                             KeyboardStep = 0.05f,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(hwAccelCheckbox = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.UseHardwareAcceleration,
                                                             Icon = FontAwesome.Solid.Bolt,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             Note = { BindTarget = hwAccelNote },
@@ -889,6 +926,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.VideoQuality,
                                                             Icon = FontAwesome.Solid.Video,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             ShowRevertToDefaultButton = false,
@@ -897,6 +935,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.AudioTracks,
                                                             Icon = FontAwesome.Solid.FileAudio,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             ShowRevertToDefaultButton = false,
@@ -906,12 +945,14 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ShowVideoMetadataOnWindowTitle,
                                                             Icon = FontAwesome.Solid.Font,
                                                             Current = showVideoMetadataOnWindowTitle,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ResetPlaybackSpeedWhenLoadingAVideo,
                                                             Icon = FontAwesome.Solid.TachometerAlt,
-                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.ResetPlaybackSpeedWhenLoadingAVideo)
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.ResetPlaybackSpeedWhenLoadingAVideo),
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -927,6 +968,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoBloomLevel),
                                                             DisplayAsPercentage = true,
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
@@ -934,6 +976,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength),
                                                             DisplayAsPercentage = true,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
@@ -941,6 +984,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoGrayscaleLevel),
                                                             DisplayAsPercentage = true,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
@@ -948,7 +992,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoHueShift),
                                                             KeyboardStep = 1,
-                                                            LabelFormat = value => $"{value:N0}°"
+                                                            LabelFormat = value => $"{value:N0}°",
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -970,12 +1015,14 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.ClosedCaptioning,
                                                             Current = captionEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.CycleCaptionLanguage),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         advancedSubtitlesBase = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.AdvancedSubtitleStyle,
                                                             Icon = FontAwesome.Solid.ClosedCaptioning,
                                                             Current = advancedSubtitles,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             Note = { BindTarget = srv3Notice },
@@ -984,6 +1031,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.CaptionLanguage,
                                                             Icon = FontAwesome.Solid.Language,
+                                                            CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
                                                             ShowRevertToDefaultButton = false,
@@ -993,6 +1041,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.CaptionFont,
                                                             Current = caption_font,
                                                             Icon = FontAwesome.Solid.Font,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
@@ -1000,12 +1049,14 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Sun,
                                                             Current = captionBGOpacity,
                                                             DisplayAsPercentage = true,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormColourPicker
                                                         {
                                                             Caption = AXPlayerStrings.CaptionBGColour,
                                                             Current = appConfig.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor),
                                                             Icon = FontAwesome.Solid.Palette,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<int>
                                                         {
@@ -1013,13 +1064,15 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.SlidersH,
                                                             Current = appConfig.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius),
                                                             KeyboardStep = 1,
-                                                            LabelFormat = value => $"{value}px"
+                                                            LabelFormat = value => $"{value}px",
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ClosedCaptionsSmoothAnimation,
                                                             Icon = FontAwesome.Solid.ClosedCaptioning,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation),
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -1033,6 +1086,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.OutputDevice,
                                                             Icon = FontAwesome.Solid.VolumeUp,
+                                                            CornerType = FormControlCornerType.Top,
                                                         })
                                                         {
                                                             Note = { BindTarget = alsaExclusiveDeviceNote },
@@ -1047,6 +1101,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.VolumeUp,
                                                             Current = adjustPitch,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleAdjustPitchOnSpeedChange),
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -1070,6 +1125,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Icon = FontAwesome.Solid.VolumeUp,
                                                                     Current = videoVolume,
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Top,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<double>
                                                                 {
@@ -1077,6 +1133,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     Icon = FontAwesome.Solid.VolumeUp,
                                                                     Current = config.GetBindable<double>(FrameworkSetting.VolumeEffect),
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                             }
                                                         },
@@ -1084,7 +1141,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.AudioNormalization,
                                                             Icon = FontAwesome.Solid.VolumeUp,
-                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.AudioNormalization)
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.AudioNormalization),
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText
                                                         {
@@ -1099,18 +1157,21 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ShowLogOverlay,
                                                             Icon = FontAwesome.Solid.Bug,
                                                             Current = config.GetBindable<bool>(FrameworkSetting.ShowLogOverlay),
-                                                            Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F10 }))
+                                                            Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F10 })),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.BypassFTBRenderPass,
                                                             Icon = FontAwesome.Solid.Bug,
-                                                            Current = debugConfig.GetBindable<bool>(DebugSetting.BypassFrontToBackPass)
+                                                            Current = debugConfig.GetBindable<bool>(DebugSetting.BypassFrontToBackPass),
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(latencyModeDropdown = new FormEnumDropdown<GCLatencyMode>
                                                         {
                                                             Caption = AXPlayerStrings.GC_Mode,
                                                             Icon = FontAwesome.Solid.Bug,
+                                                            CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new SettingsButtonV2
                                                         {

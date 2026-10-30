@@ -56,12 +56,24 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         private readonly DiscordProfileImageWithoutMasking profileImage;
 
-        public FormControlBackgroundWithDiscordProfileImage()
+        public FormControlBackgroundWithDiscordProfileImage(FormControlCornerType cornerType)
         {
             RelativeSizeAxes = Axes.Both;
 
             Masking = true;
-            CornerRadius = AXPlayerApp.UI_CORNER_RADIUS / 1.5f;
+
+            switch (cornerType)
+            {
+                case FormControlCornerType.Top:
+                    CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS, 8);
+                    break;
+                case FormControlCornerType.Center:
+                    CornerRadius = new CornersInfo(8, 8, 8, 8);
+                    break;
+                case FormControlCornerType.Bottom:
+                    CornerRadius = new CornersInfo(8, AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS);
+                    break;
+            }
 
             BorderThickness = BORDER_THICKNESS;
 
@@ -158,8 +170,10 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
             this.TransformTo(nameof(BorderColour), border ? borderColour : colour, 250, Easing.OutQuint);
 
+            /*
             if (IsCheckbox)
                 this.TransformTo(nameof(CornerRadius), enabled ? new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS / 1.5f) : new CornersInfo(DrawHeight / 2), 250, Easing.OutQuint);
+            */
 
             box.FadeColour(colour, 250, Easing.OutQuint);
         }

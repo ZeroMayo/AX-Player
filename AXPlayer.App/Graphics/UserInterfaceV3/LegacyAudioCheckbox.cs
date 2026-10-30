@@ -19,6 +19,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             Caption = AXPlayerStrings.LegacyAudioLabel;
             HintText = AXPlayerStrings.LegacyAudioTooltip;
             Icon = FontAwesome.Solid.VolumeUp;
+            CornerType = FormControlCornerType.Center;
         }
 
         [BackgroundDependencyLoader]

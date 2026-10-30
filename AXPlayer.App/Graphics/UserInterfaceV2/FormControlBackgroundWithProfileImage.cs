@@ -2,16 +2,17 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using AXPlayer.App.Graphics.UserInterface;
+using AXPlayer.App.Online;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osuTK.Graphics;
-using AXPlayer.App.Graphics.UserInterface;
-using osu.Framework.Bindables;
-using AXPlayer.App.Online;
+using Vortice.Direct3D11;
 
 namespace AXPlayer.App.Graphics.UserInterfaceV2
 {
@@ -56,12 +57,24 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         private readonly ProfileImageWithoutMasking profileImage;
 
-        public FormControlBackgroundWithProfileImage()
+        public FormControlBackgroundWithProfileImage(FormControlCornerType cornerType)
         {
             RelativeSizeAxes = Axes.Both;
 
             Masking = true;
-            CornerRadius = AXPlayerApp.UI_CORNER_RADIUS / 1.5f;
+
+            switch (cornerType)
+            {
+                case FormControlCornerType.Top:
+                    CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS, 8);
+                    break;
+                case FormControlCornerType.Center:
+                    CornerRadius = new CornersInfo(8, 8, 8, 8);
+                    break;
+                case FormControlCornerType.Bottom:
+                    CornerRadius = new CornersInfo(8, AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS);
+                    break;
+            }
 
             BorderThickness = BORDER_THICKNESS;
 
@@ -172,8 +185,10 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
             this.TransformTo(nameof(BorderColour), border ? borderColour : colour, 250, Easing.OutQuint);
 
+            /*
             if (IsCheckbox)
                 this.TransformTo(nameof(CornerRadius), enabled ? new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS / 1.5f) : new CornersInfo(DrawHeight / 2), 250, Easing.OutQuint);
+            */
 
             box.FadeColour(colour, 250, Easing.OutQuint);
         }

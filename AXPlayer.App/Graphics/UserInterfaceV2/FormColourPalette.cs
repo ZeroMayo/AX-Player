@@ -27,6 +27,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         public LocalisableString Caption { get; init; }
         public LocalisableString HintText { get; init; }
+        public FormControlCornerType CornerType { get; init; }
 
         public BindableBool CanAdd { get; } = new BindableBool(true);
 
@@ -46,7 +47,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
             InternalChildren = new Drawable[]
             {
-                background = new FormControlBackground(),
+                background = new FormControlBackground(CornerType),
                 new FillFlowContainer
                 {
                     RelativeSizeAxes = Axes.X,

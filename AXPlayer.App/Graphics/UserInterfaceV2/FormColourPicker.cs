@@ -76,6 +76,8 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
         /// </summary>
         public LocalisableString HintText { get; init; }
 
+        public FormControlCornerType CornerType { get; init; }
+
         public IconUsage Icon { get; set; }
 
         public Hotkey Hotkey { get; init; }
@@ -97,7 +99,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
             InternalChildren = new Drawable[]
             {
-                background = new FormControlBackground(),
+                background = new FormControlBackground(CornerType),
                 flashLayer = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
