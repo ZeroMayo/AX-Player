@@ -124,8 +124,8 @@ namespace AXPlayer.App.Graphics.UserInterface
                             Origin = Anchor.CentreLeft,
                             RelativeSizeAxes = Axes.Both,
                             Size = new Vector2(0.5f, 1),
-                            Colour = overlayColourProvider.Background5,
-                            Alpha = 0f,
+                            Colour = ColourInfo.GradientHorizontal(overlayColourProvider.Content2, overlayColourProvider.Background5),
+                            Alpha = 0.2f,
                         },
                         new Container {
                             Anchor = Anchor.Centre,
