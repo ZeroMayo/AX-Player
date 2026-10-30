@@ -93,6 +93,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 {
                     Colour = Colour4.Transparent,
                     RelativeSizeAxes = Axes.Both,
+                    //Blending = BlendingParameters.Additive,
                 },
                 sounds = new HoverSounds(),
             };
@@ -136,39 +137,32 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             sounds.Enabled.Value = visualStyle != VisualStyle.Disabled;
 
             ColourInfo colour;
-            ColourInfo borderColour;
-
-            bool border = false;
 
             switch (visualStyle)
             {
                 case VisualStyle.Normal:
                     colour = colourProvider.Background4.Darken(0.1f);
-                    borderColour = colourProvider.Light4;
                     break;
 
                 case VisualStyle.Disabled:
                     colour = colourProvider.Background4;
-                    borderColour = colourProvider.Dark1;
                     break;
 
                 case VisualStyle.Hovered:
-                    colour = ColourInfo.GradientHorizontal(colourProvider.Background5, colourProvider.Dark4);
-                    borderColour = colourProvider.Light4;
-                    border = true;
+                    colour = colourProvider.Background3.Darken(0.1f);
                     break;
 
                 case VisualStyle.Focused:
-                    colour = ColourInfo.GradientHorizontal(colourProvider.Background5, colourProvider.Dark3);
-                    border = true;
-                    borderColour = colourProvider.Highlight1;
+                    colour = colourProvider.Background3.Darken(0.1f);
                     break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            this.TransformTo(nameof(BorderColour), border ? borderColour : colour, 250, Easing.OutQuint);
+            this.TransformTo(nameof(BorderColour), colour, 250, Easing.OutQuint);
+
+            //hoverLayer.FadeTo(focused ? 0.2f : 0f, 250, Easing.OutQuint);
 
             /*
             if (IsCheckbox)
