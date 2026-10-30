@@ -228,6 +228,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                             Width = 0.5f,
                             Padding = new MarginPadding
                             {
+                                Left = 4,
                                 Right = 10,
                                 Vertical = 4,
                             },
@@ -272,6 +273,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                             s.Origin = Anchor.CentreRight;
                             s.RelativeSizeAxes = Axes.X;
                             s.Width = 0.5f;
+                            s.Margin = new MarginPadding { Right = 4 };
                         })
                     },
                 },

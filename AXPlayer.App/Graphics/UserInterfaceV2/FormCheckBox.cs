@@ -68,7 +68,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Padding = new MarginPadding(9),
+                    Padding = new MarginPadding() { Vertical = 9, Left = 9, Right = 13 },
                     Children = new Drawable[]
                     {
                         new Container
@@ -77,7 +77,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                             Origin = Anchor.CentreLeft,
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
-                            Padding = new MarginPadding { Right = 56 + 5 },
+                            Padding = new MarginPadding { Left = 4, Right = 56 + 5 },
                             Children = new Drawable[]
                             {
                                 caption = new FormFieldCaption

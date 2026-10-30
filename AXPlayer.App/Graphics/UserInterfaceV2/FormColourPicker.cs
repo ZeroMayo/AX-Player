@@ -113,7 +113,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                     {
                         Vertical = 5,
                         Left = 9,
-                        Right = 5,
+                        Right = 5 + 8,
                     },
                     ColumnDimensions = new[]
                     {
@@ -138,6 +138,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                                 {
                                     Right = 10,
                                     Vertical = 4,
+                                    Left = 4,
                                 },
                                 Children = new Drawable[]
                                 {

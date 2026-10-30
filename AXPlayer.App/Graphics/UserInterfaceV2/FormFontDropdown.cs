@@ -215,7 +215,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                     {
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
-                        Padding = new MarginPadding(9),
+                        Padding = new MarginPadding() { Vertical = 9, Left = 9, Right = 9 },
                         Children = new Drawable[]
                         {
                             new FillFlowContainer
@@ -224,6 +224,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                                 AutoSizeAxes = Axes.Y,
                                 Direction = FillDirection.Vertical,
                                 Spacing = new Vector2(0, 4),
+                                Padding = new MarginPadding { Left = 4 },
                                 Children = new Drawable[]
                                 {
                                     caption = new FormFieldCaption
