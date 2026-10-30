@@ -2239,6 +2239,7 @@ namespace AXPlayer.App.Screens
                                                             Caption = AXPlayerStrings.ReverbEffect,
                                                             Current = reverbEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleReverbEffect),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         reverbSettings = new FillFlowContainer
                                                         {
@@ -2253,23 +2254,27 @@ namespace AXPlayer.App.Screens
                                                                 {
                                                                     Caption = AXPlayerStrings.WetMix,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbWetMix),
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.StereoWidth,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbStereoWidth),
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.HighFreqDamp,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbDamp),
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.RoomSize,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbRoomSize),
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 }),
                                                             }
                                                         },
@@ -2278,6 +2283,7 @@ namespace AXPlayer.App.Screens
                                                             Caption = AXPlayerStrings.RotateParameters_Enabled,
                                                             Current = rotateEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleRotateEffect),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         rotateSettings = new FillFlowContainer
                                                         {
@@ -2293,6 +2299,7 @@ namespace AXPlayer.App.Screens
                                                                     Caption = AXPlayerStrings.RotateParameters_fRate,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.RotateRate),
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 }),
                                                             }
                                                         },
@@ -2301,6 +2308,7 @@ namespace AXPlayer.App.Screens
                                                             Caption = AXPlayerStrings.EchoEffect,
                                                             Current = echoEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleEchoEffect),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         echoSettings = new FillFlowContainer
                                                         {
@@ -2316,23 +2324,27 @@ namespace AXPlayer.App.Screens
                                                                     Caption = AXPlayerStrings.DryMix,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDryMix),
                                                                     LabelFormat = f => $"{f - 2}",
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.EchoWetMix,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoWetMix),
                                                                     LabelFormat = f => $"{f - 2}",
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.EchoFeedback,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoFeedback),
                                                                     LabelFormat = f => $"{f - 1}",
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.EchoDelay,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay),
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 }),
                                                             }
                                                         },
@@ -2341,6 +2353,7 @@ namespace AXPlayer.App.Screens
                                                             Caption = AXPlayerStrings.DistortionEffect,
                                                             Current = distortionEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleDistortionEffect),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         distortionSettings = new FillFlowContainer
                                                         {
@@ -2356,6 +2369,7 @@ namespace AXPlayer.App.Screens
                                                                     Caption = AXPlayerStrings.DistortionVolume,
                                                                     Current = DistortionVolume,
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 })
                                                                 {
                                                                     Note = { BindTarget = DistortionVolumeNotice },
@@ -2367,6 +2381,7 @@ namespace AXPlayer.App.Screens
                                                             Caption = AXPlayerStrings.KaraokeMode,
                                                             Current = karaokeEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleKaraokeEffect),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         karaokeSettings = new FillFlowContainer
                                                         {
@@ -2382,6 +2397,7 @@ namespace AXPlayer.App.Screens
                                                                     Caption = AXPlayerStrings.KaraokeVocalVolume,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.KaraokeVocalVolume),
                                                                     DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 }),
                                                             }
                                                         },
@@ -2390,6 +2406,7 @@ namespace AXPlayer.App.Screens
                                                             Caption = AXPlayerStrings.ChorusEffect,
                                                             Current = chorusEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleChorusEffect),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         chorusSettings = new FillFlowContainer
                                                         {
@@ -2405,33 +2422,39 @@ namespace AXPlayer.App.Screens
                                                                     Caption = AXPlayerStrings.DryMix,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusDryMix),
                                                                     LabelFormat = f => $"{f - 2}",
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.EchoWetMix,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusWetMix),
                                                                     LabelFormat = f => $"{f - 2}",
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.EchoFeedback,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusFeedback),
                                                                     LabelFormat = f => $"{f - 1}",
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.ChorusMinSweep,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMinSweep),
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.ChorusMaxSweep,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusMaxSweep),
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.ChorusRate,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusRate),
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 }),
                                                             }
                                                         },
@@ -2440,6 +2463,7 @@ namespace AXPlayer.App.Screens
                                                             Caption = AXPlayerStrings.EightBitEffectEnabled,
                                                             Current = eightBitEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleEightBitEffect),
+                                                            CornerType = FormControlCornerType.Top,
                                                         }),
                                                         eightBitSettings = new FillFlowContainer
                                                         {
@@ -2455,6 +2479,7 @@ namespace AXPlayer.App.Screens
                                                                     Caption = AXPlayerStrings.BitDepth,
                                                                     Current = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth),
                                                                     LabelFormat = f => $"{f} bits",
+                                                                    CornerType = FormControlCornerType.Bottom,
                                                                 }),
                                                             }
                                                         },
