@@ -17,14 +17,14 @@ namespace AXPlayer.App.Screens
         public override void OnEntering(ScreenTransitionEvent e)
         {
             base.OnEntering(e);
-            this.FadeOut(250, Easing.OutQuint);
-            this.ScaleTo(0.9f, 250, Easing.OutQuint);
+            this.FadeIn(250, Easing.OutQuint);
+            this.ScaleTo(1.1f).Then().ScaleTo(1f, 250, Easing.OutQuint);
         }
 
         public override bool OnExiting(ScreenExitEvent e)
         {
-            this.FadeIn(250, Easing.OutQuint);
-            this.ScaleTo(1.1f).Then().ScaleTo(1f, 250, Easing.OutQuint);
+            this.FadeOut(250, Easing.OutQuint);
+            this.ScaleTo(0.9f, 250, Easing.OutQuint);
             return base.OnExiting(e);
         }
     }
