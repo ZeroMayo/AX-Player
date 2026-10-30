@@ -33,16 +33,17 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             AllowableAnchors = [Anchor.TopCentre, Anchor.BottomCentre],
             Child = new Container
             {
-                Width = 550,
+                Width = 500,
                 AutoSizeAxes = Axes.Y,
-                Child = new FormSliderBar<double>
+                Padding = new MarginPadding { Vertical = 8 },
+                Child = new SettingsItemV2(new FormSliderBar<double>
                 {
                     Icon = FontAwesome.Solid.TachometerAlt,
                     Caption = AXPlayerStrings.PlaybackSpeedWithoutValue,
                     Current = Current,
                     DisplayAsPercentage = true,
                     KeyboardStep = 0.05f,
-                }
+                })
             }
         };
     }
