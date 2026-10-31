@@ -989,4 +989,13 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="waiting_for_authentication" xml:space="preserve">
     <value>Đang chờ xác thực...</value>
   </data>
+  <data name="dark_mode" xml:space="preserve">
+    <value>Chế độ tối</value>
+  </data>
+  <data name="common_copy" xml:space="preserve">
+    <value>Sao chép</value>
+  </data>
+  <data name="common_open_in_browser" xml:space="preserve">
+    <value>Mở bằng trình duyệt bên ngoài</value>
+  </data>
 </root>

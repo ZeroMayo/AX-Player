@@ -113,6 +113,7 @@ namespace AXPlayer.App.Screens
             discordRichPresence = appConfig.GetBindable<DiscordRichPresenceMode>(AXPlayerSetting.DiscordRichPresence);
             closeButtonAction = appConfig.GetBindable<CloseButtonAction>(AXPlayerSetting.CloseButtonAction);
             colourSchemeBindable = appConfig.GetBindable<OverlayColourScheme>(AXPlayerSetting.ColourScheme);
+            darkModeBindable = appConfig.GetBindable<bool>(AXPlayerSetting.DarkMode);
             profileImageShape = appConfig.GetBindable<ProfileImageShape>(AXPlayerSetting.ProfileImageShape);
 
             captionEnabled = appConfig.GetBindable<bool>(AXPlayerSetting.CaptionEnabled);
@@ -154,6 +155,11 @@ namespace AXPlayer.App.Screens
             });
 
             colourSchemeBindable.BindValueChanged(_ =>
+            {
+                restartDialogOverlay.OpenDialog();
+            });
+
+            darkModeBindable.BindValueChanged(_ =>
             {
                 restartDialogOverlay.OpenDialog();
             });

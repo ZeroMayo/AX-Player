@@ -58,6 +58,8 @@ namespace AXPlayer.App.Overlays.Containers
 
         private Bindable<ReleaseStream> configReleaseStream;
 
+        private Bindable<bool> darkModeBindable;
+
         public void ShowSettingsOverlayAtName(string name)
         {
             // wait for load of sections
@@ -393,6 +395,7 @@ namespace AXPlayer.App.Overlays.Containers
             fpsDisplay = appConfig.GetBindable<bool>(AXPlayerSetting.ShowFpsDisplay);
             closeButtonAction = appConfig.GetBindable<CloseButtonAction>(AXPlayerSetting.CloseButtonAction);
             colourSchemeBindable = appConfig.GetBindable<OverlayColourScheme>(AXPlayerSetting.ColourScheme);
+            darkModeBindable = appConfig.GetBindable<bool>(AXPlayerSetting.DarkMode);
             profileImageShape = appConfig.GetBindable<ProfileImageShape>(AXPlayerSetting.ProfileImageShape);
             adjustPitch = appConfig.GetBindable<bool>(AXPlayerSetting.AdjustPitchOnSpeedChange);
             usernameDisplayMode = appConfig.GetBindable<UsernameDisplayMode>(AXPlayerSetting.UsernameDisplayMode);
@@ -616,6 +619,13 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ColourScheme,
                                                             Current = colourSchemeBindable,
                                                             Icon = FontAwesome.Solid.Palette,
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.DarkMode,
+                                                            Current = darkModeBindable,
+                                                            Icon = FontAwesome.Solid.Moon,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<UIFont>

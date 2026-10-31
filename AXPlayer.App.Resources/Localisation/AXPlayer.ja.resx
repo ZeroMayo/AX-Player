@@ -988,4 +988,13 @@
   <data name="waiting_for_authentication" xml:space="preserve">
     <value>認証を待っています...</value>
   </data>
+  <data name="dark_mode" xml:space="preserve">
+    <value>ダークモード</value>
+  </data>
+  <data name="common_copy" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="common_open_in_browser" xml:space="preserve">
+    <value>外部ブラウザーで開く</value>
+  </data>
 </root>

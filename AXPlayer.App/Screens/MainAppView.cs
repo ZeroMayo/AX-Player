@@ -192,6 +192,7 @@ namespace AXPlayer.App.Screens
         private Bindable<SettingsNote.Data> hwAccelNote = new Bindable<SettingsNote.Data>();
 
         private Bindable<OverlayColourScheme> colourSchemeBindable;
+        private Bindable<bool> darkModeBindable;
         private Bindable<ProfileImageShape> profileImageShape;
         private Bindable<CloseButtonAction> closeButtonAction;
 

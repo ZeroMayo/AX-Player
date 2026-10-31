@@ -12,14 +12,20 @@ namespace AXPlayer.App.Graphics
         /// </summary>
         public int Hue { get; private set; }
 
-        public OverlayColourProvider(OverlayColourScheme colourScheme)
-            : this(colourScheme.GetHue())
+        /// <summary>
+        /// Whether the provided colour shades use the dark-mode palette.
+        /// </summary>
+        public bool IsDarkMode { get; private set; }
+
+        public OverlayColourProvider(OverlayColourScheme colourScheme, bool isDarkMode = true)
+            : this(colourScheme.GetHue(), isDarkMode)
         {
         }
 
-        public OverlayColourProvider(int hue)
+        public OverlayColourProvider(int hue, bool isDarkMode = true)
         {
             Hue = hue;
+            IsDarkMode = isDarkMode;
         }
 
         // Note that the following five colours are also defined in `OsuColour` as `{colourScheme}{0,1,2,3,4}`.
@@ -68,6 +74,17 @@ namespace AXPlayer.App.Graphics
         /// <param name="hue">The proposed hue degree.</param>
         public void ChangeColourScheme(int hue) => Hue = hue;
 
-        private Color4 getColour(float saturation, float lightness) => osu.Framework.Graphics.Colour4.FromHSL(Hue / 360f, saturation, lightness);
+        /// <summary>
+        /// Changes whether the provider uses the dark-mode or light-mode palette.
+        /// Note that this does not trigger any kind of signal to any drawable that received colours from here, all drawables need to be updated manually.
+        /// </summary>
+        /// <param name="isDarkMode">Whether to use the dark-mode palette.</param>
+        public void ChangeDarkMode(bool isDarkMode) => IsDarkMode = isDarkMode;
+
+        private Color4 getColour(float saturation, float lightness)
+        {
+            float adjustedLightness = IsDarkMode ? lightness : 1 - lightness;
+            return osu.Framework.Graphics.Colour4.FromHSL(Hue / 360f, saturation, adjustedLightness);
+        }
     }
 }

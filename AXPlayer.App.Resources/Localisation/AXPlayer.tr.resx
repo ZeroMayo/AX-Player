@@ -988,4 +988,13 @@
   <data name="waiting_for_authentication" xml:space="preserve">
     <value>Kimlik doğrulaması bekleniyor...</value>
   </data>
+  <data name="dark_mode" xml:space="preserve">
+    <value>Koyu mod</value>
+  </data>
+  <data name="common_copy" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="common_open_in_browser" xml:space="preserve">
+    <value>Harici tarayıcıda aç</value>
+  </data>
 </root>

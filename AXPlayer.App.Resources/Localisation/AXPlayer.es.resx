@@ -988,4 +988,13 @@
   <data name="waiting_for_authentication" xml:space="preserve">
     <value>Esperando la autenticación...</value>
   </data>
+  <data name="dark_mode" xml:space="preserve">
+    <value>Modo oscuro</value>
+  </data>
+  <data name="common_copy" xml:space="preserve">
+    <value>Copiar</value>
+  </data>
+  <data name="common_open_in_browser" xml:space="preserve">
+    <value>Abrir en navegador externo</value>
+  </data>
 </root>

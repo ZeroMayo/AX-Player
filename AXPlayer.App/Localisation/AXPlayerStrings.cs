@@ -1055,6 +1055,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString ColourScheme => new TranslatableString(getKey(@"colour_scheme"), "App colour scheme");
 
         /// <summary>
+        /// "Dark mode"
+        /// </summary>
+        public static LocalisableString DarkMode => new TranslatableString(getKey(@"dark_mode"), "Dark mode");
+
+        /// <summary>
         /// "Circle"
         /// </summary>
         public static LocalisableString Circle => new TranslatableString(getKey(@"circle"), @"Circle");
