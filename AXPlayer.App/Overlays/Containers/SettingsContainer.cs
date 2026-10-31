@@ -621,13 +621,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Palette,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
-                                                        new SettingsItemV2(new FormCheckBox
-                                                        {
-                                                            Caption = AXPlayerStrings.DarkMode,
-                                                            Current = darkModeBindable,
-                                                            Icon = FontAwesome.Solid.Moon,
-                                                            CornerType = FormControlCornerType.Center,
-                                                        }),
                                                         new SettingsItemV2(new FormEnumDropdown<UIFont>
                                                         {
                                                             Caption = AXPlayerStrings.UIFont,
