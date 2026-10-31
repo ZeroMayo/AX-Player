@@ -988,4 +988,13 @@
   <data name="waiting_for_authentication" xml:space="preserve">
     <value>인증 대기 중...</value>
   </data>
+  <data name="dark_mode" xml:space="preserve">
+    <value>다크 모드</value>
+  </data>
+  <data name="common_copy" xml:space="preserve">
+    <value>복사</value>
+  </data>
+  <data name="common_open_in_browser" xml:space="preserve">
+    <value>외부 브라우저에서 열기</value>
+  </data>
 </root>

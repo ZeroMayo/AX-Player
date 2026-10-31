@@ -72,6 +72,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.AudioQuality, AudioQuality.PreferHighQuality);
             SetDefault(AXPlayerSetting.CloseButtonAction, CloseButtonAction.HideToTrayIcon);
             SetDefault(AXPlayerSetting.ColourScheme, OverlayColourScheme.Lime);
+            SetDefault(AXPlayerSetting.DarkMode, true);
             SetDefault(AXPlayerSetting.ProfileImageShape, ProfileImageShape.Circle);
             SetDefault(AXPlayerSetting.CommentsSortCriteria, CommentsSortCriteria.Top);
 
@@ -190,5 +191,6 @@ namespace AXPlayer.App.Config
         WavySeekBar,
         Version,
         SmoothCaptionAnimation,
+        DarkMode,
     }
 }

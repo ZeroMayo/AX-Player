@@ -351,7 +351,9 @@ namespace AXPlayer.App
 
                 dependencies.CacheAs(colours = new ProjectYomiColour());
 
-                dependencies.CacheAs(overlayColourProvider = new OverlayColourProvider(colourScheme));
+                dependencies.CacheAs(overlayColourProvider = new OverlayColourProvider(
+                    colourScheme,
+                    LocalConfig.Get<bool>(AXPlayerSetting.DarkMode)));
 
                 Logger.Log($"🎨 OverlayColourProvider loaded");
 

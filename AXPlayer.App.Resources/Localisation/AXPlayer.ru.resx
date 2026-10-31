@@ -989,4 +989,13 @@
   <data name="waiting_for_authentication" xml:space="preserve">
     <value>Ожидание аутентификации...</value>
   </data>
+  <data name="dark_mode" xml:space="preserve">
+    <value>Тёмный режим</value>
+  </data>
+  <data name="common_copy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="common_open_in_browser" xml:space="preserve">
+    <value>Открыть во внешнем браузере</value>
+  </data>
 </root>
