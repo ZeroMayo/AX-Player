@@ -1044,14 +1044,23 @@ namespace AXPlayer.App.Screens
 
         private void updateWindowTitle()
         {
-            if ((showVideoMetadataOnWindowTitle.Value) && (videoData != null))
+            Task.Run(async () =>
             {
-                game.RequestUpdateWindowTitle($"{TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 40)} - {TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 50)}");
-            }
-            else
-            {
-                game.RequestUpdateWindowTitle(string.Empty);
-            }
+                string channelTitle = string.Empty;
+                string videoTitle = string.Empty;
+
+                channelTitle = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 40);
+                videoTitle = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 50);
+
+                if ((showVideoMetadataOnWindowTitle.Value) && (videoData != null))
+                {
+                    Schedule(() => game.RequestUpdateWindowTitle($"{channelTitle} - {videoTitle}"));
+                }
+                else
+                {
+                    Schedule(() => game.RequestUpdateWindowTitle(string.Empty));
+                }
+            });
         }
 
         private int parseTimestampFromURL(string url)
