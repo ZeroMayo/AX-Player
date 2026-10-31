@@ -173,13 +173,9 @@ namespace AXPlayer.App
             // A screen stack and sample screen has been provided for convenience, but you can replace it if you don't want to use screens.
             AddRange(new Drawable[]
             {
-                onDemandBackbufferProvider = new OnDemandBackbufferProvider
+                screenStack = new ScreenStack
                 {
-                    RelativeSizeAxes = Axes.Both,
-                    Child = screenStack = new ScreenStack
-                    {
-                        RelativeSizeAxes = Axes.Both
-                    },
+                    RelativeSizeAxes = Axes.Both
                 },
                 overlayContainer = new Container
                 {
