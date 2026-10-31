@@ -684,7 +684,7 @@ namespace AXPlayer.App.Screens
 
                                     if (settingsContainer.CaptionLangDropdown.Current.Value != null)
                                     {
-                                        preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Name.ToString();
+                                        preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Hl.ToString();
                                     }
                                     else
                                     {
@@ -693,7 +693,7 @@ namespace AXPlayer.App.Screens
 
                                     settingsContainer.CaptionLangDropdown.Current.Value = settingsContainer.CaptionLangDropdown.Items.Where(lang => lang.Hl.Contains(preferedLang)).First();
 
-                                    var trackInfo = trackLists.Where(track => track.Language.Name.Contains(preferedLang)).First();
+                                    var trackInfo = trackLists.Where(track => track.Language.Code.Contains(preferedLang)).First();
 
                                     if (trackInfo != null)
                                     {
@@ -1063,7 +1063,7 @@ namespace AXPlayer.App.Screens
 
                                     if (settingsContainer.CaptionLangDropdown.Current.Value != null)
                                     {
-                                        preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Name.ToString();
+                                        preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Hl.ToString();
                                     }
                                     else
                                     {
@@ -1072,7 +1072,7 @@ namespace AXPlayer.App.Screens
 
                                     settingsContainer.CaptionLangDropdown.Current.Value = settingsContainer.CaptionLangDropdown.Items.Where(lang => lang.Hl.Contains(preferedLang)).First();
 
-                                    var trackInfo = trackLists.Where(track => track.Language.Name.Contains(preferedLang)).First();
+                                    var trackInfo = trackLists.Where(track => track.Language.Code.Contains(preferedLang)).First();
 
                                     if (trackInfo != null)
                                     {
