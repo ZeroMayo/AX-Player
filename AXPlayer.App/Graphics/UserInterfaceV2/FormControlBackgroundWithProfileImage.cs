@@ -89,7 +89,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                     Colour = Color4.White,
                     RelativeSizeAxes = Axes.Both,
                 },
-                profileImage = new ProfileImageWithoutMasking(100)
+                profileImage = new ProfileImageWithoutMasking(150)
                 {
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,

@@ -88,7 +88,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                     Colour = Color4.White,
                     RelativeSizeAxes = Axes.Both,
                 },
-                profileImage = new DiscordProfileImageWithoutMasking(100)
+                profileImage = new DiscordProfileImageWithoutMasking(150)
                 {
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,

@@ -2212,7 +2212,7 @@ namespace AXPlayer.App.Screens
                                     RelativeSizeAxes = Axes.Both,
                                     Padding = new MarginPadding
                                     {
-                                        Horizontal = 16,
+                                        Horizontal = 4,
                                     },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
