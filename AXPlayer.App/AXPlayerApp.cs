@@ -18,8 +18,6 @@ using AXPlayer.App.Input.Binding;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
 using AXPlayer.App.Overlays;
-using AXPlayer.App.Overlays.Containers;
-using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Screens;
 using AXPlayer.App.Updater;
 using osu.Framework;
@@ -32,11 +30,8 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input;
 using osu.Framework.Input.Events;
-using osu.Framework.Input.Handlers.Mouse;
-using osu.Framework.Input.Handlers.Pen;
 using osu.Framework.Localisation;
 using osu.Framework.Logging;
 using osu.Framework.Screens;
@@ -132,6 +127,8 @@ namespace AXPlayer.App
 
         private Bindable<CloseButtonAction> closeButtonAction;
 
+        private OnDemandBackbufferProvider onDemandBackbufferProvider;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -176,9 +173,13 @@ namespace AXPlayer.App
             // A screen stack and sample screen has been provided for convenience, but you can replace it if you don't want to use screens.
             AddRange(new Drawable[]
             {
-                screenStack = new ScreenStack
+                onDemandBackbufferProvider = new OnDemandBackbufferProvider
                 {
-                    RelativeSizeAxes = Axes.Both
+                    RelativeSizeAxes = Axes.Both,
+                    Child = screenStack = new ScreenStack
+                    {
+                        RelativeSizeAxes = Axes.Both
+                    },
                 },
                 overlayContainer = new Container
                 {
@@ -187,6 +188,8 @@ namespace AXPlayer.App
                 leftFloatingOverlayContent = new Container { RelativeSizeAxes = Axes.Both },
                 topMostOverlayContent = new Container { RelativeSizeAxes = Axes.Both },
             });
+
+            dependencies.CacheAs(onDemandBackbufferProvider);
 
             loadComponentSingleFile(volume = new VolumeOverlay(), leftFloatingOverlayContent.Add, true);
 

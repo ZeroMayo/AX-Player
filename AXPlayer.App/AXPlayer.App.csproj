@@ -9,7 +9,7 @@
     <ProjectReference Include="..\AXPlayer.App.Resources\AXPlayer.App.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ZeroMayo.Framework" Version="2026.1030.1" />
+    <PackageReference Include="ZeroMayo.Framework" Version="2026.1030.2" />
     <PackageReference Include="CommunityToolkit.HighPerformance" Version="8.4.2" />
     <PackageReference Include="Crypto.AES" Version="1.0.4" />
     <PackageReference Include="ZeroMayo.DiscordRichPresence" Version="26.0.2" />

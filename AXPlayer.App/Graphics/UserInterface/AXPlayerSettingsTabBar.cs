@@ -22,14 +22,6 @@ namespace AXPlayer.App.Graphics.UserInterface
             Masking = true;
             AutoSizeAxes = Axes.Both;
 
-            EdgeEffect = new osu.Framework.Graphics.Effects.EdgeEffectParameters
-            {
-                Type = osu.Framework.Graphics.Effects.EdgeEffectType.Shadow,
-                Colour = Color4.Black.Opacity(0.25f),
-                Offset = new Vector2(0, 8),
-                Radius = 64,
-            };
-
             Children = new Drawable[]
             {
                 bg = new Box
