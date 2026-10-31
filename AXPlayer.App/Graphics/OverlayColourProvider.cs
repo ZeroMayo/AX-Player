@@ -81,10 +81,6 @@ namespace AXPlayer.App.Graphics
         /// <param name="isDarkMode">Whether to use the dark-mode palette.</param>
         public void ChangeDarkMode(bool isDarkMode) => IsDarkMode = isDarkMode;
 
-        private Color4 getColour(float saturation, float lightness)
-        {
-            float adjustedLightness = IsDarkMode ? lightness : 1 - lightness;
-            return osu.Framework.Graphics.Colour4.FromHSL(Hue / 360f, saturation, adjustedLightness);
-        }
+        private Color4 getColour(float saturation, float lightness) => osu.Framework.Graphics.Colour4.FromHSL(Hue / 360f, saturation, lightness);
     }
 }
