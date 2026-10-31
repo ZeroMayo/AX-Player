@@ -1554,6 +1554,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString DiscordPresenceVideoInfoOnly => new TranslatableString(getKey(@"discord_presence_video_info_only"), @"Only video infomation");
 
+        /// <summary>
+        /// "Copy"
+        /// </summary>
+        public static LocalisableString Copy => new TranslatableString(getKey(@"common_copy"), @"Copy");
+
+        /// <summary>
+        /// "Open in external browser"
+        /// </summary>
+        public static LocalisableString OpenInExternalBrowser => new TranslatableString(getKey(@"common_open_in_browser"), @"Open in external browser");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

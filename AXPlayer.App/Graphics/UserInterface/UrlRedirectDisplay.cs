@@ -3,27 +3,29 @@
 
 #nullable disable
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AXPlayer.App.Config;
-using AXPlayer.App.Graphics.Containers;
+using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
+using AXPlayer.App.Overlays;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
-using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osu.Framework.Platform;
-using osuTK;
 using osuTK.Graphics;
 using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
-    public partial class UrlRedirectDisplay : ProjectYomiClickableContainer, IHasLineBaseHeight
+    public partial class UrlRedirectDisplay : ProjectYomiClickableContainer, IHasLineBaseHeight, IHasContextMenu
     {
         private string url;
 
@@ -228,5 +230,36 @@ namespace AXPlayer.App.Graphics.UserInterface
         }
 
         public float LineBaseHeight => 15.5f;
+
+        [Resolved]
+        private Clipboard clipboard { get; set; }
+
+        [Resolved]
+        private NewToastOverlay toastOverlay { get; set; }
+
+        MenuItem[] IHasContextMenu.ContextMenuItems
+        {
+            get
+            {
+                List<MenuItem> items = new List<MenuItem>();
+
+                items.Add(new ProjectYomiMenuItem(AXPlayerStrings.OpenInExternalBrowser, () =>
+                {
+                    host.OpenUrlExternally(url);
+                }));
+
+                items.Add(new ProjectYomiMenuItem(AXPlayerStrings.Copy, () =>
+                {
+                    clipboard.SetText(url);
+
+                    Schedule(() =>
+                    {
+                        toastOverlay.ShowToast(AXPlayerStrings.CopiedToClipboard);
+                    });
+                }));
+
+                return items.ToArray();
+            }
+        }
     }
 }

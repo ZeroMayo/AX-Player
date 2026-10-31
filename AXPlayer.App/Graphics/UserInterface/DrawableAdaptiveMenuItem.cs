@@ -37,10 +37,10 @@ namespace AXPlayer.App.Graphics.UserInterface
         }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(OverlayColourProvider overlayColourProvider)
         {
             BackgroundColour = Color4.Transparent;
-            BackgroundColourHover = Color4Extensions.FromHex(@"172023");
+            BackgroundColourHover = overlayColourProvider.Background5;
 
             AddInternal(hoverClickSounds = new HoverClickSounds());
 

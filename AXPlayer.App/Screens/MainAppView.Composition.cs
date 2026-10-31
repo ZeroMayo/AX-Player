@@ -13,6 +13,7 @@ using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
+using AXPlayer.App.Graphics.Cursor;
 using AXPlayer.App.Graphics.Shaders;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.Sprites.Odometer;
@@ -1033,7 +1034,7 @@ namespace AXPlayer.App.Screens
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                 },
-                                new Container
+                                new ProjectYomiContextMenuContainer
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                     Padding = new MarginPadding()

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using AXPlayer.App.Config;
+using AXPlayer.App.Graphics.Containers;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -10,7 +12,6 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
 using osuTK;
 using osuTK.Graphics;
-using AXPlayer.App.Graphics.Containers;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
@@ -49,10 +50,14 @@ namespace AXPlayer.App.Graphics.UserInterface
             base.Update();
         }
 
+        [Resolved]
+        private AXPlayerConfigManager config { get; set; }
+
         protected override void AnimateOpen()
         {
             if (PlaySamples && !WasOpened)
-                menuSamples?.PlayOpenSample();
+                if (config.Get<bool>(AXPlayerSetting.PlayOverlaySFX))
+                    menuSamples?.PlayOpenSample();
 
             WasOpened = true;
             this.FadeIn(FADE_DURATION, Easing.OutQuint);
@@ -61,7 +66,8 @@ namespace AXPlayer.App.Graphics.UserInterface
         protected override void AnimateClose()
         {
             if (PlaySamples && WasOpened)
-                menuSamples?.PlayCloseSample();
+                if (config.Get<bool>(AXPlayerSetting.PlayOverlaySFX))
+                    menuSamples?.PlayCloseSample();
 
             this.Delay(DELAY_BEFORE_FADE_OUT)
                 .FadeOut(FADE_DURATION, Easing.OutQuint);

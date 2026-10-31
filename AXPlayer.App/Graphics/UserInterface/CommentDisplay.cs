@@ -6,14 +6,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Google.Apis.YouTube.v3.Data;
-using Humanizer;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.Containers;
+using AXPlayer.App.Graphics.Cursor;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
+using Google.Apis.YouTube.v3.Data;
+using Humanizer;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
@@ -97,7 +98,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     Colour = overlayColourProvider.Background4,
                                     Alpha = 0.7f,
                                 },
-                                new Container {
+                                new ProjectYomiContextMenuContainer {
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
                                     Padding = new MarginPadding(7),
