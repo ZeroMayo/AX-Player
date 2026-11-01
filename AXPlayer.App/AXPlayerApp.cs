@@ -185,8 +185,6 @@ namespace AXPlayer.App
                 topMostOverlayContent = new Container { RelativeSizeAxes = Axes.Both },
             });
 
-            dependencies.CacheAs(onDemandBackbufferProvider);
-
             loadComponentSingleFile(volume = new VolumeOverlay(), leftFloatingOverlayContent.Add, true);
 
             onScreenDisplay = new OnScreenDisplay();
