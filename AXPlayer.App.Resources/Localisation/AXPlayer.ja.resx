@@ -517,6 +517,9 @@
   <data name="chromatic_aberration" xml:space="preserve">
     <value>色収差効果強度</value>
   </data>
+  <data name="crt_video_effect" xml:space="preserve">
+    <value>CRT ビデオ効果</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>視覚効果</value>
   </data>

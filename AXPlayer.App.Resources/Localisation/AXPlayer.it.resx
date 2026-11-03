@@ -517,6 +517,9 @@
   <data name="chromatic_aberration" xml:space="preserve">
     <value>Intensità dell'effetto di aberrazione cromatica</value>
   </data>
+  <data name="crt_video_effect" xml:space="preserve">
+    <value>Effetto video CRT</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>Effetti visivi</value>
   </data>

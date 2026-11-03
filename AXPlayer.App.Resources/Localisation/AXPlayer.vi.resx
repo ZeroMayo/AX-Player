@@ -517,6 +517,9 @@
   <data name="chromatic_aberration" xml:space="preserve">
     <value>Cường độ hiệu ứng quang sai màu</value>
   </data>
+  <data name="crt_video_effect" xml:space="preserve">
+    <value>Hiệu ứng video CRT</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>Hiệu ứng hình ảnh</value>
   </data>

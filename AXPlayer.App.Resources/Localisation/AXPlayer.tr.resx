@@ -517,6 +517,9 @@
   <data name="chromatic_aberration" xml:space="preserve">
     <value>Kromatik sapma efekti yoğunluğu</value>
   </data>
+  <data name="crt_video_effect" xml:space="preserve">
+    <value>CRT video efekti</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>Görsel efektler</value>
   </data>
