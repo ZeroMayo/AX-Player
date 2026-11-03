@@ -64,6 +64,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.ChromaticAberrationStrength, 0f, 0f, 1f, 0.01f);
             SetDefault(AXPlayerSetting.VideoGrayscaleLevel, 0f, 0f, 1f, 0.01f);
             SetDefault(AXPlayerSetting.VideoHueShift, 0, 0, 360, 1);
+            SetDefault(AXPlayerSetting.VideoCRTEffectEnabled, false);
 
             SetDefault(AXPlayerSetting.DiscordRichPresence, DiscordRichPresenceMode.Full);
             SetDefault(AXPlayerSetting.AudioNormalization, true);
@@ -192,5 +193,6 @@ namespace AXPlayer.App.Config
         Version,
         SmoothCaptionAnimation,
         DarkMode,
+        VideoCRTEffectEnabled,
     }
 }

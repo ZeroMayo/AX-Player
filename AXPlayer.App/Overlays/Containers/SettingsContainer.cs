@@ -968,13 +968,20 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Padding = new MarginPadding { Horizontal = 30, Vertical = 12 },
                                                             Colour = overlayColourProvider.Content2,
                                                         },
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.CRTVideoEffect,
+                                                            Icon = FontAwesome.Solid.Sun,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled),
+                                                            CornerType = FormControlCornerType.Top,
+                                                        }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoBloomLevel,
                                                             Icon = FontAwesome.Solid.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoBloomLevel),
                                                             DisplayAsPercentage = true,
-                                                            CornerType = FormControlCornerType.Top,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {

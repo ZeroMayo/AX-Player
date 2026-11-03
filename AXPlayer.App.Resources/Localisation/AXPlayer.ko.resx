@@ -517,6 +517,9 @@
   <data name="chromatic_aberration" xml:space="preserve">
     <value>색수차 효과 강도</value>
   </data>
+  <data name="crt_video_effect" xml:space="preserve">
+    <value>CRT 동영상 효과</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>시각적 효과</value>
   </data>

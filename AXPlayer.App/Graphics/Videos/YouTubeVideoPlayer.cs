@@ -11,6 +11,7 @@ using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Shaders.New;
 using AXPlayer.App.Graphics.Shaders.New.Bloom;
 using AXPlayer.App.Graphics.Shaders.New.Chromatic;
+using AXPlayer.App.Graphics.Shaders.New.CRT;
 using AXPlayer.App.Graphics.Shaders.New.Grayscale;
 using AXPlayer.App.Graphics.Shaders.New.HueShift;
 using AXPlayer.App.Online;
@@ -106,7 +107,9 @@ namespace AXPlayer.App.Graphics.Videos
         private Bindable<AspectRatioMethod> aspectRatioMethod = null!;
         private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift = null!;
 
-        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift = null!;
+        private Bindable<bool> videoCrtEffectEnabled = null!;
+
+        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, crt = null!;
 
         private Bindable<bool> useNewSubtitlesFeature = null!;
 
@@ -151,6 +154,7 @@ namespace AXPlayer.App.Graphics.Videos
             videoBloomLevel = config.GetBindable<float>(AXPlayerSetting.VideoBloomLevel);
             videoGrayscaleLevel = config.GetBindable<float>(AXPlayerSetting.VideoGrayscaleLevel);
             videoHueShift = config.GetBindable<float>(AXPlayerSetting.VideoHueShift);
+            videoCrtEffectEnabled = config.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled);
             chromaticAberrationStrength = config.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength);
             useNewSubtitlesFeature = config.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
@@ -187,37 +191,41 @@ namespace AXPlayer.App.Graphics.Videos
                         new DimmableContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Child = grayscale = new GrayscaleContainer
+                            Child = crt = new CrtContainer
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Child = chromatic = new ChromaticContainer
+                                Child = grayscale = new GrayscaleContainer
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Child = bloom = new BloomContainer
+                                    Child = chromatic = new ChromaticContainer
                                     {
                                         RelativeSizeAxes = Axes.Both,
-                                        Child = hueShift = new HueShiftContainer
+                                        Child = bloom = new BloomContainer
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Children = new Drawable[]
+                                            Child = hueShift = new HueShiftContainer
                                             {
-                                                blurContainer = new BufferedContainer
+                                                RelativeSizeAxes = Axes.Both,
+                                                Children = new Drawable[]
                                                 {
-                                                    RelativeSizeAxes = Axes.Both,
-                                                    Children = new Drawable[]
+                                                    blurContainer = new BufferedContainer
                                                     {
-                                                        new Box
+                                                        RelativeSizeAxes = Axes.Both,
+                                                        Children = new Drawable[]
                                                         {
-                                                            RelativeSizeAxes = Axes.Both,
-                                                            Colour = Color4.Black,
-                                                        },
-                                                        video = new Video(fileName_Video, false)
-                                                        {
-                                                            RelativeSizeAxes = Axes.Both,
-                                                            FillMode = FillMode.Fit,
-                                                            Anchor = Anchor.Centre,
-                                                            Origin = Anchor.Centre,
-                                                            Clock = framedClock,
+                                                            new Box
+                                                            {
+                                                                RelativeSizeAxes = Axes.Both,
+                                                                Colour = Color4.Black,
+                                                            },
+                                                            video = new Video(fileName_Video, false)
+                                                            {
+                                                                RelativeSizeAxes = Axes.Both,
+                                                                FillMode = FillMode.Fit,
+                                                                Anchor = Anchor.Centre,
+                                                                Origin = Anchor.Centre,
+                                                                Clock = framedClock,
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -293,6 +301,11 @@ namespace AXPlayer.App.Graphics.Videos
             videoHueShift.BindValueChanged(value =>
             {
                 hueShift.Strength = value.NewValue / 360;
+            }, true);
+
+            videoCrtEffectEnabled.BindValueChanged(value =>
+            {
+                crt.Strength = value.NewValue ? 1 : 0;
             }, true);
 
             //drawableTrack.Completed += trackCompleted;

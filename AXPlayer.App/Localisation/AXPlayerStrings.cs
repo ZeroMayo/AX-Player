@@ -785,6 +785,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString VideoHueShift => new TranslatableString(getKey(@"hue_shift"), "Video hue shift");
 
         /// <summary>
+        /// "CRT video effect"
+        /// </summary>
+        public static LocalisableString CRTVideoEffect => new TranslatableString(getKey(@"crt_video_effect"), "CRT video effect");
+
+        /// <summary>
         /// "Discord Rich Presence"
         /// </summary>
         public static LocalisableString DiscordRichPresence => new TranslatableString(getKey(@"discord_rich_presence"), @"Discord Rich Presence");

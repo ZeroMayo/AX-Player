@@ -32,6 +32,8 @@ namespace AXPlayer.App.Graphics.Shaders.New
 
         [ShaderStrength(1)]
         [ShaderStrength(2, ParamName = "Scale", Tooltip = "Scale factor of each consecutive reflection.")]
-        Reflections
+        Reflections,
+
+        CRT
     }
 }
