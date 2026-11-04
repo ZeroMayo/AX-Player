@@ -151,45 +151,51 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             {
                 RelativeSizeAxes = Axes.X,
                 Height = 50,
-                Padding = new MarginPadding { Horizontal = 30 },
                 Child = new ProjectYomiScrollContainer(Direction.Horizontal)
                 {
                     RelativeSizeAxes = Axes.Both,
                     Child = presetButtons,
+                    Padding = new MarginPadding { Horizontal = 30 },
+                    ScrollbarVisible = false,
                 },
             };
 
-            Drawable addPresetContent = new FillFlowContainer
+            Drawable addPresetContent = new GridContainer
             {
                 RelativeSizeAxes = Axes.X,
-                AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Horizontal,
-                Spacing = new Vector2(8, 0),
-                Padding = new MarginPadding { Horizontal = 30 },
-                Children = new Drawable[]
+                Height = 50,
+                ColumnDimensions = new[]
                 {
-                    new Container
+                    new Dimension(),
+                    new Dimension(GridSizeMode.AutoSize),
+                },
+                Padding = new MarginPadding { Horizontal = 30 },
+                Content = new []
+                {
+                    new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Width = 0.78f,
-                        Child = speedInput,
-                    },
-                    new RoundedButton
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        Width = 0.18f,
-                        Height = 50,
-                        Text = "+",
-                        Enabled = { BindTarget = canAddPreset },
-                        Action = () =>
+                        new Container
                         {
-                            if (!isValidNewPreset(speedInput.Current.Value, out double speed))
-                                return;
+                            RelativeSizeAxes = Axes.X,
+                            Height = 50,
+                            Size = new Vector2(0.97f, 1f),
+                            Child = speedInput,
+                        },
+                        new RoundedButton
+                        {
+                            Width = 60,
+                            Height = 50,
+                            Text = "+",
+                            Enabled = { BindTarget = canAddPreset },
+                            Action = () =>
+                            {
+                                if (!isValidNewPreset(speedInput.Current.Value, out double speed))
+                                    return;
 
-                            customPresets.Add(speed);
-                            speedInput.Current.Value = string.Empty;
-                            savePresets();
+                                customPresets.Add(speed);
+                                speedInput.Current.Value = string.Empty;
+                                savePresets();
+                            },
                         },
                     },
                 },
