@@ -253,6 +253,12 @@
   <data name="playback_speed_without_value" xml:space="preserve">
     <value>Tốc độ phát</value>
   </data>
+  <data name="playback_speed_presets" xml:space="preserve">
+    <value>Tốc độ cài sẵn</value>
+  </data>
+  <data name="add_playback_speed_preset" xml:space="preserve">
+    <value>Thêm tốc độ cài sẵn</value>
+  </data>
   <data name="quick_action" xml:space="preserve">
     <value>Thao tác nhanh</value>
   </data>

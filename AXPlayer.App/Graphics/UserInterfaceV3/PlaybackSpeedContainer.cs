@@ -20,6 +20,7 @@ using osu.Framework.Graphics.Cursor;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.UserInterface;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osuTK;
 
 namespace AXPlayer.App.Graphics.UserInterfaceV3
@@ -128,6 +129,108 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
             refreshPresetButtons();
 
+            Drawable speedSlider = new SettingsItemV2(new FormSliderBar<double>
+            {
+                Icon = FontAwesome.Solid.TachometerAlt,
+                Caption = AXPlayerStrings.PlaybackSpeedWithoutValue,
+                Current = Current,
+                DisplayAsPercentage = true,
+                KeyboardStep = 0.05f,
+            });
+
+            Drawable presetsContent = new Container
+            {
+                RelativeSizeAxes = Axes.X,
+                Height = 40,
+                Padding = new MarginPadding { Horizontal = 30 },
+                Child = new ProjectYomiScrollContainer(Direction.Horizontal)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Child = presetButtons,
+                },
+            };
+
+            Drawable addPresetContent = new FillFlowContainer
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Direction = FillDirection.Horizontal,
+                Spacing = new Vector2(8, 0),
+                Padding = new MarginPadding { Horizontal = 30 },
+                Children = new Drawable[]
+                {
+                    new Container
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Width = 0.78f,
+                        Child = speedInput,
+                    },
+                    new RoundedButton
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        Width = 0.18f,
+                        Height = 36,
+                        Text = "+",
+                        Enabled = { BindTarget = canAddPreset },
+                        Action = () =>
+                        {
+                            if (!isValidNewPreset(speedInput.Current.Value, out double speed))
+                                return;
+
+                            customPresets.Add(speed);
+                            speedInput.Current.Value = string.Empty;
+                            savePresets();
+                        },
+                    },
+                },
+            };
+
+            ProjectYomiTabControl<LocalisableString> tabs = new ProjectYomiTabControl<LocalisableString>
+            {
+                RelativeSizeAxes = Axes.X,
+                Height = 32,
+            };
+            tabs.AddItem(AXPlayerStrings.PlaybackSpeedWithoutValue);
+            tabs.AddItem(AXPlayerStrings.PlaybackSpeedPresets);
+            tabs.AddItem(AXPlayerStrings.AddPlaybackSpeedPreset);
+
+            PlaybackSpeedTabPage speedSliderPage = new PlaybackSpeedTabPage(speedSlider)
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                IsActive = true,
+            };
+            PlaybackSpeedTabPage presetsPage = new PlaybackSpeedTabPage(presetsContent)
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+            };
+            PlaybackSpeedTabPage addPresetPage = new PlaybackSpeedTabPage(addPresetContent)
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+            };
+
+            void updateTabContent(LocalisableString selectedTab)
+            {
+                speedSliderPage.IsActive = selectedTab.Equals(AXPlayerStrings.PlaybackSpeedWithoutValue);
+                presetsPage.IsActive = selectedTab.Equals(AXPlayerStrings.PlaybackSpeedPresets);
+                addPresetPage.IsActive = selectedTab.Equals(AXPlayerStrings.AddPlaybackSpeedPreset);
+            }
+
+            tabs.Current.ValueChanged += valueChanged => updateTabContent(valueChanged.NewValue);
+            tabs.Current.Value = AXPlayerStrings.PlaybackSpeedWithoutValue;
+            updateTabContent(AXPlayerStrings.PlaybackSpeedWithoutValue);
+
+            FillFlowContainer tabContent = new FillFlowContainer
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Direction = FillDirection.Vertical,
+                Children = new Drawable[] { speedSliderPage, presetsPage, addPresetPage },
+            };
+
             return new ProjectYomiPopover(false)
             {
                 // Ensure the popover doesn't cover up the text input.
@@ -143,66 +246,38 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                         AutoSizeAxes = Axes.Y,
                         Direction = FillDirection.Vertical,
                         Spacing = new Vector2(0, 8),
-                        Children = new Drawable[]
-                        {
-                            new SettingsItemV2(new FormSliderBar<double>
-                            {
-                                Icon = FontAwesome.Solid.TachometerAlt,
-                                Caption = AXPlayerStrings.PlaybackSpeedWithoutValue,
-                                Current = Current,
-                                DisplayAsPercentage = true,
-                                KeyboardStep = 0.05f,
-                            }),
-                            new Container
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                Height = 40,
-                                Padding = new MarginPadding { Horizontal = 30 },
-                                Child = new ProjectYomiScrollContainer(Direction.Horizontal)
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Child = presetButtons,
-                                },
-                            },
-                            new FillFlowContainer
-                            {
-                                RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
-                                Direction = FillDirection.Horizontal,
-                                Spacing = new Vector2(8, 0),
-                                Padding = new MarginPadding { Horizontal = 30 },
-                                Children = new Drawable[]
-                                {
-                                    new Container
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        Width = 0.78f,
-                                        Child = speedInput,
-                                    },
-                                    new RoundedButton
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        Width = 0.18f,
-                                        Height = 36,
-                                        Text = "+",
-                                        Enabled = { BindTarget = canAddPreset },
-                                        Action = () =>
-                                        {
-                                            if (!isValidNewPreset(speedInput.Current.Value, out double speed))
-                                                return;
-
-                                            customPresets.Add(speed);
-                                            speedInput.Current.Value = string.Empty;
-                                            savePresets();
-                                        },
-                                    },
-                                },
-                            },
-                        },
+                        Children = new Drawable[] { tabs, tabContent },
                     },
                 },
             };
+        }
+
+        private sealed partial class PlaybackSpeedTabPage : Container
+        {
+            private bool isActive;
+
+            public bool IsActive
+            {
+                get => isActive;
+                set
+                {
+                    if (isActive == value)
+                        return;
+
+                    bool wasPresent = IsPresent;
+                    isActive = value;
+
+                    if (IsPresent != wasPresent)
+                        Invalidate(Invalidation.Presence);
+                }
+            }
+
+            public override bool IsPresent => base.IsPresent && isActive;
+
+            public PlaybackSpeedTabPage(Drawable content)
+            {
+                Child = content;
+            }
         }
 
         private static List<double> parsePresets(string value)
