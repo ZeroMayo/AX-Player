@@ -43,7 +43,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private Box bg;
 
-        public OverlaySortTabControl()
+        public OverlaySortTabControl(bool hideText = false)
         {
             AutoSizeAxes = Axes.Both;
             AddInternal(new Container
@@ -101,6 +101,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                     }
                 }
             });
+
+            if (hideText)
+                text.Hide();
         }
 
         [BackgroundDependencyLoader]
@@ -187,7 +190,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                             Anchor = Anchor.Centre,
                             Origin = Anchor.Centre,
                             Font = AXPlayerApp.DefaultFont.With(size: 12, weight: "Regular"),
-                            Text = (value as Enum)?.GetLocalisableDescription() ?? value.ToString()
+                            Text = (value as Enum)?.GetLocalisableDescription() ?? (value is LocalisableString localisableValue ? localisableValue : (LocalisableString)value.ToString())
                         }
                     }
                 });

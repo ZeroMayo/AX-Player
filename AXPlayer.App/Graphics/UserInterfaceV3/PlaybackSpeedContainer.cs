@@ -66,7 +66,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                     presetButtons.Add(new RoundedButton
                     {
                         Width = 60,
-                        Height = 40,
+                        Height = 50,
                         Text = formatSpeed(speed),
                         Action = () => Current.Value = speed,
                         BackgroundColour = overlayColourProvider.Background3,
@@ -85,7 +85,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                             new RoundedButton
                             {
                                 Width = 60,
-                                Height = 40,
+                                Height = 50,
                                 Text = formatSpeed(speed),
                                 Action = () => Current.Value = speed,
                                 BackgroundColour = overlayColourProvider.Background3,
@@ -93,7 +93,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                             new RoundedButton
                             {
                                 Width = 28,
-                                Height = 40,
+                                Height = 50,
                                 Text = "x",
                                 Action = () =>
                                 {
@@ -195,14 +195,25 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                 },
             };
 
-            ProjectYomiTabControl<LocalisableString> tabs = new ProjectYomiTabControl<LocalisableString>
+            OverlaySortTabControl<LocalisableString> tabs = new OverlaySortTabControl<LocalisableString>(true)
+            {
+                Height = 32,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
+            };
+            tabs.TabControl.AddItem(AXPlayerStrings.PlaybackSpeedWithoutValue);
+            tabs.TabControl.AddItem(AXPlayerStrings.PlaybackSpeedPresets);
+            tabs.TabControl.AddItem(AXPlayerStrings.AddPlaybackSpeedPreset);
+
+            Container tabsContainer = new Container
             {
                 RelativeSizeAxes = Axes.X,
-                Height = 32,
+                AutoSizeAxes = Axes.Y,
+                Children = new Drawable[]
+                {
+                    tabs,
+                }
             };
-            tabs.AddItem(AXPlayerStrings.PlaybackSpeedWithoutValue);
-            tabs.AddItem(AXPlayerStrings.PlaybackSpeedPresets);
-            tabs.AddItem(AXPlayerStrings.AddPlaybackSpeedPreset);
 
             PlaybackSpeedTabPage speedSliderPage = new PlaybackSpeedTabPage(speedSlider)
             {
@@ -255,7 +266,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                         AutoSizeAxes = Axes.Y,
                         Direction = FillDirection.Vertical,
                         Spacing = new Vector2(0, 8),
-                        Children = new Drawable[] { tabs, tabContent },
+                        Children = new Drawable[] { tabContent, tabsContainer },
                     },
                 },
             };
