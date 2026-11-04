@@ -126,6 +126,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
             FormNumberBox speedInput = new FormNumberBox(allowDecimals: true)
             {
+                Icon = FontAwesome.Solid.TachometerAlt,
                 Caption = AXPlayerStrings.PlaybackSpeedWithoutValue,
                 PlaceholderText = "0.1 - 8",
                 Current = { Value = string.Empty },
@@ -266,6 +267,8 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                     Width = 500,
                     AutoSizeAxes = Axes.Y,
                     Padding = new MarginPadding { Vertical = 8 },
+                    CornerRadius = AXPlayerApp.UI_CORNER_RADIUS,
+                    Masking = true,
                     Child = new FillFlowContainer
                     {
                         RelativeSizeAxes = Axes.X,
