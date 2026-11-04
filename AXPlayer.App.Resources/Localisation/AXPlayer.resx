@@ -253,6 +253,12 @@
   <data name="playback_speed_without_value" xml:space="preserve">
     <value>Playback speed</value>
   </data>
+  <data name="playback_speed_presets" xml:space="preserve">
+    <value>Speed presets</value>
+  </data>
+  <data name="add_playback_speed_preset" xml:space="preserve">
+    <value>Add speed preset</value>
+  </data>
   <data name="quick_action" xml:space="preserve">
     <value>Quick Action</value>
   </data>

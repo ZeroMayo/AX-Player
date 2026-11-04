@@ -253,6 +253,12 @@
   <data name="playback_speed_without_value" xml:space="preserve">
     <value>재생 속도</value>
   </data>
+  <data name="playback_speed_presets" xml:space="preserve">
+    <value>재생 속도 프리셋</value>
+  </data>
+  <data name="add_playback_speed_preset" xml:space="preserve">
+    <value>재생 속도 프리셋 추가</value>
+  </data>
   <data name="quick_action" xml:space="preserve">
     <value>빠른 작업</value>
   </data>

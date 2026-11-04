@@ -20,6 +20,16 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString PlaybackSpeedWithoutValue => new TranslatableString(getKey(@"playback_speed_without_value"), "Playback speed");
 
         /// <summary>
+        /// "Speed presets"
+        /// </summary>
+        public static LocalisableString PlaybackSpeedPresets => new TranslatableString(getKey(@"playback_speed_presets"), "Speed presets");
+
+        /// <summary>
+        /// "Add speed preset"
+        /// </summary>
+        public static LocalisableString AddPlaybackSpeedPreset => new TranslatableString(getKey(@"add_playback_speed_preset"), "Add speed preset");
+
+        /// <summary>
         /// "Quick Action"
         /// </summary>
         public static LocalisableString QuickAction => new TranslatableString(getKey(@"quick_action"), "Quick Action");
