@@ -14,8 +14,8 @@
     <PackageReference Include="Crypto.AES" Version="1.0.4" />
     <PackageReference Include="ZeroMayo.DiscordRichPresence" Version="26.0.2" />
     <PackageReference Include="Google.Apis.Auth" Version="1.78.0" />
-    <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.74.0.1869" />
-    <PackageReference Include="SharpCompress" Version="0.50.7" />
+    <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.78.0.1869" />
+    <PackageReference Include="SharpCompress" Version="0.50.8" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.77.0.4309" />
     <PackageReference Include="Humanizer" Version="3.0.10" />
     <PackageReference Include="PaletteNet" Version="3.0.1" />
