@@ -109,12 +109,11 @@ namespace AXPlayer.App.Graphics.UserInterface
         {
             Height = 40;
 
-            AddInternal(Content = new Container
+            AddInternal(Content = new CircularContainer
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Masking = true,
-                CornerRadius = Height / 2,
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {

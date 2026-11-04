@@ -34,7 +34,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             Content.Padding = withPadding ? new MarginPadding(20) : new MarginPadding();
 
             Body.Masking = true;
-            Body.CornerRadius = 10;
+            Body.CornerRadius = AXPlayerApp.UI_CORNER_RADIUS;
             Body.Margin = new MarginPadding(10);
             Body.EdgeEffect = new EdgeEffectParameters
             {

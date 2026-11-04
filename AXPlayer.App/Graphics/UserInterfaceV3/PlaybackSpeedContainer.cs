@@ -34,6 +34,12 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
         [Resolved]
         private AXPlayerConfigManager config { get; set; }
 
+        [Resolved]
+        private OverlayColourProvider overlayColourProvider { get; set; }
+
+        [Resolved]
+        private ProjectYomiColour colour { get; set; }
+
         protected override bool OnClick(ClickEvent e)
         {
             this.ShowPopover();
@@ -60,9 +66,10 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                     presetButtons.Add(new RoundedButton
                     {
                         Width = 60,
-                        Height = 32,
+                        Height = 40,
                         Text = formatSpeed(speed),
                         Action = () => Current.Value = speed,
+                        BackgroundColour = overlayColourProvider.Background3,
                     });
                 }
 
@@ -78,20 +85,22 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                             new RoundedButton
                             {
                                 Width = 60,
-                                Height = 32,
+                                Height = 40,
                                 Text = formatSpeed(speed),
                                 Action = () => Current.Value = speed,
+                                BackgroundColour = overlayColourProvider.Background3,
                             },
                             new RoundedButton
                             {
                                 Width = 28,
-                                Height = 32,
+                                Height = 40,
                                 Text = "x",
                                 Action = () =>
                                 {
                                     customPresets.Remove(speed);
                                     savePresets();
                                 },
+                                BackgroundColour = colour.Red3,
                             },
                         },
                     });
@@ -170,7 +179,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                     {
                         RelativeSizeAxes = Axes.X,
                         Width = 0.18f,
-                        Height = 36,
+                        Height = 50,
                         Text = "+",
                         Enabled = { BindTarget = canAddPreset },
                         Action = () =>
