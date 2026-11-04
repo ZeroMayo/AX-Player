@@ -150,7 +150,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             Drawable presetsContent = new Container
             {
                 RelativeSizeAxes = Axes.X,
-                Height = 40,
+                Height = 50,
                 Padding = new MarginPadding { Horizontal = 30 },
                 Child = new ProjectYomiScrollContainer(Direction.Horizontal)
                 {
