@@ -11,6 +11,7 @@ using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Localisation;
+using AXPlayer.App.Overlays;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
@@ -40,6 +41,9 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
         [Resolved]
         private ProjectYomiColour colour { get; set; }
 
+        [Resolved]
+        private NewToastOverlay newToastOverlay { get; set; }
+
         protected override bool OnClick(ClickEvent e)
         {
             this.ShowPopover();
@@ -68,7 +72,11 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                         Width = 60,
                         Height = 50,
                         Text = formatSpeed(speed),
-                        Action = () => Current.Value = speed,
+                        Action = () =>
+                        {
+                            Current.Value = speed;
+                            newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(speed));
+                        },
                         BackgroundColour = overlayColourProvider.Background3,
                     });
                 }
@@ -87,7 +95,11 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                                 Width = 60,
                                 Height = 50,
                                 Text = formatSpeed(speed),
-                                Action = () => Current.Value = speed,
+                                Action = () =>
+                                {
+                                    Current.Value = speed;
+                                    newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(speed));
+                                },
                                 BackgroundColour = overlayColourProvider.Background3,
                             },
                             new RoundedButton
