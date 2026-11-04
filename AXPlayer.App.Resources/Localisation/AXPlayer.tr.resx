@@ -253,6 +253,12 @@
   <data name="playback_speed_without_value" xml:space="preserve">
     <value>Oynatma hızı</value>
   </data>
+  <data name="playback_speed_presets" xml:space="preserve">
+    <value>Hız ön ayarları</value>
+  </data>
+  <data name="add_playback_speed_preset" xml:space="preserve">
+    <value>Hız ön ayarı ekle</value>
+  </data>
   <data name="quick_action" xml:space="preserve">
     <value>Hızlı işlem</value>
   </data>

@@ -253,6 +253,12 @@
   <data name="playback_speed_without_value" xml:space="preserve">
     <value>播放速度</value>
   </data>
+  <data name="playback_speed_presets" xml:space="preserve">
+    <value>速度预设</value>
+  </data>
+  <data name="add_playback_speed_preset" xml:space="preserve">
+    <value>添加速度预设</value>
+  </data>
   <data name="quick_action" xml:space="preserve">
     <value>快捷操作</value>
   </data>
