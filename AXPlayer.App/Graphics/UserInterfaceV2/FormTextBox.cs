@@ -102,7 +102,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 {
                     RelativeSizeAxes = Axes.X,
                     AutoSizeAxes = Axes.Y,
-                    Padding = new MarginPadding(9),
+                    Padding = new MarginPadding() { Vertical = 9, Left = 9 + 4, Right = 13 },
                     Spacing = new Vector2(0, 4),
                     Children = new Drawable[]
                     {
