@@ -895,6 +895,12 @@
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>加载视频时重置播放速度</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>播放列表交叉淡化</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>交叉淡化时长</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>字幕背景颜色</value>
   </data>

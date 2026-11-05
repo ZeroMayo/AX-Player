@@ -339,7 +339,7 @@ namespace AXPlayer.App.Online
             return result;
         }
 
-        public CommentThreadListResponse GetCommentThread(string videoId, string pageToken, CommentThreadsResource.ListRequest.OrderEnum orderEnum = CommentThreadsResource.ListRequest.OrderEnum.Time)
+        public async Task<CommentThreadListResponse> GetCommentThreadAsync(string videoId, string pageToken, CommentThreadsResource.ListRequest.OrderEnum orderEnum = CommentThreadsResource.ListRequest.OrderEnum.Time)
         {
             Logger.Log($"[NekoPlayer] GetCommentThread called with params ({videoId}, {orderEnum.ToString()})");
 
@@ -356,7 +356,7 @@ namespace AXPlayer.App.Online
             if (googleOAuth2.SignedIn.Value == true)
                 request.AccessToken = googleOAuth2.GetAccessToken();
 
-            var response = request.Execute();
+            var response = await request.ExecuteAsync();
 
             return response;
         }

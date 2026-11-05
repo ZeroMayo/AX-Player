@@ -4,6 +4,8 @@
 #nullable disable
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -79,37 +81,362 @@ namespace AXPlayer.App.Screens
             if (timestampInURL(videoUrl))
                 Schedule(() => seekTo(parseTimestampFromURL(videoUrl)));
 
-            if (playlists.Count > 0)
+            configureVideoCompleted(currentVideoSource);
+            currentVideoSource.OnUpdateAction = updatePlaylistCrossfade;
+
+            updatePresence(discordRichPresence.Value);
+        }
+
+        private void configureVideoCompleted(YouTubeVideoPlayer source)
+        {
+            source.OnVideoCompleted = () =>
             {
-                currentVideoSource.OnVideoCompleted = async () =>
+                if (crossfadeOutgoing == source && crossfadeIncoming != null)
                 {
                     if (repeat.Value)
                     {
-                        currentVideoSource.Play();
+                        cancelCrossfadeCandidate();
+                    }
+                    else if (crossfadeIncoming.IsReady && crossfadeStarted)
+                    {
+                        finishCrossfade();
                         return;
                     }
-
-                    if (playlistItemIndex != playlists.Count - 1)
-                        playlistItemIndex++;
-
-                    Schedule(async () =>
+                    else
                     {
-                        SetVideoSource(playlists[playlistItemIndex].Snippet.ResourceId.VideoId);
-                    });
-                };
+                        cancelCrossfadeCandidate();
+                    }
+                }
+
+                if (source != currentVideoSource)
+                    return;
+
+                if (repeat.Value)
+                {
+                    source.Play();
+                    return;
+                }
+
+                if (playlists == null || playlists.Count == 0 || playlistItemIndex >= playlists.Count - 1)
+                    return;
+
+                playlistItemIndex++;
+                string nextVideoId = playlists[playlistItemIndex].Snippet.ResourceId.VideoId;
+                Schedule(() => SetVideoSource(nextVideoId));
+            };
+        }
+
+        private void updatePlaylistCrossfade()
+        {
+            bool crossfadeEnabled = appGlobalConfig.Get<bool>(AXPlayerSetting.PlaylistCrossfadeEnabled);
+            double configuredDuration = Math.Clamp(appGlobalConfig.Get<float>(AXPlayerSetting.PlaylistCrossfadeDuration), 1f, 10f);
+
+            if (!crossfadeEnabled || playlists == null || repeat.Value || currentVideoSource == null || playlistItemIndex >= playlists.Count - 1)
+            {
+                cancelCrossfadeCandidate();
+                return;
+            }
+
+            double remaining = currentVideoSource.VideoProgress.MaxValue - currentVideoSource.VideoProgress.Value;
+            double prepareTime = configuredDuration + crossfade_prepare_buffer_seconds;
+
+            if (crossfadeIncoming == null && !crossfadeAttempted && remaining <= prepareTime && remaining > 0)
+                prepareCrossfadeCandidate();
+
+            if (crossfadeIncoming == null)
+                return;
+
+            if (!crossfadeStarted && currentVideoSource.IsPlaying() && remaining <= configuredDuration)
+            {
+                if (!crossfadeIncoming.IsReady)
+                    return;
+
+                crossfadeStarted = true;
+                crossfadeDurationSeconds = configuredDuration;
+                crossfadeIncoming.Play();
+                cacheFollowingPlaylistVideo();
+            }
+
+            if (!crossfadeStarted)
+            {
+                if (remaining > prepareTime)
+                    cancelCrossfadeCandidate();
+
+                return;
+            }
+
+            if (currentVideoSource.IsPlaying())
+            {
+                YouTubeVideoPlayer inactiveSource = crossfadeSourceSwitched ? crossfadeOutgoing : crossfadeIncoming;
+                if (!inactiveSource.IsPlaying())
+                    inactiveSource.Play();
+
+                if (!crossfadeSourceSwitched && !crossfadeIncoming.IsPlaying())
+                    crossfadeIncoming.Play();
+
+                double outgoingRemaining = crossfadeOutgoing.VideoProgress.MaxValue - crossfadeOutgoing.VideoProgress.Value;
+                double progress = Math.Clamp(1 - outgoingRemaining / crossfadeDurationSeconds, 0, 1);
+                double easedProgress = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
+                double fadeAngle = easedProgress * Math.PI / 2;
+                crossfadeOutgoing.Alpha = (float)(1 - easedProgress);
+                crossfadeOutgoing.Scale = new osuTK.Vector2((float)(1 - easedProgress * 0.035));
+                crossfadeOutgoing.SetTransitionVolume(Math.Cos(fadeAngle));
+                crossfadeIncoming.Alpha = (float)easedProgress;
+                crossfadeIncoming.Scale = new osuTK.Vector2((float)(1.045 - easedProgress * 0.045));
+                crossfadeIncoming.SetTransitionVolume(Math.Sin(fadeAngle));
+
+                if (!crossfadeSourceSwitched && progress >= 0.5)
+                    switchCrossfadeSource();
+
+                if (progress >= 1)
+                    finishCrossfade();
             }
             else
             {
-                currentVideoSource.OnVideoCompleted = async () =>
-                {
-                    if (!repeat.Value)
-                        return;
+                if (crossfadeOutgoing.IsPlaying())
+                    crossfadeOutgoing.Pause();
+                if (crossfadeIncoming.IsPlaying())
+                    crossfadeIncoming.Pause();
+            }
+        }
 
-                    currentVideoSource.Play();
+        private void prepareCrossfadeCandidate()
+        {
+            crossfadeAttempted = true;
+
+            try
+            {
+                string nextVideoId = playlists[playlistItemIndex + 1].Snippet.ResourceId.VideoId;
+                string videoDirectory = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(nextVideoId);
+                string audioFile = Path.Combine(videoDirectory, "audio.ogg");
+                string mp4File = Path.Combine(videoDirectory, "video.mp4");
+                string webmFile = Path.Combine(videoDirectory, "video.webm");
+                string cachedVideoFile = File.Exists(mp4File) ? mp4File : File.Exists(webmFile) ? webmFile : null;
+
+                bool videoCached = cachedVideoFile != null && File.Exists(audioFile);
+                if (!videoCached)
+                    return;
+
+                crossfadeVideoData = api.GetVideo(nextVideoId);
+                crossfadeVideoId = nextVideoId;
+                crossfadeOutgoing = currentVideoSource;
+                crossfadeIncoming = new YouTubeVideoPlayer(cachedVideoFile, audioFile, null, string.Empty, crossfadeVideoData, 0, 0, true, false)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Alpha = 0,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new osuTK.Vector2(1.045f),
+                    OnSeekAction = () => updatePresence(discordRichPresence.Value),
                 };
+                crossfadeStarted = false;
+                crossfadeSourceSwitched = false;
+                videoContainer.Add(crossfadeIncoming);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, e.GetDescription());
+                cancelCrossfadeCandidate();
+            }
+        }
+
+        private void cacheFollowingPlaylistVideo()
+        {
+            int followingIndex = playlistItemIndex + 2;
+            if (playlists == null || followingIndex >= playlists.Count)
+                return;
+
+            string followingVideoId = playlists[followingIndex].Snippet.ResourceId.VideoId;
+            if (string.IsNullOrEmpty(followingVideoId) || !playlistVideoCachesInProgress.TryAdd(followingVideoId, 0))
+                return;
+
+            string preferredVideoQuality = settingsContainer.VideoQualitySettings.Current.Value;
+            AudioQuality preferredAudioQuality = audioQuality.Value;
+            bool useOriginalAudio = alwaysUseOriginalAudio.Value;
+            string preferredAudioLanguage = appGlobalConfig.Get<Language>(AXPlayerSetting.AudioLanguage).ToString();
+            string ffmpegPath = app.GetFFmpegPath();
+
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await cachePlaylistVideoAsync(followingVideoId, preferredVideoQuality, preferredAudioQuality, useOriginalAudio, preferredAudioLanguage, ffmpegPath);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, e.GetDescription());
+                }
+                finally
+                {
+                    playlistVideoCachesInProgress.TryRemove(followingVideoId, out _);
+                }
+            });
+        }
+
+        private async Task cachePlaylistVideoAsync(string targetVideoId, string preferredVideoQuality, AudioQuality preferredAudioQuality, bool useOriginalAudio, string preferredAudioLanguage, string ffmpegPath)
+        {
+            string videoUrl = $"https://youtube.com/watch?v={targetVideoId}";
+            string videoDirectory = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(targetVideoId);
+            string audioFile = Path.Combine(videoDirectory, "audio.ogg");
+            string mp4File = Path.Combine(videoDirectory, "video.mp4");
+            string webmFile = Path.Combine(videoDirectory, "video.webm");
+
+            if (File.Exists(audioFile) && (File.Exists(mp4File) || File.Exists(webmFile)))
+                return;
+
+            Directory.CreateDirectory(videoDirectory);
+            var manifest = await app.YouTubeClient.Videos.Streams.GetManifestAsync(videoUrl);
+            List<IAudioStreamInfo> audioStreams = manifest.GetAudioOnlyStreams().Cast<IAudioStreamInfo>().ToList();
+            if (audioStreams.Count == 0)
+                return;
+
+            IAudioStreamInfo selectedAudioStream = selectPlaylistCacheAudioStream(audioStreams, preferredAudioQuality, useOriginalAudio, preferredAudioLanguage);
+            IEnumerable<IVideoStreamInfo> videoStreams = manifest.GetVideoOnlyStreams();
+            List<IVideoStreamInfo> webmStreams = videoStreams
+                .Where(stream => stream.Container == YoutubeExplode.Videos.Streams.Container.WebM)
+                .ToList();
+            List<IVideoStreamInfo> availableVideoStreams = webmStreams.Count > 0 ? webmStreams : videoStreams.ToList();
+            if (availableVideoStreams.Count == 0)
+                return;
+
+            IVideoStreamInfo selectedVideoStream = availableVideoStreams
+                .FirstOrDefault(stream => !string.IsNullOrEmpty(preferredVideoQuality) && stream.VideoQuality.Label.Contains(preferredVideoQuality))
+                ?? availableVideoStreams.TryGetWithHighestVideoQuality();
+
+            string targetVideoFile = selectedVideoStream.VideoCodec.Contains("avc1") ? mp4File : webmFile;
+            if (!File.Exists(audioFile))
+            {
+                await app.YouTubeClient.Videos.DownloadAsync(
+                    [selectedAudioStream],
+                    new ConversionRequestBuilder(audioFile).SetFFmpegPath(ffmpegPath).Build());
             }
 
+            if (!File.Exists(mp4File) && !File.Exists(webmFile))
+            {
+                await app.YouTubeClient.Videos.DownloadAsync(
+                    [selectedVideoStream],
+                    new ConversionRequestBuilder(targetVideoFile).SetFFmpegPath(ffmpegPath).Build());
+            }
+        }
+
+        private IAudioStreamInfo selectPlaylistCacheAudioStream(IEnumerable<IAudioStreamInfo> availableStreams, AudioQuality preferredAudioQuality, bool useOriginalAudio, string preferredAudioLanguage)
+        {
+            List<IAudioStreamInfo> streams = availableStreams.ToList();
+            IEnumerable<IAudioStreamInfo> preferredLanguageStreams;
+            if (useOriginalAudio)
+            {
+                preferredLanguageStreams = streams.Where(stream => stream.IsAudioLanguageDefault == true);
+            }
+            else
+            {
+                preferredLanguageStreams = streams.Where(stream => stream.AudioLanguage.HasValue && stream.AudioLanguage.Value.Code.Contains(preferredAudioLanguage));
+            }
+
+            List<IAudioStreamInfo> languageMatches = preferredLanguageStreams.ToList();
+            if (languageMatches.Count == 0)
+                languageMatches = streams.Where(stream => stream.IsAudioLanguageDefault == true).ToList();
+            if (languageMatches.Count == 0)
+                languageMatches = streams.ToList();
+
+            string preferredCodec = preferredAudioQuality == AudioQuality.PreferMp4a
+                ? "mp4a"
+                : preferredAudioQuality == AudioQuality.PreferOpus ? "opus" : null;
+            List<IAudioStreamInfo> codecMatches = preferredCodec == null
+                ? languageMatches
+                : languageMatches.Where(stream => stream.AudioCodec.Contains(preferredCodec)).ToList();
+            if (codecMatches.Count == 0)
+                codecMatches = languageMatches;
+
+            if (preferredAudioQuality == AudioQuality.LowQuality)
+                return codecMatches[0];
+
+            return (IAudioStreamInfo)codecMatches.TryGetWithHighestBitrate();
+        }
+
+        private void finishCrossfade()
+        {
+            if (crossfadeIncoming == null || crossfadeOutgoing == null)
+                return;
+
+            if (!crossfadeSourceSwitched)
+                switchCrossfadeSource();
+
+            crossfadeIncoming.Alpha = 1;
+            crossfadeIncoming.Scale = new osuTK.Vector2(1);
+            crossfadeIncoming.SetTransitionVolume(1);
+            crossfadeOutgoing.SetTransitionVolume(0);
+            crossfadeOutgoing.Expire();
+
+            if (playlistItemViews.Count > 0)
+            {
+                foreach (PlaylistItemView playlistItemView in playlistItemViews)
+                {
+                    playlistItemView.UpdateState(false);
+                }
+
+                playlistItemViews[playlistItemIndex].UpdateState(true);
+            }
+
+            crossfadeOutgoing = null;
+            crossfadeIncoming = null;
+            crossfadeVideoId = string.Empty;
+            crossfadeVideoData = null;
+            crossfadeStarted = false;
+            crossfadeSourceSwitched = false;
+            crossfadeAttempted = false;
+        }
+
+        private void switchCrossfadeSource()
+        {
+            if (crossfadeIncoming == null || crossfadeOutgoing == null || crossfadeSourceSwitched)
+                return;
+
+            currentVideoSource = crossfadeIncoming;
+            videoId = crossfadeVideoId;
+            videoData = crossfadeVideoData;
+            playlistItemIndex++;
+            configureVideoCompleted(crossfadeIncoming);
+            crossfadeIncoming.OnUpdateAction = updatePlaylistCrossfade;
+            crossfadeOutgoing.OnUpdateAction = null;
+            crossfadeOutgoing.DeactivateMediaSession();
+            crossfadeIncoming.ActivateMediaSession();
+            crossfadeSourceSwitched = true;
+
+            if (playlistItemViews.Count > 0)
+            {
+                foreach (PlaylistItemView playlistItemView in playlistItemViews)
+                {
+                    playlistItemView.UpdateState(false);
+                }
+
+                playlistItemViews[playlistItemIndex].UpdateState(true);
+            }
+
+            updateVideoMetadata(videoId);
             updatePresence(discordRichPresence.Value);
+        }
+
+        private void cancelCrossfadeCandidate()
+        {
+            if (crossfadeIncoming != null)
+                crossfadeIncoming.Expire();
+
+            if (crossfadeOutgoing != null)
+            {
+                crossfadeOutgoing.Alpha = 1;
+                crossfadeOutgoing.Scale = new osuTK.Vector2(1);
+                crossfadeOutgoing.SetTransitionVolume(1);
+                if (crossfadeSourceSwitched)
+                    crossfadeOutgoing.OnUpdateAction = null;
+            }
+
+            crossfadeOutgoing = null;
+            crossfadeIncoming = null;
+            crossfadeVideoId = string.Empty;
+            crossfadeVideoData = null;
+            crossfadeStarted = false;
+            crossfadeSourceSwitched = false;
+            crossfadeAttempted = false;
         }
 
         private void seekTo(double pos)
@@ -132,6 +459,17 @@ namespace AXPlayer.App.Screens
         private double pausedTime = 0;
 
         private string videoFile = string.Empty;
+
+        private const double crossfade_prepare_buffer_seconds = 3;
+        private YouTubeVideoPlayer crossfadeOutgoing;
+        private YouTubeVideoPlayer crossfadeIncoming;
+        private string crossfadeVideoId = string.Empty;
+        private Google.Apis.YouTube.v3.Data.Video crossfadeVideoData;
+        private double crossfadeDurationSeconds = 2;
+        private bool crossfadeStarted;
+        private bool crossfadeSourceSwitched;
+        private bool crossfadeAttempted;
+        private readonly ConcurrentDictionary<string, byte> playlistVideoCachesInProgress = new ConcurrentDictionary<string, byte>();
 
         [Resolved]
         private AXPlayerConfigManager appGlobalConfig { get; set; }
@@ -175,6 +513,7 @@ namespace AXPlayer.App.Screens
 
         public void SetVideoSource(string videoId, bool clearCache = false, LoadType loadType = LoadType.Full)
         {
+            cancelCrossfadeCandidate();
             srv3Contents = string.Empty;
             videoIdBox.Text = string.Empty;
 
@@ -241,6 +580,9 @@ namespace AXPlayer.App.Screens
                     }
                     this.videoId = YoutubeExplode.Videos.VideoId.Parse(videoId);
                     //ClearPlaylistItems();
+                    if (currentVideoSource != null)
+                        currentVideoSource.OnUpdateAction = null;
+
                     pausedTime = clearCache ? currentVideoSource.VideoProgress.Value : 0;
                     Schedule(() => currentVideoSource?.Expire());
                     commentsSort.UnbindEvents();
@@ -371,10 +713,10 @@ namespace AXPlayer.App.Screens
                         settingsContainer.VideoQualitySettingsCore.Show();
                         settingsContainer.AudioQualitySettingsCore.Show();
 
-                        bool videoCached = !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg") || !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm");
+                        //bool videoCached = !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg") || !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm");
 
                         isVideoLoading = true;
-                        if (videoCached) // always download cache
+                        if (true) // always download cache
                         {
                             if (loadType == LoadType.Full)
                                 Directory.CreateDirectory(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}"));
@@ -760,7 +1102,9 @@ namespace AXPlayer.App.Screens
 
                             currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime)
                             {
-                                RelativeSizeAxes = Axes.Both
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
                             };
 
                             //spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);
@@ -1122,7 +1466,9 @@ namespace AXPlayer.App.Screens
 
                             currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime)
                             {
-                                RelativeSizeAxes = Axes.Both
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
                             };
 
                             //spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);

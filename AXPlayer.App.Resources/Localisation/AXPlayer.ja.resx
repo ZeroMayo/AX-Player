@@ -895,6 +895,12 @@
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>動画の読み込み時に再生速度をリセットする</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>プレイリストのクロスフェード</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>クロスフェード時間</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>クローズドキャプションの背景色</value>
   </data>
