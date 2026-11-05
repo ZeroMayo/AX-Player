@@ -383,8 +383,11 @@ namespace AXPlayer.App.Graphics.Videos
 
             uiLanguage.BindValueChanged(lang =>
             {
-                if (mediaSessionEnabled)
-                    mediaSession?.UpdateMediaSession(videoData);
+                Schedule(() =>
+                {
+                    if (mediaSessionEnabled)
+                        mediaSession?.UpdateMediaSession(videoData);
+                });
             }, true);
 
             playbackSpeed.BindValueChanged(v =>
@@ -437,6 +440,7 @@ namespace AXPlayer.App.Graphics.Videos
             video.Seek(targetPosition);
             if (mediaSessionEnabled)
                 mediaSession?.UpdateTimestamp(videoData, targetPosition);
+
             Schedule(() => OnSeekAction?.Invoke());
         }
 
@@ -534,7 +538,10 @@ namespace AXPlayer.App.Graphics.Videos
             mediaSessionEnabled = true;
             mediaSession?.CreateMediaSession(api, fileName_Audio);
             mediaSession?.RegisterControlEvents(mediaSessionControls);
-            mediaSession?.UpdateMediaSession(videoData);
+            Schedule(() =>
+            {
+                mediaSession?.UpdateMediaSession(videoData);
+            });
             mediaSession?.UpdatePlayingState(IsPlaying());
             if (drawableTrack != null)
                 mediaSession?.UpdateTimestamp(videoData, drawableTrack.CurrentTime);
