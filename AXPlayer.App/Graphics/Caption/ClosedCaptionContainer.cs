@@ -141,7 +141,7 @@ namespace AXPlayer.App.Graphics.Caption
                     {
                         RelativeSizeAxes = Axes.Both,
                         Colour = Color4.Black,
-                        Alpha = 0.5f
+                        Alpha = 0.5f,
                     },
                     spriteText = new ProjectYomiTextFlowContainer(t =>
                     {
