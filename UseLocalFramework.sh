@@ -8,7 +8,7 @@
 APP_CSPROJ="AXPlayer.App/AXPlayer.App.csproj"
 SLN="AXPlayer.sln"
 
-dotnet remove $APP_CSPROJ reference ppy.osu.Framework
+dotnet remove $APP_CSPROJ reference ZeroMayo.Framework
 
 dotnet sln $SLN add ../osu-framework/osu.Framework/osu.Framework.csproj \
     ../osu-framework/osu.Framework.NativeLibs/osu.Framework.NativeLibs.csproj
