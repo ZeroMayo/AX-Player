@@ -1013,4 +1013,10 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="common_open_in_browser" xml:space="preserve">
     <value>Mở bằng trình duyệt bên ngoài</value>
   </data>
+  <data name="add_at_current_speed" xml:space="preserve">
+    <value>Thêm tốc độ hiện tại</value>
+  </data>
+  <data name="preset_saved" xml:space="preserve">
+    <value>Đã lưu giá trị đặt trước</value>
+  </data>
 </root>

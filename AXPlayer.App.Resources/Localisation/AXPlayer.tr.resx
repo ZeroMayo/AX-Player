@@ -1012,4 +1012,10 @@
   <data name="common_open_in_browser" xml:space="preserve">
     <value>Harici tarayıcıda aç</value>
   </data>
+  <data name="add_at_current_speed" xml:space="preserve">
+    <value>Geçerli hızı ekle</value>
+  </data>
+  <data name="preset_saved" xml:space="preserve">
+    <value>Ön ayar kaydedildi</value>
+  </data>
 </root>
