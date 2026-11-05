@@ -1019,4 +1019,7 @@
   <data name="preset_saved" xml:space="preserve">
     <value>预设已保存</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>字幕背景模糊</value>
+  </data>
 </root>

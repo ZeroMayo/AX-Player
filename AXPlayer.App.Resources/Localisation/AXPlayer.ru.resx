@@ -1019,4 +1019,7 @@
   <data name="preset_saved" xml:space="preserve">
     <value>Пресет сохранён</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>Размытие фона субтитров</value>
+  </data>
 </root>

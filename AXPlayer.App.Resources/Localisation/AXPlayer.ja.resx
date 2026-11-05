@@ -1018,4 +1018,7 @@
   <data name="preset_saved" xml:space="preserve">
     <value>プリセットを保存しました</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>字幕の背景をぼかす</value>
+  </data>
 </root>
