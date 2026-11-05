@@ -1594,6 +1594,16 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString OpenInExternalBrowser => new TranslatableString(getKey(@"common_open_in_browser"), @"Open in external browser");
 
+        /// <summary>
+        /// "Add at current speed"
+        /// </summary>
+        public static LocalisableString AddAtCurrentSpeed => new TranslatableString(getKey(@"add_at_current_speed"), @"Add at current speed");
+
+        /// <summary>
+        /// "Preset saved"
+        /// </summary>
+        public static LocalisableString PresetSaved => new TranslatableString(getKey(@"preset_saved"), @"Preset saved");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

@@ -23,8 +23,12 @@ namespace AXPlayer.App.Graphics.UserInterface
     {
         public LocalisableString Text
         {
-            get => SpriteText.Text;
-            set => SpriteText.Text = value;
+            get;
+            set
+            {
+                field = value;
+                SpriteText.Text = value;
+            }
         }
 
         private Color4? backgroundColour;
@@ -101,7 +105,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         protected Box Hover;
         protected Box Background;
-        protected SpriteText SpriteText;
+        protected ProjectYomiTextFlowContainer SpriteText;
 
         private readonly Box flashLayer;
 
@@ -205,12 +209,13 @@ namespace AXPlayer.App.Graphics.UserInterface
             base.OnMouseUp(e);
         }
 
-        protected virtual SpriteText CreateText() => new ProjectYomiSpriteText
+        protected virtual ProjectYomiTextFlowContainer CreateText() => new ProjectYomiTextFlowContainer(f => f.Font = AXPlayerApp.DefaultFont.With(weight: "SemiBold"))
         {
+            TextAnchor = Anchor.Centre,
+            RelativeSizeAxes = Axes.Both,
             Depth = -1,
             Origin = Anchor.Centre,
             Anchor = Anchor.Centre,
-            Font = AXPlayerApp.DefaultFont.With(weight: "SemiBold"),
         };
     }
 }

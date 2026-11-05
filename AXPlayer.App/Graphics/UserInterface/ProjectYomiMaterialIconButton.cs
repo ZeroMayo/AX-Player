@@ -24,15 +24,13 @@ namespace AXPlayer.App.Graphics.UserInterface
     {
         public LocalisableString Text
         {
-            get => text;
+            get;
             set
             {
-                text = value;
+                field = value;
                 SpriteText.Text = value;
             }
         }
-
-        private LocalisableString text;
 
         private IconUsage icon;
 
@@ -87,12 +85,11 @@ namespace AXPlayer.App.Graphics.UserInterface
             this.icon = icon;
             Height = 40;
 
-            AddInternal(Content = new Container
+            AddInternal(Content = new CircularContainer
             {
                 Anchor = Anchor.Centre,
                 Origin = Anchor.Centre,
                 Masking = true,
-                CornerRadius = Height / 2,
                 RelativeSizeAxes = Axes.Both,
                 Children = new Drawable[]
                 {
@@ -140,9 +137,12 @@ namespace AXPlayer.App.Graphics.UserInterface
 
             if (icon.Icon != 0)
             {
-                SpriteText.Text = "";
-                SpriteText.AddIcon(icon, f => f.Margin = new MarginPadding { Right = 5 });
-                SpriteText.AddText(text);
+                Schedule(() =>
+                {
+                    SpriteText.Text = "";
+                    SpriteText.AddIcon(icon, f => f.Margin = new MarginPadding { Right = 5 });
+                    SpriteText.AddText(Text);
+                });
             }
 
             Colour = dimColour;

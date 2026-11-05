@@ -102,11 +102,10 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                                 },
                                 BackgroundColour = overlayColourProvider.Background3,
                             },
-                            new RoundedButton
+                            new RoundedIconOnlyButton(FontAwesome.Solid.Times)
                             {
                                 Width = 28,
                                 Height = 50,
-                                Text = "x",
                                 Action = () =>
                                 {
                                     customPresets.Remove(speed);
@@ -181,6 +180,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                 {
                     new Dimension(),
                     new Dimension(GridSizeMode.AutoSize),
+                    new Dimension(GridSizeMode.AutoSize),
                 },
                 Padding = new MarginPadding { Horizontal = 30 },
                 Content = new []
@@ -194,11 +194,10 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                             Size = new Vector2(0.97f, 1f),
                             Child = speedInput,
                         },
-                        new RoundedButton
+                        new RoundedIconOnlyButton(FontAwesome.Solid.Plus)
                         {
                             Width = 60,
                             Height = 50,
-                            Text = "+",
                             Enabled = { BindTarget = canAddPreset },
                             Action = () =>
                             {
@@ -208,6 +207,24 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                                 customPresets.Add(speed);
                                 speedInput.Current.Value = string.Empty;
                                 savePresets();
+                                newToastOverlay.ShowToast(AXPlayerStrings.PresetSaved);
+                            },
+                        },
+                        new RoundedButton
+                        {
+                            Width = 190,
+                            Height = 50,
+                            Enabled = { BindTarget = canAddPreset },
+                            Text = AXPlayerStrings.AddAtCurrentSpeed,
+                            Margin = new MarginPadding() { Left = 8 },
+                            Action = () =>
+                            {
+                                if (!isValidNewPreset(Current.Value.ToString(), out double speed))
+                                    return;
+
+                                customPresets.Add(speed);
+                                savePresets();
+                                newToastOverlay.ShowToast(AXPlayerStrings.PresetSaved);
                             },
                         },
                     },
