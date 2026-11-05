@@ -104,7 +104,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.SmoothCaptionAnimation, true);
             SetDefault(AXPlayerSetting.CustomPlaybackSpeedPresets, string.Empty);
 
-            SetDefault(AXPlayerSetting.ClosedCaptionsBackdropBlur, false);
+            SetDefault(AXPlayerSetting.ClosedCaptionsBackdropBlur, true);
         }
 
         public AXPlayerConfigManager(Storage storage, IDictionary<AXPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
