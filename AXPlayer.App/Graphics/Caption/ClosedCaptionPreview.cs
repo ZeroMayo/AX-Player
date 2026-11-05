@@ -29,6 +29,8 @@ namespace AXPlayer.App.Graphics.Caption
         private Bindable<int> captionBGRadius;
         private Bindable<bool> smoothCaptionAnimation;
 
+        private Bindable<bool> closedCaptionsBackdropBlur;
+
         [BackgroundDependencyLoader]
         private void load(AXPlayerConfigManager config, SessionStatics sessionStatics, TextureStore textureStore)
         {
@@ -37,6 +39,7 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGColor = config.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor);
             captionBGRadius = config.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius);
             smoothCaptionAnimation = config.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation);
+            closedCaptionsBackdropBlur = config.GetBindable<bool>(AXPlayerSetting.ClosedCaptionsBackdropBlur);
 
             captionContainer = new BackdropBlurContainer
             {
@@ -90,6 +93,11 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGRadius.BindValueChanged(corner =>
             {
                 captionContainer.CornerRadius = new CornersInfo(corner.NewValue);
+            }, true);
+
+            closedCaptionsBackdropBlur.BindValueChanged(blur =>
+            {
+                captionContainer.BlurSigma = new osuTK.Vector2(blur.NewValue ? 10 : 0);
             }, true);
 
             captionBGOpacity.BindValueChanged(opacity =>

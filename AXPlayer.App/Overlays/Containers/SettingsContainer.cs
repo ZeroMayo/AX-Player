@@ -1101,6 +1101,13 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ClosedCaptionsSmoothAnimation,
                                                             Icon = FontAwesome.Solid.ClosedCaptioning,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation),
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.ClosedCaptionsBackdropBlur,
+                                                            Icon = FontAwesome.Solid.ClosedCaptioning,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.ClosedCaptionsBackdropBlur),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText

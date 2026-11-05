@@ -1604,6 +1604,11 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString PresetSaved => new TranslatableString(getKey(@"preset_saved"), @"Preset saved");
 
+        /// <summary>
+        /// "Closed captions backdrop blur"
+        /// </summary>
+        public static LocalisableString ClosedCaptionsBackdropBlur => new TranslatableString(getKey(@"closed_captions_backdrop_blur"), @"Closed captions backdrop blur");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

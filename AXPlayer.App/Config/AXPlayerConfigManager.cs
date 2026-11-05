@@ -103,6 +103,8 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.Version, string.Empty);
             SetDefault(AXPlayerSetting.SmoothCaptionAnimation, true);
             SetDefault(AXPlayerSetting.CustomPlaybackSpeedPresets, string.Empty);
+
+            SetDefault(AXPlayerSetting.ClosedCaptionsBackdropBlur, false);
         }
 
         public AXPlayerConfigManager(Storage storage, IDictionary<AXPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
@@ -200,5 +202,6 @@ namespace AXPlayer.App.Config
         CustomPlaybackSpeedPresets,
         PlaylistCrossfadeEnabled,
         PlaylistCrossfadeDuration,
+        ClosedCaptionsBackdropBlur,
     }
 }
