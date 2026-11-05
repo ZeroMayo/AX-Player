@@ -93,13 +93,19 @@ namespace AXPlayer.App.Screens
             {
                 if (crossfadeOutgoing == source && crossfadeIncoming != null)
                 {
-                    if (crossfadeIncoming.IsReady && crossfadeStarted)
+                    if (repeat.Value)
+                    {
+                        cancelCrossfadeCandidate();
+                    }
+                    else if (crossfadeIncoming.IsReady && crossfadeStarted)
                     {
                         finishCrossfade();
                         return;
                     }
-
-                    cancelCrossfadeCandidate();
+                    else
+                    {
+                        cancelCrossfadeCandidate();
+                    }
                 }
 
                 if (source != currentVideoSource)
@@ -161,22 +167,36 @@ namespace AXPlayer.App.Screens
 
             if (currentVideoSource.IsPlaying())
             {
-                if (!crossfadeIncoming.IsPlaying())
+                YouTubeVideoPlayer inactiveSource = crossfadeSourceSwitched ? crossfadeOutgoing : crossfadeIncoming;
+                if (!inactiveSource.IsPlaying())
+                    inactiveSource.Play();
+
+                if (!crossfadeSourceSwitched && !crossfadeIncoming.IsPlaying())
                     crossfadeIncoming.Play();
 
-                double progress = Math.Clamp(1 - remaining / crossfadeDurationSeconds, 0, 1);
-                double fadeAngle = progress * Math.PI / 2;
-                currentVideoSource.Alpha = (float)(1 - progress);
-                currentVideoSource.SetTransitionVolume(Math.Cos(fadeAngle));
-                crossfadeIncoming.Alpha = (float)progress;
+                double outgoingRemaining = crossfadeOutgoing.VideoProgress.MaxValue - crossfadeOutgoing.VideoProgress.Value;
+                double progress = Math.Clamp(1 - outgoingRemaining / crossfadeDurationSeconds, 0, 1);
+                double easedProgress = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
+                double fadeAngle = easedProgress * Math.PI / 2;
+                crossfadeOutgoing.Alpha = (float)(1 - easedProgress);
+                crossfadeOutgoing.Scale = new osuTK.Vector2((float)(1 - easedProgress * 0.035));
+                crossfadeOutgoing.SetTransitionVolume(Math.Cos(fadeAngle));
+                crossfadeIncoming.Alpha = (float)easedProgress;
+                crossfadeIncoming.Scale = new osuTK.Vector2((float)(1.045 - easedProgress * 0.045));
                 crossfadeIncoming.SetTransitionVolume(Math.Sin(fadeAngle));
+
+                if (!crossfadeSourceSwitched && progress >= 0.5)
+                    switchCrossfadeSource();
 
                 if (progress >= 1)
                     finishCrossfade();
             }
-            else if (crossfadeIncoming.IsPlaying())
+            else
             {
-                crossfadeIncoming.Pause();
+                if (crossfadeOutgoing.IsPlaying())
+                    crossfadeOutgoing.Pause();
+                if (crossfadeIncoming.IsPlaying())
+                    crossfadeIncoming.Pause();
             }
         }
 
@@ -204,9 +224,13 @@ namespace AXPlayer.App.Screens
                 {
                     RelativeSizeAxes = Axes.Both,
                     Alpha = 0,
+                    Anchor = Anchor.Centre,
+                    Origin = Anchor.Centre,
+                    Scale = new osuTK.Vector2(1.045f),
                     OnSeekAction = () => updatePresence(discordRichPresence.Value),
                 };
                 crossfadeStarted = false;
+                crossfadeSourceSwitched = false;
                 videoContainer.Add(crossfadeIncoming);
             }
             catch (Exception e)
@@ -334,22 +358,14 @@ namespace AXPlayer.App.Screens
             if (crossfadeIncoming == null || crossfadeOutgoing == null)
                 return;
 
-            YouTubeVideoPlayer outgoing = crossfadeOutgoing;
-            YouTubeVideoPlayer incoming = crossfadeIncoming;
+            if (!crossfadeSourceSwitched)
+                switchCrossfadeSource();
 
-            currentVideoSource = incoming;
-            videoId = crossfadeVideoId;
-            videoData = crossfadeVideoData;
-            playlistItemIndex++;
-            incoming.Alpha = 1;
-            incoming.SetTransitionVolume(1);
-            configureVideoCompleted(incoming);
-            incoming.OnUpdateAction = updatePlaylistCrossfade;
-            outgoing.OnUpdateAction = null;
-            outgoing.DeactivateMediaSession();
-            incoming.ActivateMediaSession();
-            outgoing.SetTransitionVolume(0);
-            outgoing.Expire();
+            crossfadeIncoming.Alpha = 1;
+            crossfadeIncoming.Scale = new osuTK.Vector2(1);
+            crossfadeIncoming.SetTransitionVolume(1);
+            crossfadeOutgoing.SetTransitionVolume(0);
+            crossfadeOutgoing.Expire();
 
             if (playlistItemViews.Count > 0)
             {
@@ -366,7 +382,35 @@ namespace AXPlayer.App.Screens
             crossfadeVideoId = string.Empty;
             crossfadeVideoData = null;
             crossfadeStarted = false;
+            crossfadeSourceSwitched = false;
             crossfadeAttempted = false;
+        }
+
+        private void switchCrossfadeSource()
+        {
+            if (crossfadeIncoming == null || crossfadeOutgoing == null || crossfadeSourceSwitched)
+                return;
+
+            currentVideoSource = crossfadeIncoming;
+            videoId = crossfadeVideoId;
+            videoData = crossfadeVideoData;
+            playlistItemIndex++;
+            configureVideoCompleted(crossfadeIncoming);
+            crossfadeIncoming.OnUpdateAction = updatePlaylistCrossfade;
+            crossfadeOutgoing.OnUpdateAction = null;
+            crossfadeOutgoing.DeactivateMediaSession();
+            crossfadeIncoming.ActivateMediaSession();
+            crossfadeSourceSwitched = true;
+
+            if (playlistItemViews.Count > 0)
+            {
+                foreach (PlaylistItemView playlistItemView in playlistItemViews)
+                {
+                    playlistItemView.UpdateState(false);
+                }
+
+                playlistItemViews[playlistItemIndex].UpdateState(true);
+            }
 
             updateVideoMetadata(videoId);
             updatePresence(discordRichPresence.Value);
@@ -380,7 +424,10 @@ namespace AXPlayer.App.Screens
             if (crossfadeOutgoing != null)
             {
                 crossfadeOutgoing.Alpha = 1;
+                crossfadeOutgoing.Scale = new osuTK.Vector2(1);
                 crossfadeOutgoing.SetTransitionVolume(1);
+                if (crossfadeSourceSwitched)
+                    crossfadeOutgoing.OnUpdateAction = null;
             }
 
             crossfadeOutgoing = null;
@@ -388,6 +435,7 @@ namespace AXPlayer.App.Screens
             crossfadeVideoId = string.Empty;
             crossfadeVideoData = null;
             crossfadeStarted = false;
+            crossfadeSourceSwitched = false;
             crossfadeAttempted = false;
         }
 
@@ -419,6 +467,7 @@ namespace AXPlayer.App.Screens
         private Google.Apis.YouTube.v3.Data.Video crossfadeVideoData;
         private double crossfadeDurationSeconds = 2;
         private bool crossfadeStarted;
+        private bool crossfadeSourceSwitched;
         private bool crossfadeAttempted;
         private readonly ConcurrentDictionary<string, byte> playlistVideoCachesInProgress = new ConcurrentDictionary<string, byte>();
 
@@ -1051,7 +1100,9 @@ namespace AXPlayer.App.Screens
 
                             currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime)
                             {
-                                RelativeSizeAxes = Axes.Both
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
                             };
 
                             //spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);
@@ -1413,7 +1464,9 @@ namespace AXPlayer.App.Screens
 
                             currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime)
                             {
-                                RelativeSizeAxes = Axes.Both
+                                RelativeSizeAxes = Axes.Both,
+                                Anchor = Anchor.Centre,
+                                Origin = Anchor.Centre,
                             };
 
                             //spinnerShow = Scheduler.AddDelayed(spinner.Hide, 0);
