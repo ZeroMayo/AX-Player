@@ -1018,4 +1018,7 @@
   <data name="preset_saved" xml:space="preserve">
     <value>Preset salvato</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>Sfocatura dello sfondo dei sottotitoli</value>
+  </data>
 </root>

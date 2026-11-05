@@ -1019,4 +1019,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="preset_saved" xml:space="preserve">
     <value>Preset saved</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>Closed captions backdrop blur</value>
+  </data>
 </root>

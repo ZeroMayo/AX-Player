@@ -1018,4 +1018,7 @@
   <data name="preset_saved" xml:space="preserve">
     <value>Ön ayar kaydedildi</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>Altyazı arka planı bulanıklığı</value>
+  </data>
 </root>

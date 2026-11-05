@@ -1018,4 +1018,7 @@
   <data name="preset_saved" xml:space="preserve">
     <value>Preajuste guardado</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>Desenfoque del fondo de los subtítulos</value>
+  </data>
 </root>

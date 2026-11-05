@@ -1018,4 +1018,7 @@
   <data name="preset_saved" xml:space="preserve">
     <value>프리셋이 저장되었습니다</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>자막 배경 흐림</value>
+  </data>
 </root>

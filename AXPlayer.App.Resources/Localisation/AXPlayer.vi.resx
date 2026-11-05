@@ -1019,4 +1019,7 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="preset_saved" xml:space="preserve">
     <value>Đã lưu giá trị đặt trước</value>
   </data>
+  <data name="closed_captions_backdrop_blur" xml:space="preserve">
+    <value>Làm mờ nền phụ đề</value>
+  </data>
 </root>
