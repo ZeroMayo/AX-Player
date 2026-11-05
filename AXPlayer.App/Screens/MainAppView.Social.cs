@@ -46,7 +46,7 @@ namespace AXPlayer.App.Screens
         private RoundedIconButton viewMoreComments;
         private Container viewMoreCommentsContainer;
 
-        private void updateComments(string videoId, string pageToken = "")
+        private async Task updateComments(string videoId, string pageToken = "")
         {
             if (commentsDisabled)
             {
@@ -60,149 +60,130 @@ namespace AXPlayer.App.Screens
                 return;
             }
 
+            OrderEnum orderEnum = commentsSort.Value == CommentsSortCriteria.Top ? OrderEnum.Relevance : OrderEnum.Time;
+            CommentThreadListResponse commentThreadListResponse;
+
+            try
+            {
+                commentThreadListResponse = await api.GetCommentThreadAsync(videoId, pageToken, orderEnum);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, e.GetDescription());
+                Schedule(() => commentsEmpty.Show());
+                return;
+            }
+
             Schedule(() =>
             {
-                foreach (var item in commentContainer.Children)
+                if (string.IsNullOrEmpty(pageToken))
                 {
-                    if (string.IsNullOrEmpty(pageToken))
-                        Schedule(() => item.Expire());
+                    foreach (var item in commentContainer.Children)
+                        item.Expire();
                 }
 
                 quickCommentOpenButton.TooltipText = AXPlayerStrings.Comments(videoData.Statistics.CommentCount != null ? Convert.ToInt32(videoData.Statistics.CommentCount).ToStandardFormattedString(0) : AXPlayerStrings.DisabledByUploader);
                 commentCount.Text = videoData.Statistics.CommentCount != null ? Convert.ToDouble(videoData.Statistics.CommentCount).ToMetric(decimals: 2) : AXPlayerStrings.DisabledByUploader;
                 commentsContainerTitle.Text = AXPlayerStrings.Comments(videoData.Statistics.CommentCount != null ? Convert.ToInt32(videoData.Statistics.CommentCount).ToStandardFormattedString(0) : AXPlayerStrings.DisabledByUploader);
+                currentCommentsNextPageToken = commentThreadListResponse.NextPageToken;
 
-                OrderEnum orderEnum = commentsSort.Value == CommentsSortCriteria.Top ? OrderEnum.Relevance : OrderEnum.Time;
-
-                CommentThreadListResponse commentThreadListResponse;
-
-                try
+                if (!string.IsNullOrEmpty(commentThreadListResponse.NextPageToken))
                 {
-                    // comments area
-                    commentThreadListResponse = api.GetCommentThread(videoId, pageToken, orderEnum);
-
-                    currentCommentsNextPageToken = commentThreadListResponse.NextPageToken;
-
-                    if (!string.IsNullOrEmpty(commentThreadListResponse.NextPageToken))
+                    viewMoreComments = new RoundedIconButton(FontAwesome.Solid.ArrowDown)
                     {
-                        viewMoreComments = new RoundedIconButton(FontAwesome.Solid.ArrowDown)
+                        Width = 250,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        Text = AXPlayerStrings.ViewMoreComments,
+                        Action = () =>
                         {
-                            Width = 250,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            Text = AXPlayerStrings.ViewMoreComments,
-                            Action = () =>
-                            {
-                                viewMoreCommentsContainer.Expire();
-                                updateComments(videoId, currentCommentsNextPageToken);
-                            }
-                        };
+                            viewMoreCommentsContainer.Expire();
+                            updateComments(videoId, currentCommentsNextPageToken).FireAndForget();
+                        }
+                    };
 
-                        viewMoreCommentsContainer = new Container
-                        {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Children = new Drawable[]
-                            {
-                                viewMoreComments,
-                            }
-                        };
-                    }
-
-                    if (string.IsNullOrEmpty(pageToken))
+                    viewMoreCommentsContainer = new Container
                     {
-                        commentContainer.Add(new CircularContainer
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Children = new Drawable[]
                         {
-                            RelativeSizeAxes = Axes.X,
-                            AutoSizeAxes = Axes.Y,
-                            Masking = true,
-                            Children = new Drawable[]
+                            viewMoreComments,
+                        }
+                    };
+                }
+
+                if (string.IsNullOrEmpty(pageToken))
+                {
+                    commentContainer.Add(new CircularContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Masking = true,
+                        Children = new Drawable[]
+                        {
+                            new Box
                             {
-                                new Box
-                                {
-                                    RelativeSizeAxes = Axes.Both,
-                                    Colour = overlayColourProvider1.Background4,
-                                    Alpha = 0.7f,
-                                },
-                                new Container
+                                RelativeSizeAxes = Axes.Both,
+                                Colour = overlayColourProvider1.Background4,
+                                Alpha = 0.7f,
+                            },
+                            new Container
+                            {
+                                RelativeSizeAxes = Axes.X,
+                                AutoSizeAxes = Axes.Y,
+                                Padding = new MarginPadding(8),
+                                Child = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 16))
                                 {
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
-                                    Padding = new MarginPadding(8),
-                                    Child = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: 16))
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
-                                        TextAnchor = Anchor.Centre,
-                                        Text = AXPlayerStrings.RepliesLimited,
-                                        Colour = overlayColourProvider1.Content2,
-                                    }
+                                    TextAnchor = Anchor.Centre,
+                                    Text = AXPlayerStrings.RepliesLimited,
+                                    Colour = overlayColourProvider1.Content2,
                                 }
                             }
-                        });
-                    }
-
-                    for (int i = 0; i < commentThreadListResponse.Items.Count; i++)
-                    {
-                        CommentThread item = commentThreadListResponse.Items[i];
-#pragma warning disable CS4014 // 이 호출을 대기하지 않으므로 호출이 완료되기 전에 현재 메서드가 계속 실행됩니다.
-                        Task.Run(async () =>
-                        {
-                            Schedule(() =>
-                            {
-                                commentContainer.Add(new CommentDisplay(item)
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    TimestampClicked = second =>
-                                    {
-                                        Logger.Log(second.ToString());
-                                        hideOverlays();
-                                        seekTo((second / 60) * 1000);
-                                    }
-                                });
-
-                                if (item.Replies != null && item.Replies.Comments != null && item.Replies.Comments.Count > 0)
-                                {
-                                    for (int i2 = 0; i2 < item.Replies.Comments.Count; i2++)
-                                    {
-                                        Comment item2 = item.Replies.Comments[i2];
-                                        commentContainer.Add(new CommentDisplay(item, item2)
-                                        {
-                                            RelativeSizeAxes = Axes.X,
-                                            TimestampClicked = second =>
-                                            {
-                                                Logger.Log(second.ToString());
-                                                hideOverlays();
-                                                seekTo((second / 60) * 1000);
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }).ContinueWith(_ =>
-                        {
-                            if (!string.IsNullOrEmpty(commentThreadListResponse.NextPageToken))
-                            {
-                                Schedule(() =>
-                                {
-                                    commentContainer.Remove(viewMoreCommentsContainer, false);
-                                    commentContainer.Add(viewMoreCommentsContainer);
-                                });
-                            }
-                        });
-#pragma warning restore CS4014 // 이 호출을 대기하지 않으므로 호출이 완료되기 전에 현재 메서드가 계속 실행됩니다.
-                    }
-
-                    if (commentThreadListResponse.Items.Count > 0)
-                        commentsEmpty.Hide();
-                    else
-                        commentsEmpty.Show();
+                        }
+                    });
                 }
-                catch (Exception e)
+
+                foreach (CommentThread item in commentThreadListResponse.Items)
                 {
-                    Logger.Error(e, e.GetDescription());
-                    commentsEmpty.Show();
+                    commentContainer.Add(new CommentDisplay(item)
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        TimestampClicked = second =>
+                        {
+                            Logger.Log(second.ToString());
+                            hideOverlays();
+                            seekTo((second / 60) * 1000);
+                        }
+                    });
+
+                    if (item.Replies?.Comments == null)
+                        continue;
+
+                    foreach (Comment item2 in item.Replies.Comments)
+                    {
+                        commentContainer.Add(new CommentDisplay(item, item2)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                            TimestampClicked = second =>
+                            {
+                                Logger.Log(second.ToString());
+                                hideOverlays();
+                                seekTo((second / 60) * 1000);
+                            }
+                        });
+                    }
                 }
+
+                if (!string.IsNullOrEmpty(commentThreadListResponse.NextPageToken))
+                    commentContainer.Add(viewMoreCommentsContainer);
+
+                if (commentThreadListResponse.Items.Count > 0)
+                    commentsEmpty.Hide();
+                else
+                    commentsEmpty.Show();
             });
         }
 
@@ -837,7 +818,7 @@ namespace AXPlayer.App.Screens
                 //commentsContainerTitle.Text = NekoPlayerStrings.Comments(videoData.Statistics.CommentCount != null ? Convert.ToInt32(videoData.Statistics.CommentCount).ToStandardFormattedString(0) : NekoPlayerStrings.Disabled);
                 videoInfoDetails.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(Convert.ToInt32(videoData.Statistics.ViewCount).ToStandardFormattedString(0), uploadDate.ToString());
 
-                updateComments(videoId);
+                updateComments(videoId).FireAndForget();
 
                 refreshLikeDislikeCount(videoId);
 
@@ -942,7 +923,10 @@ namespace AXPlayer.App.Screens
                         //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.CommentAdded, FontAwesome.Regular.Comment);
                         api.SendComment(videoId, commentTextBox.Text);
 
-                        Scheduler.AddDelayed(() => updateComments(videoId), 2000);
+                        Scheduler.AddDelayed(() =>
+                        {
+                            updateComments(videoId).FireAndForget();
+                        }, 2000);
 
                         //Schedule(() => onScreenDisplay.Display(toast));
                         Schedule(() =>
@@ -957,7 +941,7 @@ namespace AXPlayer.App.Screens
 
                 commentsSort.BindValueChanged(sort =>
                 {
-                    updateComments(videoId);
+                    updateComments(videoId).FireAndForget();
                 });
 
                 usernameDisplayMode.BindValueChanged(locale =>

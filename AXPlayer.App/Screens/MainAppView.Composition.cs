@@ -1556,7 +1556,10 @@ namespace AXPlayer.App.Screens
 
                                                 api.SendComment(videoId, commentTextBox.Text);
 
-                                                Scheduler.AddDelayed(() => updateComments(videoId), 2000);
+                                                Scheduler.AddDelayed(() =>
+                                                {
+                                                    updateComments(videoId).FireAndForget();
+                                                }, 2000);
 
                                                 //Schedule(() => onScreenDisplay.Display(toast));
                                                 Schedule(() =>
