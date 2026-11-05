@@ -664,8 +664,10 @@ namespace AXPlayer.App.Screens
                         settingsContainer.VideoQualitySettingsCore.Show();
                         settingsContainer.AudioQualitySettingsCore.Show();
 
+                        bool videoCached = !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg") || !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm");
+
                         isVideoLoading = true;
-                        if (true) // always download cache
+                        if (videoCached) // always download cache
                         {
                             if (loadType == LoadType.Full)
                                 Directory.CreateDirectory(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}"));
