@@ -89,7 +89,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.PlayOverlaySFX, false);
             SetDefault(AXPlayerSetting.OverlaySFXType, SFXType.Normal);
 
-            SetDefault(AXPlayerSetting.CaptionBGOpacity, 0.5f, 0.25f, 1f, 0.01f);
+            SetDefault(AXPlayerSetting.CaptionBGOpacity, 0.25f, 0.25f, 1f, 0.01f);
             SetDefault(AXPlayerSetting.ResetPlaybackSpeedWhenLoadingAVideo, false);
             SetDefault(AXPlayerSetting.PlaylistCrossfadeEnabled, false);
             SetDefault(AXPlayerSetting.PlaylistCrossfadeDuration, 2f, 1f, 10f, 1f);
