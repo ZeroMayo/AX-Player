@@ -23,7 +23,11 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public ITextPart AddArbitraryDrawable(Drawable drawable) => AddPart(new TextPartManual(new ArbitraryDrawableWrapper(drawable).Yield()));
 
-        public ITextPart AddIcon(IconUsage icon, Action<SpriteText>? creationParameters = null) => AddText(icon.Icon.ToString(), creationParameters);
+        public ITextPart AddIcon(IconUsage icon, Action<SpriteText>? creationParameters = null) => AddText(icon.Icon.ToString(), text =>
+        {
+            creationParameters?.Invoke(text);
+            text.Font = text.Font.With(icon.Family, weight: icon.Weight);
+        });
 
         private partial class ArbitraryDrawableWrapper : Container, IHasLineBaseHeight
         {
