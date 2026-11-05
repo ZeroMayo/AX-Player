@@ -47,7 +47,7 @@ namespace AXPlayer.App.Graphics.Caption
 
         private Bindable<bool> captionEnabled;
         private Bindable<CaptionFonts> captionFont;
-        private Container captionContainer;
+        private BackdropBlurContainer captionContainer;
         private Bindable<float> bottomMargin = new Bindable<float>();
 
         public ClosedCaptionContainer(YouTubeVideoPlayer videoPlayer, ClosedCaptionTrack captionTrack)
@@ -124,7 +124,7 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGRadius = config.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius);
             smoothCaptionAnimation = config.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation);
 
-            Add(captionContainer = new Container
+            Add(captionContainer = new BackdropBlurContainer
             {
                 AutoSizeAxes = Axes.Both,
                 Anchor = Anchor.BottomCentre,
@@ -132,6 +132,7 @@ namespace AXPlayer.App.Graphics.Caption
                 AutoSizeDuration = 350,
                 AutoSizeEasing = Easing.OutQuart,
                 Masking = true,
+                BlurSigma = new osuTK.Vector2(10),
                 Children = new Drawable[]
                 {
                     bg = new Box

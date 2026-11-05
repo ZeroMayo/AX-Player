@@ -22,7 +22,7 @@ namespace AXPlayer.App.Graphics.Caption
         private Bindable<CaptionFonts> captionFont;
         private Bindable<float> captionBGOpacity;
         private Bindable<Colour4> captionBGColor;
-        private Container captionContainer;
+        private BackdropBlurContainer captionContainer;
         private Box bg;
         private Action<SpriteText> textCreationParameters;
         private Action<SpriteText> shadowOptions;
@@ -38,7 +38,7 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGRadius = config.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius);
             smoothCaptionAnimation = config.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation);
 
-            captionContainer = new Container
+            captionContainer = new BackdropBlurContainer
             {
                 AutoSizeAxes = Axes.Both,
                 Anchor = Anchor.Centre,
@@ -46,6 +46,7 @@ namespace AXPlayer.App.Graphics.Caption
                 AutoSizeDuration = 350,
                 AutoSizeEasing = Easing.OutQuart,
                 Masking = true,
+                BlurSigma = new osuTK.Vector2(10),
                 Children = new Drawable[]
                 {
                     bg = new Box
@@ -80,7 +81,7 @@ namespace AXPlayer.App.Graphics.Caption
                         Origin = Anchor.Centre,
                         Anchor = Anchor.Centre,
                         FillMode = FillMode.Fill,
-                        Texture = textureStore.Get("ClosedCaptionPreviewBG"),
+                        Texture = textureStore.Get("ClosedCaptionPreviewBG_New"),
                     },
                     captionContainer,
                 }
