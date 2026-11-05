@@ -1013,4 +1013,10 @@
   <data name="common_open_in_browser" xml:space="preserve">
     <value>在外部浏览器中打开</value>
   </data>
+  <data name="add_at_current_speed" xml:space="preserve">
+    <value>添加当前速度</value>
+  </data>
+  <data name="preset_saved" xml:space="preserve">
+    <value>预设已保存</value>
+  </data>
 </root>

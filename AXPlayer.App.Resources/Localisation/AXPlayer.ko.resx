@@ -1012,4 +1012,10 @@
   <data name="common_open_in_browser" xml:space="preserve">
     <value>외부 브라우저에서 열기</value>
   </data>
+  <data name="add_at_current_speed" xml:space="preserve">
+    <value>현재 속도 추가</value>
+  </data>
+  <data name="preset_saved" xml:space="preserve">
+    <value>프리셋이 저장되었습니다</value>
+  </data>
 </root>

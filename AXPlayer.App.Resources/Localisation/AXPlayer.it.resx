@@ -1012,4 +1012,10 @@
   <data name="common_open_in_browser" xml:space="preserve">
     <value>Apri nel browser esterno</value>
   </data>
+  <data name="add_at_current_speed" xml:space="preserve">
+    <value>Aggiungi velocità attuale</value>
+  </data>
+  <data name="preset_saved" xml:space="preserve">
+    <value>Preset salvato</value>
+  </data>
 </root>
