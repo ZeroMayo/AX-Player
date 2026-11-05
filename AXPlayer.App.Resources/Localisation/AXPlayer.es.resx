@@ -895,6 +895,12 @@
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>Reestablecer la velocidad de reproducción al cargar un vídeo</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>Fundido cruzado entre videos de la lista</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>Duración del fundido cruzado</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Color de fondo de las captas cerradas</value>
   </data>

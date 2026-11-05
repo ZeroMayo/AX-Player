@@ -895,6 +895,12 @@
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>Reimposta la velocità di riproduzione quando carichi un video</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>Dissolvenza incrociata della playlist</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>Durata della dissolvenza incrociata</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Colore dello sfondo dei sottotitoli</value>
   </data>

@@ -54,11 +54,15 @@ namespace AXPlayer.App.Graphics.Videos
 
         private Bindable<double> playbackSpeed = null!;
         private readonly double resumeFromTime;
+        private readonly double initialVolume;
+        private readonly bool startPaused;
+        private bool mediaSessionEnabled;
         private bool trackFinished;
 
         public Action? OnVideoCompleted = null!;
 
         public Action? OnSeekAction = null!;
+        public Action? OnUpdateAction = null!;
 
         private MediaSessionControls mediaSessionControls = null!;
 
@@ -70,7 +74,7 @@ namespace AXPlayer.App.Graphics.Videos
         private MediaSession? mediaSession { get; set; }
 #nullable disable
 
-        public YouTubeVideoPlayer(string fileName_Video, string fileName_Audio, ClosedCaptionTrack closedCaptionTrack, string srv3Contents, Google.Apis.YouTube.v3.Data.Video videoData, double resumeFromTime)
+        public YouTubeVideoPlayer(string fileName_Video, string fileName_Audio, ClosedCaptionTrack closedCaptionTrack, string srv3Contents, Google.Apis.YouTube.v3.Data.Video videoData, double resumeFromTime, double initialVolume = 1, bool startPaused = false, bool enableMediaSession = true)
         {
             this.fileName_Video = fileName_Video;
             this.fileName_Audio = fileName_Audio;
@@ -78,6 +82,9 @@ namespace AXPlayer.App.Graphics.Videos
             this.closedCaptionTrack = closedCaptionTrack;
             this.videoData = videoData;
             this.resumeFromTime = resumeFromTime;
+            this.initialVolume = initialVolume;
+            this.startPaused = startPaused;
+            mediaSessionEnabled = enableMediaSession;
         }
 
         public void UpdateCaptionTrack(ClosedCaptionTrack closedCaptionTrack, string srv3Contents)
@@ -163,6 +170,11 @@ namespace AXPlayer.App.Graphics.Videos
 
             rateAdjustClock = new StopwatchClock(false);
             framedClock = new DecouplingFramedClock(rateAdjustClock);
+            drawableTrack = new DrawableTrack(track)
+            {
+                Clock = framedClock,
+            };
+            drawableTrack.Volume.Value = initialVolume;
 
             mediaSessionControls = new MediaSessionControls()
             {
@@ -176,15 +188,14 @@ namespace AXPlayer.App.Graphics.Videos
                 },
             };
 
-            mediaSession?.CreateMediaSession(api, fileName_Audio);
-
-            mediaSession?.RegisterControlEvents(mediaSessionControls);
+            if (mediaSessionEnabled)
+            {
+                mediaSession?.CreateMediaSession(api, fileName_Audio);
+                mediaSession?.RegisterControlEvents(mediaSessionControls);
+            }
 
             AddRange(new Drawable[] {
-                drawableTrack = new DrawableTrack(track)
-                {
-                    Clock = framedClock,
-                },
+                drawableTrack,
                 new ScalingContainerNew(ScalingMode.Video)
                 {
                     Children = new Drawable[] {
@@ -259,7 +270,8 @@ namespace AXPlayer.App.Graphics.Videos
             UpdatePreservePitch(config.Get<bool>(AXPlayerSetting.AdjustPitchOnSpeedChange));
 
             SeekTo(resumeFromTime * milliseconds_per_second);
-            Play();
+            if (!startPaused)
+                Play();
 
             uiVisible.BindValueChanged(visible =>
             {
@@ -338,8 +350,7 @@ namespace AXPlayer.App.Graphics.Videos
         {
             uiLanguage.UnbindEvents();
             uiVisible.UnbindEvents();
-            mediaSession?.UnregisterControlEvents();
-            mediaSession?.DeleteMediaSession();
+            DeactivateMediaSession();
 
             video.Dispose();
             drawableTrack.Dispose();
@@ -372,16 +383,19 @@ namespace AXPlayer.App.Graphics.Videos
 
             uiLanguage.BindValueChanged(lang =>
             {
-                mediaSession?.UpdateMediaSession(videoData);
+                if (mediaSessionEnabled)
+                    mediaSession?.UpdateMediaSession(videoData);
             }, true);
 
             playbackSpeed.BindValueChanged(v =>
             {
                 rateAdjustClock.Rate = v.NewValue;
-                mediaSession?.UpdatePlaybackSpeed(v.NewValue);
+                if (mediaSessionEnabled)
+                    mediaSession?.UpdatePlaybackSpeed(v.NewValue);
             }, true);
 
-            mediaSession?.UpdateTimestamp(videoData, 0);
+            if (mediaSessionEnabled)
+                mediaSession?.UpdateTimestamp(videoData, 0);
         }
 
         protected override void Update()
@@ -395,7 +409,7 @@ namespace AXPlayer.App.Graphics.Videos
                 if (VideoProgress.MaxValue != length)
                     VideoProgress.MaxValue = length;
 
-                if (VideoProgress.Value >= drawableTrack.Length - 100) //this will fix app hang bugs
+                if (!trackFinished && drawableTrack.CurrentTime >= drawableTrack.Length - 100) //this will fix app hang bugs
                 {
                     trackFinished = true;
                     Pause();
@@ -407,6 +421,8 @@ namespace AXPlayer.App.Graphics.Videos
 
                 if (Math.Abs(drawableTrack.CurrentTime - video.Time.Current) > video_sync_tolerance)
                     video.Seek(drawableTrack.CurrentTime);
+
+                OnUpdateAction?.Invoke();
             }
         }
 
@@ -419,7 +435,8 @@ namespace AXPlayer.App.Graphics.Videos
 
             drawableTrack.Seek(targetPosition);
             video.Seek(targetPosition);
-            mediaSession?.UpdateTimestamp(videoData, targetPosition);
+            if (mediaSessionEnabled)
+                mediaSession?.UpdateTimestamp(videoData, targetPosition);
             Schedule(() => OnSeekAction?.Invoke());
         }
 
@@ -457,8 +474,11 @@ namespace AXPlayer.App.Graphics.Videos
             drawableTrack.Stop();
             framedClock.Stop();
 
-            mediaSession?.UpdatePlayingState(false);
-            mediaSession?.UpdateTimestamp(videoData, drawableTrack.CurrentTime);
+            if (mediaSessionEnabled)
+            {
+                mediaSession?.UpdatePlayingState(false);
+                mediaSession?.UpdateTimestamp(videoData, drawableTrack.CurrentTime);
+            }
 
             if (isKeyboardOrMouseAction)
                 keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.PlayPause, FontAwesome.Solid.Pause);
@@ -477,8 +497,11 @@ namespace AXPlayer.App.Graphics.Videos
                 trackFinished = false;
             }
 
-            mediaSession?.UpdatePlayingState(true);
-            mediaSession?.UpdateTimestamp(videoData, drawableTrack.CurrentTime);
+            if (mediaSessionEnabled)
+            {
+                mediaSession?.UpdatePlayingState(true);
+                mediaSession?.UpdateTimestamp(videoData, drawableTrack.CurrentTime);
+            }
 
             drawableTrack.Start();
             framedClock.Start();
@@ -493,6 +516,38 @@ namespace AXPlayer.App.Graphics.Videos
         public void SetPlaybackSpeed(double speed)
         {
             playbackSpeed.Value = speed;
+        }
+
+        public bool IsReady => drawableTrack != null && video != null;
+
+        public void SetTransitionVolume(double volume)
+        {
+            if (drawableTrack != null)
+                drawableTrack.Volume.Value = Math.Clamp(volume, 0, 1);
+        }
+
+        public void ActivateMediaSession()
+        {
+            if (mediaSessionEnabled)
+                return;
+
+            mediaSessionEnabled = true;
+            mediaSession?.CreateMediaSession(api, fileName_Audio);
+            mediaSession?.RegisterControlEvents(mediaSessionControls);
+            mediaSession?.UpdateMediaSession(videoData);
+            mediaSession?.UpdatePlayingState(IsPlaying());
+            if (drawableTrack != null)
+                mediaSession?.UpdateTimestamp(videoData, drawableTrack.CurrentTime);
+        }
+
+        public void DeactivateMediaSession()
+        {
+            if (!mediaSessionEnabled)
+                return;
+
+            mediaSessionEnabled = false;
+            mediaSession?.UnregisterControlEvents();
+            mediaSession?.DeleteMediaSession();
         }
     }
 }

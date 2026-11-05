@@ -895,6 +895,12 @@
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>Video yüklenirken oynatma hızını sıfırla</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>Oynatma listesi çapraz geçişi</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>Çapraz geçiş süresi</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Altyazı arka plan rengi</value>
   </data>

@@ -896,6 +896,12 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>Đặt lại tốc độ phát khi tải video</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>Chuyển tiếp chéo trong danh sách phát</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>Thời lượng chuyển tiếp chéo</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Màu nền phụ đề</value>
   </data>

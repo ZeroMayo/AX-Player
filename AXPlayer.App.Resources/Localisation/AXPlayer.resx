@@ -896,6 +896,12 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>Reset playback speed when loading a video</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>Playlist crossfade</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>Crossfade duration</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Closed captions background colour</value>
   </data>

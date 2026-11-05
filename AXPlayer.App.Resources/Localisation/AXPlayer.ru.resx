@@ -896,6 +896,12 @@
   <data name="reset_playback_speed_when_loading_a_video" xml:space="preserve">
     <value>Сбрасывать скорость воспроизведения при загрузке видео</value>
   </data>
+  <data name="playlist_crossfade" xml:space="preserve">
+    <value>Плавный переход между видео плейлиста</value>
+  </data>
+  <data name="playlist_crossfade_duration" xml:space="preserve">
+    <value>Длительность плавного перехода</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Цвет фона субтитров</value>
   </data>

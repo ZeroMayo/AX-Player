@@ -958,6 +958,22 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ResetPlaybackSpeedWhenLoadingAVideo,
                                                             Icon = FontAwesome.Solid.TachometerAlt,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.ResetPlaybackSpeedWhenLoadingAVideo),
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.PlaylistCrossfade,
+                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.PlaylistCrossfadeEnabled),
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        new SettingsItemV2(new FormSliderBar<float>
+                                                        {
+                                                            Caption = AXPlayerStrings.PlaylistCrossfadeDuration,
+                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Current = appConfig.GetBindable<float>(AXPlayerSetting.PlaylistCrossfadeDuration),
+                                                            KeyboardStep = 1,
+                                                            LabelFormat = value => $"{value:N0}s",
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new ProjectYomiSpriteText

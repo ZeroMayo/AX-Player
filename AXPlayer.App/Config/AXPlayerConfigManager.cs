@@ -91,6 +91,8 @@ namespace AXPlayer.App.Config
 
             SetDefault(AXPlayerSetting.CaptionBGOpacity, 0.5f, 0.25f, 1f, 0.01f);
             SetDefault(AXPlayerSetting.ResetPlaybackSpeedWhenLoadingAVideo, false);
+            SetDefault(AXPlayerSetting.PlaylistCrossfadeEnabled, true);
+            SetDefault(AXPlayerSetting.PlaylistCrossfadeDuration, 2f, 1f, 10f, 1f);
             SetDefault(AXPlayerSetting.CaptionBGColor, Colour4.Black);
             SetDefault(AXPlayerSetting.CaptionCornerRadius, 0, 0, 16);
             SetDefault(AXPlayerSetting.UseNewSubtitlesFeature, false);
@@ -196,5 +198,7 @@ namespace AXPlayer.App.Config
         DarkMode,
         VideoCRTEffectEnabled,
         CustomPlaybackSpeedPresets,
+        PlaylistCrossfadeEnabled,
+        PlaylistCrossfadeDuration,
     }
 }
