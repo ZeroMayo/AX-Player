@@ -1099,13 +1099,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
-                                                            Caption = AXPlayerStrings.ClosedCaptionsSmoothAnimation,
-                                                            Icon = FontAwesome.Solid.ClosedCaptioning,
-                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation),
-                                                            CornerType = FormControlCornerType.Center,
-                                                        }),
-                                                        new SettingsItemV2(new FormCheckBox
-                                                        {
                                                             Caption = AXPlayerStrings.ClosedCaptionsBackdropBlur,
                                                             Icon = FontAwesome.Solid.ClosedCaptioning,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.ClosedCaptionsBackdropBlur),

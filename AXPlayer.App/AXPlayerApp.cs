@@ -245,7 +245,7 @@ namespace AXPlayer.App
         /// </summary>
         private void applyConfigMigrations()
         {
-            // arrives as 2026.1018.0
+            // arrives as 26.1.0
             string rawVersion = LocalConfig.Get<string>(AXPlayerSetting.Version);
 
             if (rawVersion.Length < 6)
@@ -255,14 +255,19 @@ namespace AXPlayer.App
 
             // on a fresh install or when coming from a non-release build, execution will end here.
             // we don't want to run migrations in such cases.
-            if (!int.TryParse(pieces[0], out int year)) return;
-            if (!int.TryParse(pieces[1], out int monthDay)) return;
+            if (!int.TryParse(pieces[0], out int majorVersion)) return;
+            if (!int.TryParse(pieces[1], out int minorVersion)) return;
+            if (!int.TryParse(pieces[2], out int hotfixVersion)) return;
 
-            int combined = (year * 10000) + monthDay;
+            int combined = (majorVersion * 100) + (minorVersion * 10) + hotfixVersion;
 
-            if (combined < 20261018 && RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
+            if (combined < 2610 && RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
             {
                 Audio.UseExperimentalWasapi.Value = true;
+            }
+            if (combined < 2633)
+            {
+                LocalConfig.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation).Value = false;
             }
         }
 
