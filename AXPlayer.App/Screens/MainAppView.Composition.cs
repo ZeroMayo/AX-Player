@@ -1043,17 +1043,16 @@ namespace AXPlayer.App.Screens
                                 new ProjectYomiContextMenuContainer
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding()
-                                    {
-                                        Horizontal = 6,
-                                    },
                                     Child = new ProjectYomiScrollContainer
                                     {
                                         Padding = new MarginPadding()
                                         {
                                             Top = 96,
                                             Bottom = 6,
+                                            Horizontal = 6,
                                         },
+                                        ProgressiveBlurTopHeight = 96 + 24,
+                                        ProgressiveBlurBottomHeight = 0,
                                         RelativeSizeAxes = Axes.Both,
                                         CornerRadius = AXPlayerApp.UI_CORNER_RADIUS,
                                         Masking = true,
@@ -1375,10 +1374,6 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
@@ -1388,6 +1383,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Top = 56,
                                                 Bottom = 56 + 8,
+                                                Horizontal = 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -1607,10 +1603,6 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
@@ -1619,7 +1611,8 @@ namespace AXPlayer.App.Screens
                                             Padding = new MarginPadding
                                             {
                                                 Top = (56 * 2),
-                                                Bottom = 6,
+                                                Bottom = 56 + 6,
+                                                Horizontal = 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -1760,10 +1753,6 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[]
                                     {
                                         new ProjectYomiScrollContainer
@@ -1774,6 +1763,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Bottom = 72,
                                                 Top = 56,
+                                                Horizontal = 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -1893,10 +1883,11 @@ namespace AXPlayer.App.Screens
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             ScrollbarVisible = false,
+                                            ProgressiveBlurTopHeight = 250 + 48,
                                             Padding = new MarginPadding
                                             {
                                                 Bottom = 16,
-                                                Top = 250 + 16
+                                                Top = 250 + 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -2078,10 +2069,6 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
@@ -2091,6 +2078,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Bottom = 16,
                                                 Top = 56,
+                                                Horizontal = 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -2122,6 +2110,15 @@ namespace AXPlayer.App.Screens
                                     RelativeSizeAxes = Axes.X,
                                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5, overlayColourProvider.Background5.Opacity(0)),
                                     Height = (56 + 20),
+                                },
+                                new Box
+                                {
+                                    Name = "masking of overlay",
+                                    RelativeSizeAxes = Axes.X,
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
+                                    Height = 56 + 20,
                                 },
                                 new IconButton
                                 {
@@ -2220,10 +2217,6 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 4,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
@@ -2233,6 +2226,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Bottom = 16,
                                                 Top = 56,
+                                                Horizontal = 4,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -2506,6 +2500,15 @@ namespace AXPlayer.App.Screens
                                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5, overlayColourProvider.Background5.Opacity(0)),
                                     Height = (56 + 20),
                                 },
+                                new Box
+                                {
+                                    Name = "masking of overlay",
+                                    RelativeSizeAxes = Axes.X,
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
+                                    Height = 56 + 20,
+                                },
                                 new IconButton
                                 {
                                     Enabled = { Value = true },
@@ -2626,18 +2629,16 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             ScrollbarVisible = false,
+                                            ProgressiveBlurBottomHeight = 0,
                                             Padding = new MarginPadding
                                             {
                                                 Top = 56,
+                                                Horizontal = 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -2749,10 +2750,6 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
@@ -2762,7 +2759,9 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Bottom = 16,
                                                 Top = 56,
+                                                Horizontal = 16,
                                             },
+                                            ProgressiveBlurBottomHeight = 0,
                                             Children = new Drawable[]
                                             {
                                                 new FillFlowContainer
@@ -2855,18 +2854,16 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             ScrollbarVisible = false,
+                                            ProgressiveBlurBottomHeight = 0,
                                             Padding = new MarginPadding
                                             {
                                                 Top = 56,
+                                                Horizontal = 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -2966,10 +2963,6 @@ namespace AXPlayer.App.Screens
                                 new Container
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Padding = new MarginPadding
-                                    {
-                                        Horizontal = 16,
-                                    },
                                     Children = new Drawable[] {
                                         new ProjectYomiScrollContainer
                                         {
@@ -2979,6 +2972,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Bottom = 16,
                                                 Top = 56,
+                                                Horizontal = 16,
                                             },
                                             Children = new Drawable[]
                                             {
@@ -3207,6 +3201,15 @@ namespace AXPlayer.App.Screens
                                     RelativeSizeAxes = Axes.X,
                                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5, overlayColourProvider.Background5.Opacity(0)),
                                     Height = (56 + 20),
+                                },
+                                new Box
+                                {
+                                    Name = "masking of overlay",
+                                    RelativeSizeAxes = Axes.X,
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
+                                    Height = 56 + 20,
                                 },
                                 new IconButton
                                 {
