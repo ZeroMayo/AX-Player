@@ -1883,7 +1883,7 @@ namespace AXPlayer.App.Screens
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             ScrollbarVisible = false,
-                                            ProgressiveBlurTopHeight = 250 + 48,
+                                            ProgressiveBlurTopHeight = (250) + (56 + 20),
                                             Padding = new MarginPadding
                                             {
                                                 Bottom = 16,

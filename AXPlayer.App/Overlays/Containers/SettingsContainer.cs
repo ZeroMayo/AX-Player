@@ -467,8 +467,9 @@ namespace AXPlayer.App.Overlays.Containers
 
             discordRichPresence = appConfig.GetBindable<DiscordRichPresenceMode>(AXPlayerSetting.DiscordRichPresence);
 
-            Size = new Vector2(0.34f, 1f);
-            RelativeSizeAxes = Axes.Both;
+            //Size = new Vector2(0.34f, 1f);
+            Width = 464;
+            RelativeSizeAxes = Axes.Y;
             CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS, AXPlayerApp.UI_CORNER_RADIUS, 0, 0);
             Masking = true;
             Origin = Anchor.CentreRight;
