@@ -70,7 +70,7 @@ namespace AXPlayer.App
 
         private BindableNumber<double> sampleVolume = null!;
         private FPSCounter fpsCounter;
-        private Container topMostOverlayContent, overlayContainer, leftFloatingOverlayContent;
+        private Container topMostOverlayContent, overlayContainer;
 
         public const float UI_CORNER_RADIUS = 18f;
 
@@ -176,20 +176,22 @@ namespace AXPlayer.App
                 new OnDemandBackbufferProvider
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Child = screenStack = new ScreenStack
+                    Children = new Drawable[]
                     {
-                        RelativeSizeAxes = Axes.Both
+                        screenStack = new ScreenStack
+                        {
+                            RelativeSizeAxes = Axes.Both
+                        },
+                        overlayContainer = new Container
+                        {
+                            RelativeSizeAxes = Axes.Both
+                        },
+                        topMostOverlayContent = new Container { RelativeSizeAxes = Axes.Both },
                     },
                 },
-                overlayContainer = new Container
-                {
-                    RelativeSizeAxes = Axes.Both
-                },
-                leftFloatingOverlayContent = new Container { RelativeSizeAxes = Axes.Both },
-                topMostOverlayContent = new Container { RelativeSizeAxes = Axes.Both },
             });
 
-            loadComponentSingleFile(volume = new VolumeOverlay(), leftFloatingOverlayContent.Add, true);
+            loadComponentSingleFile(volume = new VolumeOverlay(), overlayContainer.Add, true);
 
             onScreenDisplay = new OnScreenDisplay();
             loadingOverlay = new LoadingOverlay();

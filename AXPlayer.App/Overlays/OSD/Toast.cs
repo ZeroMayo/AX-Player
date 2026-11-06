@@ -27,8 +27,6 @@ namespace AXPlayer.App.Overlays.OSD
         private readonly Container content;
         private readonly Box background;
 
-        protected override Container<Drawable> Content => content;
-
         protected readonly ProjectYomiTextFlowContainer ExtraSpriteText;
         private readonly ProjectYomiTextFlowContainer valueSpriteText, descriptionText;
 
@@ -43,7 +41,7 @@ namespace AXPlayer.App.Overlays.OSD
             // A toast's height is decided (and transformed) by the containing OnScreenDisplay.
             AutoSizeAxes = Axes.Both;
 
-            InternalChildren = new Drawable[]
+            Children = new Drawable[]
             {
                 new Container // this container exists just to set a minimum width for the toast
                 {

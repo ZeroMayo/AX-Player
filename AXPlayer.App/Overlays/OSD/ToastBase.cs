@@ -8,10 +8,6 @@ namespace AXPlayer.App.Overlays.OSD
 {
     public partial class ToastBase : Container
     {
-        private readonly Container content;
-
-        protected override Container<Drawable> Content => content;
-
         public ToastBase()
         {
             Anchor = Anchor.Centre;

@@ -41,27 +41,24 @@ namespace AXPlayer.App.Overlays.OSD
 
             FillFlowContainer<OptionLight> optionLights;
 
-            Children = new Drawable[]
+            Add(new Container
             {
-                new Container
+                Anchor = Anchor.BottomCentre,
+                Origin = Anchor.BottomCentre,
+                Margin = new MarginPadding { Bottom = lights_bottom_margin },
+                Children = new Drawable[]
                 {
-                    Anchor = Anchor.BottomCentre,
-                    Origin = Anchor.BottomCentre,
-                    Margin = new MarginPadding { Bottom = lights_bottom_margin },
-                    Children = new Drawable[]
+                    optionLights = new FillFlowContainer<OptionLight>
                     {
-                        optionLights = new FillFlowContainer<OptionLight>
-                        {
-                            Margin = new MarginPadding { Bottom = 5 },
-                            Spacing = new Vector2(5, 0),
-                            Direction = FillDirection.Horizontal,
-                            Anchor = Anchor.Centre,
-                            Origin = Anchor.Centre,
-                            AutoSizeAxes = Axes.Both
-                        },
-                    }
+                        Margin = new MarginPadding { Bottom = 5 },
+                        Spacing = new Vector2(5, 0),
+                        Direction = FillDirection.Horizontal,
+                        Anchor = Anchor.Centre,
+                        Origin = Anchor.Centre,
+                        AutoSizeAxes = Axes.Both
+                    },
                 }
-            };
+            });
 
             switch (description.RawValue)
             {

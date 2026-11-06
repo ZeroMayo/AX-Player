@@ -25,7 +25,7 @@ namespace AXPlayer.App.Overlays
     /// </summary>
     public partial class OnScreenDisplay : Container
     {
-        private readonly BufferedContainer box;
+        private readonly BackdropBlurContainer box;
 
         private Bindable<bool> videoPlaying = null!;
 
@@ -38,7 +38,7 @@ namespace AXPlayer.App.Overlays
 
             Children = new Drawable[]
             {
-                box = new BufferedContainer
+                box = new BackdropBlurContainer
                 {
                     AutoSizeAxes = Axes.Both,
                     Origin = Anchor.BottomCentre,
@@ -46,7 +46,7 @@ namespace AXPlayer.App.Overlays
                     Margin = new MarginPadding(32),
                     Masking = true,
                     CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS),
-                    BlurSigma = new Vector2(15),
+                    BlurSigma = new Vector2(10),
                 },
             };
         }
@@ -121,16 +121,16 @@ namespace AXPlayer.App.Overlays
 
         private void displayTrackedSettingChange(SettingDescription description) => Scheduler.AddOnce(Display, new TrackedSettingToast(description));
 
-        private TransformSequence<BufferedContainer> fadeIn;
+        private TransformSequence<BackdropBlurContainer> fadeIn;
         private ScheduledDelegate fadeOut;
 
-        protected virtual void DisplayTemporarily(BufferedContainer toDisplay)
+        protected virtual void DisplayTemporarily(BackdropBlurContainer toDisplay)
         {
             // avoid starting a new fade-in if one is already active.
             if (fadeIn == null)
             {
                 fadeIn = toDisplay.Animate(
-                    b => b.BlurTo(new Vector2(0), 250, Easing.OutExpo),
+                    //b => b.BlurTo(new Vector2(0), 250, Easing.OutExpo),
                     b => b.FadeIn(500, Easing.OutQuint),
                     b => b.ScaleTo(1f, 500, Easing.OutQuint)
                 );
@@ -142,7 +142,7 @@ namespace AXPlayer.App.Overlays
             fadeOut = Scheduler.AddDelayed(() =>
             {
                 toDisplay.Animate(
-                    b => b.BlurTo(new Vector2(15), 250, Easing.OutQuint),
+                    //b => b.BlurTo(new Vector2(15), 250, Easing.OutQuint),
                     b => b.FadeOutFromOne(250, Easing.OutQuint),
                     b => b.ScaleTo(0.8f, 250, Easing.OutQuint)
                 );

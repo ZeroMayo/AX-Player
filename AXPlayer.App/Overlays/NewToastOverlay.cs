@@ -18,7 +18,7 @@ namespace AXPlayer.App.Overlays
 {
     public partial class NewToastOverlay : Container
     {
-        private BufferedContainer overlayContainer;
+        private BackdropBlurContainer overlayContainer;
         private ProjectYomiTextFlowContainer bodyText;
 
         public NewToastOverlay()
@@ -28,7 +28,7 @@ namespace AXPlayer.App.Overlays
             Anchor = Anchor.Centre;
             Origin = Anchor.Centre;
 
-            Add(overlayContainer = new OverlayContainer
+            Add(overlayContainer = new BackdropBlurContainer
             {
                 Width = 250,
                 AutoSizeAxes = Axes.Y,
@@ -37,7 +37,7 @@ namespace AXPlayer.App.Overlays
                 Margin = new MarginPadding(32),
                 Masking = true,
                 CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS),
-                BlurSigma = new Vector2(15),
+                BlurSigma = new Vector2(10),
                 Children = new Drawable[]
                 {
                     new OverlayBackground
@@ -76,7 +76,7 @@ namespace AXPlayer.App.Overlays
             overlayContainer.FadeOut();
             bodyText.Colour = overlayColourProvider.Content2;
         }
-        private TransformSequence<BufferedContainer> fadeIn;
+        private TransformSequence<BackdropBlurContainer> fadeIn;
         private ScheduledDelegate fadeOut;
 
         public Bindable<bool> IsOpened = new Bindable<bool>(false);
@@ -93,7 +93,7 @@ namespace AXPlayer.App.Overlays
                 if (fadeIn == null)
                 {
                     fadeIn = overlayContainer.Animate(
-                        b => b.BlurTo(new Vector2(0), 250, Easing.OutExpo),
+                        //b => b.BlurTo(new Vector2(0), 250, Easing.OutExpo),
                         b => b.FadeIn(500, Easing.OutQuint),
                         b => b.ScaleTo(1f, 500, Easing.OutQuint)
                     );
@@ -105,7 +105,7 @@ namespace AXPlayer.App.Overlays
                 fadeOut = Scheduler.AddDelayed(() =>
                 {
                     overlayContainer.Animate(
-                        b => b.BlurTo(new Vector2(15), 250, Easing.OutQuint),
+                        //b => b.BlurTo(new Vector2(15), 250, Easing.OutQuint),
                         b => b.FadeOutFromOne(250, Easing.OutQuint),
                         b => b.ScaleTo(0.8f, 250, Easing.OutQuint)
                     );
