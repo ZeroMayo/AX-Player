@@ -43,7 +43,7 @@ namespace AXPlayer.Desktop
 
                     // 연결이 성공적으로 맺어진 후 D-Bus 객체 및 서비스 등록
                     await dbusConnection.RegisterObjectAsync(mprisPlayer);
-                    await dbusConnection.RegisterServiceAsync("org.mpris.MediaPlayer2.NekoPlayer");
+                    await dbusConnection.RegisterServiceAsync("org.mpris.MediaPlayer2.AXPlayer");
 
                     IsLoaded = true;
                     base.YouTubeAPI = youtubeAPI;
@@ -196,8 +196,8 @@ namespace AXPlayer.Desktop
             public Task QuitAsync() => Task.CompletedTask;
             public Task<bool> GetCanQuitAsync() => Task.FromResult(false);
             public Task<bool> GetCanRaiseAsync() => Task.FromResult(false);
-            public Task<string> GetIdentityAsync() => Task.FromResult("NekoPlayer");
-            public Task<string> GetDesktopEntryAsync() => Task.FromResult("nekoplayer");
+            public Task<string> GetIdentityAsync() => Task.FromResult("AXPlayer");
+            public Task<string> GetDesktopEntryAsync() => Task.FromResult("AXPlayer");
 
             // IPlayer - Event Handlers
             public Task PlayAsync()
