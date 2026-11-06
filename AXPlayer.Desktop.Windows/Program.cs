@@ -6,7 +6,6 @@ using AXPlayer.Desktop.Windows.LowLatency;
 using osu.Framework;
 using osu.Framework.Development;
 using osu.Framework.Platform;
-using SDL;
 using Velopack;
 
 namespace AXPlayer.Desktop.Windows
