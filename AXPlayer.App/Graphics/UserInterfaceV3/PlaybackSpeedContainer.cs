@@ -44,6 +44,11 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
         [Resolved]
         private NewToastOverlay newToastOverlay { get; set; }
 
+        public PlaybackSpeedContainer()
+        {
+            Enabled.Value = true;
+        }
+
         protected override bool OnClick(ClickEvent e)
         {
             this.ShowPopover();

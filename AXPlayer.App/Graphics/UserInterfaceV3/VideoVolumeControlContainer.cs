@@ -21,6 +21,11 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
     {
         public Bindable<double> Current;
 
+        public VideoVolumeControlContainer()
+        {
+            Enabled.Value = true;
+        }
+
         protected override bool OnClick(ClickEvent e)
         {
             this.ShowPopover();

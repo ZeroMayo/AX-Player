@@ -60,7 +60,8 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private readonly SpriteIcon icon;
 
-        public IconButton()
+        public IconButton(HoverSampleSet hoverSampleSet = HoverSampleSet.Default)
+            : base(hoverSampleSet)
         {
             Size = new Vector2(DEFAULT_BUTTON_SIZE);
 

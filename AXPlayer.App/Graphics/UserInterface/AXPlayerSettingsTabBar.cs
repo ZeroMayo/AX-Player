@@ -71,6 +71,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         public partial class Button : IconButton
         {
             public Button()
+                : base(HoverSampleSet.ButtonSidebar)
             {
                 Width = 40;
                 Height = 40;
