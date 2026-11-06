@@ -86,6 +86,11 @@ namespace AXPlayer.Desktop.Windows
                 }
                 catch (Exception e)
                 {
+                    smtc.DisplayUpdater.MusicProperties.Title = video.Snippet.Title;
+                    smtc.DisplayUpdater.MusicProperties.Artist = video.Snippet.ChannelTitle;
+                    smtc.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromUri(new Uri(video.Snippet.Thumbnails.High.Url));
+
+                    smtc.DisplayUpdater.Update();
                     Logger.Error(e, e.GetDescription());
                 }
             });
