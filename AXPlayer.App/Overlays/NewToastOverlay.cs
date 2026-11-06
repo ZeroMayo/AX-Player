@@ -43,7 +43,6 @@ namespace AXPlayer.App.Overlays
                     new OverlayBackground
                     {
                         RelativeSizeAxes = Axes.Both,
-                        Alpha = 0.8f,
                     },
                     new FillFlowContainer
                     {

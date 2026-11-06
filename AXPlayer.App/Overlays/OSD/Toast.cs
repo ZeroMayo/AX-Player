@@ -53,7 +53,6 @@ namespace AXPlayer.App.Overlays.OSD
                 background = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Alpha = 0.8f
                 },
                 content = new Container
                 {
