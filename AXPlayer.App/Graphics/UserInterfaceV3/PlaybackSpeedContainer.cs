@@ -165,6 +165,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                 Height = 50,
                 Child = new ProjectYomiScrollContainer(Direction.Horizontal)
                 {
+                    ProgressiveBlurEnabled = false,
                     RelativeSizeAxes = Axes.Both,
                     Child = presetButtons,
                     Padding = new MarginPadding { Horizontal = 30 },

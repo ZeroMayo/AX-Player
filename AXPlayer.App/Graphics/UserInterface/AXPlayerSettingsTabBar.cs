@@ -27,6 +27,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 bg = new Box
                 {
                     RelativeSizeAxes = Axes.Both,
+                    Alpha = 0.4f,
                 },
                 items = new FillFlowContainer
                 {

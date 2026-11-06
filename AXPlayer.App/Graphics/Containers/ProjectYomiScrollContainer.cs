@@ -2,10 +2,17 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Rendering;
+using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Shaders.Types;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
 using osuTK;
@@ -26,15 +33,194 @@ namespace AXPlayer.App.Graphics.Containers
         }
     }
 
-    public partial class AdaptiveScrollContainer<T> : ScrollContainer<T>
+    public partial class AdaptiveScrollContainer<T> : ScrollContainer<T>, IBufferedDrawable
         where T : Drawable
     {
         public const float SCROLL_BAR_WIDTH = 10;
         public const float SCROLL_BAR_PADDING = 3;
+        private const float EDGE_BLUR_SIGMA = 10;
+        private const int EDGE_BLUR_RADIUS = 30;
+
+        private IShader edgeBlurShader = null!;
+        private readonly BufferedDrawNodeSharedData sharedData = new(effectBufferCount: 2, textureFormat: TexturePixelFormat.R8G8B8A8Float, null, false, true);
+
+        private bool progressiveBlurEnabled = true;
+        private float progressiveBlurTopHeight = 76;
+        private float progressiveBlurBottomHeight = 76;
+
+        public bool ProgressiveBlurEnabled
+        {
+            get => progressiveBlurEnabled;
+            set
+            {
+                if (progressiveBlurEnabled == value)
+                    return;
+
+                progressiveBlurEnabled = value;
+                Invalidate(Invalidation.DrawNode);
+            }
+        }
+
+        public float ProgressiveBlurTopHeight
+        {
+            get => progressiveBlurTopHeight;
+            set
+            {
+                value = Math.Max(0, value);
+
+                if (progressiveBlurTopHeight == value)
+                    return;
+
+                progressiveBlurTopHeight = value;
+                Invalidate(Invalidation.DrawNode);
+            }
+        }
+
+        public float ProgressiveBlurBottomHeight
+        {
+            get => progressiveBlurBottomHeight;
+            set
+            {
+                value = Math.Max(0, value);
+
+                if (progressiveBlurBottomHeight == value)
+                    return;
+
+                progressiveBlurBottomHeight = value;
+                Invalidate(Invalidation.DrawNode);
+            }
+        }
+
+        public IShader TextureShader { get; private set; } = null!;
+        public Color4 BackgroundColour => new(0, 0, 0, 0);
+        public DrawColourInfo? FrameBufferDrawColour => base.DrawColourInfo;
+        public Vector2 FrameBufferScale => Vector2.One;
 
         public AdaptiveScrollContainer(Direction scrollDirection = Direction.Vertical)
             : base(scrollDirection)
         {
+        }
+
+        [BackgroundDependencyLoader]
+        private void load(ShaderManager shaders)
+        {
+            TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
+            edgeBlurShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, "ScrollEdgeBlur");
+        }
+
+        protected override DrawNode CreateDrawNode()
+            => Masking ? new EdgeBlurDrawNode(this, sharedData) : base.CreateDrawNode();
+
+        protected override void Update()
+        {
+            base.Update();
+            Invalidate(Invalidation.DrawNode);
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            base.Dispose(isDisposing);
+            sharedData.Dispose();
+        }
+
+        private class EdgeBlurDrawNode : BufferedDrawNode, ICompositeDrawNode
+        {
+            private readonly AdaptiveScrollContainer<T> source;
+            private readonly BufferedDrawNodeSharedData sharedData;
+            private IUniformBuffer<EdgeBlurParameters>? parametersBuffer;
+            private IShader shader = null!;
+
+            private CompositeDrawableDrawNode Child => (CompositeDrawableDrawNode)base.Child;
+
+            public List<DrawNode> Children
+            {
+                get => Child.Children;
+                set => Child.Children = value;
+            }
+
+            public bool AddChildDrawNodes => RequiresRedraw;
+
+            private bool progressiveBlurEnabled;
+            private float progressiveBlurTopHeight;
+            private float progressiveBlurBottomHeight;
+
+            public EdgeBlurDrawNode(AdaptiveScrollContainer<T> source, BufferedDrawNodeSharedData sharedData)
+                : base(source, new CompositeDrawableDrawNode(source), sharedData)
+            {
+                this.source = source;
+                this.sharedData = sharedData;
+            }
+
+            public override void ApplyState()
+            {
+                base.ApplyState();
+                shader = source.edgeBlurShader;
+                progressiveBlurEnabled = source.ProgressiveBlurEnabled;
+                progressiveBlurTopHeight = source.ProgressiveBlurTopHeight;
+                progressiveBlurBottomHeight = source.ProgressiveBlurBottomHeight;
+            }
+
+            protected override void PopulateContents(IRenderer renderer)
+            {
+                base.PopulateContents(renderer);
+
+                if (!progressiveBlurEnabled)
+                    return;
+
+                drawFrameBuffer(renderer, new Vector2(1, 0));
+                drawFrameBuffer(renderer, new Vector2(0, 1));
+            }
+
+            private void drawFrameBuffer(IRenderer renderer, Vector2 blurDirection)
+            {
+                IFrameBuffer current = sharedData.CurrentEffectBuffer;
+                IFrameBuffer target = sharedData.GetNextEffectBuffer();
+                parametersBuffer ??= renderer.CreateUniformBuffer<EdgeBlurParameters>();
+                parametersBuffer.Data = parametersBuffer.Data with
+                {
+                    TexSize = current.Size,
+                    Radius = EDGE_BLUR_RADIUS,
+                    Sigma = EDGE_BLUR_SIGMA,
+                    BlurDirection = blurDirection,
+                    StartEdgeSize = progressiveBlurTopHeight,
+                    EndEdgeSize = progressiveBlurBottomHeight,
+                    EdgeAxis = source.ScrollDim,
+                };
+
+                renderer.SetBlend(BlendingParameters.None);
+
+                using (BindFrameBuffer(target))
+                {
+                    shader.BindUniformBlock("m_ScrollEdgeBlurParameters", parametersBuffer);
+                    shader.Bind();
+                    renderer.DrawFrameBuffer(current, new RectangleF(0, 0, current.Texture.Width, current.Texture.Height), ColourInfo.SingleColour(Color4.White));
+                    shader.Unbind();
+                }
+            }
+
+            protected override void DrawContents(IRenderer renderer)
+            {
+                renderer.DrawFrameBuffer(sharedData.CurrentEffectBuffer, DrawRectangle, DrawColourInfo.Colour);
+            }
+
+            protected override void Dispose(bool isDisposing)
+            {
+                base.Dispose(isDisposing);
+                parametersBuffer?.Dispose();
+            }
+
+            [StructLayout(LayoutKind.Sequential, Pack = 1)]
+            private record struct EdgeBlurParameters
+            {
+                public UniformVector2 TexSize;
+                public UniformInt Radius;
+                public UniformFloat Sigma;
+                public UniformVector2 BlurDirection;
+                public UniformFloat StartEdgeSize;
+                public UniformFloat EndEdgeSize;
+                public UniformInt EdgeAxis;
+                private readonly UniformPadding12 padding;
+            }
         }
 
         /// <summary>
