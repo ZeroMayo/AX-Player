@@ -161,7 +161,10 @@ namespace AXPlayer.App.Graphics.UserInterface
                 BackgroundColourSelected = SelectionColour
             };
 
-            protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new ProjectYomiScrollContainer(direction);
+            protected override ScrollContainer<Drawable> CreateScrollContainer(Direction direction) => new ProjectYomiScrollContainer(direction)
+            {
+                ProgressiveBlurEnabled = false,
+            };
 
             #region DrawableAdaptiveDropdownMenuItem
 

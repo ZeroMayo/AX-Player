@@ -113,6 +113,7 @@ namespace AXPlayer.App.Overlays
                                                 RelativeSizeAxes = Axes.Both,
                                             },
                                             new ProjectYomiScrollContainer {
+                                                ProgressiveBlurEnabled = false,
                                                 RelativeSizeAxes = Axes.Both,
                                                 Masking = true,
                                                 Children = new Drawable[]
