@@ -9,7 +9,6 @@
 <a href="https://github.com/ZeroMayo/ZeroMayo/blob/main/docs/project-status.md"><img src="https://img.shields.io/badge/status-active-47c219.svg" alt="상태"></a>
 <a href="https://github.com/ZeroMayo/AX-Player/actions/workflows/ci.yml"><img src="https://github.com/ZeroMayo/AX-Player/actions/workflows/ci.yml/badge.svg?branch=master&event=push" alt="빌드 상태"></a>
 <a href="https://github.com/ZeroMayo/AX-Player/releases/latest"><img src="https://img.shields.io/github/release/ZeroMayo/AX-Player.svg" alt="GitHub 릴리스"></a>
-<img src="https://img.shields.io/badge/made_in-korea-0F64CD.svg?labelColor=CD2E3A" alt="Made In Korea">
 <a href="https://github.com/ZeroMayo/AX-Player/blob/master/LICENSE.md"><img src="https://img.shields.io/github/license/ZeroMayo/AX-Player.svg" alt="라이선스"></a>
 <a href="https://discord.gg/UZWDqQ29ch"><img src="https://discordapp.com/api/guilds/1474931183854026812/widget.png?style=shield" alt="dev chat"></a>
 <a href="https://www.codefactor.io/repository/github/ZeroMayo/AX-Player"><img src="https://www.codefactor.io/repository/github/ZeroMayo/AX-Player/badge" alt="CodeFactor"></a>
