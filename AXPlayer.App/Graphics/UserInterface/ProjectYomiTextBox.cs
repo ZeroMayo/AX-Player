@@ -33,7 +33,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         /// </summary>
         protected virtual bool AllowUniqueCharacterSamples => true;
 
-        protected override float LeftRightPadding => 10;
+        protected override float LeftRightPadding => 12;
 
         protected override float CaretWidth => 3;
 
