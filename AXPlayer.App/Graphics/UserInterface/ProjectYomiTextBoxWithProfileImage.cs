@@ -81,7 +81,6 @@ namespace AXPlayer.App.Graphics.UserInterface
         {
             Height = 40;
             TextContainer.Height = 0.5f;
-            CornerRadius = DrawHeight / 2;
             LengthLimit = 1000;
 
             Current.DisabledChanged += disabled => { Alpha = disabled ? 0.3f : 1; };
@@ -98,6 +97,12 @@ namespace AXPlayer.App.Graphics.UserInterface
                 Depth = 1,
                 Colour = ColourInfo.GradientHorizontal(Color4.Black.Opacity(0f), Color4.Black.Opacity(0.5f))
             });
+        }
+
+        protected override void UpdateAfterChildren()
+        {
+            base.UpdateAfterChildren();
+            CornerRadius = Math.Min(DrawSize.X, DrawSize.Y) / 2f;
         }
 
         [Resolved]
