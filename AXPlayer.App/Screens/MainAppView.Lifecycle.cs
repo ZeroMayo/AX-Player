@@ -1199,7 +1199,8 @@ namespace AXPlayer.App.Screens
             if (notificationOverlayOpened != blurState)
             {
                 blurState = notificationOverlayOpened;
-                videoContainer.BlurTo(new Vector2((blurState || isAnyOverlayOpen.Value) ? 6 : 0), 250, Easing.OutQuart);
+                videoContainer.BlurTo(new Vector2((blurState || isAnyOverlayOpen.Value) ? 16 : 0), 250, Easing.OutQuart);
+                uiContainer.BlurTo(new Vector2((blurState || isAnyOverlayOpen.Value) ? 8 : 0), 250, Easing.OutQuart);
             }
 
             if (currentVideoSource != null)

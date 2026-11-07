@@ -3959,7 +3959,10 @@ namespace AXPlayer.App.Screens
                     if (visible.NewValue)
                     {
                         if (isAnyOverlayOpen.Value)
-                            videoContainer.BlurTo(new Vector2(6));
+                        {
+                            videoContainer.BlurTo(new Vector2(16));
+                            uiContainer.BlurTo(new Vector2(8));
+                        }
 
                         videoScalingContainer.Show();
                         userInterfaceContainer.Show();
@@ -3967,7 +3970,10 @@ namespace AXPlayer.App.Screens
                     else
                     {
                         if (isAnyOverlayOpen.Value)
+                        {
                             videoContainer.BlurTo(new Vector2(0));
+                            uiContainer.BlurTo(new Vector2(0));
+                        }
 
                         videoScalingContainer.Hide();
                         userInterfaceContainer.Hide();

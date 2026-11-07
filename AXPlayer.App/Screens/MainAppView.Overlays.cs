@@ -114,7 +114,10 @@ namespace AXPlayer.App.Screens
                     isControlVisible = true;
                     uiContainer.FadeInFromZero(250, Easing.OutQuint);
                     uiGradientContainer.FadeInFromZero(250, Easing.OutQuint);
-                    uiContainer.BlurTo(new Vector2(0), 250, Easing.OutQuint);
+
+                    if (!isAnyOverlayOpen.Value)
+                        uiContainer.BlurTo(new Vector2(0), 250, Easing.OutQuint);
+
                     sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = true;
                     bottomUIContainer.MoveToY(0, 250, Easing.OutQuint);
                     topUIContainer.MoveToY(0, 250, Easing.OutQuint);
@@ -142,7 +145,10 @@ namespace AXPlayer.App.Screens
                         isControlVisible = false;
                         uiContainer.FadeOutFromOne(150, Easing.InCubic);
                         uiGradientContainer.FadeOutFromOne(150, Easing.InCubic);
-                        uiContainer.BlurTo(new Vector2(8), 150, Easing.InCubic);
+
+                        if (!isAnyOverlayOpen.Value)
+                            uiContainer.BlurTo(new Vector2(8), 150, Easing.InCubic);
+
                         sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
                         bottomUIContainer.MoveToY(30, 150, Easing.InCubic);
                         topUIContainer.MoveToY(-30, 150, Easing.InCubic);
@@ -225,7 +231,8 @@ namespace AXPlayer.App.Screens
             if (playOverlaySFX.Value)
                 overlayShowSample.Play();
 
-            videoContainer.BlurTo(new Vector2(6), 250, Easing.OutQuart);
+            videoContainer.BlurTo(new Vector2(16), 250, Easing.OutQuart);
+            uiContainer.BlurTo(new Vector2(8), 250, Easing.OutQuart);
 
             if (overlayContent is BottomOverlayContainer)
             {
@@ -296,6 +303,7 @@ namespace AXPlayer.App.Screens
                 overlayHideSample.Play();
 
             videoContainer.BlurTo(new Vector2(0), 250, Easing.OutQuart);
+            uiContainer.BlurTo(new Vector2(0), 250, Easing.OutQuart);
 
             if (overlayContent is BottomOverlayContainer)
             {
