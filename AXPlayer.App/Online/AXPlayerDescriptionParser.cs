@@ -43,6 +43,9 @@ namespace AXPlayer.App.Online
 
         public static bool IsDiscord(string url)
         {
+            if (url.Contains("discord.gg"))
+                return true;
+
             if (url.Contains("discord.com"))
                 return true;
 
