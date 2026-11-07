@@ -1336,7 +1336,11 @@ namespace AXPlayer.App.Overlays.Containers
                                 {
                                     Origin = Anchor.BottomCentre,
                                     Anchor = Anchor.BottomCentre,
-                                    Margin = new MarginPadding(16),
+                                    Margin = new MarginPadding()
+                                    {
+                                        Horizontal = 16,
+                                        Vertical = 10,
+                                    },
                                 }
                     }
                 }

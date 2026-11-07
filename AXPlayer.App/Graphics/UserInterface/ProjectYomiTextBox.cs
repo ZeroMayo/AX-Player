@@ -81,6 +81,12 @@ namespace AXPlayer.App.Graphics.UserInterface
             Current.DisabledChanged += disabled => { Alpha = disabled ? 0.3f : 1; };
         }
 
+        protected override void UpdateAfterChildren()
+        {
+            base.UpdateAfterChildren();
+            CornerRadius = Math.Min(DrawSize.X, DrawSize.Y) / 2f;
+        }
+
         [BackgroundDependencyLoader(true)]
         private void load(OverlayColourProvider? colourProvider, ProjectYomiColour colour, AudioManager audio)
         {
