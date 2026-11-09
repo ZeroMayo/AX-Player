@@ -4,6 +4,8 @@
 #nullable enable
 
 using System.Collections.Generic;
+using osu.Framework.Bindables;
+using osu.Framework.Graphics;
 using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.Input.Events;
@@ -15,12 +17,31 @@ namespace AXPlayer.App.Input.Binding
         protected override bool Prioritised => true;
 
         private readonly IKeyBindingHandler<GlobalAction>? handler;
+        private readonly GlobalShortcutManager shortcutManager;
+        private readonly IBindable<string> shortcutBindings;
 
-        public GlobalActionContainer(AXPlayerAppBase? game)
+        public GlobalActionContainer(AXPlayerAppBase? game, GlobalShortcutManager shortcutManager)
             : base(matchingMode: KeyCombinationMatchingMode.Modifiers)
         {
+            this.shortcutManager = shortcutManager;
+            shortcutBindings = shortcutManager.BindingsChanged.GetBoundCopy();
+
             if (game is IKeyBindingHandler<GlobalAction> h)
                 handler = h;
+        }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            shortcutBindings.BindValueChanged(_ => Schedule(ReloadMappings));
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            if (isDisposing)
+                shortcutBindings.UnbindEvents();
+
+            base.Dispose(isDisposing);
         }
 
         /// <summary>
@@ -30,11 +51,19 @@ namespace AXPlayer.App.Input.Binding
         /// IMPORTANT: Take care when changing order of the items in the enumerable.
         /// It is used to decide the order of precedence, with the earlier items having higher precedence.
         /// </remarks>
-        public override IEnumerable<IKeyBinding> DefaultKeyBindings => GlobalKeyBindings;
+        public override IEnumerable<IKeyBinding> DefaultKeyBindings => shortcutManager.GetBindings();
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e) => handler?.OnPressed(e) == true;
 
         public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) => handler?.OnReleased(e);
+
+        protected override bool OnKeyDown(KeyDownEvent e)
+        {
+            if (shortcutManager.CapturingAction.Value != null)
+                return shortcutManager.Capture(e);
+
+            return base.OnKeyDown(e);
+        }
 
         public static IEnumerable<KeyBinding> GlobalKeyBindings => new[]
         {
@@ -87,9 +116,6 @@ namespace AXPlayer.App.Input.Binding
             new KeyBinding(new[] { InputKey.Alt, InputKey.Up }, GlobalAction.IncreaseVolume),
             new KeyBinding(new[] { InputKey.Alt, InputKey.Down }, GlobalAction.DecreaseVolume),
 
-            new KeyBinding(new[] { InputKey.Alt, InputKey.Left }, GlobalAction.PreviousVolumeMeter),
-            new KeyBinding(new[] { InputKey.Alt, InputKey.Right }, GlobalAction.NextVolumeMeter),
-
             new KeyBinding(new[] { InputKey.Control, InputKey.F4 }, GlobalAction.ToggleMute),
             new KeyBinding(new[] { InputKey.Control, InputKey.Shift, InputKey.R }, GlobalAction.RestartApp),
 
@@ -101,7 +127,6 @@ namespace AXPlayer.App.Input.Binding
             new KeyBinding(new[] { InputKey.Alt, InputKey.S }, GlobalAction.SaveVideoToPlaylist),
             new KeyBinding(new[] { InputKey.Alt, InputKey.R }, GlobalAction.ToggleRepeatVideo),
             new KeyBinding(new[] { InputKey.Tab }, GlobalAction.OpenMenu),
-            new KeyBinding(new[] { InputKey.Alt, InputKey.D }, GlobalAction.DownloadVideo),
             new KeyBinding(InputKey.S, GlobalAction.ResetPlaybackSpeed),
             new KeyBinding(new[] { InputKey.Alt, InputKey.Shift, InputKey.F4 }, GlobalAction.QuitApp),
 
@@ -171,9 +196,6 @@ namespace AXPlayer.App.Input.Binding
         IncreaseVolume,
         DecreaseVolume,
 
-        PreviousVolumeMeter,
-        NextVolumeMeter,
-
         ToggleMute,
         RestartApp,
 
@@ -184,7 +206,6 @@ namespace AXPlayer.App.Input.Binding
         SaveVideoToPlaylist,
         ToggleRepeatVideo,
         OpenMenu,
-        DownloadVideo,
         ResetPlaybackSpeed,
         QuitApp,
 

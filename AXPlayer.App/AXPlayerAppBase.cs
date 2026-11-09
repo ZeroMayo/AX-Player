@@ -342,6 +342,10 @@ namespace AXPlayer.App
                 colourScheme = LocalConfig.Get<OverlayColourScheme>(AXPlayerSetting.ColourScheme);
 
                 GlobalActionContainer globalBindings;
+                var shortcutManager = new GlobalShortcutManager(LocalConfig);
+                dependencies.Cache(shortcutManager);
+                LocalConfig.ShortcutManager = shortcutManager;
+                AudioEffectsConfig.ShortcutManager = shortcutManager;
 
                 ProjectYomiMenuSamples menuSamples;
                 dependencies.Cache(menuSamples = new ProjectYomiMenuSamples());
@@ -382,7 +386,7 @@ namespace AXPlayer.App
                 {
                     SafeAreaOverrideEdges = SafeAreaOverrideEdges,
                     RelativeSizeAxes = Axes.Both,
-                    Child = CreateScalingContainer().WithChild(globalBindings = new GlobalActionContainer(this)
+                    Child = CreateScalingContainer().WithChild(globalBindings = new GlobalActionContainer(this, shortcutManager)
                     {
                         Children = new Drawable[]
                         {

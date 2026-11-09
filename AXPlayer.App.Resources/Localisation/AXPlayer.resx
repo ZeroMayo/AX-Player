@@ -619,6 +619,174 @@
   <data name="video_removed_from_playlist" xml:space="preserve">
     <value>Removed current video from playlist {0}.</value>
   </data>
+  <data name="shortcut_help_title" xml:space="preserve">
+    <value>Keyboard shortcuts</value>
+  </data>
+  <data name="shortcut_change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="shortcut_press" xml:space="preserve">
+    <value>Press a key combination</value>
+  </data>
+  <data name="shortcut_already_assigned" xml:space="preserve">
+    <value>Shortcut is already assigned. Press another key combination.</value>
+  </data>
+  <data name="shortcut_back" xml:space="preserve">
+    <value>Close the current overlay</value>
+  </data>
+  <data name="shortcut_select" xml:space="preserve">
+    <value>Activate the selected item</value>
+  </data>
+  <data name="shortcut_playpause" xml:space="preserve">
+    <value>Play or pause the video</value>
+  </data>
+  <data name="shortcut_fastforward_10sec" xml:space="preserve">
+    <value>Seek forward 10 seconds</value>
+  </data>
+  <data name="shortcut_fastrewind_10sec" xml:space="preserve">
+    <value>Seek backward 10 seconds</value>
+  </data>
+  <data name="shortcut_opensettings" xml:space="preserve">
+    <value>Open settings</value>
+  </data>
+  <data name="shortcut_toggleadjustpitchonspeedchange" xml:space="preserve">
+    <value>Toggle pitch adjustment when changing playback speed</value>
+  </data>
+  <data name="shortcut_togglefpsdisplay" xml:space="preserve">
+    <value>Toggle the FPS display</value>
+  </data>
+  <data name="shortcut_cyclecaptionlanguage" xml:space="preserve">
+    <value>Caption On/Off</value>
+  </data>
+  <data name="shortcut_cycleaspectratio" xml:space="preserve">
+    <value>Cycle the video aspect ratio</value>
+  </data>
+  <data name="shortcut_cyclescalingmode" xml:space="preserve">
+    <value>Cycle the video scaling mode</value>
+  </data>
+  <data name="shortcut_decreaseplaybackspeed" xml:space="preserve">
+    <value>Decrease playback speed by 0.05x</value>
+  </data>
+  <data name="shortcut_increaseplaybackspeed" xml:space="preserve">
+    <value>Increase playback speed by 0.05x</value>
+  </data>
+  <data name="shortcut_decreaseplaybackspeed2" xml:space="preserve">
+    <value>Decrease playback speed by 0.01x</value>
+  </data>
+  <data name="shortcut_increaseplaybackspeed2" xml:space="preserve">
+    <value>Increase playback speed by 0.01x</value>
+  </data>
+  <data name="shortcut_opendescription" xml:space="preserve">
+    <value>Open the video description</value>
+  </data>
+  <data name="shortcut_opencomments" xml:space="preserve">
+    <value>Open comments</value>
+  </data>
+  <data name="shortcut_takescreenshot" xml:space="preserve">
+    <value>Take a screenshot</value>
+  </data>
+  <data name="shortcut_reportabuse" xml:space="preserve">
+    <value>Report the video</value>
+  </data>
+  <data name="shortcut_decreasevideovolume" xml:space="preserve">
+    <value>Decrease video volume</value>
+  </data>
+  <data name="shortcut_increasevideovolume" xml:space="preserve">
+    <value>Increase video volume</value>
+  </data>
+  <data name="shortcut_openplaylist" xml:space="preserve">
+    <value>Open the current playlist</value>
+  </data>
+  <data name="shortcut_prevvideo" xml:space="preserve">
+    <value>Play the previous video</value>
+  </data>
+  <data name="shortcut_nextvideo" xml:space="preserve">
+    <value>Play the next video</value>
+  </data>
+  <data name="shortcut_openaudioeffects" xml:space="preserve">
+    <value>Open audio effects</value>
+  </data>
+  <data name="shortcut_increasevolume" xml:space="preserve">
+    <value>Increase application volume</value>
+  </data>
+  <data name="shortcut_decreasevolume" xml:space="preserve">
+    <value>Decrease application volume</value>
+  </data>
+  <data name="shortcut_togglemute" xml:space="preserve">
+    <value>Toggle mute</value>
+  </data>
+  <data name="shortcut_restartapp" xml:space="preserve">
+    <value>Restart the application</value>
+  </data>
+  <data name="shortcut_openloadvideo" xml:space="preserve">
+    <value>Open video or playlist</value>
+  </data>
+  <data name="shortcut_opensearch" xml:space="preserve">
+    <value>Open search</value>
+  </data>
+  <data name="shortcut_openmyplaylists" xml:space="preserve">
+    <value>Open your playlists</value>
+  </data>
+  <data name="shortcut_addplaylistkey" xml:space="preserve">
+    <value>Create a playlist</value>
+  </data>
+  <data name="shortcut_savevideotoplaylist" xml:space="preserve">
+    <value>Save the video to a playlist</value>
+  </data>
+  <data name="shortcut_togglerepeatvideo" xml:space="preserve">
+    <value>Toggle video repeat</value>
+  </data>
+  <data name="shortcut_openmenu" xml:space="preserve">
+    <value>Open the menu</value>
+  </data>
+  <data name="shortcut_resetplaybackspeed" xml:space="preserve">
+    <value>Reset playback speed to 1x</value>
+  </data>
+  <data name="shortcut_quitapp" xml:space="preserve">
+    <value>Quit the application</value>
+  </data>
+  <data name="shortcut_togglereverbeffect" xml:space="preserve">
+    <value>Toggle the reverb effect</value>
+  </data>
+  <data name="shortcut_togglerotateeffect" xml:space="preserve">
+    <value>Toggle the rotate effect</value>
+  </data>
+  <data name="shortcut_toggleechoeffect" xml:space="preserve">
+    <value>Toggle the echo effect</value>
+  </data>
+  <data name="shortcut_toggledistortioneffect" xml:space="preserve">
+    <value>Toggle the distortion effect</value>
+  </data>
+  <data name="shortcut_togglekaraokeeffect" xml:space="preserve">
+    <value>Toggle the karaoke effect</value>
+  </data>
+  <data name="shortcut_togglechoruseffect" xml:space="preserve">
+    <value>Toggle the chorus effect</value>
+  </data>
+  <data name="shortcut_togglecontrolspinstate" xml:space="preserve">
+    <value>Toggle pinned playback controls</value>
+  </data>
+  <data name="shortcut_notifications" xml:space="preserve">
+    <value>Open notifications</value>
+  </data>
+  <data name="shortcut_cycleprofileshape" xml:space="preserve">
+    <value>Cycle the profile image shape</value>
+  </data>
+  <data name="shortcut_toggleeightbiteffect" xml:space="preserve">
+    <value>Toggle the 8-bit effect</value>
+  </data>
+  <data name="shortcut_openplaybackspeedmenu" xml:space="preserve">
+    <value>Open playback speed controls</value>
+  </data>
+  <data name="shortcut_openvideovolumemenu" xml:space="preserve">
+    <value>Open video volume controls</value>
+  </data>
+  <data name="shortcut_decreasevideodim" xml:space="preserve">
+    <value>Dim the video</value>
+  </data>
+  <data name="shortcut_increasevideodim" xml:space="preserve">
+    <value>Brighten the video</value>
+  </data>
   <data name="menu" xml:space="preserve">
     <value>Menu</value>
   </data>

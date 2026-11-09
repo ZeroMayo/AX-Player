@@ -1021,4 +1021,60 @@
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>자막 배경 흐림</value>
   </data>
+  <data name="shortcut_help_title" xml:space="preserve"><value>키보드 단축키</value></data>
+  <data name="shortcut_back" xml:space="preserve"><value>현재 화면 닫기</value></data>
+  <data name="shortcut_select" xml:space="preserve"><value>선택한 항목 실행</value></data>
+  <data name="shortcut_playpause" xml:space="preserve"><value>영상 재생 또는 일시 정지</value></data>
+  <data name="shortcut_fastforward_10sec" xml:space="preserve"><value>10초 앞으로 이동</value></data>
+  <data name="shortcut_fastrewind_10sec" xml:space="preserve"><value>10초 뒤로 이동</value></data>
+  <data name="shortcut_opensettings" xml:space="preserve"><value>설정 열기</value></data>
+  <data name="shortcut_toggleadjustpitchonspeedchange" xml:space="preserve"><value>재생 속도 변경 시 피치 조정 켜기/끄기</value></data>
+  <data name="shortcut_togglefpsdisplay" xml:space="preserve"><value>FPS 표시 켜기/끄기</value></data>
+  <data name="shortcut_cyclecaptionlanguage" xml:space="preserve"><value>자막 켜기/끄기</value></data>
+  <data name="shortcut_cycleaspectratio" xml:space="preserve"><value>영상 화면 비율 변경</value></data>
+  <data name="shortcut_cyclescalingmode" xml:space="preserve"><value>영상 크기 조정 모드 변경</value></data>
+  <data name="shortcut_decreaseplaybackspeed" xml:space="preserve"><value>재생 속도 0.05x 낮추기</value></data>
+  <data name="shortcut_increaseplaybackspeed" xml:space="preserve"><value>재생 속도 0.05x 높이기</value></data>
+  <data name="shortcut_decreaseplaybackspeed2" xml:space="preserve"><value>재생 속도 0.01x 낮추기</value></data>
+  <data name="shortcut_increaseplaybackspeed2" xml:space="preserve"><value>재생 속도 0.01x 높이기</value></data>
+  <data name="shortcut_opendescription" xml:space="preserve"><value>영상 설명 열기</value></data>
+  <data name="shortcut_opencomments" xml:space="preserve"><value>댓글 열기</value></data>
+  <data name="shortcut_takescreenshot" xml:space="preserve"><value>스크린샷 찍기</value></data>
+  <data name="shortcut_reportabuse" xml:space="preserve"><value>영상 신고</value></data>
+  <data name="shortcut_decreasevideovolume" xml:space="preserve"><value>영상 볼륨 낮추기</value></data>
+  <data name="shortcut_increasevideovolume" xml:space="preserve"><value>영상 볼륨 높이기</value></data>
+  <data name="shortcut_openplaylist" xml:space="preserve"><value>현재 재생목록 열기</value></data>
+  <data name="shortcut_prevvideo" xml:space="preserve"><value>이전 영상 재생</value></data>
+  <data name="shortcut_nextvideo" xml:space="preserve"><value>다음 영상 재생</value></data>
+  <data name="shortcut_openaudioeffects" xml:space="preserve"><value>오디오 효과 열기</value></data>
+  <data name="shortcut_increasevolume" xml:space="preserve"><value>앱 볼륨 높이기</value></data>
+  <data name="shortcut_decreasevolume" xml:space="preserve"><value>앱 볼륨 낮추기</value></data>
+  <data name="shortcut_togglemute" xml:space="preserve"><value>음소거 켜기/끄기</value></data>
+  <data name="shortcut_restartapp" xml:space="preserve"><value>앱 다시 시작</value></data>
+  <data name="shortcut_openloadvideo" xml:space="preserve"><value>영상 또는 재생목록 열기</value></data>
+  <data name="shortcut_opensearch" xml:space="preserve"><value>검색 열기</value></data>
+  <data name="shortcut_openmyplaylists" xml:space="preserve"><value>내 재생목록 열기</value></data>
+  <data name="shortcut_addplaylistkey" xml:space="preserve"><value>재생목록 만들기</value></data>
+  <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>영상을 재생목록에 저장</value></data>
+  <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>영상 반복 재생 켜기/끄기</value></data>
+  <data name="shortcut_openmenu" xml:space="preserve"><value>메뉴 열기</value></data>
+  <data name="shortcut_resetplaybackspeed" xml:space="preserve"><value>재생 속도를 1x로 초기화</value></data>
+  <data name="shortcut_quitapp" xml:space="preserve"><value>앱 종료</value></data>
+  <data name="shortcut_togglereverbeffect" xml:space="preserve"><value>리버브 효과 켜기/끄기</value></data>
+  <data name="shortcut_togglerotateeffect" xml:space="preserve"><value>회전 효과 켜기/끄기</value></data>
+  <data name="shortcut_toggleechoeffect" xml:space="preserve"><value>에코 효과 켜기/끄기</value></data>
+  <data name="shortcut_toggledistortioneffect" xml:space="preserve"><value>디스토션 효과 켜기/끄기</value></data>
+  <data name="shortcut_togglekaraokeeffect" xml:space="preserve"><value>노래방 효과 켜기/끄기</value></data>
+  <data name="shortcut_togglechoruseffect" xml:space="preserve"><value>코러스 효과 켜기/끄기</value></data>
+  <data name="shortcut_togglecontrolspinstate" xml:space="preserve"><value>재생 컨트롤 고정 켜기/끄기</value></data>
+  <data name="shortcut_notifications" xml:space="preserve"><value>알림 열기</value></data>
+  <data name="shortcut_cycleprofileshape" xml:space="preserve"><value>프로필 이미지 모양 변경</value></data>
+  <data name="shortcut_toggleeightbiteffect" xml:space="preserve"><value>8비트 효과 켜기/끄기</value></data>
+  <data name="shortcut_openplaybackspeedmenu" xml:space="preserve"><value>재생 속도 컨트롤 열기</value></data>
+  <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>영상 볼륨 컨트롤 열기</value></data>
+  <data name="shortcut_decreasevideodim" xml:space="preserve"><value>영상 어둡게 하기</value></data>
+  <data name="shortcut_increasevideodim" xml:space="preserve"><value>영상 밝게 하기</value></data>
+  <data name="shortcut_change" xml:space="preserve"><value>변경</value></data>
+  <data name="shortcut_press" xml:space="preserve"><value>키 조합을 누르세요</value></data>
+  <data name="shortcut_already_assigned" xml:space="preserve"><value>이미 사용 중인 단축키입니다. 다른 키 조합을 누르세요.</value></data>
 </root>

@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Localisation;
+using AXPlayer.App.Input.Binding;
 
 namespace AXPlayer.App.Localisation
 {
@@ -1608,6 +1609,88 @@ namespace AXPlayer.App.Localisation
         /// "Closed captions backdrop blur"
         /// </summary>
         public static LocalisableString ClosedCaptionsBackdropBlur => new TranslatableString(getKey(@"closed_captions_backdrop_blur"), @"Closed captions backdrop blur");
+
+        /// <summary>
+        /// "Keyboard shortcuts"
+        /// </summary>
+        public static LocalisableString ShortcutHelpTitle => new TranslatableString(getKey(@"shortcut_help_title"), "Keyboard shortcuts");
+
+        /// <summary>
+        /// "Change"
+        /// </summary>
+        public static LocalisableString ChangeShortcut => new TranslatableString(getKey(@"shortcut_change"), "Change");
+
+        /// <summary>
+        /// "Press a key combination"
+        /// </summary>
+        public static LocalisableString PressShortcut => new TranslatableString(getKey(@"shortcut_press"), "Press a key combination");
+
+        /// <summary>
+        /// "Shortcut is already assigned. Press another key combination."
+        /// </summary>
+        public static LocalisableString ShortcutAlreadyAssigned => new TranslatableString(getKey(@"shortcut_already_assigned"), "Shortcut is already assigned. Press another key combination.");
+
+        /// <summary>
+        /// Gets the localized description for a global keyboard shortcut.
+        /// </summary>
+        public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(
+            getKey($"shortcut_{action.ToString().ToLowerInvariant()}"),
+            action switch
+            {
+                GlobalAction.Back => "Close the current overlay",
+                GlobalAction.Select => "Activate the selected item",
+                GlobalAction.PlayPause => "Play or pause the video",
+                GlobalAction.FastForward_10sec => "Seek forward 10 seconds",
+                GlobalAction.FastRewind_10sec => "Seek backward 10 seconds",
+                GlobalAction.OpenSettings => "Open settings",
+                GlobalAction.ToggleAdjustPitchOnSpeedChange => "Toggle pitch adjustment when changing playback speed",
+                GlobalAction.ToggleFPSDisplay => "Toggle the FPS display",
+                GlobalAction.CycleCaptionLanguage => "Caption On/Off",
+                GlobalAction.CycleAspectRatio => "Cycle the video aspect ratio",
+                GlobalAction.CycleScalingMode => "Cycle the video scaling mode",
+                GlobalAction.DecreasePlaybackSpeed => "Decrease playback speed by 0.05x",
+                GlobalAction.IncreasePlaybackSpeed => "Increase playback speed by 0.05x",
+                GlobalAction.DecreasePlaybackSpeed2 => "Decrease playback speed by 0.01x",
+                GlobalAction.IncreasePlaybackSpeed2 => "Increase playback speed by 0.01x",
+                GlobalAction.OpenDescription => "Open the video description",
+                GlobalAction.OpenComments => "Open comments",
+                GlobalAction.TakeScreenshot => "Take a screenshot",
+                GlobalAction.ReportAbuse => "Report the video",
+                GlobalAction.DecreaseVideoVolume => "Decrease video volume",
+                GlobalAction.IncreaseVideoVolume => "Increase video volume",
+                GlobalAction.OpenPlaylist => "Open the current playlist",
+                GlobalAction.PrevVideo => "Play the previous video",
+                GlobalAction.NextVideo => "Play the next video",
+                GlobalAction.OpenAudioEffects => "Open audio effects",
+                GlobalAction.IncreaseVolume => "Increase application volume",
+                GlobalAction.DecreaseVolume => "Decrease application volume",
+                GlobalAction.ToggleMute => "Toggle mute",
+                GlobalAction.RestartApp => "Restart the application",
+                GlobalAction.OpenLoadVideo => "Open video or playlist",
+                GlobalAction.OpenSearch => "Open search",
+                GlobalAction.OpenMyPlaylists => "Open your playlists",
+                GlobalAction.AddPlaylistKey => "Create a playlist",
+                GlobalAction.SaveVideoToPlaylist => "Save the video to a playlist",
+                GlobalAction.ToggleRepeatVideo => "Toggle video repeat",
+                GlobalAction.OpenMenu => "Open the menu",
+                GlobalAction.ResetPlaybackSpeed => "Reset playback speed to 1x",
+                GlobalAction.QuitApp => "Quit the application",
+                GlobalAction.ToggleReverbEffect => "Toggle the reverb effect",
+                GlobalAction.ToggleRotateEffect => "Toggle the rotate effect",
+                GlobalAction.ToggleEchoEffect => "Toggle the echo effect",
+                GlobalAction.ToggleDistortionEffect => "Toggle the distortion effect",
+                GlobalAction.ToggleKaraokeEffect => "Toggle the karaoke effect",
+                GlobalAction.ToggleChorusEffect => "Toggle the chorus effect",
+                GlobalAction.ToggleControlsPinState => "Toggle pinned playback controls",
+                GlobalAction.Notifications => "Open notifications",
+                GlobalAction.CycleProfileShape => "Cycle the profile image shape",
+                GlobalAction.ToggleEightBitEffect => "Toggle the 8-bit effect",
+                GlobalAction.OpenPlaybackSpeedMenu => "Open playback speed controls",
+                GlobalAction.OpenVideoVolumeMenu => "Open video volume controls",
+                GlobalAction.DecreaseVideoDim => "Dim the video",
+                GlobalAction.IncreaseVideoDim => "Brighten the video",
+                _ => throw new System.ArgumentOutOfRangeException(nameof(action), action, "No shortcut description is defined."),
+            });
 
         private static string getKey(string key) => $@"{prefix}:{key}";
     }

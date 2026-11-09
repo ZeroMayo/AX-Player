@@ -1022,4 +1022,60 @@
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>字幕背景模糊</value>
   </data>
+  <data name="shortcut_help_title" xml:space="preserve"><value>键盘快捷键</value></data>
+  <data name="shortcut_back" xml:space="preserve"><value>关闭当前面板</value></data>
+  <data name="shortcut_select" xml:space="preserve"><value>激活所选项目</value></data>
+  <data name="shortcut_playpause" xml:space="preserve"><value>播放或暂停视频</value></data>
+  <data name="shortcut_fastforward_10sec" xml:space="preserve"><value>快进 10 秒</value></data>
+  <data name="shortcut_fastrewind_10sec" xml:space="preserve"><value>后退 10 秒</value></data>
+  <data name="shortcut_opensettings" xml:space="preserve"><value>打开设置</value></data>
+  <data name="shortcut_toggleadjustpitchonspeedchange" xml:space="preserve"><value>切换更改播放速度时调整音高</value></data>
+  <data name="shortcut_togglefpsdisplay" xml:space="preserve"><value>切换 FPS 显示</value></data>
+  <data name="shortcut_cyclecaptionlanguage" xml:space="preserve"><value>切换字幕开关</value></data>
+  <data name="shortcut_cycleaspectratio" xml:space="preserve"><value>切换视频宽高比</value></data>
+  <data name="shortcut_cyclescalingmode" xml:space="preserve"><value>切换视频缩放模式</value></data>
+  <data name="shortcut_decreaseplaybackspeed" xml:space="preserve"><value>将播放速度降低 0.05 倍</value></data>
+  <data name="shortcut_increaseplaybackspeed" xml:space="preserve"><value>将播放速度提高 0.05 倍</value></data>
+  <data name="shortcut_decreaseplaybackspeed2" xml:space="preserve"><value>将播放速度降低 0.01 倍</value></data>
+  <data name="shortcut_increaseplaybackspeed2" xml:space="preserve"><value>将播放速度提高 0.01 倍</value></data>
+  <data name="shortcut_opendescription" xml:space="preserve"><value>打开视频简介</value></data>
+  <data name="shortcut_opencomments" xml:space="preserve"><value>打开评论</value></data>
+  <data name="shortcut_takescreenshot" xml:space="preserve"><value>截取屏幕</value></data>
+  <data name="shortcut_reportabuse" xml:space="preserve"><value>举报视频</value></data>
+  <data name="shortcut_decreasevideovolume" xml:space="preserve"><value>降低视频音量</value></data>
+  <data name="shortcut_increasevideovolume" xml:space="preserve"><value>提高视频音量</value></data>
+  <data name="shortcut_openplaylist" xml:space="preserve"><value>打开当前播放列表</value></data>
+  <data name="shortcut_prevvideo" xml:space="preserve"><value>播放上一个视频</value></data>
+  <data name="shortcut_nextvideo" xml:space="preserve"><value>播放下一个视频</value></data>
+  <data name="shortcut_openaudioeffects" xml:space="preserve"><value>打开音效</value></data>
+  <data name="shortcut_increasevolume" xml:space="preserve"><value>提高应用音量</value></data>
+  <data name="shortcut_decreasevolume" xml:space="preserve"><value>降低应用音量</value></data>
+  <data name="shortcut_togglemute" xml:space="preserve"><value>切换静音</value></data>
+  <data name="shortcut_restartapp" xml:space="preserve"><value>重启应用</value></data>
+  <data name="shortcut_openloadvideo" xml:space="preserve"><value>打开视频或播放列表</value></data>
+  <data name="shortcut_opensearch" xml:space="preserve"><value>打开搜索</value></data>
+  <data name="shortcut_openmyplaylists" xml:space="preserve"><value>打开我的播放列表</value></data>
+  <data name="shortcut_addplaylistkey" xml:space="preserve"><value>创建播放列表</value></data>
+  <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>将视频保存到播放列表</value></data>
+  <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>切换视频循环播放</value></data>
+  <data name="shortcut_openmenu" xml:space="preserve"><value>打开菜单</value></data>
+  <data name="shortcut_resetplaybackspeed" xml:space="preserve"><value>将播放速度重置为 1 倍</value></data>
+  <data name="shortcut_quitapp" xml:space="preserve"><value>退出应用</value></data>
+  <data name="shortcut_togglereverbeffect" xml:space="preserve"><value>切换混响效果</value></data>
+  <data name="shortcut_togglerotateeffect" xml:space="preserve"><value>切换旋转效果</value></data>
+  <data name="shortcut_toggleechoeffect" xml:space="preserve"><value>切换回声效果</value></data>
+  <data name="shortcut_toggledistortioneffect" xml:space="preserve"><value>切换失真效果</value></data>
+  <data name="shortcut_togglekaraokeeffect" xml:space="preserve"><value>切换卡拉 OK 效果</value></data>
+  <data name="shortcut_togglechoruseffect" xml:space="preserve"><value>切换合唱效果</value></data>
+  <data name="shortcut_togglecontrolspinstate" xml:space="preserve"><value>切换固定播放控件</value></data>
+  <data name="shortcut_notifications" xml:space="preserve"><value>打开通知</value></data>
+  <data name="shortcut_cycleprofileshape" xml:space="preserve"><value>切换个人资料图片形状</value></data>
+  <data name="shortcut_toggleeightbiteffect" xml:space="preserve"><value>切换 8 位效果</value></data>
+  <data name="shortcut_openplaybackspeedmenu" xml:space="preserve"><value>打开播放速度控件</value></data>
+  <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>打开视频音量控件</value></data>
+  <data name="shortcut_decreasevideodim" xml:space="preserve"><value>调暗视频</value></data>
+  <data name="shortcut_increasevideodim" xml:space="preserve"><value>调亮视频</value></data>
+  <data name="shortcut_change" xml:space="preserve"><value>更改</value></data>
+  <data name="shortcut_press" xml:space="preserve"><value>请按下快捷键组合</value></data>
+  <data name="shortcut_already_assigned" xml:space="preserve"><value>该快捷键已被占用，请按下其他组合键。</value></data>
 </root>

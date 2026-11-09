@@ -3010,6 +3010,23 @@ namespace AXPlayer.App.Screens
                                                             Hotkey = new Hotkey(GlobalAction.OpenSettings),
                                                             RoundCorner = new CornersInfo(8, 8, 8, 8),
                                                         },
+                                                        new MenuButtonItem
+                                                        {
+                                                            Enabled = { Value = true },
+                                                            Origin = Anchor.TopRight,
+                                                            Anchor = Anchor.TopRight,
+                                                            Size = new Vector2(1, 45),
+                                                            RelativeSizeAxes = Axes.X,
+                                                            Icon = FontAwesome.Solid.Keyboard,
+                                                            IconScale = new Vector2(1.2f),
+                                                            Text = AXPlayerStrings.ShortcutHelpTitle,
+                                                            RoundCorner = new CornersInfo(8, 8, 8, 8),
+                                                            Action = () =>
+                                                            {
+                                                                hideOverlays();
+                                                                showOverlayContainer(shortcutHelpOverlay);
+                                                            },
+                                                        },
                                                         commentOpenButton = new MenuButtonItem
                                                         {
                                                             Enabled = { Value = false },
@@ -3236,6 +3253,10 @@ namespace AXPlayer.App.Screens
                                     Colour = overlayColourProvider.Content2,
                                 },
                             }
+                        },
+                        shortcutHelpOverlay = new ShortcutHelpOverlay
+                        {
+                            CloseAction = () => hideOverlayContainer(shortcutHelpOverlay),
                         },
                         exitOptions = new SideOverlayContainer
                         {

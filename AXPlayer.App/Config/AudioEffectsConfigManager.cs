@@ -13,6 +13,7 @@ using osu.Framework.Extensions;
 using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Platform;
 using AXPlayer.App.Localisation;
+using AXPlayer.App.Input.Binding;
 
 namespace AXPlayer.App.Config
 {
@@ -21,6 +22,8 @@ namespace AXPlayer.App.Config
         internal const string FILENAME = @"audio_effects.ini";
 
         protected override string Filename => FILENAME;
+
+        public GlobalShortcutManager? ShortcutManager { get; set; }
 
         protected override void InitialiseDefaults()
         {
@@ -65,14 +68,17 @@ namespace AXPlayer.App.Config
 
         public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
         {
-            new TrackedSetting<bool>(AudioEffectsSetting.ReverbEnabled, v => new SettingDescription(v, AXPlayerStrings.ReverbEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+F1")),
-            new TrackedSetting<bool>(AudioEffectsSetting.RotateEnabled, v => new SettingDescription(v, AXPlayerStrings.RotateParameters_Enabled, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+F2")),
-            new TrackedSetting<bool>(AudioEffectsSetting.EchoEnabled, v => new SettingDescription(v, AXPlayerStrings.EchoEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+F3")),
-            new TrackedSetting<bool>(AudioEffectsSetting.DistortionEnabled, v => new SettingDescription(v, AXPlayerStrings.DistortionEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+F4")),
-            new TrackedSetting<bool>(AudioEffectsSetting.KaraokeEnabled, v => new SettingDescription(v, AXPlayerStrings.KaraokeMode, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+F5")),
-            new TrackedSetting<bool>(AudioEffectsSetting.ChorusEnabled, v => new SettingDescription(v, AXPlayerStrings.ChorusEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+F6")),
-            new TrackedSetting<bool>(AudioEffectsSetting.EightBitEffectEnabled, v => new SettingDescription(v, AXPlayerStrings.EightBitEffectEnabled, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+F7")),
+            new TrackedSetting<bool>(AudioEffectsSetting.ReverbEnabled, v => new SettingDescription(v, AXPlayerStrings.ReverbEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleReverbEffect, "Shift+F1"))),
+            new TrackedSetting<bool>(AudioEffectsSetting.RotateEnabled, v => new SettingDescription(v, AXPlayerStrings.RotateParameters_Enabled, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleRotateEffect, "Shift+F2"))),
+            new TrackedSetting<bool>(AudioEffectsSetting.EchoEnabled, v => new SettingDescription(v, AXPlayerStrings.EchoEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleEchoEffect, "Shift+F3"))),
+            new TrackedSetting<bool>(AudioEffectsSetting.DistortionEnabled, v => new SettingDescription(v, AXPlayerStrings.DistortionEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleDistortionEffect, "Shift+F4"))),
+            new TrackedSetting<bool>(AudioEffectsSetting.KaraokeEnabled, v => new SettingDescription(v, AXPlayerStrings.KaraokeMode, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleKaraokeEffect, "Shift+F5"))),
+            new TrackedSetting<bool>(AudioEffectsSetting.ChorusEnabled, v => new SettingDescription(v, AXPlayerStrings.ChorusEffect, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleChorusEffect, "Shift+F6"))),
+            new TrackedSetting<bool>(AudioEffectsSetting.EightBitEffectEnabled, v => new SettingDescription(v, AXPlayerStrings.EightBitEffectEnabled, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleEightBitEffect, "Shift+F7"))),
         };
+
+        private string getShortcut(GlobalAction action, string fallback) =>
+            ShortcutManager?.GetShortcutLabel(action, fallback) ?? fallback;
     }
 
     public enum AudioEffectsSetting

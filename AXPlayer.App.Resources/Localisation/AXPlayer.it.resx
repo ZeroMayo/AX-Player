@@ -1021,4 +1021,60 @@
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>Sfocatura dello sfondo dei sottotitoli</value>
   </data>
+  <data name="shortcut_help_title" xml:space="preserve"><value>Scorciatoie da tastiera</value></data>
+  <data name="shortcut_back" xml:space="preserve"><value>Chiudi la schermata corrente</value></data>
+  <data name="shortcut_select" xml:space="preserve"><value>Attiva l'elemento selezionato</value></data>
+  <data name="shortcut_playpause" xml:space="preserve"><value>Riproduci o metti in pausa il video</value></data>
+  <data name="shortcut_fastforward_10sec" xml:space="preserve"><value>Avanza di 10 secondi</value></data>
+  <data name="shortcut_fastrewind_10sec" xml:space="preserve"><value>Riavvolgi di 10 secondi</value></data>
+  <data name="shortcut_opensettings" xml:space="preserve"><value>Apri le impostazioni</value></data>
+  <data name="shortcut_toggleadjustpitchonspeedchange" xml:space="preserve"><value>Attiva o disattiva la regolazione del tono quando cambia la velocità</value></data>
+  <data name="shortcut_togglefpsdisplay" xml:space="preserve"><value>Mostra o nascondi gli FPS</value></data>
+  <data name="shortcut_cyclecaptionlanguage" xml:space="preserve"><value>Attiva o disattiva i sottotitoli</value></data>
+  <data name="shortcut_cycleaspectratio" xml:space="preserve"><value>Cambia il rapporto d'aspetto del video</value></data>
+  <data name="shortcut_cyclescalingmode" xml:space="preserve"><value>Cambia la modalità di ridimensionamento del video</value></data>
+  <data name="shortcut_decreaseplaybackspeed" xml:space="preserve"><value>Riduci la velocità di riproduzione di 0,05x</value></data>
+  <data name="shortcut_increaseplaybackspeed" xml:space="preserve"><value>Aumenta la velocità di riproduzione di 0,05x</value></data>
+  <data name="shortcut_decreaseplaybackspeed2" xml:space="preserve"><value>Riduci la velocità di riproduzione di 0,01x</value></data>
+  <data name="shortcut_increaseplaybackspeed2" xml:space="preserve"><value>Aumenta la velocità di riproduzione di 0,01x</value></data>
+  <data name="shortcut_opendescription" xml:space="preserve"><value>Apri la descrizione del video</value></data>
+  <data name="shortcut_opencomments" xml:space="preserve"><value>Apri i commenti</value></data>
+  <data name="shortcut_takescreenshot" xml:space="preserve"><value>Acquisisci uno screenshot</value></data>
+  <data name="shortcut_reportabuse" xml:space="preserve"><value>Segnala il video</value></data>
+  <data name="shortcut_decreasevideovolume" xml:space="preserve"><value>Abbassa il volume del video</value></data>
+  <data name="shortcut_increasevideovolume" xml:space="preserve"><value>Alza il volume del video</value></data>
+  <data name="shortcut_openplaylist" xml:space="preserve"><value>Apri la playlist corrente</value></data>
+  <data name="shortcut_prevvideo" xml:space="preserve"><value>Riproduci il video precedente</value></data>
+  <data name="shortcut_nextvideo" xml:space="preserve"><value>Riproduci il video successivo</value></data>
+  <data name="shortcut_openaudioeffects" xml:space="preserve"><value>Apri gli effetti audio</value></data>
+  <data name="shortcut_increasevolume" xml:space="preserve"><value>Aumenta il volume dell'applicazione</value></data>
+  <data name="shortcut_decreasevolume" xml:space="preserve"><value>Riduci il volume dell'applicazione</value></data>
+  <data name="shortcut_togglemute" xml:space="preserve"><value>Attiva o disattiva l'audio</value></data>
+  <data name="shortcut_restartapp" xml:space="preserve"><value>Riavvia l'applicazione</value></data>
+  <data name="shortcut_openloadvideo" xml:space="preserve"><value>Apri un video o una playlist</value></data>
+  <data name="shortcut_opensearch" xml:space="preserve"><value>Apri la ricerca</value></data>
+  <data name="shortcut_openmyplaylists" xml:space="preserve"><value>Apri le tue playlist</value></data>
+  <data name="shortcut_addplaylistkey" xml:space="preserve"><value>Crea una playlist</value></data>
+  <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>Salva il video in una playlist</value></data>
+  <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>Attiva o disattiva la ripetizione del video</value></data>
+  <data name="shortcut_openmenu" xml:space="preserve"><value>Apri il menu</value></data>
+  <data name="shortcut_resetplaybackspeed" xml:space="preserve"><value>Reimposta la velocità di riproduzione a 1x</value></data>
+  <data name="shortcut_quitapp" xml:space="preserve"><value>Esci dall'applicazione</value></data>
+  <data name="shortcut_togglereverbeffect" xml:space="preserve"><value>Attiva o disattiva l'effetto riverbero</value></data>
+  <data name="shortcut_togglerotateeffect" xml:space="preserve"><value>Attiva o disattiva l'effetto di rotazione</value></data>
+  <data name="shortcut_toggleechoeffect" xml:space="preserve"><value>Attiva o disattiva l'effetto eco</value></data>
+  <data name="shortcut_toggledistortioneffect" xml:space="preserve"><value>Attiva o disattiva l'effetto distorsione</value></data>
+  <data name="shortcut_togglekaraokeeffect" xml:space="preserve"><value>Attiva o disattiva l'effetto karaoke</value></data>
+  <data name="shortcut_togglechoruseffect" xml:space="preserve"><value>Attiva o disattiva l'effetto chorus</value></data>
+  <data name="shortcut_togglecontrolspinstate" xml:space="preserve"><value>Fissa o sblocca i controlli di riproduzione</value></data>
+  <data name="shortcut_notifications" xml:space="preserve"><value>Apri le notifiche</value></data>
+  <data name="shortcut_cycleprofileshape" xml:space="preserve"><value>Cambia la forma dell'immagine del profilo</value></data>
+  <data name="shortcut_toggleeightbiteffect" xml:space="preserve"><value>Attiva o disattiva l'effetto 8 bit</value></data>
+  <data name="shortcut_openplaybackspeedmenu" xml:space="preserve"><value>Apri i controlli della velocità di riproduzione</value></data>
+  <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>Apri i controlli del volume del video</value></data>
+  <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Scurisci il video</value></data>
+  <data name="shortcut_increasevideodim" xml:space="preserve"><value>Schiarisci il video</value></data>
+  <data name="shortcut_change" xml:space="preserve"><value>Modifica</value></data>
+  <data name="shortcut_press" xml:space="preserve"><value>Premi una combinazione di tasti</value></data>
+  <data name="shortcut_already_assigned" xml:space="preserve"><value>Questa scorciatoia è già assegnata. Premi un'altra combinazione.</value></data>
 </root>

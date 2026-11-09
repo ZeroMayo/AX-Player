@@ -398,6 +398,7 @@ namespace AXPlayer.App.Screens
             RegisterOverlayContainer(myPlaylistsOverlay);
             RegisterOverlayContainer(exitOptions);
             RegisterOverlayContainer(editPlaylistOverlay);
+            RegisterOverlayContainer(shortcutHelpOverlay);
 
             ghostIcon.Loop(t =>
                 t.MoveToY(-10, 2000, Easing.InOutSine)
@@ -674,8 +675,6 @@ namespace AXPlayer.App.Screens
             switch (e.Action)
             {
                 case GlobalAction.ToggleMute:
-                case GlobalAction.NextVolumeMeter:
-                case GlobalAction.PreviousVolumeMeter:
                     return volume.Adjust(e.Action);
 
                 case GlobalAction.RestartApp:

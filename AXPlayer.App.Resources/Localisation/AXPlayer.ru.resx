@@ -1022,4 +1022,60 @@
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>Размытие фона субтитров</value>
   </data>
+  <data name="shortcut_help_title" xml:space="preserve"><value>Горячие клавиши</value></data>
+  <data name="shortcut_back" xml:space="preserve"><value>Закрыть текущую панель</value></data>
+  <data name="shortcut_select" xml:space="preserve"><value>Активировать выбранный элемент</value></data>
+  <data name="shortcut_playpause" xml:space="preserve"><value>Воспроизвести или приостановить видео</value></data>
+  <data name="shortcut_fastforward_10sec" xml:space="preserve"><value>Перемотать вперёд на 10 секунд</value></data>
+  <data name="shortcut_fastrewind_10sec" xml:space="preserve"><value>Перемотать назад на 10 секунд</value></data>
+  <data name="shortcut_opensettings" xml:space="preserve"><value>Открыть настройки</value></data>
+  <data name="shortcut_toggleadjustpitchonspeedchange" xml:space="preserve"><value>Включить или выключить изменение высоты тона при смене скорости</value></data>
+  <data name="shortcut_togglefpsdisplay" xml:space="preserve"><value>Включить или выключить отображение FPS</value></data>
+  <data name="shortcut_cyclecaptionlanguage" xml:space="preserve"><value>Включить или выключить субтитры</value></data>
+  <data name="shortcut_cycleaspectratio" xml:space="preserve"><value>Изменить соотношение сторон видео</value></data>
+  <data name="shortcut_cyclescalingmode" xml:space="preserve"><value>Изменить режим масштабирования видео</value></data>
+  <data name="shortcut_decreaseplaybackspeed" xml:space="preserve"><value>Уменьшить скорость воспроизведения на 0,05x</value></data>
+  <data name="shortcut_increaseplaybackspeed" xml:space="preserve"><value>Увеличить скорость воспроизведения на 0,05x</value></data>
+  <data name="shortcut_decreaseplaybackspeed2" xml:space="preserve"><value>Уменьшить скорость воспроизведения на 0,01x</value></data>
+  <data name="shortcut_increaseplaybackspeed2" xml:space="preserve"><value>Увеличить скорость воспроизведения на 0,01x</value></data>
+  <data name="shortcut_opendescription" xml:space="preserve"><value>Открыть описание видео</value></data>
+  <data name="shortcut_opencomments" xml:space="preserve"><value>Открыть комментарии</value></data>
+  <data name="shortcut_takescreenshot" xml:space="preserve"><value>Сделать снимок экрана</value></data>
+  <data name="shortcut_reportabuse" xml:space="preserve"><value>Пожаловаться на видео</value></data>
+  <data name="shortcut_decreasevideovolume" xml:space="preserve"><value>Уменьшить громкость видео</value></data>
+  <data name="shortcut_increasevideovolume" xml:space="preserve"><value>Увеличить громкость видео</value></data>
+  <data name="shortcut_openplaylist" xml:space="preserve"><value>Открыть текущий плейлист</value></data>
+  <data name="shortcut_prevvideo" xml:space="preserve"><value>Воспроизвести предыдущее видео</value></data>
+  <data name="shortcut_nextvideo" xml:space="preserve"><value>Воспроизвести следующее видео</value></data>
+  <data name="shortcut_openaudioeffects" xml:space="preserve"><value>Открыть аудиоэффекты</value></data>
+  <data name="shortcut_increasevolume" xml:space="preserve"><value>Увеличить громкость приложения</value></data>
+  <data name="shortcut_decreasevolume" xml:space="preserve"><value>Уменьшить громкость приложения</value></data>
+  <data name="shortcut_togglemute" xml:space="preserve"><value>Включить или выключить звук</value></data>
+  <data name="shortcut_restartapp" xml:space="preserve"><value>Перезапустить приложение</value></data>
+  <data name="shortcut_openloadvideo" xml:space="preserve"><value>Открыть видео или плейлист</value></data>
+  <data name="shortcut_opensearch" xml:space="preserve"><value>Открыть поиск</value></data>
+  <data name="shortcut_openmyplaylists" xml:space="preserve"><value>Открыть мои плейлисты</value></data>
+  <data name="shortcut_addplaylistkey" xml:space="preserve"><value>Создать плейлист</value></data>
+  <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>Сохранить видео в плейлист</value></data>
+  <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>Включить или выключить повтор видео</value></data>
+  <data name="shortcut_openmenu" xml:space="preserve"><value>Открыть меню</value></data>
+  <data name="shortcut_resetplaybackspeed" xml:space="preserve"><value>Сбросить скорость воспроизведения до 1x</value></data>
+  <data name="shortcut_quitapp" xml:space="preserve"><value>Выйти из приложения</value></data>
+  <data name="shortcut_togglereverbeffect" xml:space="preserve"><value>Включить или выключить эффект реверберации</value></data>
+  <data name="shortcut_togglerotateeffect" xml:space="preserve"><value>Включить или выключить эффект вращения</value></data>
+  <data name="shortcut_toggleechoeffect" xml:space="preserve"><value>Включить или выключить эффект эха</value></data>
+  <data name="shortcut_toggledistortioneffect" xml:space="preserve"><value>Включить или выключить эффект искажения</value></data>
+  <data name="shortcut_togglekaraokeeffect" xml:space="preserve"><value>Включить или выключить эффект караоке</value></data>
+  <data name="shortcut_togglechoruseffect" xml:space="preserve"><value>Включить или выключить эффект хоруса</value></data>
+  <data name="shortcut_togglecontrolspinstate" xml:space="preserve"><value>Закрепить или открепить элементы управления воспроизведением</value></data>
+  <data name="shortcut_notifications" xml:space="preserve"><value>Открыть уведомления</value></data>
+  <data name="shortcut_cycleprofileshape" xml:space="preserve"><value>Изменить форму изображения профиля</value></data>
+  <data name="shortcut_toggleeightbiteffect" xml:space="preserve"><value>Включить или выключить 8-битный эффект</value></data>
+  <data name="shortcut_openplaybackspeedmenu" xml:space="preserve"><value>Открыть настройки скорости воспроизведения</value></data>
+  <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>Открыть настройки громкости видео</value></data>
+  <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Затемнить видео</value></data>
+  <data name="shortcut_increasevideodim" xml:space="preserve"><value>Осветлить видео</value></data>
+  <data name="shortcut_change" xml:space="preserve"><value>Изменить</value></data>
+  <data name="shortcut_press" xml:space="preserve"><value>Нажмите сочетание клавиш</value></data>
+  <data name="shortcut_already_assigned" xml:space="preserve"><value>Это сочетание уже назначено. Нажмите другое.</value></data>
 </root>

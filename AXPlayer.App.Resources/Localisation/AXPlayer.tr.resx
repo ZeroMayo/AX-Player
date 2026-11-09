@@ -1021,4 +1021,60 @@
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>Altyazı arka planı bulanıklığı</value>
   </data>
+  <data name="shortcut_help_title" xml:space="preserve"><value>Klavye kısayolları</value></data>
+  <data name="shortcut_back" xml:space="preserve"><value>Geçerli ekranı kapat</value></data>
+  <data name="shortcut_select" xml:space="preserve"><value>Seçili öğeyi etkinleştir</value></data>
+  <data name="shortcut_playpause" xml:space="preserve"><value>Videoyu oynat veya duraklat</value></data>
+  <data name="shortcut_fastforward_10sec" xml:space="preserve"><value>10 saniye ileri sar</value></data>
+  <data name="shortcut_fastrewind_10sec" xml:space="preserve"><value>10 saniye geri sar</value></data>
+  <data name="shortcut_opensettings" xml:space="preserve"><value>Ayarları aç</value></data>
+  <data name="shortcut_toggleadjustpitchonspeedchange" xml:space="preserve"><value>Oynatma hızı değiştiğinde perde ayarını aç/kapat</value></data>
+  <data name="shortcut_togglefpsdisplay" xml:space="preserve"><value>FPS göstergesini aç/kapat</value></data>
+  <data name="shortcut_cyclecaptionlanguage" xml:space="preserve"><value>Altyazıları aç/kapat</value></data>
+  <data name="shortcut_cycleaspectratio" xml:space="preserve"><value>Video en-boy oranını değiştir</value></data>
+  <data name="shortcut_cyclescalingmode" xml:space="preserve"><value>Video ölçekleme modunu değiştir</value></data>
+  <data name="shortcut_decreaseplaybackspeed" xml:space="preserve"><value>Oynatma hızını 0,05x azalt</value></data>
+  <data name="shortcut_increaseplaybackspeed" xml:space="preserve"><value>Oynatma hızını 0,05x artır</value></data>
+  <data name="shortcut_decreaseplaybackspeed2" xml:space="preserve"><value>Oynatma hızını 0,01x azalt</value></data>
+  <data name="shortcut_increaseplaybackspeed2" xml:space="preserve"><value>Oynatma hızını 0,01x artır</value></data>
+  <data name="shortcut_opendescription" xml:space="preserve"><value>Video açıklamasını aç</value></data>
+  <data name="shortcut_opencomments" xml:space="preserve"><value>Yorumları aç</value></data>
+  <data name="shortcut_takescreenshot" xml:space="preserve"><value>Ekran görüntüsü al</value></data>
+  <data name="shortcut_reportabuse" xml:space="preserve"><value>Videoyu bildir</value></data>
+  <data name="shortcut_decreasevideovolume" xml:space="preserve"><value>Video sesini azalt</value></data>
+  <data name="shortcut_increasevideovolume" xml:space="preserve"><value>Video sesini artır</value></data>
+  <data name="shortcut_openplaylist" xml:space="preserve"><value>Geçerli oynatma listesini aç</value></data>
+  <data name="shortcut_prevvideo" xml:space="preserve"><value>Önceki videoyu oynat</value></data>
+  <data name="shortcut_nextvideo" xml:space="preserve"><value>Sonraki videoyu oynat</value></data>
+  <data name="shortcut_openaudioeffects" xml:space="preserve"><value>Ses efektlerini aç</value></data>
+  <data name="shortcut_increasevolume" xml:space="preserve"><value>Uygulama sesini artır</value></data>
+  <data name="shortcut_decreasevolume" xml:space="preserve"><value>Uygulama sesini azalt</value></data>
+  <data name="shortcut_togglemute" xml:space="preserve"><value>Sesi aç/kapat</value></data>
+  <data name="shortcut_restartapp" xml:space="preserve"><value>Uygulamayı yeniden başlat</value></data>
+  <data name="shortcut_openloadvideo" xml:space="preserve"><value>Video veya oynatma listesi aç</value></data>
+  <data name="shortcut_opensearch" xml:space="preserve"><value>Aramayı aç</value></data>
+  <data name="shortcut_openmyplaylists" xml:space="preserve"><value>Oynatma listelerimi aç</value></data>
+  <data name="shortcut_addplaylistkey" xml:space="preserve"><value>Oynatma listesi oluştur</value></data>
+  <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>Videoyu oynatma listesine kaydet</value></data>
+  <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>Video tekrarını aç/kapat</value></data>
+  <data name="shortcut_openmenu" xml:space="preserve"><value>Menüyü aç</value></data>
+  <data name="shortcut_resetplaybackspeed" xml:space="preserve"><value>Oynatma hızını 1x olarak sıfırla</value></data>
+  <data name="shortcut_quitapp" xml:space="preserve"><value>Uygulamadan çık</value></data>
+  <data name="shortcut_togglereverbeffect" xml:space="preserve"><value>Yankı efektini aç/kapat</value></data>
+  <data name="shortcut_togglerotateeffect" xml:space="preserve"><value>Döndürme efektini aç/kapat</value></data>
+  <data name="shortcut_toggleechoeffect" xml:space="preserve"><value>Ekoyu aç/kapat</value></data>
+  <data name="shortcut_toggledistortioneffect" xml:space="preserve"><value>Bozulma efektini aç/kapat</value></data>
+  <data name="shortcut_togglekaraokeeffect" xml:space="preserve"><value>Karaoke efektini aç/kapat</value></data>
+  <data name="shortcut_togglechoruseffect" xml:space="preserve"><value>Koro efektini aç/kapat</value></data>
+  <data name="shortcut_togglecontrolspinstate" xml:space="preserve"><value>Oynatma denetimlerini sabitlemeyi aç/kapat</value></data>
+  <data name="shortcut_notifications" xml:space="preserve"><value>Bildirimleri aç</value></data>
+  <data name="shortcut_cycleprofileshape" xml:space="preserve"><value>Profil resmi şeklini değiştir</value></data>
+  <data name="shortcut_toggleeightbiteffect" xml:space="preserve"><value>8 bit efektini aç/kapat</value></data>
+  <data name="shortcut_openplaybackspeedmenu" xml:space="preserve"><value>Oynatma hızı denetimlerini aç</value></data>
+  <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>Video sesi denetimlerini aç</value></data>
+  <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Videoyu karart</value></data>
+  <data name="shortcut_increasevideodim" xml:space="preserve"><value>Videoyu aydınlat</value></data>
+  <data name="shortcut_change" xml:space="preserve"><value>Değiştir</value></data>
+  <data name="shortcut_press" xml:space="preserve"><value>Bir tuş kombinasyonuna basın</value></data>
+  <data name="shortcut_already_assigned" xml:space="preserve"><value>Bu kısayol zaten atanmış. Başka bir kombinasyona basın.</value></data>
 </root>
