@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using osu.Framework.Allocation;
+using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -12,6 +13,7 @@ using osu.Framework.Input;
 using osu.Framework.Platform;
 using osuTK;
 using AXPlayer.App.Graphics.Sprites;
+using AXPlayer.App.Input.Binding;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
@@ -42,6 +44,11 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private GameHost gameHost { get; set; } = null!;
 
+        [Resolved]
+        private GlobalShortcutManager shortcutManager { get; set; } = null!;
+
+        private IBindable<string> shortcutBindings = null!;
+
         [BackgroundDependencyLoader]
         private void load()
         {
@@ -54,19 +61,31 @@ namespace AXPlayer.App.Graphics.UserInterface
                 Spacing = new Vector2(5)
             };
 
+            shortcutBindings = shortcutManager.BindingsChanged.GetBoundCopy();
             updateState();
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
+            shortcutBindings.BindValueChanged(bindingsChanged);
             updateState();
         }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            if (isDisposing)
+                shortcutBindings?.UnbindEvents();
+
+            base.Dispose(isDisposing);
+        }
+
+        private void bindingsChanged(ValueChangedEvent<string> _) => updateState();
 
         private void updateState()
         {
             flow.Clear();
-            foreach (string h in hotkey.ResolveKeyCombination(readableKeyCombinationProvider, gameHost))
+            foreach (string h in hotkey.ResolveKeyCombination(readableKeyCombinationProvider, gameHost, shortcutManager))
                 flow.Add(new HotkeyBox(h));
         }
 

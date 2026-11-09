@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Localisation;
+using AXPlayer.App.Input.Binding;
 using osu.Framework.Configuration;
 using osu.Framework.Configuration.Tracking;
 using osu.Framework.Extensions;
@@ -19,6 +20,8 @@ namespace AXPlayer.App.Config
     public class AXPlayerConfigManager : IniConfigManager<AXPlayerSetting>
     {
         internal const string FILENAME = @"app.ini";
+
+        public GlobalShortcutManager? ShortcutManager { get; set; }
 
         protected override string Filename => FILENAME;
 
@@ -103,6 +106,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.Version, string.Empty);
             SetDefault(AXPlayerSetting.SmoothCaptionAnimation, true);
             SetDefault(AXPlayerSetting.CustomPlaybackSpeedPresets, string.Empty);
+            SetDefault(AXPlayerSetting.GlobalShortcutBindings, string.Empty);
 
             SetDefault(AXPlayerSetting.ClosedCaptionsBackdropBlur, true);
         }
@@ -113,21 +117,24 @@ namespace AXPlayer.App.Config
 
         public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
         {
-            new TrackedSetting<ClosedCaptionLanguage>(AXPlayerSetting.ClosedCaptionLanguage, v => new SettingDescription(v, AXPlayerStrings.CaptionLanguage, v.GetLocalisableDescription(), "Shift+C")),
-            new TrackedSetting<AspectRatioMethod>(AXPlayerSetting.AspectRatioMethod, v => new SettingDescription(v, AXPlayerStrings.AspectRatioMethod, v.GetLocalisableDescription(), "Ctrl+F6")),
-            new TrackedSetting<bool>(AXPlayerSetting.AdjustPitchOnSpeedChange, v => new SettingDescription(v, AXPlayerStrings.AdjustPitchOnSpeedChange, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Alt+P")),
-            new TrackedSetting<bool>(AXPlayerSetting.CaptionEnabled, v => new SettingDescription(v, AXPlayerStrings.ClosedCaptions, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Shift+C")),
+            new TrackedSetting<ClosedCaptionLanguage>(AXPlayerSetting.ClosedCaptionLanguage, v => new SettingDescription(v, AXPlayerStrings.CaptionLanguage, v.GetLocalisableDescription(), getShortcut(GlobalAction.CycleCaptionLanguage, "Shift+C"))),
+            new TrackedSetting<AspectRatioMethod>(AXPlayerSetting.AspectRatioMethod, v => new SettingDescription(v, AXPlayerStrings.AspectRatioMethod, v.GetLocalisableDescription(), getShortcut(GlobalAction.CycleAspectRatio, "Ctrl+F6"))),
+            new TrackedSetting<bool>(AXPlayerSetting.AdjustPitchOnSpeedChange, v => new SettingDescription(v, AXPlayerStrings.AdjustPitchOnSpeedChange, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleAdjustPitchOnSpeedChange, "Alt+P"))),
+            new TrackedSetting<bool>(AXPlayerSetting.CaptionEnabled, v => new SettingDescription(v, AXPlayerStrings.ClosedCaptions, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.CycleCaptionLanguage, "Shift+C"))),
             new TrackedSetting<float>(AXPlayerSetting.UIScale, v => new SettingDescription(v, AXPlayerStrings.UIScaling, $@"{v:0.##}x")),
-            new TrackedSetting<bool>(AXPlayerSetting.ShowFpsDisplay, v => new SettingDescription(v, AXPlayerStrings.ShowFPS, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), "Ctrl+P")),
+            new TrackedSetting<bool>(AXPlayerSetting.ShowFpsDisplay, v => new SettingDescription(v, AXPlayerStrings.ShowFPS, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleFPSDisplay, "Ctrl+P"))),
             new TrackedSetting<ScalingMode>(AXPlayerSetting.Scaling, scalingMode => new SettingDescription(
                         rawValue: scalingMode,
                         name: AXPlayerStrings.ScreenScaling,
                         value: scalingMode.GetLocalisableDescription(),
-                        shortcut: "Ctrl+Shift+F5"
+                        shortcut: getShortcut(GlobalAction.CycleScalingMode, "Ctrl+Shift+F5")
                     )
                 ),
-            new TrackedSetting<ProfileImageShape>(AXPlayerSetting.ProfileImageShape, v => new SettingDescription(v, AXPlayerStrings.ProfileImageShape, v.GetLocalisableDescription(), "Ctrl+F8")),
+            new TrackedSetting<ProfileImageShape>(AXPlayerSetting.ProfileImageShape, v => new SettingDescription(v, AXPlayerStrings.ProfileImageShape, v.GetLocalisableDescription(), getShortcut(GlobalAction.CycleProfileShape, "Ctrl+F8"))),
         };
+
+        private string getShortcut(GlobalAction action, string fallback) =>
+            ShortcutManager?.GetShortcutLabel(action, fallback) ?? fallback;
     }
 
     public enum AXPlayerSetting
@@ -203,5 +210,6 @@ namespace AXPlayer.App.Config
         PlaylistCrossfadeEnabled,
         PlaylistCrossfadeDuration,
         ClosedCaptionsBackdropBlur,
+        GlobalShortcutBindings,
     }
 }

@@ -1022,4 +1022,60 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>Làm mờ nền phụ đề</value>
   </data>
+  <data name="shortcut_help_title" xml:space="preserve"><value>Phím tắt</value></data>
+  <data name="shortcut_back" xml:space="preserve"><value>Đóng bảng hiện tại</value></data>
+  <data name="shortcut_select" xml:space="preserve"><value>Kích hoạt mục đã chọn</value></data>
+  <data name="shortcut_playpause" xml:space="preserve"><value>Phát hoặc tạm dừng video</value></data>
+  <data name="shortcut_fastforward_10sec" xml:space="preserve"><value>Tua tới 10 giây</value></data>
+  <data name="shortcut_fastrewind_10sec" xml:space="preserve"><value>Tua lùi 10 giây</value></data>
+  <data name="shortcut_opensettings" xml:space="preserve"><value>Mở cài đặt</value></data>
+  <data name="shortcut_toggleadjustpitchonspeedchange" xml:space="preserve"><value>Bật/tắt điều chỉnh cao độ khi đổi tốc độ phát</value></data>
+  <data name="shortcut_togglefpsdisplay" xml:space="preserve"><value>Bật/tắt hiển thị FPS</value></data>
+  <data name="shortcut_cyclecaptionlanguage" xml:space="preserve"><value>Bật/tắt phụ đề</value></data>
+  <data name="shortcut_cycleaspectratio" xml:space="preserve"><value>Đổi tỷ lệ khung hình video</value></data>
+  <data name="shortcut_cyclescalingmode" xml:space="preserve"><value>Đổi chế độ co giãn video</value></data>
+  <data name="shortcut_decreaseplaybackspeed" xml:space="preserve"><value>Giảm tốc độ phát 0,05x</value></data>
+  <data name="shortcut_increaseplaybackspeed" xml:space="preserve"><value>Tăng tốc độ phát 0,05x</value></data>
+  <data name="shortcut_decreaseplaybackspeed2" xml:space="preserve"><value>Giảm tốc độ phát 0,01x</value></data>
+  <data name="shortcut_increaseplaybackspeed2" xml:space="preserve"><value>Tăng tốc độ phát 0,01x</value></data>
+  <data name="shortcut_opendescription" xml:space="preserve"><value>Mở mô tả video</value></data>
+  <data name="shortcut_opencomments" xml:space="preserve"><value>Mở bình luận</value></data>
+  <data name="shortcut_takescreenshot" xml:space="preserve"><value>Chụp ảnh màn hình</value></data>
+  <data name="shortcut_reportabuse" xml:space="preserve"><value>Báo cáo video</value></data>
+  <data name="shortcut_decreasevideovolume" xml:space="preserve"><value>Giảm âm lượng video</value></data>
+  <data name="shortcut_increasevideovolume" xml:space="preserve"><value>Tăng âm lượng video</value></data>
+  <data name="shortcut_openplaylist" xml:space="preserve"><value>Mở danh sách phát hiện tại</value></data>
+  <data name="shortcut_prevvideo" xml:space="preserve"><value>Phát video trước</value></data>
+  <data name="shortcut_nextvideo" xml:space="preserve"><value>Phát video tiếp theo</value></data>
+  <data name="shortcut_openaudioeffects" xml:space="preserve"><value>Mở hiệu ứng âm thanh</value></data>
+  <data name="shortcut_increasevolume" xml:space="preserve"><value>Tăng âm lượng ứng dụng</value></data>
+  <data name="shortcut_decreasevolume" xml:space="preserve"><value>Giảm âm lượng ứng dụng</value></data>
+  <data name="shortcut_togglemute" xml:space="preserve"><value>Bật/tắt tiếng</value></data>
+  <data name="shortcut_restartapp" xml:space="preserve"><value>Khởi động lại ứng dụng</value></data>
+  <data name="shortcut_openloadvideo" xml:space="preserve"><value>Mở video hoặc danh sách phát</value></data>
+  <data name="shortcut_opensearch" xml:space="preserve"><value>Mở tìm kiếm</value></data>
+  <data name="shortcut_openmyplaylists" xml:space="preserve"><value>Mở danh sách phát của bạn</value></data>
+  <data name="shortcut_addplaylistkey" xml:space="preserve"><value>Tạo danh sách phát</value></data>
+  <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>Lưu video vào danh sách phát</value></data>
+  <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>Bật/tắt phát lại video</value></data>
+  <data name="shortcut_openmenu" xml:space="preserve"><value>Mở menu</value></data>
+  <data name="shortcut_resetplaybackspeed" xml:space="preserve"><value>Đặt lại tốc độ phát về 1x</value></data>
+  <data name="shortcut_quitapp" xml:space="preserve"><value>Thoát ứng dụng</value></data>
+  <data name="shortcut_togglereverbeffect" xml:space="preserve"><value>Bật/tắt hiệu ứng vang</value></data>
+  <data name="shortcut_togglerotateeffect" xml:space="preserve"><value>Bật/tắt hiệu ứng xoay</value></data>
+  <data name="shortcut_toggleechoeffect" xml:space="preserve"><value>Bật/tắt hiệu ứng tiếng vọng</value></data>
+  <data name="shortcut_toggledistortioneffect" xml:space="preserve"><value>Bật/tắt hiệu ứng méo tiếng</value></data>
+  <data name="shortcut_togglekaraokeeffect" xml:space="preserve"><value>Bật/tắt hiệu ứng karaoke</value></data>
+  <data name="shortcut_togglechoruseffect" xml:space="preserve"><value>Bật/tắt hiệu ứng hợp xướng</value></data>
+  <data name="shortcut_togglecontrolspinstate" xml:space="preserve"><value>Bật/tắt ghim điều khiển phát</value></data>
+  <data name="shortcut_notifications" xml:space="preserve"><value>Mở thông báo</value></data>
+  <data name="shortcut_cycleprofileshape" xml:space="preserve"><value>Đổi hình dạng ảnh hồ sơ</value></data>
+  <data name="shortcut_toggleeightbiteffect" xml:space="preserve"><value>Bật/tắt hiệu ứng 8-bit</value></data>
+  <data name="shortcut_openplaybackspeedmenu" xml:space="preserve"><value>Mở điều khiển tốc độ phát</value></data>
+  <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>Mở điều khiển âm lượng video</value></data>
+  <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Làm tối video</value></data>
+  <data name="shortcut_increasevideodim" xml:space="preserve"><value>Làm sáng video</value></data>
+  <data name="shortcut_change" xml:space="preserve"><value>Đổi</value></data>
+  <data name="shortcut_press" xml:space="preserve"><value>Nhấn tổ hợp phím</value></data>
+  <data name="shortcut_already_assigned" xml:space="preserve"><value>Phím tắt này đã được gán. Hãy nhấn tổ hợp khác.</value></data>
 </root>

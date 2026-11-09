@@ -59,6 +59,7 @@ namespace AXPlayer.App.Screens
         private SettingsContainer settingsContainer;
         private OverlayContainer loadVideoContainer, videoDescriptionContainer, commentsContainer, searchContainer, reportAbuseOverlay, loadPlaylistContainer, unsubscribeDialog, addPlaylistOverlay, videoSaveLocationOverlay, myChannelDialog, editPlaylistOverlay, downloadReadyContainer, downloadOverlay, downloadCompletedOverlay;
         private SideOverlayContainer playlistOverlay, audioEffectsOverlay, menuOverlay, myPlaylistsOverlay, exitOptions;
+        private ShortcutHelpOverlay shortcutHelpOverlay;
         private IconButton menuOverlayShow;
 
         [Resolved]

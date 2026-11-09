@@ -34,7 +34,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             PlatformAction = platformAction;
         }
 
-        public IEnumerable<string> ResolveKeyCombination(ReadableKeyCombinationProvider keyCombinationProvider, GameHost gameHost)
+        public IEnumerable<string> ResolveKeyCombination(ReadableKeyCombinationProvider keyCombinationProvider, GameHost gameHost, GlobalShortcutManager shortcutManager)
         {
             var result = new List<string>();
 
@@ -46,7 +46,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             if (GlobalAction != null)
             {
                 var action = GlobalAction.Value;
-                var bindings = GlobalActionContainer.GlobalKeyBindings.Where(kb => (GlobalAction)kb.Action == action);
+                var bindings = shortcutManager.GetBindings().Where(kb => (GlobalAction)kb.Action == action);
                 result.AddRange(bindings.Select(b => keyCombinationProvider.GetReadableString(b.KeyCombination)));
             }
 

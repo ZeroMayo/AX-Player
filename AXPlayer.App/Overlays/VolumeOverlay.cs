@@ -133,22 +133,6 @@ namespace AXPlayer.App.Overlays
                         volumeMeters.Selected?.Increase(amount, isPrecise);
                     return true;
 
-                case GlobalAction.NextVolumeMeter:
-                    if (State.Value != Visibility.Visible)
-                        return false;
-
-                    volumeMeters.SelectNext();
-                    Show();
-                    return true;
-
-                case GlobalAction.PreviousVolumeMeter:
-                    if (State.Value != Visibility.Visible)
-                        return false;
-
-                    volumeMeters.SelectPrevious();
-                    Show();
-                    return true;
-
                 case GlobalAction.ToggleMute:
                     //Show();
                     //volumeMeters.OfType<MasterVolumeMeter>().First().ToggleMute();
