@@ -62,7 +62,7 @@ namespace AXPlayer.App.Screens
 
             //game.UpdateManagerVersionText.Value = AXPlayerStrings.CheckingUpdate;
 
-            //settingsContainer.CheckForUpdatesButton.Enabled.Value = false;
+            game.UpdateButtonEnabled.Value = false;
 
             try
             {
@@ -90,14 +90,14 @@ namespace AXPlayer.App.Screens
 
                     game.UpdateStatus.Value = Updater.UpdaterStatus.NoUpdates;
                     game.UpdateManagerVersionText.Value = game.Version;
-                    settingsContainer.CheckForUpdatesButton.Enabled.Value = true;
+                    game.UpdateButtonEnabled.Value = true;
                 }
             }
             catch
             {
                 game.UpdateStatus.Value = Updater.UpdaterStatus.Error;
                 game.UpdateManagerVersionText.Value = game.Version;
-                settingsContainer.CheckForUpdatesButton.Enabled.Value = true;
+                game.UpdateButtonEnabled.Value = true;
             }
             finally
             {
