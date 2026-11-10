@@ -1277,6 +1277,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                             f.Colour = overlayColourProvider.Content2;
                                                                         })
                                                                         {
+                                                                            Margin = new MarginPadding { Top = 4 },
                                                                             AutoSizeAxes = Axes.Both,
                                                                         },
                                                                     },
