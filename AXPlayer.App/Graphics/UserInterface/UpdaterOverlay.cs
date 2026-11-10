@@ -271,7 +271,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     RelativeSizeAxes = Axes.X,
                     Size = new Vector2(0.9f, 50),
                     Text = AXPlayerStrings.CheckUpdate,
-                    Margin = new MarginPadding(14),
+                    Margin = new MarginPadding(16),
                     Action = () => CheckUpdateAction?.Invoke(),
                 },
                 new IconButton
