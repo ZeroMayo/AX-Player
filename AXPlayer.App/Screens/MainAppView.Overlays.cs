@@ -89,14 +89,14 @@ namespace AXPlayer.App.Screens
                     }
 
                     game.UpdateStatus.Value = Updater.UpdaterStatus.NoUpdates;
-                    game.UpdateManagerVersionText.Value = game.Version;
+                    //game.UpdateManagerVersionText.Value = game.Version;
                     game.UpdateButtonEnabled.Value = true;
                 }
             }
             catch
             {
                 game.UpdateStatus.Value = Updater.UpdaterStatus.Error;
-                game.UpdateManagerVersionText.Value = game.Version;
+                //game.UpdateManagerVersionText.Value = game.Version;
                 game.UpdateButtonEnabled.Value = true;
             }
             finally
