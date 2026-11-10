@@ -199,6 +199,18 @@
   <data name="updating" xml:space="preserve">
     <value>Đang cập nhật AX Player ({0}%)</value>
   </data>
+  <data name="check_updates_on_app_open" xml:space="preserve">
+    <value>Kiểm tra cập nhật khi mở ứng dụng</value>
+  </data>
+  <data name="running_latest_release_without_version" xml:space="preserve">
+    <value>Bạn đang sử dụng phiên bản mới nhất</value>
+  </data>
+  <data name="updater_title" xml:space="preserve">
+    <value>Trung tâm cập nhật</value>
+  </data>
+  <data name="updating_text" xml:space="preserve">
+    <value>Đang cập nhật...</value>
+  </data>
   <data name="restart_required" xml:space="preserve">
     <value>Bản cập nhật gần hoàn tất. Hãy chạy lại AX Player để hoàn tất cập nhật.</value>
   </data>

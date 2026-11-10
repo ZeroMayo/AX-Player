@@ -199,6 +199,18 @@
   <data name="updating" xml:space="preserve">
     <value>Actualización de AX Player ({0}%)</value>
   </data>
+  <data name="check_updates_on_app_open" xml:space="preserve">
+    <value>Buscar actualizaciones al abrir la aplicación</value>
+  </data>
+  <data name="running_latest_release_without_version" xml:space="preserve">
+    <value>Estás ejecutando la última versión</value>
+  </data>
+  <data name="updater_title" xml:space="preserve">
+    <value>Centro de actualizaciones</value>
+  </data>
+  <data name="updating_text" xml:space="preserve">
+    <value>Actualizando...</value>
+  </data>
   <data name="restart_required" xml:space="preserve">
     <value>La actualización está casi completa. Vuelva a ejecutar AX Player para terminar la actualización.</value>
   </data>
