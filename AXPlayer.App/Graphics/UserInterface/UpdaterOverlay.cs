@@ -48,6 +48,10 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private Bindable<UpdaterStatus> updateStatus;
 
+        private RoundedIconButton updateButton;
+
+        private Bindable<bool> updateButtonEnabled;
+
         public UpdaterOverlay()
         {
             Size = new Vector2(1f, 1f);
@@ -64,6 +68,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         {
             updateStatus = game.UpdateStatus.GetBoundCopy();
             updateInfo = game.UpdateInfo.GetBoundCopy();
+            updateButtonEnabled = game.UpdateButtonEnabled.GetBoundCopy();
             configReleaseStream = appConfig.GetBindable<ReleaseStream>(AXPlayerSetting.ReleaseStream);
 
             Children = new Drawable[]
@@ -258,7 +263,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
                     Height = 76,
                 },
-                new RoundedIconButton(FontAwesome.Solid.Sync)
+                updateButton = new RoundedIconButton(FontAwesome.Solid.Sync)
                 {
                     Enabled = { Value = true },
                     Origin = Anchor.BottomCentre,
@@ -309,6 +314,11 @@ namespace AXPlayer.App.Graphics.UserInterface
             updateStatus.BindValueChanged(status =>
             {
                 Schedule(() => UpdateStatus(status.NewValue));
+            });
+
+            updateButtonEnabled.BindValueChanged(enabled =>
+            {
+                Schedule(() => updateButton.Enabled.Value = enabled.NewValue);
             });
 
             updateInfo.BindValueChanged(info =>

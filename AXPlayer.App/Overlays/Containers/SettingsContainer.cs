@@ -1217,65 +1217,74 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, true, true);
                                                             }
                                                         },
-                                                        new Container
+                                                        new FillFlowContainer
                                                         {
                                                             Name = "App Info",
                                                             RelativeSizeAxes = Axes.X,
                                                             AutoSizeAxes = Axes.Y,
-                                                            Margin = new MarginPadding { Top = 12 },
-                                                            Child = new Container
+                                                            Anchor = Anchor.TopCentre,
+                                                            Origin = Anchor.TopCentre,
+                                                            Direction = FillDirection.Horizontal,
+                                                            Children = new Drawable[]
                                                             {
-                                                                AutoSizeAxes = Axes.Both,
-                                                                Anchor = Anchor.Centre,
-                                                                Origin = Anchor.Centre,
-                                                                Child = new Sprite
+                                                                new Container
                                                                 {
-                                                                    Width = 100,
-                                                                    Height = 100,
-                                                                    Texture = textures.Get(@"AXPlayer-Icon"),
-                                                                    FillMode = FillMode.Fit,
-                                                                }
-                                                            },
-                                                        },
-                                                        new ProjectYomiTextFlowContainer(f => f.Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"))
-                                                        {
-                                                            RelativeSizeAxes = Axes.X,
-                                                            AutoSizeAxes = Axes.Y,
-                                                            Text = "AX Player",
-                                                            TextAnchor = Anchor.Centre,
-                                                            Colour = overlayColourProvider.Content2,
-                                                        },
-                                                        gameVersion = new LinkFlowContainer(f =>
-                                                        {
-                                                            f.Font = AXPlayerApp.DefaultFont.With(size: 15);
-                                                            f.Colour = overlayColourProvider.Content2;
-                                                        })
-                                                        {
-                                                            Margin = new MarginPadding { Top = 4 },
-                                                            RelativeSizeAxes = Axes.X,
-                                                            AutoSizeAxes = Axes.Y,
-                                                            TextAnchor = Anchor.Centre,
-                                                        },
-                                                        ffmpegLibVersion = new ProjectYomiTextFlowContainer(f =>
-                                                        {
-                                                            f.Font = AXPlayerApp.DefaultFont.With(size: 15);
-                                                            f.Colour = overlayColourProvider.Content2;
-                                                        })
-                                                        {
-                                                            Margin = new MarginPadding { Top = 4 },
-                                                            RelativeSizeAxes = Axes.X,
-                                                            AutoSizeAxes = Axes.Y,
-                                                            TextAnchor = Anchor.Centre,
-                                                        },
-                                                        madeByText = new LinkFlowContainer(f =>
-                                                        {
-                                                            f.Font = AXPlayerApp.DefaultFont.With(size: 15);
-                                                            f.Colour = overlayColourProvider.Content2;
-                                                        })
-                                                        {
-                                                            RelativeSizeAxes = Axes.X,
-                                                            AutoSizeAxes = Axes.Y,
-                                                            TextAnchor = Anchor.Centre,
+                                                                    AutoSizeAxes = Axes.Both,
+                                                                    Anchor = Anchor.Centre,
+                                                                    Origin = Anchor.Centre,
+                                                                    Margin = new MarginPadding { Top = 12 },
+                                                                    Child = new Container
+                                                                    {
+                                                                        AutoSizeAxes = Axes.Both,
+                                                                        Anchor = Anchor.Centre,
+                                                                        Origin = Anchor.Centre,
+                                                                        Child = new Sprite
+                                                                        {
+                                                                            Width = 100,
+                                                                            Height = 100,
+                                                                            Texture = textures.Get(@"AXPlayer-Icon"),
+                                                                            FillMode = FillMode.Fit,
+                                                                        }
+                                                                    },
+                                                                },
+                                                                new FillFlowContainer
+                                                                {
+                                                                    AutoSizeAxes = Axes.Both,
+                                                                    Direction = FillDirection.Vertical,
+                                                                    Anchor = Anchor.Centre,
+                                                                    Origin = Anchor.Centre,
+                                                                    Children = new Drawable[]
+                                                                    {
+                                                                        new ProjectYomiTextFlowContainer(f => f.Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"))
+                                                                        {
+                                                                            AutoSizeAxes = Axes.Both,
+                                                                            Text = "AX Player",
+                                                                            TextAnchor = Anchor.Centre,
+                                                                            Colour = overlayColourProvider.Content2,
+                                                                        },
+                                                                        gameVersion = new LinkFlowContainer(f =>
+                                                                        {
+                                                                            f.Font = AXPlayerApp.DefaultFont.With(size: 15);
+                                                                            f.Colour = overlayColourProvider.Content2;
+                                                                        })
+                                                                        {
+                                                                            Margin = new MarginPadding { Top = 4 },
+                                                                            AutoSizeAxes = Axes.Both,
+                                                                            TextAnchor = Anchor.Centre,
+                                                                        },
+                                                                        madeByText = new LinkFlowContainer(f =>
+                                                                        {
+                                                                            f.Font = AXPlayerApp.DefaultFont.With(size: 15);
+                                                                            f.Colour = overlayColourProvider.Content2;
+                                                                        })
+                                                                        {
+                                                                            RelativeSizeAxes = Axes.X,
+                                                                            AutoSizeAxes = Axes.Y,
+                                                                            TextAnchor = Anchor.Centre,
+                                                                        },
+                                                                    },
+                                                                },
+                                                            }
                                                         },
                                                         dislikeCounterCredits = new LinkFlowContainer(f =>
                                                         {
@@ -1372,11 +1381,6 @@ namespace AXPlayer.App.Overlays.Containers
             dislikeCounterCredits.AddText(AXPlayerStrings.DislikeCounterCredits_1);
             dislikeCounterCredits.AddLink("Return YouTube Dislike API", "https://returnyoutubedislike.com/");
             dislikeCounterCredits.AddText(AXPlayerStrings.DislikeCounterCredits_2);
-
-            ffmpegLibVersion.AddText($"libavcodec {ffmpeg.LIBAVCODEC_VERSION}\n");
-            ffmpegLibVersion.AddText($"libavformat {ffmpeg.LIBAVFORMAT_VERSION}\n");
-            ffmpegLibVersion.AddText($"libavutil {ffmpeg.LIBAVUTIL_VERSION}\n");
-            ffmpegLibVersion.AddText($"libswscale {ffmpeg.LIBSWSCALE_VERSION}");
 
             if (game.IsDeployedBuild)
             {
@@ -1758,8 +1762,6 @@ namespace AXPlayer.App.Overlays.Containers
         private AXPlayerSettingsTabBar settingsTabBar;
         private Bindable<SettingsNote.Data> discordNotInstalledNote = new Bindable<SettingsNote.Data>();
         private LinkFlowContainer dislikeCounterCredits, madeByText, gameVersion;
-
-        private ProjectYomiTextFlowContainer ffmpegLibVersion;
         private FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode> discordRichPresenceDropdown;
         private FillFlowContainer volumeOptions, screenshotOptions;
 
