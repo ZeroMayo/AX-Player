@@ -198,6 +198,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 {
                                     AutoSizeAxes = Axes.X,
                                     RelativeSizeAxes = Axes.Y,
+                                    Margin = new MarginPadding { Right = 12 },
                                     Child = new HotkeyDisplay
                                     {
                                         Anchor = Anchor.Centre,
