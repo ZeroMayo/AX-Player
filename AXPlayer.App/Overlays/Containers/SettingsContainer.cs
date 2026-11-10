@@ -1270,7 +1270,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                                         {
                                                                             Margin = new MarginPadding { Top = 4 },
                                                                             AutoSizeAxes = Axes.Both,
-                                                                            TextAnchor = Anchor.Centre,
                                                                         },
                                                                         madeByText = new LinkFlowContainer(f =>
                                                                         {
@@ -1278,9 +1277,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                             f.Colour = overlayColourProvider.Content2;
                                                                         })
                                                                         {
-                                                                            RelativeSizeAxes = Axes.X,
-                                                                            AutoSizeAxes = Axes.Y,
-                                                                            TextAnchor = Anchor.Centre,
+                                                                            AutoSizeAxes = Axes.Both,
                                                                         },
                                                                     },
                                                                 },
