@@ -49,32 +49,43 @@ namespace AXPlayer.App.Updater
                 },
                 new Container
                 {
-                    RelativeSizeAxes = Axes.Both,
+                    RelativeSizeAxes = Axes.X,
+                    AutoSizeAxes = Axes.Y,
+                    Padding = new MarginPadding(16),
                     Children = new Drawable[]
                     {
                         new FillFlowContainer
                         {
+                            AutoSizeAxes = Axes.Both,
+                            Direction = FillDirection.Vertical,
+                            Spacing = new Vector2(0, 4),
                             Children = new Drawable[]
                             {
-                                new ProjectYomiTextFlowContainer
+                                new ProjectYomiTextFlowContainer(text => text.Font = text.Font.With(weight: "Bold", size: 24))
                                 {
                                     AutoSizeAxes = Axes.Both,
                                     Text = updateInfo.Version
                                 },
+                                new ProjectYomiTextFlowContainer
+                                {
+                                    AutoSizeAxes = Axes.Both,
+                                    Text = FormatFileSize(updateInfo.UpdateFileSize),
+                                },
                                 updateStateText = new ProjectYomiTextFlowContainer
                                 {
                                     AutoSizeAxes = Axes.Both,
+                                    Text = AXPlayerStrings.Updating,
                                 }
                             }
                         },
                         restartButton = new RoundedIconButton(FontAwesome.Solid.Sync)
                         {
-                            Size = new Vector2(102, 28),
+                            Size = new Vector2(120, 30),
                             Text = AXPlayerStrings.RestartNow,
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
                             Enabled = { Value = false },
-                            Action = () => game.RestartAction.Invoke(),
+                            Action = () => game.RestartAction?.Invoke(),
                         },
                     },
                 },
@@ -84,6 +95,8 @@ namespace AXPlayer.App.Updater
             {
                 UpdateStatusText(text.NewValue);
             });
+
+            restartButton.Hide();
         }
 
         public static string FormatFileSize(long bytes)
@@ -106,10 +119,10 @@ namespace AXPlayer.App.Updater
             switch (updaterStatus)
             {
                 case UpdaterStatus.RestartRequired:
-                    restartButton.Enabled.Value = true;
+                    restartButton.Show();
                     break;
                 default:
-                    restartButton.Enabled.Value = false;
+                    restartButton.Hide();
                     break;
             }
         }

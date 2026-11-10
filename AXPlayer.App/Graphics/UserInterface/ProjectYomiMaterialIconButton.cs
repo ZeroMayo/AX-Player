@@ -146,7 +146,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             }
 
             Colour = dimColour;
-            Enabled.BindValueChanged(_ => this.FadeColour(dimColour, 200, Easing.OutQuint));
+            Enabled.BindValueChanged(_ => this.FadeColour(dimColour, 200, Easing.OutQuint), true);
         }
 
         private Color4 dimColour => Enabled.Value ? Color4.White : Color4.Gray;

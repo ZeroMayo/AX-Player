@@ -4,6 +4,7 @@
 #nullable enable
 
 using System;
+using System.Data;
 using AXPlayer.App.Config;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Sprites;
@@ -30,6 +31,8 @@ namespace AXPlayer.App.Graphics.UserInterface
     {
         public Action? CloseAction { get; set; }
 
+        public Action? CheckUpdateAction { get; set; }
+
         private LinkFlowContainer gameVersion;
 
         private Bindable<ReleaseStream> configReleaseStream;
@@ -37,9 +40,13 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private UpdateManager updateManager { get; set; } = null!;
 
-        private Container updateStatusContainer;
+        private Container updateStatusContainer, updateInfoContainer;
         private ProjectYomiTextFlowContainer updateStatusText;
         private ProjectYomiScrollContainer updatingList;
+
+        private Bindable<AXPlayerUpdateInfo> updateInfo;
+
+        private Bindable<UpdaterStatus> updateStatus;
 
         public UpdaterOverlay()
         {
@@ -53,8 +60,10 @@ namespace AXPlayer.App.Graphics.UserInterface
         }
 
         [BackgroundDependencyLoader]
-        private void load(OverlayColourProvider overlayColourProvider, TextureStore textures, AXPlayerApp game, AXPlayerConfigManager appConfig)
+        private void load(OverlayColourProvider overlayColourProvider, TextureStore textures, AXPlayerAppBase game, AXPlayerConfigManager appConfig)
         {
+            updateStatus = game.UpdateStatus.GetBoundCopy();
+            updateInfo = game.UpdateInfo.GetBoundCopy();
             configReleaseStream = appConfig.GetBindable<ReleaseStream>(AXPlayerSetting.ReleaseStream);
 
             Children = new Drawable[]
@@ -172,13 +181,12 @@ namespace AXPlayer.App.Graphics.UserInterface
                                         Padding = new MarginPadding { Horizontal = 16 },
                                         Children = new Drawable[]
                                         {
-                                            new Container
+                                            new CircularContainer
                                             {
                                                 Anchor = Anchor.Centre,
                                                 Origin = Anchor.Centre,
                                                 AutoSizeAxes = Axes.Both,
                                                 Masking = true,
-                                                CornerRadius = AXPlayerApp.UI_CORNER_RADIUS + 16,
                                                 Children = new Drawable[]
                                                 {
                                                     new Box
@@ -188,16 +196,18 @@ namespace AXPlayer.App.Graphics.UserInterface
                                                     },
                                                     updateStatusText = new ProjectYomiTextFlowContainer
                                                     {
+                                                        Margin = new MarginPadding(8),
                                                         AutoSizeAxes = Axes.Both,
+                                                        Text = AXPlayerStrings.RunningLatestReleaseWithoutVersion,
                                                     }
                                                 }
                                             }
                                         },
                                     },
-                                    new Container
+                                    updateInfoContainer = new Container
                                     {
                                         RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
+                                        Height = 450,
                                         Padding = new MarginPadding { Horizontal = 16, Bottom = 16 },
                                         Children = new Drawable[]
                                         {
@@ -248,6 +258,17 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
                     Height = 76,
                 },
+                new RoundedIconButton(FontAwesome.Solid.Sync)
+                {
+                    Enabled = { Value = true },
+                    Origin = Anchor.BottomCentre,
+                    Anchor = Anchor.BottomCentre,
+                    RelativeSizeAxes = Axes.X,
+                    Size = new Vector2(0.9f, 50),
+                    Text = AXPlayerStrings.CheckUpdate,
+                    Margin = new MarginPadding(14),
+                    Action = () => CheckUpdateAction?.Invoke(),
+                },
                 new IconButton
                 {
                     Enabled = { Value = true },
@@ -271,6 +292,8 @@ namespace AXPlayer.App.Graphics.UserInterface
                 },
             };
 
+            updateInfoContainer.Hide();
+
             if (game.IsDeployedBuild)
             {
                 gameVersion.AddText(AXPlayerStrings.VersionText(string.Empty));
@@ -282,6 +305,22 @@ namespace AXPlayer.App.Graphics.UserInterface
             }
 
             releaseStreamDropdown.Current.BindValueChanged(releaseStreamChanged);
+
+            updateStatus.BindValueChanged(status =>
+            {
+                Schedule(() => UpdateStatus(status.NewValue));
+            });
+
+            updateInfo.BindValueChanged(info =>
+            {
+                Schedule(() =>
+                {
+                    if (info.NewValue != null)
+                    {
+                        updatingList.Add(new VersionInfoContainer(info.NewValue));
+                    }
+                });
+            });
         }
 
         public void UpdateStatus(UpdaterStatus updaterStatus)
@@ -289,17 +328,30 @@ namespace AXPlayer.App.Graphics.UserInterface
             switch (updaterStatus)
             {
                 case UpdaterStatus.NoUpdates:
+                    updateStatusContainer.Show();
+                    updateInfoContainer.Hide();
+                    updateStatusText.Text = AXPlayerStrings.RunningLatestReleaseWithoutVersion;
+                    break;
                 case UpdaterStatus.Error:
+                    updateStatusContainer.Show();
+                    updateInfoContainer.Hide();
+                    updateStatusText.Text = AXPlayerStrings.UpdateFailed;
+                    break;
                 case UpdaterStatus.Checking:
                     updateStatusContainer.Show();
+                    updateInfoContainer.Hide();
+                    updateStatusText.Text = AXPlayerStrings.CheckingUpdate;
                     break;
 
                 case UpdaterStatus.RestartRequired:
                 case UpdaterStatus.Updating:
                     updateStatusContainer.Hide();
+                    updateInfoContainer.Show();
                     break;
             }
         }
+
+
 
         [Resolved]
         private PopupDialogOverlay popupDialogOverlay { get; set; }

@@ -1646,6 +1646,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString CheckUpdatesOnAppOpen => new TranslatableString(getKey(@"check_updates_on_app_open"), @"Check updates when opening the app");
 
         /// <summary>
+        /// "Updating..."
+        /// </summary>
+        public static LocalisableString Updating => new TranslatableString(getKey(@"updating_text"), @"Updating...");
+
+        /// <summary>
         /// Gets the localized description for a global keyboard shortcut.
         /// </summary>
         public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(
