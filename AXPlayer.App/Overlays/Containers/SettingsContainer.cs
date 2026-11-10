@@ -1225,6 +1225,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Anchor = Anchor.TopCentre,
                                                             Origin = Anchor.TopCentre,
                                                             Direction = FillDirection.Horizontal,
+                                                            Margin = new MarginPadding { Top = 12 },
                                                             Children = new Drawable[]
                                                             {
                                                                 new Container
@@ -1232,7 +1233,6 @@ namespace AXPlayer.App.Overlays.Containers
                                                                     AutoSizeAxes = Axes.Both,
                                                                     Anchor = Anchor.Centre,
                                                                     Origin = Anchor.Centre,
-                                                                    Margin = new MarginPadding { Top = 12 },
                                                                     Child = new Container
                                                                     {
                                                                         AutoSizeAxes = Axes.Both,

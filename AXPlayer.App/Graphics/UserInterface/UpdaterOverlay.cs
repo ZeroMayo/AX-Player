@@ -99,11 +99,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 {
                                     new Container
                                     {
-                                        Name = "App Info",
                                         AutoSizeAxes = Axes.Both,
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                        Margin = new MarginPadding { Top = 12 },
                                         Child = new Container
                                         {
                                             AutoSizeAxes = Axes.Both,
