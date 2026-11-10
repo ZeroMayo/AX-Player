@@ -3267,14 +3267,17 @@ namespace AXPlayer.App.Screens
                             CloseAction = () => hideOverlayContainer(updaterOverlay),
                             CheckUpdateAction = () =>
                             {
-                                if (game.UpdateManager is NoActionUpdateManager)
+                                Schedule(() =>
                                 {
-                                    host.OpenUrlExternally(@"https://github.com/ZeroMayo/AX-Player/releases");
-                                }
-                                else
-                                {
-                                    checkForUpdates().FireAndForget();
-                                }
+                                    if (game.UpdateManager is NoActionUpdateManager)
+                                    {
+                                        host.OpenUrlExternally(@"https://github.com/ZeroMayo/AX-Player/releases");
+                                    }
+                                    else
+                                    {
+                                        checkForUpdates().FireAndForget();
+                                    }
+                                });
                             },
                         },
                         exitOptions = new SideOverlayContainer

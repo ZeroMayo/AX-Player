@@ -74,7 +74,7 @@ namespace AXPlayer.App.Screens
                     alert.Text = NekoPlayerStrings.RunningLatestRelease(game.Version);
                     alert.Show();
                     */
-                    if (settingsContainer.IsVisible)
+                    if (settingsContainer.IsVisible || updaterOverlay.IsVisible)
                     {
                         Schedule(() =>
                         {
