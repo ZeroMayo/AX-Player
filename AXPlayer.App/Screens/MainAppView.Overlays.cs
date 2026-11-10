@@ -60,9 +60,9 @@ namespace AXPlayer.App.Screens
             //                              v      bro what
             CancellationTokenSource nanahiraSingsHope = new CancellationTokenSource();
 
-            game.UpdateManagerVersionText.Value = AXPlayerStrings.CheckingUpdate;
+            //game.UpdateManagerVersionText.Value = AXPlayerStrings.CheckingUpdate;
 
-            settingsContainer.CheckForUpdatesButton.Enabled.Value = false;
+            //settingsContainer.CheckForUpdatesButton.Enabled.Value = false;
 
             try
             {
@@ -88,12 +88,14 @@ namespace AXPlayer.App.Screens
                         */
                     }
 
+                    game.UpdateStatus.Value = Updater.UpdaterStatus.NoUpdates;
                     game.UpdateManagerVersionText.Value = game.Version;
                     settingsContainer.CheckForUpdatesButton.Enabled.Value = true;
                 }
             }
             catch
             {
+                game.UpdateStatus.Value = Updater.UpdaterStatus.Error;
                 game.UpdateManagerVersionText.Value = game.Version;
                 settingsContainer.CheckForUpdatesButton.Enabled.Value = true;
             }

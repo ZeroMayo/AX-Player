@@ -399,6 +399,7 @@ namespace AXPlayer.App.Screens
             RegisterOverlayContainer(exitOptions);
             RegisterOverlayContainer(editPlaylistOverlay);
             RegisterOverlayContainer(shortcutHelpOverlay);
+            RegisterOverlayContainer(updaterOverlay);
 
             ghostIcon.Loop(t =>
                 t.MoveToY(-10, 2000, Easing.InOutSine)
@@ -418,8 +419,11 @@ namespace AXPlayer.App.Screens
             trayIconVisible.BindValueChanged(_ => updatePresence(discordRichPresence.Value), true);
 
             //check updates for LoadComplete
-            if (game.IsDeployedBuild)
-                checkForUpdates().FireAndForget();
+            if (config.Get<bool>(AXPlayerSetting.CheckUpdatesOnAppOpen) == true)
+            {
+                if (game.IsDeployedBuild)
+                    checkForUpdates().FireAndForget();
+            }
 
             if (appGlobalConfig.Get<string>(AXPlayerSetting.AccessToken) != string.Empty)
             {

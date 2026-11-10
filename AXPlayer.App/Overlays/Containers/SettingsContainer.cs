@@ -560,22 +560,24 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.GoogleAccount,
                                                             Text = AXPlayerStrings.SignedOut,
                                                             Icon = FontAwesome.Brands.Google,
-                                                            CornerType = game.IsDeployedBuild ? FormControlCornerType.Center : FormControlCornerType.Bottom,
+                                                            CornerType = FormControlCornerType.Center,
                                                             Action = () => {
                                                                 OAuthSignInAction.Invoke();
                                                             },
                                                         }),
+                                                        /*
                                                         releaseStreamSelectorButtonCore = new SettingsItemV2(releaseStreamDropdown = new FormEnumDropdown<ReleaseStream>
                                                         {
                                                             Caption = AXPlayerStrings.ReleaseStream,
                                                             Current = { Value = configReleaseStream.Value },
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
+                                                        */
                                                         checkForUpdatesButtonCore = new SettingsItemV2(CheckForUpdatesButton = new FormButton
                                                         {
                                                             Caption = AXPlayerStrings.CheckUpdate,
                                                             Text = game.Version,
-                                                            ButtonIcon = FontAwesome.Solid.Sync,
+                                                            //ButtonIcon = FontAwesome.Solid.Sync,
                                                             Icon = FontAwesome.Solid.Sync,
                                                             Action = () => {
                                                                 CheckUpdateAction.Invoke();
@@ -1360,7 +1362,7 @@ namespace AXPlayer.App.Overlays.Containers
                 wasapiExperimentalItem.Hide();
             }
 
-            releaseStreamDropdown.Current.BindValueChanged(releaseStreamChanged);
+            //releaseStreamDropdown.Current.BindValueChanged(releaseStreamChanged);
 
             wasapiExperimental.Current.ValueChanged += _ => onAudioDeviceChanged(string.Empty);
 
@@ -1412,12 +1414,12 @@ namespace AXPlayer.App.Overlays.Containers
 
             updateInfomationText.BindValueChanged(text =>
             {
-                Schedule(() => CheckForUpdatesButton.Text = text.NewValue);
+                //Schedule(() => CheckForUpdatesButton.Text = text.NewValue);
             });
 
             updateButtonEnabled.BindValueChanged(enabled =>
             {
-                Schedule(() => CheckForUpdatesButton.Enabled.Value = enabled.NewValue);
+                //Schedule(() => CheckForUpdatesButton.Enabled.Value = enabled.NewValue);
             });
 
             hwAccelCheckbox.Current.Default = hardwareVideoDecoder.Default != HardwareVideoDecoder.None;
@@ -1526,8 +1528,8 @@ namespace AXPlayer.App.Overlays.Containers
 
             if (!game.IsDeployedBuild)
             {
-                releaseStreamSelectorButtonCore.Hide();
-                checkForUpdatesButtonCore.Hide();
+                //releaseStreamSelectorButtonCore.Hide();
+                //checkForUpdatesButtonCore.Hide();
             }
 
             if (window?.SupportedWindowModes.Count() > 1)

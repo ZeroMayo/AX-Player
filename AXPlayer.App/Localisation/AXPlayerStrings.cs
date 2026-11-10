@@ -1631,6 +1631,21 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString ShortcutAlreadyAssigned => new TranslatableString(getKey(@"shortcut_already_assigned"), "Shortcut is already assigned. Press another key combination.");
 
         /// <summary>
+        /// "Update center"
+        /// </summary>
+        public static LocalisableString UpdaterTitle => new TranslatableString(getKey(@"updater_title"), "Update center");
+
+        /// <summary>
+        /// "You are running the latest release"
+        /// </summary>
+        public static LocalisableString RunningLatestReleaseWithoutVersion => new TranslatableString(getKey(@"running_latest_release_without_version"), @"You are running the latest release");
+
+        /// <summary>
+        /// "Check updates when opening the app"
+        /// </summary>
+        public static LocalisableString CheckUpdatesOnAppOpen => new TranslatableString(getKey(@"check_updates_on_app_open"), @"Check updates when opening the app");
+
+        /// <summary>
         /// Gets the localized description for a global keyboard shortcut.
         /// </summary>
         public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(

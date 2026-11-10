@@ -8,6 +8,7 @@ using AXPlayer.App;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Overlays;
+using AXPlayer.App.Updater;
 using osu.Framework.Allocation;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Logging;
@@ -15,7 +16,6 @@ using osu.Framework.Threading;
 using osuTK.Graphics;
 using Velopack;
 using Velopack.Sources;
-using YoutubeExplode.Videos.Streams;
 using UpdateManager = AXPlayer.App.Updater.UpdateManager;
 
 namespace AXPlayer.Desktop.Updater
@@ -92,6 +92,14 @@ namespace AXPlayer.Desktop.Updater
         {
             log($"Beginning download of update {update.TargetFullRelease.Version}...");
             game.UpdateButtonEnabled.Value = false;
+            game.UpdateStatus.Value = UpdaterStatus.Updating;
+
+            game.UpdateInfo.Value = new AXPlayerUpdateInfo()
+            {
+                Version = update.TargetFullRelease.Version.ToNormalizedString(),
+                UpdateFileSize = update.TargetFullRelease.Size,
+                IsBetaVersion = update.TargetFullRelease.Version.IsPrerelease,
+            };
 
             try
             {
@@ -100,6 +108,7 @@ namespace AXPlayer.Desktop.Updater
                     game.UpdateManagerVersionText.Value = AXPlayerStrings.DownloadingUpdate($"{p}");
                     game.UpdateButtonEnabled.Value = false;
                 }, cancellationToken).ConfigureAwait(false);
+                game.UpdateStatus.Value = UpdaterStatus.RestartRequired;
                 game.UpdateManagerVersionText.Value = AXPlayerStrings.RestartRequired;
                 Schedule(() =>
                 {
@@ -116,6 +125,7 @@ namespace AXPlayer.Desktop.Updater
             {
                 // In the case of an error, a separate notification will be displayed.
                 game.UpdateManagerVersionText.Value = AXPlayerStrings.UpdateFailed;
+                game.UpdateStatus.Value = UpdaterStatus.Error;
                 Schedule(() =>
                 {
                     pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Sync, Color4.Red, AXPlayerStrings.UpdateFailed, AXPlayerStrings.Updates));

@@ -60,7 +60,11 @@ namespace AXPlayer.App.Screens
         private OverlayContainer loadVideoContainer, videoDescriptionContainer, commentsContainer, searchContainer, reportAbuseOverlay, loadPlaylistContainer, unsubscribeDialog, addPlaylistOverlay, videoSaveLocationOverlay, myChannelDialog, editPlaylistOverlay, downloadReadyContainer, downloadOverlay, downloadCompletedOverlay;
         private SideOverlayContainer playlistOverlay, audioEffectsOverlay, menuOverlay, myPlaylistsOverlay, exitOptions;
         private ShortcutHelpOverlay shortcutHelpOverlay;
+        private UpdaterOverlay updaterOverlay;
         private IconButton menuOverlayShow;
+
+        [Resolved]
+        private AXPlayerConfigManager config { get; set; }
 
         [Resolved]
         private PopupDialogOverlay popupDialogOverlay { get; set; }

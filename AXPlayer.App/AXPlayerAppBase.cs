@@ -44,6 +44,7 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osuTK.Graphics;
 using YoutubeExplode;
+using AXPlayer.App.Updater;
 
 namespace AXPlayer.App
 {
@@ -291,6 +292,10 @@ namespace AXPlayer.App
 
         private OverlayColourScheme colourScheme;
         private SentryClient sentry { get; set; }
+
+        public Bindable<AXPlayerUpdateInfo> UpdateInfo = new Bindable<AXPlayerUpdateInfo>();
+
+        public Bindable<UpdaterStatus> UpdateStatus = new Bindable<UpdaterStatus>();
 
         [BackgroundDependencyLoader]
         private void load(FrameworkConfigManager frameworkConfig)

@@ -31,6 +31,7 @@ namespace AXPlayer.App.Tests
         private OnScreenDisplay onScreenDisplay;
 
         private ScreenshotManager screenshotManager;
+        private PopupDialogOverlay popupDialogOverlay;
 
         protected override void LoadComplete()
         {

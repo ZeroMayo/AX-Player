@@ -195,6 +195,7 @@ namespace AXPlayer.App.Screens
                 },
                 CheckUpdateAction = () =>
                 {
+                    /*
                     if (game.UpdateManager is NoActionUpdateManager)
                     {
                         host.OpenUrlExternally(@"https://github.com/ZeroMayo/AX-Player/releases");
@@ -206,6 +207,9 @@ namespace AXPlayer.App.Screens
                         else
                             game.RestartAction.Invoke();
                     }
+                    */
+                    hideOverlays();
+                    showOverlayContainer(updaterOverlay);
                 },
                 CloseOverlayAction = () =>
                 {
@@ -3257,6 +3261,10 @@ namespace AXPlayer.App.Screens
                         shortcutHelpOverlay = new ShortcutHelpOverlay
                         {
                             CloseAction = () => hideOverlayContainer(shortcutHelpOverlay),
+                        },
+                        updaterOverlay = new UpdaterOverlay
+                        {
+                            CloseAction = () => hideOverlayContainer(updaterOverlay),
                         },
                         exitOptions = new SideOverlayContainer
                         {

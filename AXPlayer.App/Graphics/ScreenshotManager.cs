@@ -57,16 +57,16 @@ namespace AXPlayer.App.Graphics
         [Resolved]
         private OnScreenDisplay onScreenDisplay { get; set; } = null!;
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private PushNotificationOverlay pushNotificationOverlay { get; set; } = null!;
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private PopupDialogOverlay popupDialogOverlay { get; set; } = null!;
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private RestartDialogOverlay restartDialogOverlay { get; set; } = null!;
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private NewToastOverlay newToastOverlay { get; set; } = null!;
 
         private Storage storage = null!;
@@ -120,10 +120,10 @@ namespace AXPlayer.App.Graphics
                 if (!captureMenuCursor)
                 {
                     cursorVisibility.Value = false;
-                    Schedule(() => newToastOverlay.Hide());
+                    Schedule(() => newToastOverlay?.Hide());
                     Schedule(() => onScreenDisplay.Hide());
-                    Schedule(() => popupDialogOverlay.Hide());
-                    Schedule(() => restartDialogOverlay.Hide());
+                    Schedule(() => popupDialogOverlay?.Hide());
+                    Schedule(() => restartDialogOverlay?.Hide());
 
                     // We need to wait for at most 3 draw nodes to be drawn, following which we can be assured at least one DrawNode has been generated/drawn with the set value
                     const int frames_to_wait = 3;
@@ -221,7 +221,7 @@ namespace AXPlayer.App.Graphics
 
                     Schedule(() =>
                     {
-                        popupDialogOverlay.ShowDialog(
+                        popupDialogOverlay?.ShowDialog(
                             AXPlayerStrings.TakeScreenshot,
                             AXPlayerStrings.ScreenshotSavedWithFilePath(filename),
                             AXPlayerStrings.OpenInFileExplorer,
@@ -237,9 +237,9 @@ namespace AXPlayer.App.Graphics
                 if (Interlocked.Decrement(ref screenShotTasks) == 0)
                 {
                     cursorVisibility.Value = true;
-                    Schedule(() => newToastOverlay.Show());
-                    Schedule(() => popupDialogOverlay.Show());
-                    Schedule(() => restartDialogOverlay.Show());
+                    Schedule(() => newToastOverlay?.Show());
+                    Schedule(() => popupDialogOverlay?.Show());
+                    Schedule(() => restartDialogOverlay?.Show());
                     Schedule(() => onScreenDisplay.Show());
                 }
             }

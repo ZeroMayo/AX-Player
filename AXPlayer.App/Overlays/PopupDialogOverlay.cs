@@ -168,9 +168,6 @@ namespace AXPlayer.App.Overlays
         private Bindable<SFXType> overlaySFXType;
         private Bindable<bool> playOverlaySFX;
 
-        [Resolved]
-        private AXPlayerApp game { get; set; }
-
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider overlayColourProvider, AXPlayerConfigManager appConfig, ProjectYomiColour colours)
         {
