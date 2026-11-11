@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Data;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
@@ -21,14 +22,16 @@ namespace AXPlayer.App.Updater
     public partial class VersionInfoContainer : Container
     {
         private AXPlayerUpdateInfo updateInfo;
-        private Bindable<LocalisableString> updateState = null!;
-        private ProjectYomiTextFlowContainer updateStateText = null!;
+        private Bindable<LocalisableString> updateStateText = null!;
+        private ProjectYomiTextFlowContainer updateStateTextContainer = null!;
         private RoundedIconButton restartButton = null!;
 
         public VersionInfoContainer(AXPlayerUpdateInfo updateInfo)
         {
             this.updateInfo = updateInfo;
         }
+
+        private Bindable<UpdaterStatus> updateStatus;
 
         [BackgroundDependencyLoader]
         private void load(AXPlayerAppBase game, OverlayColourProvider overlayColourProvider)
@@ -38,7 +41,8 @@ namespace AXPlayer.App.Updater
             Masking = true;
             CornerRadius = AXPlayerApp.UI_CORNER_RADIUS;
 
-            updateState = game.UpdateManagerVersionText.GetBoundCopy();
+            updateStatus = game.UpdateStatus.GetBoundCopy();
+            updateStateText = game.UpdateManagerVersionText.GetBoundCopy();
 
             Children = new Drawable[]
             {
@@ -71,7 +75,7 @@ namespace AXPlayer.App.Updater
                                     AutoSizeAxes = Axes.Both,
                                     Text = FormatFileSize(updateInfo.UpdateFileSize),
                                 },
-                                updateStateText = new ProjectYomiTextFlowContainer
+                                updateStateTextContainer = new ProjectYomiTextFlowContainer
                                 {
                                     AutoSizeAxes = Axes.Both,
                                     Text = AXPlayerStrings.Updating,
@@ -90,7 +94,12 @@ namespace AXPlayer.App.Updater
                 },
             };
 
-            updateState.BindValueChanged(text =>
+            updateStatus.BindValueChanged(status =>
+            {
+                Schedule(() => UpdateState(status.NewValue));
+            });
+
+            updateStateText.BindValueChanged(text =>
             {
                 UpdateStatusText(text.NewValue);
             });
@@ -128,7 +137,7 @@ namespace AXPlayer.App.Updater
 
         public void UpdateStatusText(LocalisableString text)
         {
-            Schedule(() => updateStateText.Text = text);
+            Schedule(() => updateStateTextContainer.Text = text);
         }
     }
 }
