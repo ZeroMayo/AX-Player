@@ -84,7 +84,6 @@ namespace AXPlayer.App.Updater
                             Text = AXPlayerStrings.RestartNow,
                             Anchor = Anchor.CentreRight,
                             Origin = Anchor.CentreRight,
-                            Enabled = { Value = false },
                             Action = () => game.RestartAction?.Invoke(),
                         },
                     },
