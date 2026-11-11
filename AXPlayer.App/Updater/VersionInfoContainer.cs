@@ -2,12 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Data;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Localisation;
-using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
