@@ -113,7 +113,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                                     RelativeSizeAxes = Axes.Both,
                                                     Anchor = Anchor.Centre,
                                                     Origin = Anchor.Centre,
-                                                    Texture = textures.Get(@"AXPlayerBanner"),
+                                                    Texture = textures.Get(@"AXPlayerBanner_Background"),
                                                     FillMode = FillMode.Fill,
                                                 }
                                             },
