@@ -151,7 +151,7 @@ namespace AXPlayer.App.Input.Binding
             new KeyBinding(new[] { InputKey.Shift, InputKey.KeypadMinus }, GlobalAction.DecreaseVideoDim),
             new KeyBinding(new[] { InputKey.Shift, InputKey.KeypadPlus }, GlobalAction.IncreaseVideoDim),
 
-            new KeyBinding(new[] { InputKey.Alt, InputKey.S }, GlobalAction.ToggleSmoothPlaybackSpeed),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Shift, InputKey.S }, GlobalAction.ToggleSmoothPlaybackSpeed),
         };
     }
 
