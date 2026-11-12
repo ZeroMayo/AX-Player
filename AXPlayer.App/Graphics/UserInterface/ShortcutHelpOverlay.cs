@@ -105,7 +105,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     RelativeSizeAxes = Axes.X,
-                    Size = new Vector2(0.9f, 42),
+                    Size = new Vector2(0.9f, 50),
                     Text = AXPlayerStrings.ResetAllShortcuts,
                     Margin = new MarginPadding(16),
                     Action = () => shortcutManager.ResetAllBindings(),
