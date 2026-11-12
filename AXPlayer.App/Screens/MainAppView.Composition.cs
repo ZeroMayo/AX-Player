@@ -101,6 +101,8 @@ namespace AXPlayer.App.Screens
 
             DistortionVolume = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume);
 
+            smoothPlaybackSpeed = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothPlaybackSpeed);
+
             videoMetadataDisplayAlignment = appConfig.GetBindable<VideoMetadataDisplayAlignment>(AXPlayerSetting.VideoMetadataDisplayAlignment);
 
             scalingMode = appConfig.GetBindable<ScalingMode>(AXPlayerSetting.Scaling);

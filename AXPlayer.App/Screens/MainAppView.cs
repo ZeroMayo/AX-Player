@@ -63,6 +63,8 @@ namespace AXPlayer.App.Screens
         private UpdaterOverlay updaterOverlay;
         private IconButton menuOverlayShow;
 
+        private Bindable<bool> smoothPlaybackSpeed;
+
         [Resolved]
         private AXPlayerConfigManager config { get; set; }
 

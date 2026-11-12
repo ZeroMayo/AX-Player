@@ -950,6 +950,10 @@ namespace AXPlayer.App.Screens
                     adjustPitch.Value = !adjustPitch.Value;
                     return true;
 
+                case GlobalAction.ToggleSmoothPlaybackSpeed:
+                    smoothPlaybackSpeed.Value = !smoothPlaybackSpeed.Value;
+                    return true;
+
                 case GlobalAction.ToggleFPSDisplay:
                     fpsDisplay.Value = !fpsDisplay.Value;
                     return true;
