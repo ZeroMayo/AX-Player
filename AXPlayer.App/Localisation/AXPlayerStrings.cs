@@ -1656,6 +1656,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString Updating => new TranslatableString(getKey(@"updating_text"), @"Updating...");
 
         /// <summary>
+        /// "Smooth playback speed adjustment"
+        /// </summary>
+        public static LocalisableString SmoothPlaybackSpeed => new TranslatableString(getKey(@"smooth_playback_speed"), @"Smooth playback speed adjustment");
+
+        /// <summary>
         /// Gets the localized description for a global keyboard shortcut.
         /// </summary>
         public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(

@@ -211,6 +211,9 @@
   <data name="updating_text" xml:space="preserve">
     <value>Aggiornamento in corso...</value>
   </data>
+  <data name="smooth_playback_speed" xml:space="preserve">
+    <value>Regolazione fluida della velocità di riproduzione</value>
+  </data>
   <data name="restart_required" xml:space="preserve">
     <value>L'aggiornamento è quasi completo. Riavvia AX Player per completarlo.</value>
   </data>

@@ -78,6 +78,11 @@ namespace AXPlayer.App.Screens
                 updatePresence(discordRichPresence.Value);
             };
 
+            currentVideoSource.PlaybackSpeed.BindValueChanged(speed =>
+            {
+                updatePlaybackSpeedDisplay();
+            });
+
             if (timestampInURL(videoUrl))
                 Schedule(() => seekTo(parseTimestampFromURL(videoUrl)));
 

@@ -965,6 +965,13 @@ namespace AXPlayer.App.Overlays.Containers
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
+                                                            Caption = AXPlayerStrings.SmoothPlaybackSpeed,
+                                                            Icon = FontAwesome.Solid.TachometerAlt,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothPlaybackSpeed),
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
                                                             Caption = AXPlayerStrings.PlaylistCrossfade,
                                                             Icon = FontAwesome.Solid.ExchangeAlt,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.PlaylistCrossfadeEnabled),

@@ -3899,8 +3899,8 @@ namespace AXPlayer.App.Screens
             playbackSpeed.BindValueChanged(speed =>
             {
                 updatePresence(discordRichPresence.Value);
-                this.TransformBindableTo(speedTextRolling, speed.NewValue, 400, Easing.OutQuint);
-                speedText.SetText($"{(int)Math.Round(speed.NewValue * 100)}%");
+                //this.TransformBindableTo(speedTextRolling, speed.NewValue, 400, Easing.OutQuint);
+                updatePlaybackSpeedDisplay();
             }, true);
 
             speedTextRolling.BindValueChanged(speed =>

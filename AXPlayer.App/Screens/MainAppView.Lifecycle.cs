@@ -376,6 +376,11 @@ namespace AXPlayer.App.Screens
             });
         }
 
+        private void updatePlaybackSpeedDisplay()
+        {
+            speedText.SetText($"{(int)Math.Round((currentVideoSource != null ? currentVideoSource.PlaybackSpeed.Value : playbackSpeed.Value) * 100)}%");
+        }
+
         protected override void LoadComplete()
         {
             base.LoadComplete();

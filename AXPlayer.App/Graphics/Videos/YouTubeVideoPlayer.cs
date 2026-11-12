@@ -52,7 +52,7 @@ namespace AXPlayer.App.Graphics.Videos
 
         private BufferedContainer blurContainer = null!;
 
-        private Bindable<double> playbackSpeed = null!;
+        public Bindable<double> PlaybackSpeed = null!;
         private readonly double resumeFromTime;
         private readonly double initialVolume;
         private readonly bool startPaused;
@@ -114,7 +114,7 @@ namespace AXPlayer.App.Graphics.Videos
         private Bindable<AspectRatioMethod> aspectRatioMethod = null!;
         private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift = null!;
 
-        private Bindable<bool> videoCrtEffectEnabled = null!;
+        private Bindable<bool> videoCrtEffectEnabled = null!, smoothPlaybackSpeed = null!;
 
         private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, crt = null!;
 
@@ -158,6 +158,7 @@ namespace AXPlayer.App.Graphics.Videos
         {
             uiVisible = screenshotManager.CursorVisibility.GetBoundCopy();
             aspectRatioMethod = config.GetBindable<AspectRatioMethod>(AXPlayerSetting.AspectRatioMethod);
+            smoothPlaybackSpeed = config.GetBindable<bool>(AXPlayerSetting.SmoothPlaybackSpeed);
             videoBloomLevel = config.GetBindable<float>(AXPlayerSetting.VideoBloomLevel);
             videoGrayscaleLevel = config.GetBindable<float>(AXPlayerSetting.VideoGrayscaleLevel);
             videoHueShift = config.GetBindable<float>(AXPlayerSetting.VideoHueShift);
@@ -165,7 +166,7 @@ namespace AXPlayer.App.Graphics.Videos
             chromaticAberrationStrength = config.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength);
             useNewSubtitlesFeature = config.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
-            playbackSpeed = new Bindable<double>(1);
+            PlaybackSpeed = new Bindable<double>(1);
             uiLanguage = app.CurrentLanguage.GetBoundCopy();
 
             rateAdjustClock = new StopwatchClock(false);
@@ -341,9 +342,9 @@ namespace AXPlayer.App.Graphics.Videos
             drawableTrack?.RemoveAllAdjustments(AdjustableProperty.Frequency);
 
             if (value)
-                drawableTrack?.AddAdjustment(AdjustableProperty.Frequency, playbackSpeed);
+                drawableTrack?.AddAdjustment(AdjustableProperty.Frequency, PlaybackSpeed);
             else
-                drawableTrack?.AddAdjustment(AdjustableProperty.Tempo, playbackSpeed);
+                drawableTrack?.AddAdjustment(AdjustableProperty.Tempo, PlaybackSpeed);
         }
 
         protected override void Dispose(bool isDisposing)
@@ -390,7 +391,7 @@ namespace AXPlayer.App.Graphics.Videos
                 });
             }, true);
 
-            playbackSpeed.BindValueChanged(v =>
+            PlaybackSpeed.BindValueChanged(v =>
             {
                 rateAdjustClock.Rate = v.NewValue;
                 if (mediaSessionEnabled)
@@ -519,7 +520,10 @@ namespace AXPlayer.App.Graphics.Videos
 
         public void SetPlaybackSpeed(double speed)
         {
-            playbackSpeed.Value = speed;
+            if (smoothPlaybackSpeed.Value)
+                this.TransformBindableTo(PlaybackSpeed, speed, 1000, Easing.InOutQuart);
+            else
+                PlaybackSpeed.Value = speed;
         }
 
         public bool IsReady => drawableTrack != null && video != null;

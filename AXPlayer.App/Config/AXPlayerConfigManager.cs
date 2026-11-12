@@ -110,6 +110,7 @@ namespace AXPlayer.App.Config
 
             SetDefault(AXPlayerSetting.ClosedCaptionsBackdropBlur, true);
             SetDefault(AXPlayerSetting.CheckUpdatesOnAppOpen, true);
+            SetDefault(AXPlayerSetting.SmoothPlaybackSpeed, false);
         }
 
         public AXPlayerConfigManager(Storage storage, IDictionary<AXPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
@@ -213,5 +214,6 @@ namespace AXPlayer.App.Config
         ClosedCaptionsBackdropBlur,
         GlobalShortcutBindings,
         CheckUpdatesOnAppOpen,
+        SmoothPlaybackSpeed,
     }
 }

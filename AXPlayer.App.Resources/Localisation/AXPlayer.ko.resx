@@ -211,6 +211,9 @@
   <data name="updating_text" xml:space="preserve">
     <value>업데이트 중...</value>
   </data>
+  <data name="smooth_playback_speed" xml:space="preserve">
+    <value>부드러운 재생 속도 조정</value>
+  </data>
   <data name="restart_required" xml:space="preserve">
     <value>업데이트가 거의 완료되었습니다. 업데이트를 마치려면 AX Player를 다시 실행하세요.</value>
   </data>

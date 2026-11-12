@@ -211,6 +211,9 @@
   <data name="updating_text" xml:space="preserve">
     <value>Đang cập nhật...</value>
   </data>
+  <data name="smooth_playback_speed" xml:space="preserve">
+    <value>Điều chỉnh tốc độ phát mượt mà</value>
+  </data>
   <data name="restart_required" xml:space="preserve">
     <value>Bản cập nhật gần hoàn tất. Hãy chạy lại AX Player để hoàn tất cập nhật.</value>
   </data>
