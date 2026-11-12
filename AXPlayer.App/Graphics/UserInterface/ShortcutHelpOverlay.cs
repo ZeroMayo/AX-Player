@@ -61,7 +61,6 @@ namespace AXPlayer.App.Graphics.UserInterface
                     {
                         RelativeSizeAxes = Axes.Both,
                         ScrollbarVisible = true,
-                        ProgressiveBlurBottomHeight = 16,
                         Padding = new MarginPadding
                         {
                             Horizontal = 16,
