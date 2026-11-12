@@ -1086,6 +1086,7 @@
   <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>動画音量のコントロールを開く</value></data>
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>動画を暗くする</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>動画を明るくする</value></data>
+  <data name="shortcut_reset_all" xml:space="preserve"><value>すべてのショートカットをリセット</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>変更</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>キーの組み合わせを押してください</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>このショートカットは既に割り当てられています。別の組み合わせを押してください。</value></data>

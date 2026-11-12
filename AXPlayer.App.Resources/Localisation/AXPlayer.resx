@@ -634,6 +634,9 @@
   <data name="shortcut_help_title" xml:space="preserve">
     <value>Keyboard shortcuts</value>
   </data>
+  <data name="shortcut_reset_all" xml:space="preserve">
+    <value>Reset all shortcuts</value>
+  </data>
   <data name="shortcut_change" xml:space="preserve">
     <value>Change</value>
   </data>
