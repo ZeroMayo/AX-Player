@@ -1719,6 +1719,7 @@ namespace AXPlayer.App.Localisation
                 GlobalAction.OpenVideoVolumeMenu => "Open video volume controls",
                 GlobalAction.DecreaseVideoDim => "Dim the video",
                 GlobalAction.IncreaseVideoDim => "Brighten the video",
+                GlobalAction.ToggleSmoothPlaybackSpeed => "Toggle smooth playback speed adjustment",
                 _ => throw new System.ArgumentOutOfRangeException(nameof(action), action, "No shortcut description is defined."),
             });
 

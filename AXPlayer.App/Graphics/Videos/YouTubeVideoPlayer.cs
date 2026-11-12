@@ -521,7 +521,7 @@ namespace AXPlayer.App.Graphics.Videos
         public void SetPlaybackSpeed(double speed)
         {
             if (smoothPlaybackSpeed.Value)
-                this.TransformBindableTo(PlaybackSpeed, speed, 1000, Easing.InOutQuart);
+                this.TransformBindableTo(PlaybackSpeed, speed, 1000, Easing.OutSine);
             else
                 PlaybackSpeed.Value = speed;
         }

@@ -133,6 +133,7 @@ namespace AXPlayer.App.Config
                     )
                 ),
             new TrackedSetting<ProfileImageShape>(AXPlayerSetting.ProfileImageShape, v => new SettingDescription(v, AXPlayerStrings.ProfileImageShape, v.GetLocalisableDescription(), getShortcut(GlobalAction.CycleProfileShape, "Ctrl+F8"))),
+            new TrackedSetting<bool>(AXPlayerSetting.SmoothPlaybackSpeed, v => new SettingDescription(v, AXPlayerStrings.SmoothPlaybackSpeed, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleSmoothPlaybackSpeed, "Alt+S"))),
         };
 
         private string getShortcut(GlobalAction action, string fallback) =>

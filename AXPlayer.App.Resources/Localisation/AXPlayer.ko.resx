@@ -1090,6 +1090,7 @@
   <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>영상 볼륨 컨트롤 열기</value></data>
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>영상 어둡게 하기</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>영상 밝게 하기</value></data>
+  <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>부드러운 재생 속도 조정 켜기/끄기</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>변경</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>키 조합을 누르세요</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>이미 사용 중인 단축키입니다. 다른 키 조합을 누르세요.</value></data>

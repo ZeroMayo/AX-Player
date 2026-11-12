@@ -805,6 +805,9 @@
   <data name="shortcut_increasevideodim" xml:space="preserve">
     <value>Brighten the video</value>
   </data>
+  <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve">
+    <value>Toggle smooth playback speed adjustment</value>
+  </data>
   <data name="menu" xml:space="preserve">
     <value>Menu</value>
   </data>

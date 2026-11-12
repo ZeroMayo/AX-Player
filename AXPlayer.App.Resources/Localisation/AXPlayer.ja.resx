@@ -1089,6 +1089,7 @@
   <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>動画音量のコントロールを開く</value></data>
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>動画を暗くする</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>動画を明るくする</value></data>
+  <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>再生速度のスムーズな調整を切り替え</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>すべてのショートカットをリセット</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>変更</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>キーの組み合わせを押してください</value></data>

@@ -1089,6 +1089,7 @@
   <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>Video sesi denetimlerini aç</value></data>
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Videoyu karart</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>Videoyu aydınlat</value></data>
+  <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>Yumuşak oynatma hızı ayarını aç/kapat</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>Tüm kısayolları sıfırla</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>Değiştir</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Bir tuş kombinasyonuna basın</value></data>

@@ -1090,6 +1090,7 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>Mở điều khiển âm lượng video</value></data>
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Làm tối video</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>Làm sáng video</value></data>
+  <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>Bật/tắt điều chỉnh tốc độ phát mượt mà</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>Đặt lại tất cả phím tắt</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>Đổi</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Nhấn tổ hợp phím</value></data>

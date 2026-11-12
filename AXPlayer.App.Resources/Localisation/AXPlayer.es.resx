@@ -1089,6 +1089,7 @@
   <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>Abrir los controles de volumen del video</value></data>
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Oscurecer el video</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>Aclarar el video</value></data>
+  <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>Alternar el ajuste suave de la velocidad de reproducción</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>Restablecer todos los atajos</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>Cambiar</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Pulsa una combinación de teclas</value></data>
