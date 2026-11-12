@@ -31,6 +31,9 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private GlobalShortcutManager shortcutManager { get; set; } = null!;
 
+        private IBindable<string> shortcutBindings = null!;
+        private RoundedIconButton resetAllButton = null!;
+
         public ShortcutHelpOverlay()
         {
             Size = new Vector2(1f, 1f);
@@ -63,7 +66,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         {
                             Horizontal = 16,
                             Top = 56,
-                            Bottom = 16,
+                            Bottom = 72,
                         },
                         Children = new Drawable[]
                         {
@@ -95,7 +98,17 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
-                    Height = 16,
+                    Height = 76,
+                },
+                resetAllButton = new RoundedIconButton(FontAwesome.Solid.Undo)
+                {
+                    Anchor = Anchor.BottomCentre,
+                    Origin = Anchor.BottomCentre,
+                    RelativeSizeAxes = Axes.X,
+                    Size = new Vector2(0.9f, 42),
+                    Text = AXPlayerStrings.ResetAllShortcuts,
+                    Margin = new MarginPadding(16),
+                    Action = () => shortcutManager.ResetAllBindings(),
                 },
                 new IconButton
                 {
@@ -120,6 +133,26 @@ namespace AXPlayer.App.Graphics.UserInterface
                 },
             };
         }
+
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+            shortcutBindings = shortcutManager.BindingsChanged.GetBoundCopy();
+            shortcutBindings.BindValueChanged(updateResetAllButton);
+            updateResetAllButton();
+        }
+
+        protected override void Dispose(bool isDisposing)
+        {
+            if (isDisposing && shortcutBindings != null)
+                shortcutBindings.UnbindEvents();
+
+            base.Dispose(isDisposing);
+        }
+
+        private void updateResetAllButton() => resetAllButton.Enabled.Value = shortcutManager.HasCustomBindings;
+
+        private void updateResetAllButton(ValueChangedEvent<string> _) => updateResetAllButton();
 
         private partial class ShortcutRow : CompositeDrawable
         {

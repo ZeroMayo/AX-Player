@@ -1616,6 +1616,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString ShortcutHelpTitle => new TranslatableString(getKey(@"shortcut_help_title"), "Keyboard shortcuts");
 
         /// <summary>
+        /// "Reset all shortcuts"
+        /// </summary>
+        public static LocalisableString ResetAllShortcuts => new TranslatableString(getKey(@"shortcut_reset_all"), "Reset all shortcuts");
+
+        /// <summary>
         /// "Change"
         /// </summary>
         public static LocalisableString ChangeShortcut => new TranslatableString(getKey(@"shortcut_change"), "Change");

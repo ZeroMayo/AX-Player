@@ -1087,6 +1087,7 @@
   <data name="shortcut_openvideovolumemenu" xml:space="preserve"><value>打开视频音量控件</value></data>
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>调暗视频</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>调亮视频</value></data>
+  <data name="shortcut_reset_all" xml:space="preserve"><value>重置所有快捷键</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>更改</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>请按下快捷键组合</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>该快捷键已被占用，请按下其他组合键。</value></data>

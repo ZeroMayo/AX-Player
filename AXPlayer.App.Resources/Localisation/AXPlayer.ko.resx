@@ -1034,6 +1034,7 @@
     <value>자막 배경 흐림</value>
   </data>
   <data name="shortcut_help_title" xml:space="preserve"><value>키보드 단축키</value></data>
+  <data name="shortcut_reset_all" xml:space="preserve"><value>모든 단축키 초기화</value></data>
   <data name="shortcut_back" xml:space="preserve"><value>현재 화면 닫기</value></data>
   <data name="shortcut_select" xml:space="preserve"><value>선택한 항목 실행</value></data>
   <data name="shortcut_playpause" xml:space="preserve"><value>영상 재생 또는 일시 정지</value></data>

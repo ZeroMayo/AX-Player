@@ -24,6 +24,7 @@ namespace AXPlayer.App.Input.Binding
         public Bindable<GlobalAction?> CapturingAction { get; } = new();
         public Bindable<bool> CaptureConflict { get; } = new();
         public Bindable<string> BindingsChanged => storedOverrides;
+        public bool HasCustomBindings => overrides.Count > 0;
 
         public GlobalShortcutManager(AXPlayerConfigManager config)
         {
@@ -73,6 +74,17 @@ namespace AXPlayer.App.Input.Binding
 
             saveOverrides();
             CaptureConflict.Value = false;
+        }
+
+        public void ResetAllBindings()
+        {
+            CancelCapture();
+
+            if (overrides.Count == 0)
+                return;
+
+            overrides.Clear();
+            saveOverrides();
         }
 
         public bool Capture(KeyDownEvent e)
