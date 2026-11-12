@@ -80,7 +80,6 @@ namespace AXPlayer.App.Graphics.UserInterface
                 new ProjectYomiScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Padding = new MarginPadding { Horizontal = 16, Top = 56 },
                     Child = new FillFlowContainer
                     {
                         RelativeSizeAxes = Axes.X,
@@ -88,32 +87,67 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Direction = FillDirection.Vertical,
                         Children = new Drawable[]
                         {
-                            new FillFlowContainer
+                            new BufferedContainer(pixelSnapping: false)
                             {
                                 RelativeSizeAxes = Axes.X,
-                                AutoSizeAxes = Axes.Y,
+                                Height = 200,
                                 Anchor = Anchor.TopCentre,
                                 Origin = Anchor.TopCentre,
-                                Direction = FillDirection.Horizontal,
                                 Children = new Drawable[]
                                 {
                                     new Container
                                     {
-                                        AutoSizeAxes = Axes.Both,
+                                        RelativeSizeAxes = Axes.Both,
                                         Anchor = Anchor.Centre,
                                         Origin = Anchor.Centre,
-                                        Child = new Container
+                                        Children = new Drawable[]
                                         {
-                                            AutoSizeAxes = Axes.Both,
-                                            Anchor = Anchor.Centre,
-                                            Origin = Anchor.Centre,
-                                            Child = new Sprite
+                                            new Container
                                             {
-                                                Width = 100,
-                                                Height = 100,
-                                                Texture = textures.Get(@"AXPlayer-Icon"),
-                                                FillMode = FillMode.Fit,
-                                            }
+                                                RelativeSizeAxes = Axes.Both,
+                                                Anchor = Anchor.Centre,
+                                                Origin = Anchor.Centre,
+                                                Masking = true,
+                                                Child = new Sprite
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    Anchor = Anchor.Centre,
+                                                    Origin = Anchor.Centre,
+                                                    Texture = textures.Get(@"AXPlayerBanner"),
+                                                    FillMode = FillMode.Fill,
+                                                }
+                                            },
+                                            new Box
+                                            {
+                                                Name = "masking of overlay",
+                                                RelativeSizeAxes = Axes.X,
+                                                Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5, overlayColourProvider.Background5.Opacity(0)),
+                                                Height = 76,
+                                            },
+                                            new Box
+                                            {
+                                                Name = "masking of overlay",
+                                                RelativeSizeAxes = Axes.X,
+                                                Anchor = Anchor.BottomCentre,
+                                                Origin = Anchor.BottomCentre,
+                                                Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
+                                                Height = 130,
+                                            },
+                                            new Container
+                                            {
+                                                RelativeSizeAxes = Axes.Both,
+                                                Anchor = Anchor.Centre,
+                                                Origin = Anchor.Centre,
+                                                Masking = true,
+                                                Child = new Sprite
+                                                {
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    Anchor = Anchor.Centre,
+                                                    Origin = Anchor.Centre,
+                                                    Texture = textures.Get(@"AXPlayerBanner_Foreground"),
+                                                    FillMode = FillMode.Fill,
+                                                }
+                                            },
                                         },
                                     },
                                     new FillFlowContainer
@@ -124,20 +158,13 @@ namespace AXPlayer.App.Graphics.UserInterface
                                         Origin = Anchor.Centre,
                                         Children = new Drawable[]
                                         {
-                                            new ProjectYomiTextFlowContainer(f => f.Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"))
-                                            {
-                                                AutoSizeAxes = Axes.Both,
-                                                Text = "AX Player",
-                                                TextAnchor = Anchor.Centre,
-                                                Colour = overlayColourProvider.Content2,
-                                            },
                                             gameVersion = new LinkFlowContainer(f =>
                                             {
-                                                f.Font = AXPlayerApp.DefaultFont.With(size: 15);
+                                                f.Font = AXPlayerApp.DefaultFont.With(size: 18, weight: "ExtraBold");
                                                 f.Colour = overlayColourProvider.Content2;
                                             })
                                             {
-                                                Margin = new MarginPadding { Top = 4 },
+                                                Margin = new MarginPadding { Top = 95 },
                                                 AutoSizeAxes = Axes.Both,
                                                 TextAnchor = Anchor.Centre,
                                             },
@@ -145,102 +172,120 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     },
                                 }
                             },
-                            new FillFlowContainer
+                            new Container
                             {
                                 RelativeSizeAxes = Axes.X,
                                 AutoSizeAxes = Axes.Y,
-                                Direction = FillDirection.Vertical,
-                                Spacing = new Vector2(0, 8),
                                 Children = new Drawable[]
                                 {
+                                    new Container
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Child = new Box
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            Colour = overlayColourProvider.Background5,
+                                        }
+                                    },
                                     new FillFlowContainer
                                     {
                                         RelativeSizeAxes = Axes.X,
                                         AutoSizeAxes = Axes.Y,
                                         Direction = FillDirection.Vertical,
-                                        Spacing = new Vector2(0, 2),
-                                        Children = new Drawable[]
-                                        {
-                                            new SettingsItemV2(releaseStreamDropdown = new FormEnumDropdown<ReleaseStream>
-                                            {
-                                                Caption = AXPlayerStrings.ReleaseStream,
-                                                Current = { Value = configReleaseStream.Value },
-                                                Icon = FontAwesome.Solid.Sync,
-                                                CornerType = FormControlCornerType.Top,
-                                            }),
-                                            new SettingsItemV2(new FormCheckBox
-                                            {
-                                                Caption = AXPlayerStrings.CheckUpdatesOnAppOpen,
-                                                Current = appConfig.GetBindable<bool>(AXPlayerSetting.CheckUpdatesOnAppOpen),
-                                                Icon = FontAwesome.Solid.Sync,
-                                                CornerType = FormControlCornerType.Bottom,
-                                            }),
-                                        }
-                                    },
-                                    updateStatusContainer = new Container
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        AutoSizeAxes = Axes.Y,
+                                        Spacing = new Vector2(0, 8),
                                         Padding = new MarginPadding { Horizontal = 16 },
                                         Children = new Drawable[]
                                         {
-                                            new CircularContainer
+                                            new FillFlowContainer
                                             {
-                                                Anchor = Anchor.Centre,
-                                                Origin = Anchor.Centre,
-                                                AutoSizeAxes = Axes.Both,
-                                                Masking = true,
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                Direction = FillDirection.Vertical,
+                                                Spacing = new Vector2(0, 2),
                                                 Children = new Drawable[]
                                                 {
-                                                    new Box
+                                                    new SettingsItemV2(releaseStreamDropdown = new FormEnumDropdown<ReleaseStream>
                                                     {
-                                                        Colour = overlayColourProvider.Background4,
-                                                        RelativeSizeAxes = Axes.Both,
-                                                    },
-                                                    updateStatusText = new ProjectYomiTextFlowContainer
+                                                        Caption = AXPlayerStrings.ReleaseStream,
+                                                        Current = { Value = configReleaseStream.Value },
+                                                        Icon = FontAwesome.Solid.Sync,
+                                                        CornerType = FormControlCornerType.Top,
+                                                    }),
+                                                    new SettingsItemV2(new FormCheckBox
                                                     {
-                                                        Margin = new MarginPadding(8),
-                                                        AutoSizeAxes = Axes.Both,
-                                                        Text = AXPlayerStrings.RunningLatestReleaseWithoutVersion,
-                                                    }
+                                                        Caption = AXPlayerStrings.CheckUpdatesOnAppOpen,
+                                                        Current = appConfig.GetBindable<bool>(AXPlayerSetting.CheckUpdatesOnAppOpen),
+                                                        Icon = FontAwesome.Solid.Sync,
+                                                        CornerType = FormControlCornerType.Bottom,
+                                                    }),
                                                 }
-                                            }
-                                        },
-                                    },
-                                    updateInfoContainer = new Container
-                                    {
-                                        RelativeSizeAxes = Axes.X,
-                                        Height = 450,
-                                        Padding = new MarginPadding { Horizontal = 16, Bottom = 16 },
-                                        Children = new Drawable[]
-                                        {
-                                            new Container
+                                            },
+                                            updateStatusContainer = new Container
                                             {
-                                                RelativeSizeAxes = Axes.Both,
-                                                Masking = true,
-                                                CornerRadius = AXPlayerApp.UI_CORNER_RADIUS + 16,
+                                                RelativeSizeAxes = Axes.X,
+                                                AutoSizeAxes = Axes.Y,
+                                                Padding = new MarginPadding { Horizontal = 16 },
                                                 Children = new Drawable[]
                                                 {
-                                                    new Box
+                                                    new CircularContainer
                                                     {
-                                                        Colour = overlayColourProvider.Background4,
-                                                        RelativeSizeAxes = Axes.Both,
-                                                    },
-                                                    updatingList = new ProjectYomiScrollContainer
-                                                    {
-                                                        ProgressiveBlurEnabled = false,
-                                                        RelativeSizeAxes = Axes.Both,
-                                                        Padding = new MarginPadding(16),
+                                                        Anchor = Anchor.Centre,
+                                                        Origin = Anchor.Centre,
+                                                        AutoSizeAxes = Axes.Both,
                                                         Masking = true,
                                                         Children = new Drawable[]
                                                         {
+                                                            new Box
+                                                            {
+                                                                Colour = overlayColourProvider.Background4,
+                                                                RelativeSizeAxes = Axes.Both,
+                                                            },
+                                                            updateStatusText = new ProjectYomiTextFlowContainer
+                                                            {
+                                                                Margin = new MarginPadding(8),
+                                                                AutoSizeAxes = Axes.Both,
+                                                                Text = AXPlayerStrings.RunningLatestReleaseWithoutVersion,
+                                                            }
                                                         }
                                                     }
-                                                }
-                                            }
+                                                },
+                                            },
+                                            updateInfoContainer = new Container
+                                            {
+                                                RelativeSizeAxes = Axes.X,
+                                                Height = 450,
+                                                Padding = new MarginPadding { Horizontal = 16, Bottom = 16 },
+                                                Children = new Drawable[]
+                                                {
+                                                    new Container
+                                                    {
+                                                        RelativeSizeAxes = Axes.Both,
+                                                        Masking = true,
+                                                        CornerRadius = AXPlayerApp.UI_CORNER_RADIUS + 16,
+                                                        Children = new Drawable[]
+                                                        {
+                                                            new Box
+                                                            {
+                                                                Colour = overlayColourProvider.Background4,
+                                                                RelativeSizeAxes = Axes.Both,
+                                                            },
+                                                            updatingList = new ProjectYomiScrollContainer
+                                                            {
+                                                                ProgressiveBlurEnabled = false,
+                                                                RelativeSizeAxes = Axes.Both,
+                                                                Padding = new MarginPadding(16),
+                                                                Masking = true,
+                                                                Children = new Drawable[]
+                                                                {
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                            },
                                         },
                                     },
-                                },
+                                }
                             },
                         },
                     },

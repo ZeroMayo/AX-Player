@@ -84,7 +84,7 @@ namespace AXPlayer.App.Graphics.Caption
                         Origin = Anchor.Centre,
                         Anchor = Anchor.Centre,
                         FillMode = FillMode.Fill,
-                        Texture = textureStore.Get("ClosedCaptionPreviewBG_New"),
+                        Texture = textureStore.Get("AXPlayerBanner"),
                     },
                     captionContainer,
                 }
