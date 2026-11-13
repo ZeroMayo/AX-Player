@@ -1401,14 +1401,19 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString ResetPlaybackSpeedWhenLoadingAVideo => new TranslatableString(getKey(@"reset_playback_speed_when_loading_a_video"), "Reset playback speed when loading a video");
 
         /// <summary>
-        /// "Playlist crossfade"
+        /// "Smart crossfade"
         /// </summary>
-        public static LocalisableString PlaylistCrossfade => new TranslatableString(getKey(@"playlist_crossfade"), "Playlist crossfade");
+        public static LocalisableString SmartCrossfade => new TranslatableString(getKey(@"smart_crossfade"), "Smart crossfade");
 
         /// <summary>
-        /// "Crossfade duration"
+        /// "Skip silence between tracks"
         /// </summary>
-        public static LocalisableString PlaylistCrossfadeDuration => new TranslatableString(getKey(@"playlist_crossfade_duration"), "Crossfade duration");
+        public static LocalisableString SmartCrossfadeSilenceTrim => new TranslatableString(getKey(@"smart_crossfade_silence_trim"), "Skip silence between tracks");
+
+        /// <summary>
+        /// "Maximum crossfade duration"
+        /// </summary>
+        public static LocalisableString SmartCrossfadeDuration => new TranslatableString(getKey(@"smart_crossfade_duration"), "Maximum crossfade duration");
 
         /// <summary>
         /// "Closed captions background colour"

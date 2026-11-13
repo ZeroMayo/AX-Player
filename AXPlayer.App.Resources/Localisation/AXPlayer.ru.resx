@@ -917,6 +917,15 @@
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>Длительность плавного перехода</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>Умный плавный переход</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>Пропускать тишину между треками</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>Максимальная длительность плавного перехода</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Цвет фона субтитров</value>
   </data>

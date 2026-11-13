@@ -916,6 +916,15 @@
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>交叉淡化时长</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>智能交叉淡化</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>跳过曲目之间的静音</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>最大交叉淡化时长</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>字幕背景颜色</value>
   </data>

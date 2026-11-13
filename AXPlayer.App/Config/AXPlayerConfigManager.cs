@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Input.Binding;
+using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Configuration.Tracking;
 using osu.Framework.Extensions;
@@ -94,8 +95,12 @@ namespace AXPlayer.App.Config
 
             SetDefault(AXPlayerSetting.CaptionBGOpacity, 0.25f, 0.25f, 1f, 0.01f);
             SetDefault(AXPlayerSetting.ResetPlaybackSpeedWhenLoadingAVideo, false);
+            // Legacy fixed-duration crossfade settings are kept so existing values can be migrated once.
             SetDefault(AXPlayerSetting.PlaylistCrossfadeEnabled, false);
             SetDefault(AXPlayerSetting.PlaylistCrossfadeDuration, 2f, 1f, 10f, 1f);
+            SetDefault(AXPlayerSetting.SmartCrossfadeEnabled, false);
+            SetDefault(AXPlayerSetting.SmartCrossfadeDuration, 4f, 1f, 12f, 1f);
+            SetDefault(AXPlayerSetting.SmartCrossfadeSilenceTrim, true);
             SetDefault(AXPlayerSetting.CaptionBGColor, Colour4.Black);
             SetDefault(AXPlayerSetting.CaptionCornerRadius, 0, 0, 16);
             SetDefault(AXPlayerSetting.UseNewSubtitlesFeature, false);
@@ -115,6 +120,30 @@ namespace AXPlayer.App.Config
 
         public AXPlayerConfigManager(Storage storage, IDictionary<AXPlayerSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
         {
+            migrateLegacyCrossfadeSettings();
+        }
+
+        private void migrateLegacyCrossfadeSettings()
+        {
+            try
+            {
+                Bindable<bool> legacyEnabled = GetBindable<bool>(AXPlayerSetting.PlaylistCrossfadeEnabled);
+
+                if (!legacyEnabled.Value)
+                    return;
+
+                Bindable<bool> smartEnabled = GetBindable<bool>(AXPlayerSetting.SmartCrossfadeEnabled);
+                Bindable<float> legacyDuration = GetBindable<float>(AXPlayerSetting.PlaylistCrossfadeDuration);
+                Bindable<float> smartDuration = GetBindable<float>(AXPlayerSetting.SmartCrossfadeDuration);
+
+                smartEnabled.Value = true;
+                smartDuration.Value = Math.Clamp(legacyDuration.Value, 1f, 12f);
+                legacyEnabled.Value = false;
+            }
+            catch
+            {
+                // Migration is best-effort. A malformed legacy value must never prevent the app from starting.
+            }
         }
 
         public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
@@ -212,6 +241,9 @@ namespace AXPlayer.App.Config
         CustomPlaybackSpeedPresets,
         PlaylistCrossfadeEnabled,
         PlaylistCrossfadeDuration,
+        SmartCrossfadeEnabled,
+        SmartCrossfadeDuration,
+        SmartCrossfadeSilenceTrim,
         ClosedCaptionsBackdropBlur,
         GlobalShortcutBindings,
         CheckUpdatesOnAppOpen,

@@ -916,6 +916,15 @@
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>クロスフェード時間</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>スマートクロスフェード</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>トラック間の無音をスキップ</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>クロスフェードの最大時間</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>クローズドキャプションの背景色</value>
   </data>

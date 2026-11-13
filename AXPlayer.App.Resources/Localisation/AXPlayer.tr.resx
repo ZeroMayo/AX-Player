@@ -916,6 +916,15 @@
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>Çapraz geçiş süresi</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>Akıllı çapraz geçiş</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>Parçalar arasındaki sessizliği atla</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>Maksimum çapraz geçiş süresi</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Altyazı arka plan rengi</value>
   </data>

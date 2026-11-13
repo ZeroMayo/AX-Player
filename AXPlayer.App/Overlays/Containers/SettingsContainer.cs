@@ -972,16 +972,23 @@ namespace AXPlayer.App.Overlays.Containers
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
-                                                            Caption = AXPlayerStrings.PlaylistCrossfade,
+                                                            Caption = AXPlayerStrings.SmartCrossfade,
                                                             Icon = FontAwesome.Solid.ExchangeAlt,
-                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.PlaylistCrossfadeEnabled),
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmartCrossfadeEnabled),
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.SmartCrossfadeSilenceTrim,
+                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmartCrossfadeSilenceTrim),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
-                                                            Caption = AXPlayerStrings.PlaylistCrossfadeDuration,
+                                                            Caption = AXPlayerStrings.SmartCrossfadeDuration,
                                                             Icon = FontAwesome.Solid.ExchangeAlt,
-                                                            Current = appConfig.GetBindable<float>(AXPlayerSetting.PlaylistCrossfadeDuration),
+                                                            Current = appConfig.GetBindable<float>(AXPlayerSetting.SmartCrossfadeDuration),
                                                             KeyboardStep = 1,
                                                             LabelFormat = value => $"{value:N0}s",
                                                             CornerType = FormControlCornerType.Bottom,

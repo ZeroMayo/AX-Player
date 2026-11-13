@@ -917,6 +917,15 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>Thời lượng chuyển tiếp chéo</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>Chuyển tiếp chéo thông minh</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>Bỏ qua khoảng lặng giữa các bài</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>Thời lượng chuyển tiếp chéo tối đa</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Màu nền phụ đề</value>
   </data>

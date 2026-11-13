@@ -87,7 +87,8 @@ namespace AXPlayer.App.Screens
                 Schedule(() => seekTo(parseTimestampFromURL(videoUrl)));
 
             configureVideoCompleted(currentVideoSource);
-            currentVideoSource.OnUpdateAction = updatePlaylistCrossfade;
+            currentVideoSource.OnUpdateAction = updateSmartCrossfade;
+            queueNextPlaylistVideoForCrossfade();
 
             updatePresence(discordRichPresence.Value);
         }
@@ -96,20 +97,20 @@ namespace AXPlayer.App.Screens
         {
             source.OnVideoCompleted = () =>
             {
-                if (crossfadeOutgoing == source && crossfadeIncoming != null)
+                if (smartCrossfadeOutgoing == source && smartCrossfadeIncoming != null)
                 {
                     if (repeat.Value)
                     {
-                        cancelCrossfadeCandidate();
+                        cancelSmartCrossfade();
                     }
-                    else if (crossfadeIncoming.IsReady && crossfadeStarted)
+                    else if (smartCrossfadeIncoming.IsReady && smartCrossfadeStarted)
                     {
-                        finishCrossfade();
+                        finishSmartCrossfade();
                         return;
                     }
                     else
                     {
-                        cancelCrossfadeCandidate();
+                        cancelSmartCrossfade();
                     }
                 }
 
@@ -131,128 +132,267 @@ namespace AXPlayer.App.Screens
             };
         }
 
-        private void updatePlaylistCrossfade()
+        private void updateSmartCrossfade()
         {
-            bool crossfadeEnabled = appGlobalConfig.Get<bool>(AXPlayerSetting.PlaylistCrossfadeEnabled);
-            double configuredDuration = Math.Clamp(appGlobalConfig.Get<float>(AXPlayerSetting.PlaylistCrossfadeDuration), 1f, 10f);
+            bool enabled = appGlobalConfig.Get<bool>(AXPlayerSetting.SmartCrossfadeEnabled);
+            double configuredDuration = Math.Clamp(appGlobalConfig.Get<float>(AXPlayerSetting.SmartCrossfadeDuration), 1f, 12f);
+            bool trimSilence = appGlobalConfig.Get<bool>(AXPlayerSetting.SmartCrossfadeSilenceTrim);
 
-            if (!crossfadeEnabled || playlists == null || repeat.Value || currentVideoSource == null || playlistItemIndex >= playlists.Count - 1)
+            if (!enabled || playlists == null || repeat.Value || currentVideoSource == null || playlistItemIndex >= playlists.Count - 1)
             {
-                cancelCrossfadeCandidate();
+                cancelSmartCrossfade();
+                return;
+            }
+
+            if (smartCrossfadeStarted)
+            {
+                updateSmartCrossfadeProgress();
                 return;
             }
 
             double remaining = currentVideoSource.VideoProgress.MaxValue - currentVideoSource.VideoProgress.Value;
-            double prepareTime = configuredDuration + crossfade_prepare_buffer_seconds;
+            double prepareLead = Math.Clamp(configuredDuration + smart_crossfade_prepare_padding_seconds, 10, 20);
 
-            if (crossfadeIncoming == null && !crossfadeAttempted && remaining <= prepareTime && remaining > 0)
-                prepareCrossfadeCandidate();
+            if (smartCrossfadeIncoming == null && !smartCrossfadePreparing && remaining > 0 && remaining <= prepareLead && DateTime.UtcNow >= smartCrossfadeNextPrepareAttemptUtc)
+                beginSmartCrossfadePreparation(configuredDuration, trimSilence);
 
-            if (crossfadeIncoming == null)
+            if (smartCrossfadeIncoming == null || smartCrossfadePlan == null)
                 return;
 
-            if (!crossfadeStarted && currentVideoSource.IsPlaying() && remaining <= configuredDuration)
+            double audibleRemaining = currentVideoSource.VideoProgress.MaxValue - currentVideoSource.VideoProgress.Value - smartCrossfadePlan.OutgoingTailSilence;
+
+            if (!smartCrossfadeStarted && currentVideoSource.IsPlaying() && audibleRemaining <= smartCrossfadePlan.Duration)
             {
-                if (!crossfadeIncoming.IsReady)
+                if (!smartCrossfadeIncoming.IsReady)
                     return;
 
-                crossfadeStarted = true;
-                crossfadeDurationSeconds = configuredDuration;
-                crossfadeIncoming.Play();
-                cacheFollowingPlaylistVideo();
+                startSmartCrossfade(configuredDuration);
             }
 
-            if (!crossfadeStarted)
-            {
-                if (remaining > prepareTime)
-                    cancelCrossfadeCandidate();
+            if (!smartCrossfadeStarted && remaining > prepareLead + 1)
+                cancelSmartCrossfade();
+        }
 
+        private void updateSmartCrossfadeProgress()
+        {
+            if (smartCrossfadeOutgoing == null || smartCrossfadeIncoming == null || smartCrossfadePlan == null)
+            {
+                cancelSmartCrossfade();
                 return;
             }
 
-            if (currentVideoSource.IsPlaying())
+            if (smartCrossfadeOutgoing.IsPlaying())
             {
-                YouTubeVideoPlayer inactiveSource = crossfadeSourceSwitched ? crossfadeOutgoing : crossfadeIncoming;
-                if (!inactiveSource.IsPlaying())
-                    inactiveSource.Play();
+                if (!smartCrossfadeIncoming.IsPlaying())
+                    smartCrossfadeIncoming.Play();
 
-                if (!crossfadeSourceSwitched && !crossfadeIncoming.IsPlaying())
-                    crossfadeIncoming.Play();
-
-                double outgoingRemaining = crossfadeOutgoing.VideoProgress.MaxValue - crossfadeOutgoing.VideoProgress.Value;
-                double progress = Math.Clamp(1 - outgoingRemaining / crossfadeDurationSeconds, 0, 1);
+                double outgoingRemaining = smartCrossfadeOutgoing.VideoProgress.MaxValue - smartCrossfadeOutgoing.VideoProgress.Value;
+                double audibleRemaining = outgoingRemaining - smartCrossfadePlan.OutgoingTailSilence;
+                double progress = Math.Clamp(1 - audibleRemaining / Math.Max(0.1, smartCrossfadeDurationSeconds), 0, 1);
                 double easedProgress = progress * progress * progress * (progress * (progress * 6 - 15) + 10);
                 double fadeAngle = easedProgress * Math.PI / 2;
-                crossfadeOutgoing.Alpha = (float)(1 - easedProgress);
-                crossfadeOutgoing.Scale = new osuTK.Vector2((float)(1 - easedProgress * 0.035));
-                crossfadeOutgoing.SetTransitionVolume(Math.Cos(fadeAngle));
-                crossfadeIncoming.Alpha = (float)easedProgress;
-                crossfadeIncoming.Scale = new osuTK.Vector2((float)(1.045 - easedProgress * 0.045));
-                crossfadeIncoming.SetTransitionVolume(Math.Sin(fadeAngle));
 
-                if (!crossfadeSourceSwitched && progress >= 0.5)
-                    switchCrossfadeSource();
+                smartCrossfadeOutgoing.Alpha = (float)(1 - easedProgress);
+                smartCrossfadeOutgoing.Scale = new osuTK.Vector2((float)(1 - easedProgress * 0.035));
+                smartCrossfadeOutgoing.SetTransitionVolume(Math.Cos(fadeAngle));
+                smartCrossfadeIncoming.Alpha = (float)easedProgress;
+                smartCrossfadeIncoming.Scale = new osuTK.Vector2((float)(1.045 - easedProgress * 0.045));
+                smartCrossfadeIncoming.SetTransitionVolume(Math.Sin(fadeAngle));
+
+                if (!smartCrossfadeSourceSwitched && progress >= 0.5)
+                    switchSmartCrossfadeSource();
 
                 if (progress >= 1)
-                    finishCrossfade();
+                    finishSmartCrossfade();
             }
             else
             {
-                if (crossfadeOutgoing.IsPlaying())
-                    crossfadeOutgoing.Pause();
-                if (crossfadeIncoming.IsPlaying())
-                    crossfadeIncoming.Pause();
+                if (smartCrossfadeIncoming.IsPlaying())
+                    smartCrossfadeIncoming.Pause();
             }
         }
 
-        private void prepareCrossfadeCandidate()
+        private void beginSmartCrossfadePreparation(double configuredDuration, bool trimSilence)
         {
-            crossfadeAttempted = true;
+            if (playlists == null || currentVideoSource == null || playlistItemIndex + 1 >= playlists.Count)
+                return;
 
+            int capturedIndex = playlistItemIndex;
+            YouTubeVideoPlayer outgoing = currentVideoSource;
+            string nextVideoId = playlists[capturedIndex + 1].Snippet.ResourceId.VideoId;
+
+            if (string.IsNullOrEmpty(nextVideoId))
+            {
+                smartCrossfadeNextPrepareAttemptUtc = DateTime.UtcNow.AddSeconds(2);
+                return;
+            }
+
+            // Never read files that are still being written by the background cache download.
+            if (playlistVideoCachesInProgress.ContainsKey(nextVideoId))
+            {
+                smartCrossfadeNextPrepareAttemptUtc = DateTime.UtcNow.AddSeconds(1);
+                return;
+            }
+
+            string videoDirectory = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(nextVideoId);
+            string audioFile = Path.Combine(videoDirectory, "audio.ogg");
+            string mp4File = Path.Combine(videoDirectory, "video.mp4");
+            string webmFile = Path.Combine(videoDirectory, "video.webm");
+            string cachedVideoFile = File.Exists(mp4File) ? mp4File : File.Exists(webmFile) ? webmFile : null;
+
+            if (cachedVideoFile == null || !File.Exists(audioFile))
+            {
+                // The next track is not cached yet. Download it in the background and try again shortly.
+                queuePlaylistVideoCache(capturedIndex + 1);
+                smartCrossfadeNextPrepareAttemptUtc = DateTime.UtcNow.AddSeconds(1.5);
+                return;
+            }
+
+            string currentAudioFile = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(videoId) + "/audio.ogg";
+            string ffmpegPath = app.GetFFmpegPath();
+            double outgoingDuration = outgoing.VideoProgress.MaxValue;
+            double previousNormalizeVolume = app.CurrentTrackNormalizeVolume.Value;
+            int attemptId = ++smartCrossfadeGeneration;
+
+            smartCrossfadePreparing = true;
+            smartCrossfadePreviousNormalizeVolume = previousNormalizeVolume;
+            smartCrossfadeNextPrepareAttemptUtc = DateTime.MaxValue;
+
+            Task.Run(async () =>
+            {
+                SmartCrossfadeAnalysis outgoingAnalysis = SmartCrossfadeAnalysis.Empty;
+                SmartCrossfadeAnalysis incomingAnalysis = SmartCrossfadeAnalysis.Empty;
+                Google.Apis.YouTube.v3.Data.Video nextVideoData = null;
+
+                // Loudness analysis can take longer than the silence analysis, so run it separately and
+                // do not block creating the incoming player on it.
+                Task<double?> normalizeVolumeTask = Task.Run(() => analyseCrossfadeNormalizeVolume(audioFile));
+
+                try
+                {
+                    Task<SmartCrossfadeAnalysis> outgoingAnalysisTask = SmartCrossfadeAnalyzer.AnalyseAsync(currentAudioFile, ffmpegPath);
+                    Task<SmartCrossfadeAnalysis> incomingAnalysisTask = SmartCrossfadeAnalyzer.AnalyseAsync(audioFile, ffmpegPath);
+
+                    await Task.WhenAll(outgoingAnalysisTask, incomingAnalysisTask).ConfigureAwait(false);
+
+                    outgoingAnalysis = await outgoingAnalysisTask.ConfigureAwait(false);
+                    incomingAnalysis = await incomingAnalysisTask.ConfigureAwait(false);
+                    nextVideoData = api.GetVideo(nextVideoId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, e.GetDescription());
+                }
+
+                Schedule(() =>
+                {
+                    if (attemptId != smartCrossfadeGeneration)
+                        return;
+
+                    smartCrossfadePreparing = false;
+
+                    if (!ReferenceEquals(currentVideoSource, outgoing) || playlistItemIndex != capturedIndex)
+                    {
+                        smartCrossfadeNextPrepareAttemptUtc = DateTime.MinValue;
+                        return;
+                    }
+
+                    if (nextVideoData == null)
+                    {
+                        smartCrossfadeNextPrepareAttemptUtc = DateTime.UtcNow.AddSeconds(2);
+                        return;
+                    }
+
+                    try
+                    {
+                        SmartCrossfadePlan plan = SmartCrossfadePlan.Create(outgoingAnalysis, incomingAnalysis, configuredDuration, outgoingDuration, trimSilence);
+
+                        smartCrossfadePlan = plan;
+                        smartCrossfadeVideoId = nextVideoId;
+                        smartCrossfadeVideoData = nextVideoData;
+                        smartCrossfadeNormalizeVolume = null;
+                        smartCrossfadeOutgoing = outgoing;
+                        smartCrossfadeIncoming = new YouTubeVideoPlayer(cachedVideoFile, audioFile, null, string.Empty, nextVideoData, plan.IncomingStartOffset, 0, true, false)
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Alpha = 0,
+                            Anchor = Anchor.Centre,
+                            Origin = Anchor.Centre,
+                            Scale = new osuTK.Vector2(1.045f),
+                            OnSeekAction = () => updatePresence(discordRichPresence.Value),
+                        };
+                        smartCrossfadeStarted = false;
+                        smartCrossfadeSourceSwitched = false;
+                        videoContainer.Add(smartCrossfadeIncoming);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, e.GetDescription());
+                        cancelSmartCrossfade();
+                    }
+                });
+
+                double? incomingNormalizeVolume = await normalizeVolumeTask.ConfigureAwait(false);
+
+                Schedule(() =>
+                {
+                    if (attemptId != smartCrossfadeGeneration || incomingNormalizeVolume == null)
+                        return;
+
+                    smartCrossfadeNormalizeVolume = incomingNormalizeVolume;
+
+                    // If the crossfade already completed before loudness analysis finished, still apply
+                    // the correct normalisation for the track that is now playing.
+                    if (videoId == nextVideoId && smartCrossfadeIncoming == null)
+                        app.CurrentTrackNormalizeVolume.Value = incomingNormalizeVolume.Value;
+                });
+            });
+        }
+
+        private static double? analyseCrossfadeNormalizeVolume(string audioFile)
+        {
             try
             {
-                string nextVideoId = playlists[playlistItemIndex + 1].Snippet.ResourceId.VideoId;
-                string videoDirectory = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(nextVideoId);
-                string audioFile = Path.Combine(videoDirectory, "audio.ogg");
-                string mp4File = Path.Combine(videoDirectory, "video.mp4");
-                string webmFile = Path.Combine(videoDirectory, "video.webm");
-                string cachedVideoFile = File.Exists(mp4File) ? mp4File : File.Exists(webmFile) ? webmFile : null;
-
-                bool videoCached = cachedVideoFile != null && File.Exists(audioFile);
-                if (!videoCached)
-                    return;
-
-                crossfadeVideoData = api.GetVideo(nextVideoId);
-                crossfadeVideoId = nextVideoId;
-                crossfadeOutgoing = currentVideoSource;
-                crossfadeIncoming = new YouTubeVideoPlayer(cachedVideoFile, audioFile, null, string.Empty, crossfadeVideoData, 0, 0, true, false)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                    Alpha = 0,
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Scale = new osuTK.Vector2(1.045f),
-                    OnSeekAction = () => updatePresence(discordRichPresence.Value),
-                };
-                crossfadeStarted = false;
-                crossfadeSourceSwitched = false;
-                videoContainer.Add(crossfadeIncoming);
+                AudioNormalization normalization = new AudioNormalization(audioFile);
+                return normalization.IntegratedLoudnessInVolumeOffset ?? AudioNormalizationManager.FALLBACK_VOLUME;
             }
             catch (Exception e)
             {
                 Logger.Error(e, e.GetDescription());
-                cancelCrossfadeCandidate();
+                return null;
             }
         }
 
-        private void cacheFollowingPlaylistVideo()
+        private void startSmartCrossfade(double configuredDuration)
         {
-            int followingIndex = playlistItemIndex + 2;
-            if (playlists == null || followingIndex >= playlists.Count)
+            if (smartCrossfadeIncoming == null || smartCrossfadePlan == null || currentVideoSource == null)
                 return;
 
-            string followingVideoId = playlists[followingIndex].Snippet.ResourceId.VideoId;
-            if (string.IsNullOrEmpty(followingVideoId) || !playlistVideoCachesInProgress.TryAdd(followingVideoId, 0))
+            double audibleRemaining = currentVideoSource.VideoProgress.MaxValue - currentVideoSource.VideoProgress.Value - smartCrossfadePlan.OutgoingTailSilence;
+            smartCrossfadeDurationSeconds = Math.Clamp(Math.Min(configuredDuration, Math.Max(0.8, audibleRemaining)), 0.8, configuredDuration);
+            smartCrossfadeStarted = true;
+            smartCrossfadeIncoming.SetPlaybackSpeed(playbackSpeed.Value);
+            smartCrossfadeIncoming.Play();
+            cacheFollowingPlaylistVideo();
+        }
+
+        private void cacheFollowingPlaylistVideo() => queuePlaylistVideoCache(playlistItemIndex + 2);
+
+        private void queueNextPlaylistVideoForCrossfade()
+        {
+            if (!appGlobalConfig.Get<bool>(AXPlayerSetting.SmartCrossfadeEnabled))
+                return;
+
+            queuePlaylistVideoCache(playlistItemIndex + 1);
+        }
+
+        private void queuePlaylistVideoCache(int playlistIndex)
+        {
+            if (playlists == null || playlistIndex < 0 || playlistIndex >= playlists.Count)
+                return;
+
+            string targetVideoId = playlists[playlistIndex].Snippet.ResourceId.VideoId;
+            if (string.IsNullOrEmpty(targetVideoId) || !playlistVideoCachesInProgress.TryAdd(targetVideoId, 0))
                 return;
 
             string preferredVideoQuality = settingsContainer.VideoQualitySettings.Current.Value;
@@ -265,7 +405,7 @@ namespace AXPlayer.App.Screens
             {
                 try
                 {
-                    await cachePlaylistVideoAsync(followingVideoId, preferredVideoQuality, preferredAudioQuality, useOriginalAudio, preferredAudioLanguage, ffmpegPath);
+                    await cachePlaylistVideoAsync(targetVideoId, preferredVideoQuality, preferredAudioQuality, useOriginalAudio, preferredAudioLanguage, ffmpegPath);
                 }
                 catch (Exception e)
                 {
@@ -273,7 +413,7 @@ namespace AXPlayer.App.Screens
                 }
                 finally
                 {
-                    playlistVideoCachesInProgress.TryRemove(followingVideoId, out _);
+                    playlistVideoCachesInProgress.TryRemove(targetVideoId, out _);
                 }
             });
         }
@@ -358,19 +498,24 @@ namespace AXPlayer.App.Screens
             return (IAudioStreamInfo)codecMatches.TryGetWithHighestBitrate();
         }
 
-        private void finishCrossfade()
+        private void finishSmartCrossfade()
         {
-            if (crossfadeIncoming == null || crossfadeOutgoing == null)
+            if (smartCrossfadeIncoming == null || smartCrossfadeOutgoing == null)
                 return;
 
-            if (!crossfadeSourceSwitched)
-                switchCrossfadeSource();
+            if (!smartCrossfadeSourceSwitched)
+                switchSmartCrossfadeSource();
 
-            crossfadeIncoming.Alpha = 1;
-            crossfadeIncoming.Scale = new osuTK.Vector2(1);
-            crossfadeIncoming.SetTransitionVolume(1);
-            crossfadeOutgoing.SetTransitionVolume(0);
-            crossfadeOutgoing.Expire();
+            smartCrossfadeIncoming.Alpha = 1;
+            smartCrossfadeIncoming.Scale = new osuTK.Vector2(1);
+            smartCrossfadeIncoming.SetTransitionVolume(1);
+            smartCrossfadeOutgoing.SetTransitionVolume(0);
+            smartCrossfadeOutgoing.Expire();
+
+            // Apply the incoming track's loudness normalisation only after the outgoing track has
+            // been removed, since normalisation is applied globally to all tracks.
+            if (smartCrossfadeNormalizeVolume.HasValue)
+                app.CurrentTrackNormalizeVolume.Value = smartCrossfadeNormalizeVolume.Value;
 
             if (playlistItemViews.Count > 0)
             {
@@ -382,30 +527,25 @@ namespace AXPlayer.App.Screens
                 playlistItemViews[playlistItemIndex].UpdateState(true);
             }
 
-            crossfadeOutgoing = null;
-            crossfadeIncoming = null;
-            crossfadeVideoId = string.Empty;
-            crossfadeVideoData = null;
-            crossfadeStarted = false;
-            crossfadeSourceSwitched = false;
-            crossfadeAttempted = false;
+            clearSmartCrossfadeState();
         }
 
-        private void switchCrossfadeSource()
+        private void switchSmartCrossfadeSource()
         {
-            if (crossfadeIncoming == null || crossfadeOutgoing == null || crossfadeSourceSwitched)
+            if (smartCrossfadeIncoming == null || smartCrossfadeOutgoing == null || smartCrossfadeSourceSwitched)
                 return;
 
-            currentVideoSource = crossfadeIncoming;
-            videoId = crossfadeVideoId;
-            videoData = crossfadeVideoData;
+            currentVideoSource = smartCrossfadeIncoming;
+            videoId = smartCrossfadeVideoId;
+            videoData = smartCrossfadeVideoData;
             playlistItemIndex++;
-            configureVideoCompleted(crossfadeIncoming);
-            crossfadeIncoming.OnUpdateAction = updatePlaylistCrossfade;
-            crossfadeOutgoing.OnUpdateAction = null;
-            crossfadeOutgoing.DeactivateMediaSession();
-            crossfadeIncoming.ActivateMediaSession();
-            crossfadeSourceSwitched = true;
+            configureVideoCompleted(smartCrossfadeIncoming);
+            smartCrossfadeIncoming.OnUpdateAction = updateSmartCrossfade;
+            smartCrossfadeOutgoing.OnUpdateAction = null;
+            smartCrossfadeOutgoing.DeactivateMediaSession();
+            smartCrossfadeIncoming.ActivateMediaSession();
+            smartCrossfadeSourceSwitched = true;
+            queueNextPlaylistVideoForCrossfade();
 
             if (playlistItemViews.Count > 0)
             {
@@ -421,27 +561,45 @@ namespace AXPlayer.App.Screens
             updatePresence(discordRichPresence.Value);
         }
 
-        private void cancelCrossfadeCandidate()
+        private void cancelSmartCrossfade()
         {
-            if (crossfadeIncoming != null)
-                crossfadeIncoming.Expire();
-
-            if (crossfadeOutgoing != null)
+            // If the incoming track is already the current one, complete the transition instead of
+            // removing the track that is currently playing.
+            if (smartCrossfadeSourceSwitched && smartCrossfadeIncoming != null)
             {
-                crossfadeOutgoing.Alpha = 1;
-                crossfadeOutgoing.Scale = new osuTK.Vector2(1);
-                crossfadeOutgoing.SetTransitionVolume(1);
-                if (crossfadeSourceSwitched)
-                    crossfadeOutgoing.OnUpdateAction = null;
+                finishSmartCrossfade();
+                return;
             }
 
-            crossfadeOutgoing = null;
-            crossfadeIncoming = null;
-            crossfadeVideoId = string.Empty;
-            crossfadeVideoData = null;
-            crossfadeStarted = false;
-            crossfadeSourceSwitched = false;
-            crossfadeAttempted = false;
+            smartCrossfadeGeneration++;
+            smartCrossfadePreparing = false;
+
+            if (smartCrossfadeIncoming != null)
+                smartCrossfadeIncoming.Expire();
+
+            if (smartCrossfadeOutgoing != null)
+            {
+                smartCrossfadeOutgoing.Alpha = 1;
+                smartCrossfadeOutgoing.Scale = new osuTK.Vector2(1);
+                smartCrossfadeOutgoing.SetTransitionVolume(1);
+                app.CurrentTrackNormalizeVolume.Value = smartCrossfadePreviousNormalizeVolume;
+            }
+
+            clearSmartCrossfadeState();
+        }
+
+        private void clearSmartCrossfadeState()
+        {
+            smartCrossfadeOutgoing = null;
+            smartCrossfadeIncoming = null;
+            smartCrossfadeVideoId = string.Empty;
+            smartCrossfadeVideoData = null;
+            smartCrossfadePlan = null;
+            smartCrossfadeNormalizeVolume = null;
+            smartCrossfadeStarted = false;
+            smartCrossfadeSourceSwitched = false;
+            smartCrossfadePreparing = false;
+            smartCrossfadeNextPrepareAttemptUtc = DateTime.MinValue;
         }
 
         private void seekTo(double pos)
@@ -465,15 +623,20 @@ namespace AXPlayer.App.Screens
 
         private string videoFile = string.Empty;
 
-        private const double crossfade_prepare_buffer_seconds = 3;
-        private YouTubeVideoPlayer crossfadeOutgoing;
-        private YouTubeVideoPlayer crossfadeIncoming;
-        private string crossfadeVideoId = string.Empty;
-        private Google.Apis.YouTube.v3.Data.Video crossfadeVideoData;
-        private double crossfadeDurationSeconds = 2;
-        private bool crossfadeStarted;
-        private bool crossfadeSourceSwitched;
-        private bool crossfadeAttempted;
+        private const double smart_crossfade_prepare_padding_seconds = 8;
+        private YouTubeVideoPlayer smartCrossfadeOutgoing;
+        private YouTubeVideoPlayer smartCrossfadeIncoming;
+        private string smartCrossfadeVideoId = string.Empty;
+        private Google.Apis.YouTube.v3.Data.Video smartCrossfadeVideoData;
+        private SmartCrossfadePlan smartCrossfadePlan;
+        private double? smartCrossfadeNormalizeVolume;
+        private double smartCrossfadePreviousNormalizeVolume = 1;
+        private double smartCrossfadeDurationSeconds = 4;
+        private bool smartCrossfadeStarted;
+        private bool smartCrossfadeSourceSwitched;
+        private bool smartCrossfadePreparing;
+        private int smartCrossfadeGeneration;
+        private DateTime smartCrossfadeNextPrepareAttemptUtc = DateTime.MinValue;
         private readonly ConcurrentDictionary<string, byte> playlistVideoCachesInProgress = new ConcurrentDictionary<string, byte>();
 
         [Resolved]
@@ -518,7 +681,7 @@ namespace AXPlayer.App.Screens
 
         public void SetVideoSource(string videoId, bool clearCache = false, LoadType loadType = LoadType.Full)
         {
-            cancelCrossfadeCandidate();
+            cancelSmartCrossfade();
             srv3Contents = string.Empty;
             videoIdBox.Text = string.Empty;
 

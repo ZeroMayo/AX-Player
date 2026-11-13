@@ -916,6 +916,15 @@
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>Durata della dissolvenza incrociata</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>Dissolvenza incrociata intelligente</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>Salta il silenzio tra i brani</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>Durata massima della dissolvenza incrociata</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Colore dello sfondo dei sottotitoli</value>
   </data>

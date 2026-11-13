@@ -916,6 +916,15 @@
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>크로스페이드 길이</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>스마트 크로스페이드</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>트랙 사이의 무음 건너뛰기</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>최대 크로스페이드 길이</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>자막 배경의 색상</value>
   </data>

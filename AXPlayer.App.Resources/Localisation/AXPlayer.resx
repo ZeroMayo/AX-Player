@@ -1091,6 +1091,15 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="playlist_crossfade_duration" xml:space="preserve">
     <value>Crossfade duration</value>
   </data>
+  <data name="smart_crossfade" xml:space="preserve">
+    <value>Smart crossfade</value>
+  </data>
+  <data name="smart_crossfade_silence_trim" xml:space="preserve">
+    <value>Skip silence between tracks</value>
+  </data>
+  <data name="smart_crossfade_duration" xml:space="preserve">
+    <value>Maximum crossfade duration</value>
+  </data>
   <data name="closed_captions_bg_colour" xml:space="preserve">
     <value>Closed captions background colour</value>
   </data>
