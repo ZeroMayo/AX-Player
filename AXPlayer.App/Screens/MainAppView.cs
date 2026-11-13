@@ -165,7 +165,7 @@ namespace AXPlayer.App.Screens
         private Bindable<bool> adjustPitch;
         private Bindable<string> localeBindable = new Bindable<string>();
         private ThumbnailContainerBackground thumbnailContainer;
-        private AXPlayerSeekBar<double> seekbar;
+        private WavySeekBar<double> seekbar;
         private Bindable<LocalisableString> updateInfomationText;
         private Bindable<bool> updateButtonEnabled, fpsDisplay, captionEnabled, use_sdl3;
         private Bindable<AspectRatioMethod> aspectRatioMethod;

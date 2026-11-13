@@ -31,7 +31,7 @@ using Vector2 = osuTK.Vector2;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
-    public partial class AXPlayerSeekBar<T> : ProjectYomiSliderBar<T>
+    public partial class WavySeekBar<T> : ProjectYomiSliderBar<T>
         where T : struct, INumber<T>, IMinMaxValue<T>
     {
         protected readonly AXPlayerSeekBar.SliderNub Nub;
@@ -91,7 +91,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         /// </summary>
         public Action ResetToDefault { get; internal set; }
 
-        public AXPlayerSeekBar()
+        public WavySeekBar()
         {
             Height = AXPlayerSeekBar.SliderNub.HEIGHT;
             //RangePadding = AXPlayerSeekBar.SliderNub.DEFAULT_EXPANDED_SIZE / 2;

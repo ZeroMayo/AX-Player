@@ -174,7 +174,7 @@ namespace AXPlayer.App.Screens
         private IWindow? window;
 #nullable disable
 
-        private partial class RoundedSeekBar : AXPlayerSeekBar<double>
+        private partial class RoundedSeekBar : WavySeekBar<double>
         {
             public override LocalisableString TooltipText => "";
         }

@@ -8,7 +8,7 @@ using osuTK;
 
 namespace AXPlayer.App.Graphics.UserInterface
 {
-    public partial class AXPlayerSeekBar
+    public partial class WavySeekBar
     {
         public partial class SliderNub : Container
         {
