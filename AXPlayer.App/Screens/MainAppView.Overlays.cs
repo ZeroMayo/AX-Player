@@ -104,7 +104,20 @@ namespace AXPlayer.App.Screens
             }
         }
 
-        public override bool CursorVisible => (isControlVisible || isAnyOverlayOpen.Value || notificationOverlay.IsOpened.Value);
+        public override bool CursorVisible
+        {
+            get
+            {
+                bool currentValue;
+
+                if (currentVideoSource != null)
+                    currentValue = (isControlVisible || isAnyOverlayOpen.Value || notificationOverlay.IsOpened.Value || currentVideoSource.LiveChatOverlayVisible.Value);
+                else
+                    currentValue = (isControlVisible || isAnyOverlayOpen.Value || notificationOverlay.IsOpened.Value);
+
+                return currentValue;
+            }
+        }
 
         private void showControls()
         {
