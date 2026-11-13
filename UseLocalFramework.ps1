@@ -1,5 +1,5 @@
 # Run this script to use a local copy of osu-framework rather than fetching it from nuget.
-# It expects the osu-framework directory to be at the same level as the osu directory
+# It expects the osu-framework directory to be at the same level as the AX-Player directory
 #
 # https://github.com/ppy/osu-framework/wiki/Testing-local-framework-checkout-with-other-projects
 
