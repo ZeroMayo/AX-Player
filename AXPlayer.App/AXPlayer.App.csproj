@@ -24,7 +24,7 @@
     <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="4.156.0" />
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="4.156.0" />
     <PackageReference Include="McEndu.FreeTypeSharp" Version="4.1.5" />
-    <PackageReference Include="Sentry" Version="6.13.0" />
+    <PackageReference Include="Sentry" Version="7.0.0" />
     <PackageReference Include="Lazy.Fody" PrivateAssets="all" Version="1.11.0" />
     <PackageReference Include="ppy.LocalisationAnalyser" Version="2026.611.0">
       <PrivateAssets>all</PrivateAssets>
