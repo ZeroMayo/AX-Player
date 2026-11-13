@@ -673,7 +673,7 @@ namespace AXPlayer.App.Online
 
         public Video GetVideo(string videoId)
         {
-            var part = "statistics,snippet,localizations,contentDetails,status,topicDetails";
+            var part = "statistics,snippet,localizations,contentDetails,status,topicDetails,liveStreamingDetails";
             var request = youtubeService.Videos.List(part);
 
             request.Id = videoId;

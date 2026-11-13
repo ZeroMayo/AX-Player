@@ -341,6 +341,11 @@ namespace AXPlayer.App.Graphics.Videos
                 });
             }, true);
 
+            if (videoData.LiveStreamingDetails != null)
+                liveChatToggleButton.Show();
+            else
+                liveChatToggleButton.Hide();
+
             LiveChatOverlayVisible.BindValueChanged(visible =>
             {
                 liveChatToggleButton.IconColour = visible.NewValue ? overlayColourProvider.Highlight1 : overlayColourProvider.Content2;
@@ -421,8 +426,11 @@ namespace AXPlayer.App.Graphics.Videos
         {
             bool visible = uiVisible.Value && !LiveChatOverlayVisible.Value;
 
-            liveChatToggleButton.FadeTo(visible ? 1 : 0, 250, Easing.OutQuint);
-            liveChatToggleButton.Enabled.Value = visible;
+            if (videoData.LiveStreamingDetails != null)
+            {
+                liveChatToggleButton.FadeTo(visible ? 1 : 0, 250, Easing.OutQuint);
+                liveChatToggleButton.Enabled.Value = visible;
+            }
         }
 
         /// <summary>
