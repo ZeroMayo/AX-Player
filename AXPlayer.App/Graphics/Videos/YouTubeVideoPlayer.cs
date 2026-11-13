@@ -75,6 +75,8 @@ namespace AXPlayer.App.Graphics.Videos
         public Action? OnSeekAction = null!;
         public Action? OnUpdateAction = null!;
 
+        private Container liveChatOverlayContainer;
+
         private MediaSessionControls mediaSessionControls = null!;
 
         private LiveChatReplayOverlay liveChatOverlay = null!;
@@ -277,7 +279,7 @@ namespace AXPlayer.App.Graphics.Videos
                         },
                     }
                 },
-                new Container
+                liveChatOverlayContainer = new Container
                 {
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
@@ -352,12 +354,14 @@ namespace AXPlayer.App.Graphics.Videos
 
                 if (visible.NewValue)
                 {
-                    liveChatOverlay.Show();
+                    liveChatOverlayContainer.ScaleTo(1, 500, Easing.OutElasticHalf);
+                    liveChatOverlayContainer.FadeIn(250, Easing.OutQuint);
                     loadLiveChatReplay();
                 }
                 else
                 {
-                    liveChatOverlay.Hide();
+                    liveChatOverlayContainer.ScaleTo(0.7f, 500, Easing.OutQuint);
+                    liveChatOverlayContainer.FadeOut(250, Easing.OutQuint);
                 }
 
                 updateLiveChatToggleVisibility();
