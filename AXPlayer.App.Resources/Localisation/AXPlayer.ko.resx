@@ -365,6 +365,12 @@
   <data name="search_placeholder" xml:space="preserve">
     <value>검색...</value>
   </data>
+  <data name="search_settings" xml:space="preserve">
+    <value>설정 검색</value>
+  </data>
+  <data name="no_matching_settings" xml:space="preserve">
+    <value>검색과 일치하는 설정이 없습니다</value>
+  </data>
   <data name="view_latest_versions" xml:space="preserve">
     <value>최신 버전 모두 보기</value>
   </data>

@@ -56,9 +56,18 @@ namespace AXPlayer.App.Overlays.Containers
     {
         private ProjectYomiScrollContainer settingsSections;
 
+        private FillFlowContainer settingsContent;
+
+        private SearchTextBox settingsSearchTextBox;
+
+        private ProjectYomiSpriteText noMatchingSettingsText;
+
         private Bindable<ReleaseStream> configReleaseStream;
 
         private Bindable<bool> darkModeBindable;
+
+        [Resolved(canBeNull: true)]
+        private LocalisationManager localisationManager { get; set; }
 
         public void ShowSettingsOverlayAtName(string name)
         {
@@ -69,8 +78,32 @@ namespace AXPlayer.App.Overlays.Containers
                 return;
             }
 
+            // an active search can hide the section being navigated to, so clear it and wait for the resulting layout update.
+            if (!string.IsNullOrEmpty(settingsSearchTextBox.Current.Value))
+            {
+                settingsSearchTextBox.Current.Value = string.Empty;
+                Scheduler.Add(() => ShowSettingsOverlayAtName(name));
+                return;
+            }
+
             settingsSections.ScrollTo(settingsSections.ChildrenOfType<Drawable>().Where(child => child.Name == name).Single());
         }
+
+        private void applySettingsSearch(string query)
+        {
+            bool filtering = !string.IsNullOrWhiteSpace(query);
+            bool anyMatch = SettingsSearchFilter.Apply(settingsContent.Children, query, localiseFilterTerm);
+
+            if (filtering && !anyMatch)
+                noMatchingSettingsText.FadeIn(150, Easing.OutQuint);
+            else
+                noMatchingSettingsText.FadeOut(150, Easing.OutQuint);
+
+            if (filtering)
+                settingsSections.ScrollToStart(false);
+        }
+
+        private string localiseFilterTerm(LocalisableString term) => localisationManager?.GetLocalisedString(term).ToString() ?? term.ToString();
 
         [Resolved]
         private OnScreenDisplay onScreenDisplay { get; set; }
@@ -491,24 +524,25 @@ namespace AXPlayer.App.Overlays.Containers
                                         {
                                             RelativeSizeAxes = Axes.Both,
                                             ScrollbarVisible = false,
+                                            ProgressiveBlurTopHeight = 104,
                                             Padding = new MarginPadding
                                             {
                                                 Horizontal = 4,
                                             },
                                             Children = new Drawable[]
                                             {
-                                                new FillFlowContainer {
+                                                settingsContent = new FillFlowContainer {
                                                     RelativeSizeAxes = Axes.X,
                                                     AutoSizeAxes = Axes.Y,
                                                     Spacing = new Vector2(0, 2),
                                                     Direction = FillDirection.Vertical,
                                                     Padding = new MarginPadding
                                                     {
-                                                        Top = 56,
+                                                        Top = 104,
                                                         Bottom = 48 + 24,
                                                     },
                                                     Children = new Drawable[] {
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "Quick Actions",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -530,7 +564,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             TooltipText = AXPlayerStrings.ReportBugsDesc,
                                                             Action = () => host.OpenUrlExternally("https://zeromayo.featurebase.app/"),
                                                         },
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "General Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -584,7 +618,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             },
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "UI Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -676,7 +710,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.WavySeekBar),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "Graphics Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -856,7 +890,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 })
                                                             }
                                                         },
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "Screenshot Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -897,7 +931,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.ScreenshotCaptureMenuCursor),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "Video Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -993,7 +1027,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             LabelFormat = value => $"{value:N0}s",
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "VFX Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -1041,7 +1075,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             LabelFormat = value => $"{value:N0}°",
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "CC Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -1049,11 +1083,16 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Padding = new MarginPadding { Horizontal = 30, Vertical = 12 },
                                                             Colour = overlayColourProvider.Content2,
                                                         },
-                                                        new ClosedCaptionPreview
+                                                        new SettingsFilterableContainer
                                                         {
                                                             Padding = new MarginPadding { Horizontal = 30 },
                                                             RelativeSizeAxes = Axes.X,
                                                             Height = 150,
+                                                            Child = new ClosedCaptionPreview
+                                                            {
+                                                                RelativeSizeAxes = Axes.X,
+                                                                Height = 150,
+                                                            },
                                                         },
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
@@ -1120,7 +1159,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.ClosedCaptionsBackdropBlur),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "Audio Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -1149,7 +1188,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Hotkey = new Hotkey(GlobalAction.ToggleAdjustPitchOnSpeedChange),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
                                                             Text = AXPlayerStrings.Volume,
@@ -1190,7 +1229,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.AudioNormalization),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
-                                                        new ProjectYomiSpriteText
+                                                        new SettingsSectionHeader
                                                         {
                                                             Name = "Debug Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
@@ -1231,7 +1270,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, true, true);
                                                             }
                                                         },
-                                                        new FillFlowContainer
+                                                        new SettingsFilterableContainer
                                                         {
                                                             Name = "App Info",
                                                             RelativeSizeAxes = Axes.X,
@@ -1298,16 +1337,21 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 },
                                                             }
                                                         },
-                                                        dislikeCounterCredits = new LinkFlowContainer(f =>
-                                                        {
-                                                            f.Font = AXPlayerApp.DefaultFont.With(size: 15);
-                                                            f.Colour = overlayColourProvider.Content2;
-                                                        })
+                                                        new SettingsFilterableContainer
                                                         {
                                                             RelativeSizeAxes = Axes.X,
                                                             AutoSizeAxes = Axes.Y,
                                                             Padding = new MarginPadding { Horizontal = 30, Vertical = 12 },
-                                                            TextAnchor = Anchor.Centre,
+                                                            Child = dislikeCounterCredits = new LinkFlowContainer(f =>
+                                                            {
+                                                                f.Font = AXPlayerApp.DefaultFont.With(size: 15);
+                                                                f.Colour = overlayColourProvider.Content2;
+                                                            })
+                                                            {
+                                                                RelativeSizeAxes = Axes.X,
+                                                                AutoSizeAxes = Axes.Y,
+                                                                TextAnchor = Anchor.Centre,
+                                                            },
                                                         },
                                                     }
                                                 }
@@ -1320,7 +1364,27 @@ namespace AXPlayer.App.Overlays.Containers
                                     Name = "masking of overlay",
                                     RelativeSizeAxes = Axes.X,
                                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5, overlayColourProvider.Background5.Opacity(0)),
-                                    Height = 76,
+                                    Height = 104,
+                                },
+                                settingsSearchTextBox = new SearchTextBox
+                                {
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    RelativeSizeAxes = Axes.X,
+                                    Width = 0.85f,
+                                    Height = 38,
+                                    Margin = new MarginPadding { Horizontal = 16, Top = 58 },
+                                    PlaceholderText = AXPlayerStrings.SearchSettings,
+                                },
+                                noMatchingSettingsText = new ProjectYomiSpriteText
+                                {
+                                    Anchor = Anchor.TopCentre,
+                                    Origin = Anchor.TopCentre,
+                                    Text = AXPlayerStrings.NoMatchingSettings,
+                                    Font = AXPlayerApp.DefaultFont.With(size: 18),
+                                    Colour = overlayColourProvider.Content2,
+                                    Margin = new MarginPadding { Top = 116 },
+                                    Alpha = 0,
                                 },
                                 new Box
                                 {
@@ -1541,6 +1605,8 @@ namespace AXPlayer.App.Overlays.Containers
             onAudioDeviceChanged(string.Empty);
 
             prepareSettingsTabs();
+
+            settingsSearchTextBox.Current.BindValueChanged(term => applySettingsSearch(term.NewValue), true);
 
             if (!game.IsDeployedBuild)
             {

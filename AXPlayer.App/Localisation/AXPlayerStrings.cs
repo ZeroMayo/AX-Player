@@ -506,6 +506,16 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString SearchPlaceholder => new TranslatableString(getKey(@"search_placeholder"), "search...");
 
         /// <summary>
+        /// "Search settings"
+        /// </summary>
+        public static LocalisableString SearchSettings => new TranslatableString(getKey(@"search_settings"), "Search settings");
+
+        /// <summary>
+        /// "No settings match your search"
+        /// </summary>
+        public static LocalisableString NoMatchingSettings => new TranslatableString(getKey(@"no_matching_settings"), "No settings match your search");
+
+        /// <summary>
         /// "View latest versions"
         /// </summary>
         public static LocalisableString ViewLatestVersions => new TranslatableString(getKey(@"view_latest_versions"), "View latest versions");

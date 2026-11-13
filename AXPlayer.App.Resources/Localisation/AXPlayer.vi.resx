@@ -365,6 +365,12 @@
   <data name="search_placeholder" xml:space="preserve">
     <value>tìm kiếm...</value>
   </data>
+  <data name="search_settings" xml:space="preserve">
+    <value>Tìm kiếm cài đặt</value>
+  </data>
+  <data name="no_matching_settings" xml:space="preserve">
+    <value>Không có cài đặt nào khớp với tìm kiếm</value>
+  </data>
   <data name="view_latest_versions" xml:space="preserve">
     <value>Xem các phiên bản mới nhất</value>
   </data>

@@ -55,12 +55,30 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         public virtual IEnumerable<LocalisableString> FilterTerms => new[] { Text };
 
+        private bool matchingFilter = true;
+
         public bool MatchingFilter
         {
-            set => this.FadeTo(value ? 1 : 0);
+            get => matchingFilter;
+            set
+            {
+                if (matchingFilter == value)
+                    return;
+
+                bool wasPresent = IsPresent;
+
+                matchingFilter = value;
+
+                if (IsPresent != wasPresent)
+                    Invalidate(Invalidation.Presence);
+
+                this.FadeTo(value ? 1 : 0);
+            }
         }
 
         public bool FilteringActive { get; set; }
+
+        public override bool IsPresent => base.IsPresent && (!FilteringActive || matchingFilter);
 
         public virtual LocalisableString TooltipText { get; set; }
     }

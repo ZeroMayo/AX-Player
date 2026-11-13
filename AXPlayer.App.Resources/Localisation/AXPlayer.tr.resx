@@ -365,6 +365,12 @@
   <data name="search_placeholder" xml:space="preserve">
     <value>ara...</value>
   </data>
+  <data name="search_settings" xml:space="preserve">
+    <value>Ayarlarda ara</value>
+  </data>
+  <data name="no_matching_settings" xml:space="preserve">
+    <value>Aramanızla eşleşen ayar yok</value>
+  </data>
   <data name="view_latest_versions" xml:space="preserve">
     <value>En son sürümleri görüntüle</value>
   </data>

@@ -365,6 +365,12 @@
   <data name="search_placeholder" xml:space="preserve">
     <value>search...</value>
   </data>
+  <data name="search_settings" xml:space="preserve">
+    <value>Search settings</value>
+  </data>
+  <data name="no_matching_settings" xml:space="preserve">
+    <value>No settings match your search</value>
+  </data>
   <data name="view_latest_versions" xml:space="preserve">
     <value>View latest versions</value>
   </data>

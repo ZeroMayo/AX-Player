@@ -365,6 +365,12 @@
   <data name="search_placeholder" xml:space="preserve">
     <value>検索...</value>
   </data>
+  <data name="search_settings" xml:space="preserve">
+    <value>設定を検索</value>
+  </data>
+  <data name="no_matching_settings" xml:space="preserve">
+    <value>検索に一致する設定がありません</value>
+  </data>
   <data name="view_latest_versions" xml:space="preserve">
     <value>最新バージョンを表示</value>
   </data>
