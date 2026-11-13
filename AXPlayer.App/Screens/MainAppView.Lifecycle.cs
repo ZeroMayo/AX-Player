@@ -378,10 +378,13 @@ namespace AXPlayer.App.Screens
 
         private void updatePlaybackSpeedDisplay()
         {
-            if (currentVideoSource != null)
-                speedText.SetText($"{(int)Math.Round((currentVideoSource.PlaybackSpeed.Value) * 100)}%");
-            else
-                speedText.SetText($"{(int)Math.Round((playbackSpeed.Value) * 100)}%");
+            Schedule(() =>
+            {
+                if (currentVideoSource != null)
+                    speedText.SetText($"{(int)Math.Round((currentVideoSource.PlaybackSpeed.Value) * 100)}%");
+                else
+                    speedText.SetText($"{(int)Math.Round((playbackSpeed.Value) * 100)}%");
+            });
         }
 
         protected override void LoadComplete()
