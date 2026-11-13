@@ -4,8 +4,13 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using AXPlayer.App.Config;
+using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.Caption;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Shaders.New;
@@ -14,18 +19,24 @@ using AXPlayer.App.Graphics.Shaders.New.Chromatic;
 using AXPlayer.App.Graphics.Shaders.New.CRT;
 using AXPlayer.App.Graphics.Shaders.New.Grayscale;
 using AXPlayer.App.Graphics.Shaders.New.HueShift;
+using AXPlayer.App.Graphics.UserInterface;
+using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
 using osu.Framework.Audio.Track;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Audio;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Video;
+using osu.Framework.Logging;
 using osu.Framework.Timing;
+using osuTK;
 using osuTK.Graphics;
 using YoutubeExplode.Videos.ClosedCaptions;
 
@@ -66,6 +77,22 @@ namespace AXPlayer.App.Graphics.Videos
 
         private MediaSessionControls mediaSessionControls = null!;
 
+        private LiveChatReplayOverlay liveChatOverlay = null!;
+        private IconButton liveChatToggleButton = null!;
+        private readonly Task<IReadOnlyList<LiveChatReplayMessage>>? preloadedLiveChatReplay;
+        private CancellationTokenSource? liveChatLoadCancellation;
+        private string? liveChatVideoId;
+
+        /// <summary>
+        /// Whether the live chat replay overlay is open. Toggling this value shows or hides the overlay.
+        /// </summary>
+        public Bindable<bool> LiveChatOverlayVisible { get; } = new BindableBool();
+
+        /// <summary>
+        /// Toggles the live chat replay overlay of this player.
+        /// </summary>
+        public void ToggleLiveChatOverlay() => LiveChatOverlayVisible.Value = !LiveChatOverlayVisible.Value;
+
         [Resolved]
         private YouTubeAPI api { get; set; }
 
@@ -74,7 +101,7 @@ namespace AXPlayer.App.Graphics.Videos
         private MediaSession? mediaSession { get; set; }
 #nullable disable
 
-        public YouTubeVideoPlayer(string fileName_Video, string fileName_Audio, ClosedCaptionTrack closedCaptionTrack, string srv3Contents, Google.Apis.YouTube.v3.Data.Video videoData, double resumeFromTime, double initialVolume = 1, bool startPaused = false, bool enableMediaSession = true)
+        public YouTubeVideoPlayer(string fileName_Video, string fileName_Audio, ClosedCaptionTrack closedCaptionTrack, string srv3Contents, Google.Apis.YouTube.v3.Data.Video videoData, double resumeFromTime, double initialVolume = 1, bool startPaused = false, bool enableMediaSession = true, Task<IReadOnlyList<LiveChatReplayMessage>>? preloadedLiveChatReplay = null)
         {
             this.fileName_Video = fileName_Video;
             this.fileName_Audio = fileName_Audio;
@@ -84,6 +111,7 @@ namespace AXPlayer.App.Graphics.Videos
             this.resumeFromTime = resumeFromTime;
             this.initialVolume = initialVolume;
             this.startPaused = startPaused;
+            this.preloadedLiveChatReplay = preloadedLiveChatReplay;
             mediaSessionEnabled = enableMediaSession;
         }
 
@@ -154,7 +182,7 @@ namespace AXPlayer.App.Graphics.Videos
         }
 
         [BackgroundDependencyLoader]
-        private void load(ITrackStore tracks, AXPlayerConfigManager config, ScreenshotManager screenshotManager)
+        private void load(ITrackStore tracks, AXPlayerConfigManager config, ScreenshotManager screenshotManager, OverlayColourProvider overlayColourProvider)
         {
             uiVisible = screenshotManager.CursorVisibility.GetBoundCopy();
             aspectRatioMethod = config.GetBindable<AspectRatioMethod>(AXPlayerSetting.AspectRatioMethod);
@@ -247,24 +275,44 @@ namespace AXPlayer.App.Graphics.Videos
                                 }
                             }
                         },
-                        keyBindingAnimations = new KeyBindingAnimations
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                        },
                     }
                 },
-                closedCaption = new ClosedCaptionContainer(this, closedCaptionTrack, srv3Contents, useNewSubtitlesFeature),
-                new TweakedClickableContainer
+                new Container
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    Size = new Vector2(320, 300),
+                    Margin = new MarginPadding
+                    {
+                        Right = 16,
+                        Bottom = 96,
+                    },
+                    Child = liveChatOverlay = new LiveChatReplayOverlay(true)
+                    {
+                        Alpha = 0,
+                        CloseAction = () => LiveChatOverlayVisible.Value = false,
+                    },
+                },
+                keyBindingAnimations = new KeyBindingAnimations
                 {
                     RelativeSizeAxes = Axes.Both,
-                    Enabled = { Value = false },
-                    Action = () =>
+                },
+                closedCaption = new ClosedCaptionContainer(this, closedCaptionTrack, srv3Contents, useNewSubtitlesFeature),
+                liveChatToggleButton = new IconButton
+                {
+                    Anchor = Anchor.BottomRight,
+                    Origin = Anchor.BottomRight,
+                    Size = new Vector2(40),
+                    Margin = new MarginPadding
                     {
-                        if (IsPlaying())
-                            Pause(true);
-                        else
-                            Play(true);
-                    }
+                        Right = 16,
+                        Bottom = 96,
+                    },
+                    Icon = FontAwesome.Solid.CommentAlt,
+                    IconScale = new Vector2(0.85f),
+                    BackgroundColour = overlayColourProvider.Background5.Opacity(0.85f),
+                    TooltipText = AXPlayerStrings.LiveChatReplay("0"),
+                    Action = ToggleLiveChatOverlay,
                 }
             });
 
@@ -288,7 +336,26 @@ namespace AXPlayer.App.Graphics.Videos
                         keyBindingAnimations.Hide();
                         closedCaption.Hide();
                     }
+
+                    updateLiveChatToggleVisibility();
                 });
+            }, true);
+
+            LiveChatOverlayVisible.BindValueChanged(visible =>
+            {
+                liveChatToggleButton.IconColour = visible.NewValue ? overlayColourProvider.Highlight1 : overlayColourProvider.Content2;
+
+                if (visible.NewValue)
+                {
+                    liveChatOverlay.Show();
+                    loadLiveChatReplay();
+                }
+                else
+                {
+                    liveChatOverlay.Hide();
+                }
+
+                updateLiveChatToggleVisibility();
             }, true);
 
             aspectRatioMethod.BindValueChanged(value =>
@@ -347,10 +414,96 @@ namespace AXPlayer.App.Graphics.Videos
                 drawableTrack?.AddAdjustment(AdjustableProperty.Tempo, PlaybackSpeed);
         }
 
+        /// <summary>
+        /// The toggle button is only shown while the player controls are visible and the overlay is closed.
+        /// </summary>
+        private void updateLiveChatToggleVisibility()
+        {
+            bool visible = uiVisible.Value && !LiveChatOverlayVisible.Value;
+
+            liveChatToggleButton.FadeTo(visible ? 1 : 0, 250, Easing.OutQuint);
+            liveChatToggleButton.Enabled.Value = visible;
+        }
+
+        /// <summary>
+        /// Loads the live chat replay of the current video once, the first time the overlay is opened.
+        /// </summary>
+        private void loadLiveChatReplay()
+        {
+            string? videoId = videoData?.Id;
+
+            if (string.IsNullOrEmpty(videoId))
+            {
+                liveChatOverlay.ShowUnavailable();
+                return;
+            }
+
+            if (liveChatVideoId == videoId)
+                return;
+
+            liveChatVideoId = videoId;
+
+            liveChatLoadCancellation?.Cancel();
+            liveChatLoadCancellation?.Dispose();
+            liveChatLoadCancellation = new CancellationTokenSource();
+
+            CancellationToken cancellationToken = liveChatLoadCancellation.Token;
+
+            liveChatOverlay.SetLoading();
+
+            // The player usually receives a fetch that was already started by SetVideoSource.
+            // Fall back to fetching here if the player was created without a preload.
+            Task<IReadOnlyList<LiveChatReplayMessage>> loadTask = preloadedLiveChatReplay ?? api.GetLiveChatReplayAsync(videoId, cancellationToken);
+
+            completeLiveChatReplayLoadAsync(loadTask, videoId, cancellationToken).FireAndForget();
+        }
+
+        private async Task completeLiveChatReplayLoadAsync(Task<IReadOnlyList<LiveChatReplayMessage>> loadTask, string videoId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                IReadOnlyList<LiveChatReplayMessage> messages = await loadTask.WaitAsync(cancellationToken).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                Schedule(() =>
+                {
+                    if (cancellationToken.IsCancellationRequested || liveChatVideoId != videoId)
+                        return;
+
+                    if (messages.Count == 0)
+                    {
+                        liveChatOverlay.ShowUnavailable();
+                        return;
+                    }
+
+                    liveChatOverlay.SetMessages(messages);
+                    liveChatToggleButton.TooltipText = AXPlayerStrings.LiveChatReplay(messages.Count.ToString(CultureInfo.InvariantCulture));
+                });
+            }
+            catch (OperationCanceledException)
+            {
+                // The player was disposed, or its live chat load was superseded.
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, exception.GetDescription());
+
+                Schedule(() =>
+                {
+                    if (!cancellationToken.IsCancellationRequested)
+                        liveChatOverlay.ShowUnavailable();
+                });
+            }
+        }
+
         protected override void Dispose(bool isDisposing)
         {
             uiLanguage.UnbindEvents();
             uiVisible.UnbindEvents();
+            LiveChatOverlayVisible.UnbindAll();
+            liveChatLoadCancellation?.Cancel();
+            liveChatLoadCancellation?.Dispose();
+            liveChatLoadCancellation = null;
             DeactivateMediaSession();
 
             video.Dispose();
@@ -422,6 +575,7 @@ namespace AXPlayer.App.Graphics.Videos
                 }
 
                 VideoProgress.Value = drawableTrack.CurrentTime / milliseconds_per_second;
+                liveChatOverlay.PlaybackPosition.Value = VideoProgress.Value;
 
                 if (Math.Abs(drawableTrack.CurrentTime - video.Time.Current) > video_sync_tolerance)
                     video.Seek(drawableTrack.CurrentTime);

@@ -1110,4 +1110,19 @@
   <data name="shortcut_change" xml:space="preserve"><value>Изменить</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Нажмите сочетание клавиш</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>Это сочетание уже назначено. Нажмите другое.</value></data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>Повтор живого чата ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>Здесь нет сообщений чата...</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>Сообщения, появившиеся во время трансляции или премьеры, будут показаны здесь.</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>Загрузка повтора живого чата...</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>Повтор живого чата недоступен для этого видео.</value>
+  </data>
 </root>

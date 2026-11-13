@@ -1109,4 +1109,19 @@
   <data name="shortcut_change" xml:space="preserve"><value>변경</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>키 조합을 누르세요</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>이미 사용 중인 단축키입니다. 다른 키 조합을 누르세요.</value></data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>실시간 채팅 다시보기 ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>채팅 메시지가 없어요...</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>방송이나 프리미어 동안 표시된 메시지가 여기에 나타납니다.</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>실시간 채팅 다시보기를 불러오는 중...</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>이 동영상에서는 실시간 채팅 다시보기를 사용할 수 없어요.</value>
+  </data>
 </root>

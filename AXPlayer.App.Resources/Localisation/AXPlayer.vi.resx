@@ -1110,4 +1110,19 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="shortcut_change" xml:space="preserve"><value>Đổi</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Nhấn tổ hợp phím</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>Phím tắt này đã được gán. Hãy nhấn tổ hợp khác.</value></data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>Phát lại trò chuyện trực tiếp ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>Không có tin nhắn trò chuyện nào ở đây...</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>Những tin nhắn xuất hiện trong buổi phát trực tiếp hoặc buổi ra mắt sẽ hiển thị ở đây.</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>Đang tải bản phát lại trò chuyện trực tiếp...</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>Bản phát lại trò chuyện trực tiếp không khả dụng cho video này.</value>
+  </data>
 </root>

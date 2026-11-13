@@ -661,6 +661,19 @@ namespace AXPlayer.App.Screens
                                                                                                 showOverlayContainer(commentsContainer);
                                                                                             }
                                                                                         },
+                                                                                        /*
+                                                                                        quickLiveChatOpenButton = new ControlBarIconButton(false)
+                                                                                        {
+                                                                                            Width = 50,
+                                                                                            Enabled = { Value = true },
+                                                                                            Icon = FontAwesome.Solid.CommentAlt,
+                                                                                            TooltipText = AXPlayerStrings.LiveChatReplay("0"),
+                                                                                            IconColour = overlayColourProvider.Content2,
+                                                                                            BackgroundColour = overlayColourProvider.Background3,
+                                                                                            IconScale = new Vector2(0.85f),
+                                                                                            ClickAction = _ => openLiveChatReplay(),
+                                                                                        },
+                                                                                        */
                                                                                         pinButton = new ControlBarIconButton(false)
                                                                                         {
                                                                                             Width = 50,
@@ -1592,6 +1605,12 @@ namespace AXPlayer.App.Screens
                                 },
                             }
                         },
+                        /*
+                        liveChatReplayOverlay = new LiveChatReplayOverlay
+                        {
+                            CloseAction = () => hideOverlayContainer(liveChatReplayOverlay),
+                        },
+                        */
                         searchContainer = new BottomOverlayContainer
                         {
                             Size = new Vector2(0.7f),
@@ -2976,7 +2995,7 @@ namespace AXPlayer.App.Screens
                                             ScrollbarVisible = false,
                                             Padding = new MarginPadding
                                             {
-                                                Bottom = 16,
+                                                Bottom = 56,
                                                 Top = 56,
                                                 Horizontal = 16,
                                             },
@@ -3046,6 +3065,21 @@ namespace AXPlayer.App.Screens
                                                             Hotkey = new Hotkey(GlobalAction.OpenComments),
                                                             RoundCorner = new CornersInfo(8, 8, 8, 8),
                                                         },
+                                                        /*
+                                                        liveChatOpenButton = new MenuButtonItem
+                                                        {
+                                                            Enabled = { Value = true },
+                                                            Origin = Anchor.TopRight,
+                                                            Anchor = Anchor.TopRight,
+                                                            Size = new Vector2(1, 45),
+                                                            RelativeSizeAxes = Axes.X,
+                                                            Icon = FontAwesome.Solid.CommentAlt,
+                                                            IconScale = new Vector2(1.2f),
+                                                            Text = AXPlayerStrings.LiveChatReplay("0"),
+                                                            RoundCorner = new CornersInfo(8, 8, 8, 8),
+                                                            Action = () => openLiveChatReplay(),
+                                                        },
+                                                        */
                                                         copyVideoUrlButton = new MenuButtonItem
                                                         {
                                                             Enabled = { Value = false },
@@ -3452,6 +3486,7 @@ namespace AXPlayer.App.Screens
             captionButton.SetEnabledValue2(true);
             videoSettingsButton.SetEnabledValue2(true);
             takeScreenshotButton.SetEnabledValue2(true);
+            //quickLiveChatOpenButton.SetEnabledValue2(true);
             playlistButton.SetEnabledValue2(true);
             quickCommentOpenButton.SetEnabledValue2(true);
 

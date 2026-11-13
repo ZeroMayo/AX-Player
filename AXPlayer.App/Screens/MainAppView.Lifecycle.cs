@@ -231,7 +231,7 @@ namespace AXPlayer.App.Screens
                                         Timestamps = new Timestamps()
                                         {
                                             Start = startTime,
-                                            End = endTime // End °ªÀÌ µé¾î°¡¾ß ÇÁ·Î±×·¹½º ¹Ù(³²Àº ½Ã°£) ÇüÅÂ·Î Ç¥½ÃµË´Ï´Ù.
+                                            End = endTime // End ê°’ì´ ë“¤ì–´ê°€ì•¼ í”„ë¡œê·¸ë ˆìŠ¤ ë°”(ë‚¨ì€ ì‹œê°„) í˜•íƒœë¡œ í‘œì‹œë©ë‹ˆë‹¤.
                                         },
                                         Buttons =
                                         [
@@ -264,7 +264,7 @@ namespace AXPlayer.App.Screens
                                         Timestamps = new Timestamps()
                                         {
                                             Start = startTime,
-                                            End = endTime // End °ªÀÌ µé¾î°¡¾ß ÇÁ·Î±×·¹½º ¹Ù(³²Àº ½Ã°£) ÇüÅÂ·Î Ç¥½ÃµË´Ï´Ù.
+                                            End = endTime // End ê°’ì´ ë“¤ì–´ê°€ì•¼ í”„ë¡œê·¸ë ˆìŠ¤ ë°”(ë‚¨ì€ ì‹œê°„) í˜•íƒœë¡œ í‘œì‹œë©ë‹ˆë‹¤.
                                         },
                                         Buttons =
                                         [
@@ -390,6 +390,7 @@ namespace AXPlayer.App.Screens
             RegisterOverlayContainer(settingsContainer);
             RegisterOverlayContainer(videoDescriptionContainer);
             RegisterOverlayContainer(commentsContainer);
+            //RegisterOverlayContainer(liveChatReplayOverlay);
             RegisterOverlayContainer(searchContainer);
             RegisterOverlayContainer(reportAbuseOverlay);
             RegisterOverlayContainer(playlistOverlay);
@@ -1266,6 +1267,8 @@ namespace AXPlayer.App.Screens
 
                 if (seekbar.IsDragged == false)
                     videoProgress.Value = currentVideoSource.VideoProgress.Value;
+
+                //liveChatReplayOverlay.PlaybackPosition.Value = currentVideoSource.VideoProgress.Value;
             }
         }
 

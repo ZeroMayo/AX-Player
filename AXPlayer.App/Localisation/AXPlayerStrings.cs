@@ -246,6 +246,31 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString Comments(LocalisableString count) => new TranslatableString(getKey(@"comments"), "Comments ({0})", count);
 
         /// <summary>
+        /// "Live chat replay ({0})"
+        /// </summary>
+        public static LocalisableString LiveChatReplay(LocalisableString count) => new TranslatableString(getKey(@"live_chat_replay"), "Live chat replay ({0})", count);
+
+        /// <summary>
+        /// "No chat messages here..."
+        /// </summary>
+        public static LocalisableString LiveChatReplayEmptyTitle => new TranslatableString(getKey(@"live_chat_replay_empty_title"), @"No chat messages here...");
+
+        /// <summary>
+        /// "Messages that appeared during the stream or premiere will show up here."
+        /// </summary>
+        public static LocalisableString LiveChatReplayEmptyDescription => new TranslatableString(getKey(@"live_chat_replay_empty_description"), @"Messages that appeared during the stream or premiere will show up here.");
+
+        /// <summary>
+        /// "Loading live chat replay..."
+        /// </summary>
+        public static LocalisableString LiveChatReplayLoading => new TranslatableString(getKey(@"live_chat_replay_loading"), @"Loading live chat replay...");
+
+        /// <summary>
+        /// "Live chat replay is not available for this video."
+        /// </summary>
+        public static LocalisableString LiveChatReplayUnavailable => new TranslatableString(getKey(@"live_chat_replay_unavailable"), @"Live chat replay is not available for this video.");
+
+        /// <summary>
         /// "Video dim level"
         /// </summary>
         public static LocalisableString VideoDimLevel => new TranslatableString(getKey(@"dim"), "Video dim level");

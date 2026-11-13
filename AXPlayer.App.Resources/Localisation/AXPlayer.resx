@@ -1226,4 +1226,19 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>Closed captions backdrop blur</value>
   </data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>Live chat replay ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>No chat messages here...</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>Messages that appeared during the stream or premiere will show up here.</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>Loading live chat replay...</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>Live chat replay is not available for this video.</value>
+  </data>
 </root>

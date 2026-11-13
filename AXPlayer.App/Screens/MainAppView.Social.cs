@@ -697,6 +697,12 @@ namespace AXPlayer.App.Screens
                     quickCommentOpenButton.AccentColor = accentColor;
                     quickCommentOpenButton.BackgroundColour = bgColor;
 
+                    /*
+                    quickLiveChatOpenButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
+                    quickLiveChatOpenButton.AccentColor = accentColor;
+                    quickLiveChatOpenButton.BackgroundColour = bgColor;
+                    */
+
                     videoSettingsButton.IconObject.FadeColour(accentColor, 500, Easing.OutQuint);
                     videoSettingsButton.AccentColor = accentColor;
                     videoSettingsButton.BackgroundColour = bgColor;

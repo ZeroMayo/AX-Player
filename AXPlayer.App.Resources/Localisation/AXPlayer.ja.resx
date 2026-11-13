@@ -1109,4 +1109,19 @@
   <data name="shortcut_change" xml:space="preserve"><value>変更</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>キーの組み合わせを押してください</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>このショートカットは既に割り当てられています。別の組み合わせを押してください。</value></data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>ライブチャットのリプレイ ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>チャットメッセージはありません…</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>配信やプレミア公開中に表示されたメッセージがここに表示されます。</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>ライブチャットのリプレイを読み込み中…</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>この動画ではライブチャットのリプレイを利用できません。</value>
+  </data>
 </root>

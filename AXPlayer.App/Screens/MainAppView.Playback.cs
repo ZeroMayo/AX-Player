@@ -312,7 +312,7 @@ namespace AXPlayer.App.Screens
                         smartCrossfadeVideoData = nextVideoData;
                         smartCrossfadeNormalizeVolume = null;
                         smartCrossfadeOutgoing = outgoing;
-                        smartCrossfadeIncoming = new YouTubeVideoPlayer(cachedVideoFile, audioFile, null, string.Empty, nextVideoData, plan.IncomingStartOffset, 0, true, false)
+                        smartCrossfadeIncoming = new YouTubeVideoPlayer(cachedVideoFile, audioFile, null, string.Empty, nextVideoData, plan.IncomingStartOffset, 0, true, false, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(nextVideoId))
                         {
                             RelativeSizeAxes = Axes.Both,
                             Alpha = 0,
@@ -747,6 +747,13 @@ namespace AXPlayer.App.Screens
                         return;
                     }
                     this.videoId = YoutubeExplode.Videos.VideoId.Parse(videoId);
+                    _ = getOrStartLiveChatReplayPreload(this.videoId);
+                    /*
+                    resetLiveChatReplay();
+
+                    if (liveChatReplayOverlay != null && liveChatReplayOverlay.IsVisible)
+                        loadLiveChatReplay();
+                    */
                     //ClearPlaylistItems();
                     if (currentVideoSource != null)
                         currentVideoSource.OnUpdateAction = null;
@@ -1268,7 +1275,7 @@ namespace AXPlayer.App.Screens
                                 }
                             }
 
-                            currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime)
+                            currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(this.videoId))
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,
@@ -1632,7 +1639,7 @@ namespace AXPlayer.App.Screens
                                 videoFile = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm";
                             }
 
-                            currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime)
+                            currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(this.videoId))
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,

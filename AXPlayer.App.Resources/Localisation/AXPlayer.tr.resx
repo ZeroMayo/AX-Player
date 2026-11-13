@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1109,4 +1109,19 @@
   <data name="shortcut_change" xml:space="preserve"><value>Değiştir</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Bir tuş kombinasyonuna basın</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>Bu kısayol zaten atanmış. Başka bir kombinasyona basın.</value></data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>Canlı sohbet tekrarı ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>Burada sohbet mesajı yok...</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>Yayın veya prömiyer sırasında görünen mesajlar burada gösterilecek.</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>Canlı sohbet tekrarı yükleniyor...</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>Canlı sohbet tekrarı bu video için kullanılamıyor.</value>
+  </data>
 </root>

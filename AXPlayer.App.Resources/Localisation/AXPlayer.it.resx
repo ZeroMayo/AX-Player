@@ -1109,4 +1109,19 @@
   <data name="shortcut_change" xml:space="preserve"><value>Modifica</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Premi una combinazione di tasti</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>Questa scorciatoia è già assegnata. Premi un'altra combinazione.</value></data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>Replay della chat dal vivo ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>Nessun messaggio della chat...</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>I messaggi apparsi durante la diretta o la première verranno mostrati qui.</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>Caricamento del replay della chat dal vivo...</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>Il replay della chat dal vivo non è disponibile per questo video.</value>
+  </data>
 </root>

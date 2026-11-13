@@ -1109,4 +1109,19 @@
   <data name="shortcut_change" xml:space="preserve"><value>Cambiar</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Pulsa una combinación de teclas</value></data>
   <data name="shortcut_already_assigned" xml:space="preserve"><value>Ese atajo ya está asignado. Pulsa otra combinación.</value></data>
+  <data name="live_chat_replay" xml:space="preserve">
+    <value>Repetición del chat en directo ({0})</value>
+  </data>
+  <data name="live_chat_replay_empty_title" xml:space="preserve">
+    <value>No hay mensajes de chat aquí...</value>
+  </data>
+  <data name="live_chat_replay_empty_description" xml:space="preserve">
+    <value>Los mensajes que aparecieron durante la transmisión o el estreno se mostrarán aquí.</value>
+  </data>
+  <data name="live_chat_replay_loading" xml:space="preserve">
+    <value>Cargando la repetición del chat en directo...</value>
+  </data>
+  <data name="live_chat_replay_unavailable" xml:space="preserve">
+    <value>La repetición del chat en directo no está disponible para este vídeo.</value>
+  </data>
 </root>
