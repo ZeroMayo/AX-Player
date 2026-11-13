@@ -35,6 +35,26 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
             {
                 versionInfoContainer.UpdateState(UpdaterStatus.Updating);
             });
+
+            AddStep("update state to Checking", () =>
+            {
+                versionInfoContainer.UpdateState(UpdaterStatus.Checking);
+            });
+
+            AddStep("update state to Error", () =>
+            {
+                versionInfoContainer.UpdateState(UpdaterStatus.Error);
+            });
+
+            AddStep("update state to NoUpdates", () =>
+            {
+                versionInfoContainer.UpdateState(UpdaterStatus.NoUpdates);
+            });
+
+            AddStep("update state to RestartRequired", () =>
+            {
+                versionInfoContainer.UpdateState(UpdaterStatus.RestartRequired);
+            });
         }
     }
 }
