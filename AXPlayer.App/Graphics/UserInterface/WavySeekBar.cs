@@ -1,10 +1,9 @@
-// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable enable
 
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Numerics;
 using System.Threading;
@@ -12,7 +11,6 @@ using System.Threading.Tasks;
 using AXPlayer.App.Config;
 using AXPlayer.App.Utils;
 using Google.Apis.YouTube.v3.Data;
-using Newtonsoft.Json.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -34,25 +32,45 @@ namespace AXPlayer.App.Graphics.UserInterface
     public partial class WavySeekBar<T> : ProjectYomiSliderBar<T>
         where T : struct, INumber<T>, IMinMaxValue<T>
     {
-        protected readonly AXPlayerSeekBar.SliderNub Nub;
-        protected readonly Path LeftBox;
-        protected readonly Box RightBox, RightBoxGradient;
+        protected readonly SliderNub Nub;
+        protected readonly SmoothPath LeftBox;
+        protected readonly SmoothPath LeftBoxGlow, LeftBoxHighlight;
+        protected readonly Box RightBox, RightBoxGradient, RightBoxHighlight;
         protected readonly Container LeftBoxContainer;
         protected readonly Container RightBoxContainer;
         private readonly Container nubContainer;
         private readonly Container mainContent;
 
-        private const float track_height = AXPlayerSeekBar.SliderNub.HEIGHT / 3f;
+        /// <summary>
+        /// Thickness of the unplayed portion of the track.
+        /// </summary>
+        private const float track_height = 6f;
+
+        /// <summary>
+        /// Thickness (radius) of the wave drawn over the played portion of the track.
+        /// </summary>
+        private const float wave_radius = 3f;
+
+        /// <summary>
+        /// Radius of the soft glow which is rendered underneath the wave.
+        /// </summary>
+        private const float wave_glow_radius = 7f;
+
+        /// <summary>
+        /// Radius of the bright core which runs along the centre of the wave.
+        /// </summary>
+        private const float wave_highlight_radius = 1f;
+
+        private const float wave_glow_alpha = 0.16f;
         private const float nub_overlap = 0f;
         private const float wave_frequency = 0.1f;
-        private const float wave_point_spacing = 1f;
+        private const float wave_point_spacing = 2f;
 
         private static readonly HttpClient httpClient = new HttpClient();
-        private readonly List<Vector2> waveVertices = new List<Vector2>();
 
         private bool isWavy;
-        private bool isNubGlowing;
-        private bool waveIsFlat = true;
+        private bool isDragging;
+        private bool isBarHovered;
         private float lastWaveWidth = float.NaN;
         private float lastRangePadding = float.NaN;
         private int paletteRequestVersion;
@@ -69,7 +87,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             }
         }
 
-        private Colour4 backgroundColour;
+        private Color4 backgroundColour;
 
         public Color4 BackgroundColour
         {
@@ -93,8 +111,8 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public WavySeekBar()
         {
-            Height = AXPlayerSeekBar.SliderNub.HEIGHT;
-            //RangePadding = AXPlayerSeekBar.SliderNub.DEFAULT_EXPANDED_SIZE / 2;
+            Height = SliderNub.HEIGHT;
+            //RangePadding = SliderNub.DEFAULT_EXPANDED_SIZE / 2;
             ResetToDefault = () =>
             {
                 if (!Current.Disabled)
@@ -109,7 +127,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
                     Padding = new MarginPadding { Horizontal = 2 },
-                    Child = mainContent = new CircularContainer
+                    Child = mainContent = new Container
                     {
                         RelativeSizeAxes = Axes.X,
                         AutoSizeAxes = Axes.Y,
@@ -117,29 +135,13 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Origin = Anchor.CentreLeft,
                         Children = new Drawable[]
                         {
-                            LeftBoxContainer = new Container
-                            {
-                                Height = track_height,
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                                Masking = false,
-                                Children = new Drawable[] {
-                                    LeftBox = new SmoothPath
-                                    {
-                                        AlwaysPresent = true,
-                                        PathRadius = 5f,
-                                        Anchor = Anchor.CentreLeft,
-                                        Origin = Anchor.CentreLeft,
-                                    },
-                                },
-                            },
                             RightBoxContainer = new Container
                             {
                                 Height = track_height,
                                 Anchor = Anchor.CentreRight,
                                 Origin = Anchor.CentreRight,
                                 Masking = true,
-                                CornerRadius = new CornersInfo(track_height / 3, track_height / 3, track_height / 2, track_height / 2),
+                                CornerRadius = new CornersInfo(track_height / 2),
                                 Children = new Drawable[] {
                                     RightBox = new Box
                                     {
@@ -147,27 +149,51 @@ namespace AXPlayer.App.Graphics.UserInterface
                                         Colour = backgroundColour,
                                         RelativeSizeAxes = Axes.X,
                                     },
+                                    // A very soft sheen gives the remaining track a slight glass-like curvature.
+                                    RightBoxHighlight = new Box
+                                    {
+                                        Height = track_height,
+                                        RelativeSizeAxes = Axes.X,
+                                        Colour = ColourInfo.GradientVertical(Color4.White.Opacity(0.07f), Color4.White.Opacity(0)),
+                                    },
+                                    // The accent bleeds out of the nub into the remaining track, like a light trail.
                                     RightBoxGradient = new Box
                                     {
-                                        Width = 50,
+                                        Width = 56,
                                         Height = track_height,
                                         Blending = BlendingParameters.Additive,
-                                        Colour = ColourInfo.GradientHorizontal(accentColour, accentColour.Opacity(0)),
+                                        Colour = ColourInfo.GradientHorizontal(accentColour.Opacity(0.55f), accentColour.Opacity(0)),
                                         Alpha = 0.3f,
                                     },
                                 },
-                             },
+                            },
+                            LeftBoxContainer = new Container
+                            {
+                                Height = track_height,
+                                Anchor = Anchor.CentreLeft,
+                                Origin = Anchor.CentreLeft,
+                                Masking = false,
+                                Children = new Drawable[] {
+                                    LeftBoxGlow = createWave(wave_glow_radius, accentColour.Opacity(wave_glow_alpha), additive: true),
+                                    LeftBox = createWave(wave_radius, accentColour),
+                                    LeftBoxHighlight = createWave(wave_highlight_radius, Color4.White.Opacity(0.22f), additive: true),
+                                },
+                            },
                         },
                     },
                 },
-                nubContainer = new Container
+                nubContainer = new NubHoverContainer
                 {
                     RelativeSizeAxes = Axes.Both,
+                    HoverChanged = hovered =>
+                    {
+                        isBarHovered = hovered;
+                        updateNubHighlight();
+                    },
                     Child = Nub = new SliderNub
                     {
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.Centre,
-                        Colour = AccentColour,
                         RelativePositionAxes = Axes.X,
                         //OnDoubleClicked = () => ResetToDefault.Invoke(),
                     },
@@ -175,10 +201,23 @@ namespace AXPlayer.App.Graphics.UserInterface
             };
         }
 
+        private static SmoothPath createWave(float radius, ColourInfo colour, bool additive = false) => new SmoothPath
+        {
+            AlwaysPresent = true,
+            PathRadius = radius,
+            Colour = colour,
+            Blending = additive ? BlendingParameters.Additive : BlendingParameters.Mixture,
+            // Path sizes itself to the vertices padded by PathRadius on every side, so shift it back by that
+            // amount to keep the start of the played portion flush with the left edge of the track.
+            Position = new Vector2(-radius, 0),
+            Anchor = Anchor.CentreLeft,
+            Origin = Anchor.CentreLeft,
+        };
+
         [BackgroundDependencyLoader(true)]
         private void load(OverlayColourProvider overlayColourProvider)
         {
-            AccentColour = Nub.Colour = overlayColourProvider.Content2;
+            AccentColour = overlayColourProvider.Content2;
             BackgroundColour = overlayColourProvider.Content2.Darken(1);
             WavyToggle = configManager.GetBindable<bool>(AXPlayerSetting.WavySeekBar);
 
@@ -201,16 +240,17 @@ namespace AXPlayer.App.Graphics.UserInterface
         private void updateColours()
         {
             LeftBox.FadeColour(accentColour, 500, Easing.OutQuint);
-            Nub.FadeColour(accentColour, 500, Easing.OutQuint);
+            LeftBoxGlow.FadeColour(accentColour.Opacity(wave_glow_alpha), 500, Easing.OutQuint);
+            Nub.AccentColour = accentColour;
             RightBox.FadeColour(backgroundColour, 500, Easing.OutQuint);
 
-            RightBoxGradient.FadeColour(ColourInfo.GradientHorizontal(accentColour, accentColour.Opacity(0)), 500, Easing.OutQuint);
+            RightBoxGradient.FadeColour(ColourInfo.GradientHorizontal(accentColour.Opacity(0.55f), accentColour.Opacity(0)), 500, Easing.OutQuint);
         }
 
         [Resolved]
-        private AXPlayerConfigManager configManager { get; set; }
+        private AXPlayerConfigManager configManager { get; set; } = null!;
 
-        private Bindable<bool> WavyToggle;
+        private Bindable<bool> WavyToggle = new Bindable<bool>();
 
         [Resolved]
         private OverlayColourProvider overlayColourProvider { get; set; } = null!;
@@ -283,18 +323,11 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private void updateWaveState()
         {
-            double minValue = double.CreateTruncating(CurrentNumber.MinValue);
-            double maxValue = double.CreateTruncating(CurrentNumber.MaxValue);
-            double value = double.CreateTruncating(CurrentNumber.Value);
-            double range = maxValue - minValue;
-            //bool shouldBeWavy = range > 0 && value >= minValue + range * 0.04 && value <= maxValue - range * 0.04;
-            bool shouldBeWavy = true; // always wavy seekbar
-
-            if (shouldBeWavy == isWavy)
+            if (isWavy)
                 return;
 
-            isWavy = shouldBeWavy;
-            this.TransformBindableTo(amplitudeAnimated2, shouldBeWavy ? 1f : 0f, shouldBeWavy ? 1250 : 750, Easing.OutQuint);
+            isWavy = true;
+            this.TransformBindableTo(amplitudeAnimated2, 1f, 1250, Easing.OutQuint);
         }
 
         private void updateWavePath()
@@ -303,29 +336,27 @@ namespace AXPlayer.App.Graphics.UserInterface
             float width = Math.Max(0, LeftBoxContainer.Width - nub_overlap);
             bool isFlat = amplitude <= 0.001f;
 
-            if (width == lastWaveWidth)
+            // A flat wave only needs to be rebuilt when the track is resized, a wavy one scrolls every frame.
+            if (isFlat && width == lastWaveWidth)
                 return;
 
-            waveVertices.Clear();
-
-            if (isFlat)
-            {
-                waveVertices.Add(Vector2.Zero);
-                waveVertices.Add(new Vector2(width - wave_point_spacing, 0));
-            }
-            else
-            {
-                float phase = (float)(Time.Current * -0.05 * speedRolling.Value);
-
-                for (float x = wave_point_spacing; x < width; x += wave_point_spacing)
-                    waveVertices.Add(new Vector2(x, MathF.Sin((x - phase) * wave_frequency) * amplitude));
-
-                waveVertices.Add(new Vector2(width, MathF.Sin((width - phase) * wave_frequency) * amplitude));
-            }
-
-            LeftBox.Vertices = waveVertices;
-            waveIsFlat = isFlat;
             lastWaveWidth = width;
+
+            int pointCount = Math.Max(2, (int)MathF.Ceiling(width / wave_point_spacing) + 1);
+            var vertices = new Vector2[pointCount];
+
+            float phase = (float)(Time.Current * -0.05 * speedRolling.Value);
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                float x = Math.Min(i * wave_point_spacing, width);
+                float y = isFlat ? 0 : MathF.Sin((x - phase) * wave_frequency) * amplitude;
+                vertices[i] = new Vector2(x, y);
+            }
+
+            LeftBox.Vertices = vertices;
+            LeftBoxGlow.Vertices = vertices;
+            LeftBoxHighlight.Vertices = vertices;
         }
 
         protected override void LoadComplete()
@@ -335,8 +366,34 @@ namespace AXPlayer.App.Graphics.UserInterface
             Current.BindDisabledChanged(disabled =>
             {
                 Alpha = disabled ? 0.3f : 1;
+
+                if (disabled)
+                    Nub.Highlighted = false;
             }, true);
         }
+
+        protected override bool OnDragStart(DragStartEvent e)
+        {
+            bool handled = base.OnDragStart(e);
+
+            if (handled)
+            {
+                isDragging = true;
+                updateNubHighlight();
+            }
+
+            return handled;
+        }
+
+        protected override void OnDragEnd(DragEndEvent e)
+        {
+            isDragging = false;
+            updateNubHighlight();
+            base.OnDragEnd(e);
+        }
+
+        private void updateNubHighlight()
+            => Nub.Highlighted = !Current.Disabled && (isBarHovered || isDragging);
 
         protected override bool ShouldHandleAsRelativeDrag(MouseDownEvent e)
             => Nub.ReceivePositionalInputAt(e.ScreenSpaceMouseDownPosition);
@@ -348,8 +405,8 @@ namespace AXPlayer.App.Graphics.UserInterface
             float trackWidth = mainContent.DrawWidth;
             float nubCentre = Nub.ToSpaceOfOtherDrawable(Vector2.Zero, mainContent).X;
 
-            LeftBoxContainer.Width = Math.Clamp(RangePadding + nubCentre - (nub_overlap), 0, trackWidth);
-            RightBoxContainer.Width = Math.Clamp(trackWidth - nubCentre - (nub_overlap) - RangePadding, 0, trackWidth);
+            LeftBoxContainer.Width = Math.Clamp(RangePadding + nubCentre - nub_overlap, 0, trackWidth);
+            RightBoxContainer.Width = Math.Clamp(trackWidth - nubCentre - nub_overlap - RangePadding, 0, trackWidth);
         }
 
         protected override void UpdateValue(float value)
@@ -357,16 +414,23 @@ namespace AXPlayer.App.Graphics.UserInterface
             Nub.MoveToX(value, 250, Easing.OutQuint);
         }
 
-        public partial class SliderNub : AXPlayerSeekBar.SliderNub
+        /// <summary>
+        /// A full-size input surface spanning the bar, so that hovering anywhere over the seek bar can highlight the nub.
+        /// </summary>
+        private partial class NubHoverContainer : Container
         {
-            public Action? OnDoubleClicked { get; init; }
+            public Action<bool>? HoverChanged;
 
-            protected override bool OnClick(ClickEvent e) => true;
-
-            protected override bool OnDoubleClick(DoubleClickEvent e)
+            protected override bool OnHover(HoverEvent e)
             {
-                OnDoubleClicked?.Invoke();
-                return true;
+                HoverChanged?.Invoke(true);
+                return base.OnHover(e);
+            }
+
+            protected override void OnHoverLost(HoverLostEvent e)
+            {
+                HoverChanged?.Invoke(false);
+                base.OnHoverLost(e);
             }
         }
     }
