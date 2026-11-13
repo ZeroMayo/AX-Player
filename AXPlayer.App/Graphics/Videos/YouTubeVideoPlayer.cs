@@ -284,6 +284,7 @@ namespace AXPlayer.App.Graphics.Videos
                     Anchor = Anchor.BottomRight,
                     Origin = Anchor.BottomRight,
                     Size = new Vector2(320, 300),
+                    Alpha = 0,
                     Margin = new MarginPadding
                     {
                         Right = 16,
@@ -291,7 +292,6 @@ namespace AXPlayer.App.Graphics.Videos
                     },
                     Child = liveChatOverlay = new LiveChatReplayOverlay(true)
                     {
-                        Alpha = 0,
                         CloseAction = () => LiveChatOverlayVisible.Value = false,
                     },
                 },
