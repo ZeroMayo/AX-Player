@@ -510,8 +510,9 @@ namespace AXPlayer.App.Graphics.Videos
 
         protected override void Dispose(bool isDisposing)
         {
-            uiLanguage.UnbindEvents();
-            uiVisible.UnbindEvents();
+            uiLanguage.UnbindAll();
+            uiVisible.UnbindAll();
+            PlaybackSpeed.UnbindAll();
             LiveChatOverlayVisible.UnbindAll();
             liveChatLoadCancellation?.Cancel();
             liveChatLoadCancellation?.Dispose();
