@@ -18,7 +18,7 @@
 
 ### 최신 릴리스:
 
-| [Windows 10+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) |
+| [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) |
 |--------------------------------------------------------------------------------------|
 
 YouTube API Daily Quota는 매우 빠르게 차버립니다(구글은 10,000단위의 엄격한 제한을 두고 있습니다). 이에 대해 묻지 마세요.

@@ -18,7 +18,7 @@
 
 ### Latest release:
 
-| [Windows 10+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) |
+| [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) |
 |--------------------------------------------------------------------------------------|
 
 The YouTube API Daily Quota fills up very fast (Google has a hard limit of 10,000 units). Please do not ask about this.
