@@ -81,13 +81,7 @@ namespace AXPlayer.App.Screens
 
         private static readonly string[] empty_comments_samples =
         {
-            @"cuayo",
-            @"cuayo1",
-            @"cuayo2",
-            @"cuayo3",
-            @"ner",
-            @"speaki_ner",
-            @"speaki1",
+            @"usagi",
         };
 
         private FormEnumDropdown<PrivacyStatus> playlistPrivacyStatusDropdown, editPlaylistPrivacyStatusDropdown;
