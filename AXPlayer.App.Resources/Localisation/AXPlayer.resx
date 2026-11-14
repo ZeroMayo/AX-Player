@@ -1256,6 +1256,27 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="preset_saved" xml:space="preserve">
     <value>Preset saved</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>Audio effect presets</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>Preset name</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>Enter a preset name</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>Save current effects</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>Delete preset</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>Applied audio effect preset: {0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>No saved presets</value>
+  </data>
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>Closed captions backdrop blur</value>
   </data>

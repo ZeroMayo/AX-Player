@@ -1138,4 +1138,25 @@
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>此视频无法使用实时聊天回放。</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>音频效果预设</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>预设名称</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>输入预设名称</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>保存当前效果</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>删除预设</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>已应用音频效果预设：{0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>没有已保存的预设</value>
+  </data>
 </root>

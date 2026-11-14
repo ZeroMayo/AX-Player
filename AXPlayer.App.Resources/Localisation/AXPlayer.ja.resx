@@ -1137,4 +1137,25 @@
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>この動画ではライブチャットのリプレイを利用できません。</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>オーディオエフェクトプリセット</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>プリセット名</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>プリセット名を入力</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>現在のエフェクトを保存</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>プリセットを削除</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>オーディオエフェクトプリセットを適用しました: {0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>保存されたプリセットはありません</value>
+  </data>
 </root>

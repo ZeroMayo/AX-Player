@@ -1137,4 +1137,25 @@
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>Canlı sohbet tekrarı bu video için kullanılamıyor.</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>Ses efekti ayarları</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>Ayar adı</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>Bir ayar adı girin</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>Mevcut efektleri kaydet</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>Ayarı sil</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>Ses efekti ayarı uygulandı: {0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>Kayıtlı ayar yok</value>
+  </data>
 </root>

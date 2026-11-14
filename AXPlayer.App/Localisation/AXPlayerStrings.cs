@@ -1646,6 +1646,41 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString PresetSaved => new TranslatableString(getKey(@"preset_saved"), @"Preset saved");
 
         /// <summary>
+        /// "Audio effect presets"
+        /// </summary>
+        public static LocalisableString AudioEffectPresets => new TranslatableString(getKey(@"audio_effect_presets"), @"Audio effect presets");
+
+        /// <summary>
+        /// "Preset name"
+        /// </summary>
+        public static LocalisableString AudioEffectPresetName => new TranslatableString(getKey(@"audio_effect_preset_name"), @"Preset name");
+
+        /// <summary>
+        /// "Enter a preset name"
+        /// </summary>
+        public static LocalisableString AudioEffectPresetNamePlaceholder => new TranslatableString(getKey(@"audio_effect_preset_name_placeholder"), @"Enter a preset name");
+
+        /// <summary>
+        /// "Save current effects"
+        /// </summary>
+        public static LocalisableString SaveAudioEffectPreset => new TranslatableString(getKey(@"save_audio_effect_preset"), @"Save current effects");
+
+        /// <summary>
+        /// "Delete preset"
+        /// </summary>
+        public static LocalisableString DeleteAudioEffectPreset => new TranslatableString(getKey(@"delete_audio_effect_preset"), @"Delete preset");
+
+        /// <summary>
+        /// "Applied audio effect preset: {0}"
+        /// </summary>
+        public static LocalisableString AudioEffectPresetApplied(string name) => new TranslatableString(getKey(@"audio_effect_preset_applied"), @"Applied audio effect preset: {0}", name);
+
+        /// <summary>
+        /// "No saved presets"
+        /// </summary>
+        public static LocalisableString NoAudioEffectPresets => new TranslatableString(getKey(@"no_audio_effect_presets"), @"No saved presets");
+
+        /// <summary>
         /// "Closed captions backdrop blur"
         /// </summary>
         public static LocalisableString ClosedCaptionsBackdropBlur => new TranslatableString(getKey(@"closed_captions_backdrop_blur"), @"Closed captions backdrop blur");

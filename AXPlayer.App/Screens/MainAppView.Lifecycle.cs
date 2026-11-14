@@ -403,6 +403,7 @@ namespace AXPlayer.App.Screens
             RegisterOverlayContainer(playlistOverlay);
             RegisterOverlayContainer(loadPlaylistContainer);
             RegisterOverlayContainer(audioEffectsOverlay);
+            refreshAudioEffectPresets();
             RegisterOverlayContainer(unsubscribeDialog);
             RegisterOverlayContainer(videoSaveLocationOverlay);
             RegisterOverlayContainer(addPlaylistOverlay);

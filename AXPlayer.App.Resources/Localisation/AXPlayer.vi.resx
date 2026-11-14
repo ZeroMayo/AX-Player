@@ -1138,4 +1138,25 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>Bản phát lại trò chuyện trực tiếp không khả dụng cho video này.</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>Cài đặt trước hiệu ứng âm thanh</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>Tên cài đặt trước</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>Nhập tên cài đặt trước</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>Lưu hiệu ứng hiện tại</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>Xóa cài đặt trước</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>Đã áp dụng cài đặt trước hiệu ứng âm thanh: {0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>Không có cài đặt trước nào được lưu</value>
+  </data>
 </root>

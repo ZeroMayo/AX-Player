@@ -1137,4 +1137,25 @@
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>Il replay della chat dal vivo non è disponibile per questo video.</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>Preset degli effetti audio</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>Nome del preset</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>Inserisci un nome per il preset</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>Salva effetti attuali</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>Elimina preset</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>Preset degli effetti audio applicato: {0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>Nessun preset salvato</value>
+  </data>
 </root>

@@ -2263,6 +2263,65 @@ namespace AXPlayer.App.Screens
                                                     Spacing = new Vector2(4),
                                                     Children = new Drawable[]
                                                     {
+                                                        new FillFlowContainer
+                                                        {
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            Direction = FillDirection.Vertical,
+                                                            Spacing = new Vector2(0, 4),
+                                                            Margin = new MarginPadding { Bottom = 12 },
+                                                            Children = new Drawable[]
+                                                            {
+                                                                new Container
+                                                                {
+                                                                    RelativeSizeAxes = Axes.X,
+                                                                    AutoSizeAxes = Axes.Y,
+                                                                    Padding = new MarginPadding { Horizontal = 30, Bottom = 4 },
+                                                                    Child = new ProjectYomiSpriteText
+                                                                    {
+                                                                        Text = AXPlayerStrings.AudioEffectPresets,
+                                                                        Font = AXPlayerApp.DefaultFont.With(size: 18, weight: "Bold"),
+                                                                        Colour = overlayColourProvider.Content2,
+                                                                    },
+                                                                },
+                                                                new SettingsItemV2(audioEffectPresetNameBox = new FormTextBox
+                                                                {
+                                                                    Icon = FontAwesome.Solid.Bookmark,
+                                                                    Caption = AXPlayerStrings.AudioEffectPresetName,
+                                                                    PlaceholderText = AXPlayerStrings.AudioEffectPresetNamePlaceholder,
+                                                                })
+                                                                {
+                                                                    ShowRevertToDefaultButton = false,
+                                                                },
+                                                                new Container
+                                                                {
+                                                                    RelativeSizeAxes = Axes.X,
+                                                                    AutoSizeAxes = Axes.Y,
+                                                                    Padding = new MarginPadding { Horizontal = 30 },
+                                                                    Child = new RoundedButton
+                                                                    {
+                                                                        RelativeSizeAxes = Axes.X,
+                                                                        Height = 44,
+                                                                        Text = AXPlayerStrings.SaveAudioEffectPreset,
+                                                                        BackgroundColour = overlayColourProvider.Background4,
+                                                                        Action = saveAudioEffectPreset,
+                                                                    },
+                                                                },
+                                                                new Container
+                                                                {
+                                                                    RelativeSizeAxes = Axes.X,
+                                                                    AutoSizeAxes = Axes.Y,
+                                                                    Padding = new MarginPadding { Horizontal = 30, Top = 4 },
+                                                                    Child = audioEffectPresetList = new FillFlowContainer
+                                                                    {
+                                                                        RelativeSizeAxes = Axes.X,
+                                                                        AutoSizeAxes = Axes.Y,
+                                                                        Direction = FillDirection.Vertical,
+                                                                        Spacing = new Vector2(0, 4),
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
                                                         new SettingsItemV2(reverbToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ReverbEffect,

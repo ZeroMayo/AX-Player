@@ -1051,6 +1051,27 @@
   <data name="preset_saved" xml:space="preserve">
     <value>프리셋이 저장되었습니다</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>오디오 효과 프리셋</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>프리셋 이름</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>프리셋 이름 입력</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>현재 효과 저장</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>프리셋 삭제</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>오디오 효과 프리셋 적용됨: {0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>저장된 프리셋 없음</value>
+  </data>
   <data name="closed_captions_backdrop_blur" xml:space="preserve">
     <value>자막 배경 흐림</value>
   </data>

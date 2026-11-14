@@ -1137,4 +1137,25 @@
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>La repetición del chat en directo no está disponible para este vídeo.</value>
   </data>
+  <data name="audio_effect_presets" xml:space="preserve">
+    <value>Preajustes de efectos de audio</value>
+  </data>
+  <data name="audio_effect_preset_name" xml:space="preserve">
+    <value>Nombre del preajuste</value>
+  </data>
+  <data name="audio_effect_preset_name_placeholder" xml:space="preserve">
+    <value>Introduce un nombre de preajuste</value>
+  </data>
+  <data name="save_audio_effect_preset" xml:space="preserve">
+    <value>Guardar efectos actuales</value>
+  </data>
+  <data name="delete_audio_effect_preset" xml:space="preserve">
+    <value>Eliminar preajuste</value>
+  </data>
+  <data name="audio_effect_preset_applied" xml:space="preserve">
+    <value>Preajuste de efectos de audio aplicado: {0}</value>
+  </data>
+  <data name="no_audio_effect_presets" xml:space="preserve">
+    <value>No hay preajustes guardados</value>
+  </data>
 </root>

@@ -241,6 +241,10 @@ namespace AXPlayer.App.Screens
         private Bindable<bool> reverbEnabled, rotateEnabled, echoEnabled, distortionEnabled, karaokeEnabled, chorusEnabled, eightBitEnabled;
         private FillFlowContainer reverbSettings, rotateSettings, echoSettings, distortionSettings, karaokeSettings, chorusSettings, eightBitSettings;
 
+        //audio effect presets
+        private FormTextBox audioEffectPresetNameBox;
+        private FillFlowContainer audioEffectPresetList;
+
         private Bindable<bool> repeat = new Bindable<bool>();
         private Bindable<bool> alwaysShowControl = new Bindable<bool>();
 
