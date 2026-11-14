@@ -1025,6 +1025,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.TachometerAlt,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothPlaybackSpeed),
                                                             CornerType = FormControlCornerType.Center,
+                                                            Hotkey = new Hotkey(GlobalAction.ToggleSmoothPlaybackSpeed)
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
