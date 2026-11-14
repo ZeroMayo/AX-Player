@@ -251,8 +251,10 @@ namespace AXPlayer.App.Online
                 request.Headers.TryAddWithoutValidation(@"X-Youtube-Client-Name", @"1");
                 request.Headers.TryAddWithoutValidation(@"X-Youtube-Client-Version", web_client_version);
 
+                /*
                 if (googleOAuth2.SignedIn.Value)
                     request.Headers.TryAddWithoutValidation(@"Authorization", $@"Bearer {googleOAuth2.GetAccessToken()}");
+                */
 
                 using HttpResponseMessage response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
