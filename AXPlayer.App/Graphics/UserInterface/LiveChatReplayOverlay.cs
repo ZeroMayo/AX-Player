@@ -140,7 +140,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     },
                 },
                 emptyState = createEmptyState(overlayColourProvider),
-                loadingState = createLoadingState(overlayColourProvider),
+                loadingState = createLoadingState(),
                 new Box
                 {
                     Name = "masking of overlay",
@@ -457,7 +457,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             };
         }
 
-        private Container createLoadingState(OverlayColourProvider overlayColourProvider)
+        private Container createLoadingState()
         {
             return new Container
             {
