@@ -1911,7 +1911,7 @@ namespace AXPlayer.App.Screens
                                             ProgressiveBlurTopHeight = (250) + (56 + 20),
                                             Padding = new MarginPadding
                                             {
-                                                Bottom = 16,
+                                                Bottom = 56,
                                                 Top = 250 + 16,
                                             },
                                             Children = new Drawable[]
@@ -2101,7 +2101,7 @@ namespace AXPlayer.App.Screens
                                             ScrollbarVisible = false,
                                             Padding = new MarginPadding
                                             {
-                                                Bottom = 16,
+                                                Bottom = 56,
                                                 Top = 56,
                                                 Horizontal = 16,
                                             },
@@ -2249,7 +2249,7 @@ namespace AXPlayer.App.Screens
                                             ScrollbarVisible = false,
                                             Padding = new MarginPadding
                                             {
-                                                Bottom = 16,
+                                                Bottom = 56,
                                                 Top = 56,
                                                 Horizontal = 4,
                                             },
