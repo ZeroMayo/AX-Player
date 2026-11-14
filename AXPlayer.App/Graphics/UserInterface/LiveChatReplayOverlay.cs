@@ -463,14 +463,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 RelativeSizeAxes = Axes.Both,
                 Alpha = 0,
-                Child = new ProjectYomiSpriteText
-                {
-                    Anchor = Anchor.Centre,
-                    Origin = Anchor.Centre,
-                    Font = AXPlayerApp.DefaultFont.With(size: compact ? 14 : 22, weight: "SemiBold"),
-                    Text = AXPlayerStrings.LiveChatReplayLoading,
-                    Colour = overlayColourProvider.Content2,
-                },
+                Child = new AXPlayerLoadingLayer()
             };
         }
 
