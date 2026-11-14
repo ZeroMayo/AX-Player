@@ -7,10 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Crypto.AES;
 using Google.Apis.Auth.OAuth2;
-using Google.Apis.Oauth2.v2;
-using Google.Apis.Oauth2.v2.Data;
-using Google.Apis.Services;
 using Google.Apis.Util.Store;
+using Google.Apis.Util;
 using osu.Framework.Bindables;
 using osu.Framework.Logging;
 using AXPlayer.App.Config;
@@ -20,15 +18,9 @@ namespace AXPlayer.App.Online
 {
     public partial class GoogleOAuth2
     {
-        private static bool isTestClient_static;
-
         private AXPlayerConfigManager appConfig;
-
-        private bool isTestClient
-        {
-            get => isTestClient_static;
-            set => isTestClient_static = value;
-        }
+        private readonly bool isTestClient;
+        private readonly SemaphoreSlim credentialLock = new SemaphoreSlim(1, 1);
 
         public GoogleOAuth2(AXPlayerConfigManager appConfig, bool isTestClient)
         {
@@ -44,35 +36,43 @@ namespace AXPlayer.App.Online
 
         public async Task SignIn()
         {
-            credential = await getUserCredentialAsync();
-
-            if (!string.IsNullOrEmpty(appConfig.Get<string>(AXPlayerSetting.AccessToken)))
+            await credentialLock.WaitAsync().ConfigureAwait(false);
+            try
             {
-                await credential.RefreshTokenAsync(CancellationToken.None);
+                if (!SignedIn.Value)
+                    credential = await getUserCredentialAsync().ConfigureAwait(false);
+
+                await refreshCredentialIfNeededAsync().ConfigureAwait(false);
+
+                Logger.Log("signed in to google");
+
+                SignedIn.Value = true;
+                appConfig.SetValue<string>(AXPlayerSetting.AccessToken, credential.Token.AccessToken);
             }
-
-            // OAuth2 API 클라이언트를 생성합니다.
-            var oauth2Service = new Oauth2Service(new BaseClientService.Initializer()
+            finally
             {
-                HttpClientInitializer = credential
-            });
-
-            Logger.Log("signed in to google");
-
-            SignedIn.Value = true;
-            appConfig.SetValue<string>(AXPlayerSetting.AccessToken, GetAccessToken());
+                credentialLock.Release();
+            }
         }
 
         public async Task SignOut()
         {
-            if (credential != null)
+            await credentialLock.WaitAsync().ConfigureAwait(false);
+            try
             {
+                if (credential == null)
+                    return;
+
                 await credential.RevokeTokenAsync(CancellationToken.None);
 
                 Logger.Log("signed out to google");
-
                 SignedIn.Value = false;
                 appConfig.SetValue<string>(AXPlayerSetting.AccessToken, string.Empty);
+                credential = null;
+            }
+            finally
+            {
+                credentialLock.Release();
             }
         }
 
@@ -81,7 +81,16 @@ namespace AXPlayer.App.Online
             if (!SignedIn.Value)
                 return string.Empty;
 
-            return credential?.Token?.AccessToken;
+            credentialLock.Wait();
+            try
+            {
+                refreshCredentialIfNeededAsync().GetAwaiter().GetResult();
+                return credential?.Token?.AccessToken ?? string.Empty;
+            }
+            finally
+            {
+                credentialLock.Release();
+            }
         }
 
         public UserCredential GetCredential()
@@ -92,12 +101,12 @@ namespace AXPlayer.App.Online
             return credential;
         }
 
-        private static ClientSecrets getAuthConfig()
+        private ClientSecrets getAuthConfig()
         {
             ClientSecrets wth = new ClientSecrets();
 
-            string str1 = !isTestClient_static ? "ZZLYQ+6EpclmaSSEKGqfVglCIf3Qhk9C744YKjGg8nZ6GkIq/S5v6NMRLEiTO0L/bp/dIZCP/oZGgsfZO1EF8ngylv7MYPJswUrQand0plM=" : "GkAYdCHFjxBARXzB9XFVpm2jNC9hMnyTECc1mo36Xb841Qomeo7RVLqz/bbBs9TadbhgkqbrEuYNMJHLklgae11ToWTmc3VtYOiyyELMy6Q=";
-            string str2 = isTestClient_static ? "NKGBVZGTYD2i++0r+GzyNiK6nFEgiIqvBcgKIUqS844d6X4Js0U4tykxMMzFsZdG" : "Hmg9SjNCg5BT774C1H0VEwcFTi5JLiBhyP++dnYnAqZkiPXA7VwCyW7aPHZxfIYf";
+            string str1 = !isTestClient ? "ZZLYQ+6EpclmaSSEKGqfVglCIf3Qhk9C744YKjGg8nZ6GkIq/S5v6NMRLEiTO0L/bp/dIZCP/oZGgsfZO1EF8ngylv7MYPJswUrQand0plM=" : "GkAYdCHFjxBARXzB9XFVpm2jNC9hMnyTECc1mo36Xb841Qomeo7RVLqz/bbBs9TadbhgkqbrEuYNMJHLklgae11ToWTmc3VtYOiyyELMy6Q=";
+            string str2 = isTestClient ? "NKGBVZGTYD2i++0r+GzyNiK6nFEgiIqvBcgKIUqS844d6X4Js0U4tykxMMzFsZdG" : "Hmg9SjNCg5BT774C1H0VEwcFTi5JLiBhyP++dnYnAqZkiPXA7VwCyW7aPHZxfIYf";
 
             using (AES aes_1 = new AES("youtube-player-ex"))
             {
@@ -115,20 +124,33 @@ namespace AXPlayer.App.Online
             }
         }
 
-        private static async Task<UserCredential> getUserCredentialAsync()
+        private async Task refreshCredentialIfNeededAsync()
         {
-            UserCredential credential;
+            if (credential?.Token == null)
+                throw new System.InvalidOperationException("Google OAuth credentials are not available.");
 
-            string credPath = (isTestClient_static || DebugUtils.IsDebugBuild) ? @"AXPlayer-development/OAuth2" : @"AXPlayer/OAuth2";
-            credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+            if (!credential.Token.IsExpired(SystemClock.Default))
+                return;
+
+            if (string.IsNullOrWhiteSpace(credential.Token.RefreshToken))
+                throw new System.InvalidOperationException("The Google OAuth refresh token is unavailable. Sign in again.");
+
+            if (!await credential.RefreshTokenAsync(CancellationToken.None).ConfigureAwait(false))
+                throw new System.InvalidOperationException("Google OAuth access token refresh failed. Sign in again.");
+
+            appConfig.SetValue<string>(AXPlayerSetting.AccessToken, credential.Token.AccessToken);
+        }
+
+        private async Task<UserCredential> getUserCredentialAsync()
+        {
+            string credPath = (isTestClient || DebugUtils.IsDebugBuild) ? @"AXPlayer-development/OAuth2" : @"AXPlayer/OAuth2";
+            return await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 getAuthConfig(),
                 new[] { Google.Apis.YouTube.v3.YouTubeService.Scope.YoutubeForceSsl },
                 "user",
                 CancellationToken.None,
                 new FileDataStore(credPath, false)
-            );
-
-            return credential;
+            ).ConfigureAwait(false);
         }
     }
 }
