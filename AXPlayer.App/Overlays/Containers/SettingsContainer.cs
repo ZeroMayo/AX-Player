@@ -263,7 +263,11 @@ namespace AXPlayer.App.Overlays.Containers
 
         public FormButton CheckForUpdatesButton;
 
-        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, captionLangOptions, wasapiExperimentalItem, releaseStreamSelectorButtonCore;
+        private SettingsItemV2 checkForUpdatesButtonCore, reflexSettingBase, wasapiExperimentalItem, releaseStreamSelectorButtonCore;
+
+        public SettingsItemV2 CaptionLangOptions;
+
+        public Bindable<bool> CaptionLangOptionsEnabled = new Bindable<bool>(false);
 
         private FormCheckBox wasapiExperimental;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
@@ -1137,7 +1141,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Note = { BindTarget = srv3Notice },
                                                         },
-                                                        captionLangOptions = new SettingsItemV2(CaptionLangDropdown = new YouTubeI18nLangDropdown
+                                                        CaptionLangOptions = new SettingsItemV2(CaptionLangDropdown = new YouTubeI18nLangDropdown
                                                         {
                                                             Caption = AXPlayerStrings.CaptionLanguage,
                                                             Icon = FontAwesome.Solid.Language,
@@ -1478,6 +1482,7 @@ namespace AXPlayer.App.Overlays.Containers
 
             VideoQualitySettingsCore.Hide();
             AudioQualitySettingsCore.Hide();
+            CaptionLangOptions.Hide();
 
             dislikeCounterCredits.AddText(AXPlayerStrings.DislikeCounterCredits_1);
             dislikeCounterCredits.AddLink("Return YouTube Dislike API", "https://returnyoutubedislike.com/");
@@ -1572,10 +1577,21 @@ namespace AXPlayer.App.Overlays.Containers
 
             captionEnabled.BindValueChanged(enabled =>
             {
-                if (enabled.NewValue)
-                    captionLangOptions.Show();
+                if (CaptionLangOptionsEnabled.Value)
+                {
+                    if (enabled.NewValue)
+                        CaptionLangOptions.Show();
+                    else
+                        CaptionLangOptions.Hide();
+                }
+            }, true);
+
+            CaptionLangOptionsEnabled.BindValueChanged(enabled =>
+            {
+                if (captionEnabled.Value)
+                    CaptionLangOptions.Show();
                 else
-                    captionLangOptions.Hide();
+                    CaptionLangOptions.Hide();
             }, true);
 
             renderer.BindValueChanged(r =>
