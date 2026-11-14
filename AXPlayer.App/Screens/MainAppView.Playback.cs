@@ -888,6 +888,8 @@ namespace AXPlayer.App.Screens
                         settingsContainer.VideoQualitySettingsCore.Show();
                         settingsContainer.AudioQualitySettingsCore.Show();
 
+                        settingsContainer.CaptionLangOptionsEnabled.Value = true;
+
                         //bool videoCached = !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg") || !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm");
 
                         isVideoLoading = true;
