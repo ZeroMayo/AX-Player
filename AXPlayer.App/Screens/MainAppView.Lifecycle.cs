@@ -381,10 +381,15 @@ namespace AXPlayer.App.Screens
         {
             Schedule(() =>
             {
-                if (currentVideoSource != null)
-                    speedText.SetText($"{(int)Math.Round((currentVideoSource.PlaybackSpeed.Value) * 100)}%");
-                else
-                    speedText.SetText($"{(int)Math.Round((playbackSpeed.Value) * 100)}%");
+                YouTubeVideoPlayer source = currentVideoSource;
+
+                // Once a source has been disposed it no longer reflects the configured playback speed,
+                // so fall back to the view's own bindable instead of showing a stale value.
+                double? sourceSpeed = source != null && source.IsPlaybackAvailable && source.PlaybackSpeed != null
+                    ? source.PlaybackSpeed.Value
+                    : null;
+
+                speedText.SetText(PlaybackSpeedDisplay.Format(PlaybackSpeedDisplay.ResolveSpeed(playbackSpeed.Value, sourceSpeed)));
             });
         }
 

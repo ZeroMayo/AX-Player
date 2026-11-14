@@ -64,6 +64,14 @@ namespace AXPlayer.App.Graphics.Videos
         private BufferedContainer blurContainer = null!;
 
         public Bindable<double> PlaybackSpeed = null!;
+
+        private bool playbackAvailable = true;
+
+        /// <summary>
+        /// Whether this player can still receive playback commands. Becomes <c>false</c> once the player is disposed.
+        /// </summary>
+        public bool IsPlaybackAvailable => playbackAvailable;
+
         private readonly double resumeFromTime;
         private readonly double initialVolume;
         private readonly bool startPaused;
@@ -540,9 +548,11 @@ namespace AXPlayer.App.Graphics.Videos
 
         protected override void Dispose(bool isDisposing)
         {
+            playbackAvailable = false;
+
             uiLanguage.UnbindAll();
             uiVisible.UnbindAll();
-            PlaybackSpeed.UnbindAll();
+            PlaybackSpeed?.UnbindAll();
             LiveChatOverlayVisible.UnbindAll();
             liveChatLoadCancellation?.Cancel();
             liveChatLoadCancellation?.Dispose();

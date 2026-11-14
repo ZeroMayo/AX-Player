@@ -28,6 +28,7 @@ using AXPlayer.App.Overlays.Containers;
 using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Overlays.Volume;
 using AXPlayer.App.Updater;
+using AXPlayer.App.Utils;
 using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Sample;
@@ -4022,9 +4023,12 @@ namespace AXPlayer.App.Screens
 
             playbackSpeed.BindValueChanged(speed =>
             {
+                // Update the display before touching the video source. Forwarding the speed to a
+                // disposed source must never be able to abort this handler.
+                updatePlaybackSpeedDisplay();
+                setPlaybackSpeed(speed.NewValue);
                 updatePresence(discordRichPresence.Value);
                 //this.TransformBindableTo(speedTextRolling, speed.NewValue, 400, Easing.OutQuint);
-                updatePlaybackSpeedDisplay();
             }, true);
 
             speedTextRolling.BindValueChanged(speed =>
@@ -4037,7 +4041,7 @@ namespace AXPlayer.App.Screens
             {
                 Schedule(() =>
                 {
-                    speedText.SetText($"{(int)Math.Round(playbackSpeed.Value * 100)}%");
+                    speedText.SetText(PlaybackSpeedDisplay.Format(playbackSpeed.Value));
                 });
             }, true);
 

@@ -68,10 +68,10 @@ namespace AXPlayer.App.Screens
                     seekTo(seek.NewValue * 1000);
             });
 
-            playbackSpeed.BindValueChanged(speed =>
-            {
-                setPlaybackSpeed(speed.NewValue);
-            }, true);
+            // The playback speed is applied from the single binding registered during load,
+            // so re-registering it for every video would leave stale handlers behind.
+            setPlaybackSpeed(playbackSpeed.Value);
+            updatePlaybackSpeedDisplay();
 
             currentVideoSource.OnSeekAction = () =>
             {
@@ -609,7 +609,14 @@ namespace AXPlayer.App.Screens
 
         private void setPlaybackSpeed(double speed)
         {
-            currentVideoSource?.SetPlaybackSpeed(speed);
+            YouTubeVideoPlayer source = currentVideoSource;
+
+            // A disposed player no longer owns its playback clock, so forwarding speed changes to it
+            // can throw and abort the remaining playbackSpeed bindings (including the speed display).
+            if (source == null || !source.IsPlaybackAvailable || source.PlaybackSpeed == null)
+                return;
+
+            source.SetPlaybackSpeed(speed);
         }
 
         private void playVideo()
