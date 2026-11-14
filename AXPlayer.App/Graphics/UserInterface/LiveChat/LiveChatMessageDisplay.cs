@@ -187,6 +187,15 @@ namespace AXPlayer.App.Graphics.UserInterface.LiveChat
                 });
             }
 
+            var messageText = new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: compact ? 12 : 14, weight: "Regular"))
+            {
+                RelativeSizeAxes = Axes.X,
+                AutoSizeAxes = Axes.Y,
+                Colour = overlayColourProvider.Content2,
+            };
+
+            populateMessageText(messageText);
+
             var contents = new FillFlowContainer
             {
                 RelativeSizeAxes = Axes.X,
@@ -197,17 +206,28 @@ namespace AXPlayer.App.Graphics.UserInterface.LiveChat
                 Children = new Drawable[]
                 {
                     authorRow,
-                    new ProjectYomiTextFlowContainer(font => font.Font = AXPlayerApp.DefaultFont.With(size: compact ? 12 : 14, weight: "Regular"))
-                    {
-                        RelativeSizeAxes = Axes.X,
-                        AutoSizeAxes = Axes.Y,
-                        Text = Message.Text,
-                        Colour = overlayColourProvider.Content2,
-                    },
+                    messageText,
                 },
             };
 
             return contents;
+        }
+
+        private void populateMessageText(ProjectYomiTextFlowContainer container)
+        {
+            if (Message.Segments.Count == 0)
+            {
+                container.Text = Message.Text;
+                return;
+            }
+
+            foreach (LiveChatReplayTextSegment segment in Message.Segments)
+            {
+                if (segment.HasImage)
+                    container.AddArbitraryDrawable(new LiveChatEmojiSprite(segment, compact));
+                else if (!string.IsNullOrEmpty(segment.Text))
+                    container.AddText(segment.Text);
+            }
         }
 
         private Drawable createSystemMessage(OverlayColourProvider overlayColourProvider)

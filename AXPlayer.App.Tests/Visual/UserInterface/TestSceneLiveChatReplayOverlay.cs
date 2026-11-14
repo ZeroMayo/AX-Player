@@ -63,7 +63,7 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
                         "message": {
                           "runs": [
                             { "text": "Hello " },
-                            { "emoji": { "emojiId": "wave-emoji", "shortcuts": [":wave:"] } },
+                            { "emoji": { "emojiId": "wave-emoji", "shortcuts": [":wave:"], "isCustomEmoji": true, "image": { "thumbnails": [ { "url": "https://example.com/emoji.png", "width": 32, "height": 32 } ] } } },
                             { "text": " chat!" }
                           ]
                         },
@@ -168,6 +168,13 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
 
             AddStep("seek back to the start", () => overlay.PlaybackPosition.Value = 0);
             AddAssert("messages after the start are hidden again", () => displayedMessageCount == 1);
+        }
+
+        [Test]
+        public void RendersPictureEmoji()
+        {
+            AddStep("seek to the text message", () => overlay.PlaybackPosition.Value = 5);
+            AddAssert("the picture emoji is rendered as an image", () => overlay.ChildrenOfType<LiveChatEmojiSprite>().Any());
         }
 
         [Test]

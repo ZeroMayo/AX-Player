@@ -30,7 +30,7 @@ namespace AXPlayer.App.Tests.Online
                         "message": {
                           "runs": [
                             { "text": "Hello " },
-                            { "emoji": { "emojiId": "wave-emoji", "shortcuts": [":wave:"] } },
+                            { "emoji": { "emojiId": "wave-emoji", "shortcuts": [":wave:"], "isCustomEmoji": true, "image": { "thumbnails": [ { "url": "emoji-small.png" }, { "url": "emoji-large.png" } ], "accessibility": { "accessibilityData": { "label": "waving hand" } } } } },
                             { "text": " chat!" }
                           ]
                         },
@@ -124,6 +124,17 @@ namespace AXPlayer.App.Tests.Online
             Assert.That(message.AuthorChannelId, Is.EqualTo(@"UC0000000000000000000000"));
             Assert.That(message.AuthorPhotoUrl, Is.EqualTo(@"large.png"));
             Assert.That(message.Text, Is.EqualTo(@"Hello :wave: chat!"));
+            Assert.That(message.Segments, Has.Count.EqualTo(3));
+            Assert.That(message.Segments[0].Kind, Is.EqualTo(LiveChatReplayTextSegmentKind.Text));
+            Assert.That(message.Segments[0].Text, Is.EqualTo(@"Hello "));
+            Assert.That(message.Segments[1].Kind, Is.EqualTo(LiveChatReplayTextSegmentKind.Emoji));
+            Assert.That(message.Segments[1].Text, Is.EqualTo(@":wave:"));
+            Assert.That(message.Segments[1].ImageUrl, Is.EqualTo(@"emoji-large.png"));
+            Assert.That(message.Segments[1].Label, Is.EqualTo(@"waving hand"));
+            Assert.That(message.Segments[1].IsCustomEmoji, Is.True);
+            Assert.That(message.Segments[1].HasImage, Is.True);
+            Assert.That(message.Segments[2].Kind, Is.EqualTo(LiveChatReplayTextSegmentKind.Text));
+            Assert.That(message.Segments[2].Text, Is.EqualTo(@" chat!"));
             Assert.That(message.Badges, Has.Count.EqualTo(2));
             Assert.That(message.Badges[0].Label, Is.EqualTo(@"Moderator"));
             Assert.That(message.Badges[1].Label, Is.EqualTo(@"Member (1 year)"));
@@ -142,6 +153,51 @@ namespace AXPlayer.App.Tests.Online
 
             Assert.That(messages[2].Kind, Is.EqualTo(LiveChatReplayMessageKind.Membership));
             Assert.That(messages[2].Text, Is.EqualTo(@"Member (1 year)"));
+        }
+
+        [Test]
+        public void ParsesEmojiOnlyMessageAndEmojiWithoutImage()
+        {
+            const string json = """
+            [
+              {
+                "replayChatItemAction": {
+                  "actions": [
+                    {
+                      "addChatItemAction": {
+                        "item": {
+                          "liveChatTextMessageRenderer": {
+                            "id": "emoji-only-1",
+                            "authorName": { "simpleText": "Retsi" },
+                            "message": {
+                              "runs": [
+                                { "emoji": { "emojiId": "clap-emoji", "shortcuts": [":clapping_hands:"], "image": { "thumbnails": [ { "url": "clap.png" } ] } } },
+                                { "emoji": { "shortcuts": [":heart:"] } }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "videoOffsetTimeMsec": "1000"
+                }
+              }
+            ]
+            """;
+
+            IReadOnlyList<LiveChatReplayMessage> messages = LiveChatReplayParser.Parse(json);
+
+            Assert.That(messages, Has.Count.EqualTo(1));
+
+            LiveChatReplayMessage message = messages[0];
+
+            Assert.That(message.Text, Is.EqualTo(@":clapping_hands::heart:"));
+            Assert.That(message.Segments, Has.Count.EqualTo(2));
+            Assert.That(message.Segments[0].HasImage, Is.True);
+            Assert.That(message.Segments[0].ImageUrl, Is.EqualTo(@"clap.png"));
+            Assert.That(message.Segments[1].HasImage, Is.False);
+            Assert.That(message.Segments[1].Text, Is.EqualTo(@":heart:"));
         }
 
         [Test]

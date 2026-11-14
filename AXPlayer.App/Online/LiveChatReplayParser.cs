@@ -52,6 +52,54 @@ namespace AXPlayer.App.Online
     }
 
     /// <summary>
+    /// The kind of a <see cref="LiveChatReplayTextSegment"/>.
+    /// </summary>
+    public enum LiveChatReplayTextSegmentKind
+    {
+        /// <summary>Plain text.</summary>
+        Text,
+
+        /// <summary>An emoji, which may either be a Unicode character or a picture emoji (for example ":clapping_hands:").</summary>
+        Emoji,
+    }
+
+    /// <summary>
+    /// A piece of the message text of a <see cref="LiveChatReplayMessage"/>.
+    /// Message text is split into runs so that picture emoji can be rendered as images.
+    /// </summary>
+    public sealed class LiveChatReplayTextSegment
+    {
+        public LiveChatReplayTextSegmentKind Kind { get; init; } = LiveChatReplayTextSegmentKind.Text;
+
+        /// <summary>
+        /// The text of the run. For emoji this is the shortcut representation, for example ":clapping_hands:".
+        /// </summary>
+        public string Text { get; init; } = string.Empty;
+
+        /// <summary>
+        /// The URL of the picture emoji, if this run is a picture emoji.
+        /// </summary>
+        public string? ImageUrl { get; init; }
+
+        /// <summary>
+        /// The accessibility label of the emoji, if any.
+        /// </summary>
+        public string? Label { get; init; }
+
+        /// <summary>
+        /// Whether this emoji is a channel-specific (custom) emoji rather than a standard one.
+        /// </summary>
+        public bool IsCustomEmoji { get; init; }
+
+        /// <summary>
+        /// Whether this segment should be rendered as an image rather than as text.
+        /// </summary>
+        public bool HasImage => Kind == LiveChatReplayTextSegmentKind.Emoji && !string.IsNullOrEmpty(ImageUrl);
+
+        public override string ToString() => Text;
+    }
+
+    /// <summary>
     /// A single message of a YouTube live chat replay, positioned on the video timeline.
     /// </summary>
     public sealed class LiveChatReplayMessage
@@ -78,6 +126,13 @@ namespace AXPlayer.App.Online
         /// The flattened message text. Emoji are expanded to their shortcut representation.
         /// </summary>
         public string Text { get; init; } = string.Empty;
+
+        /// <summary>
+        /// The message text split into runs. Picture emoji (which carry an <see cref="LiveChatReplayTextSegment.ImageUrl"/>
+        /// when the payload provides one) can be rendered as images from this list.
+        /// The list is empty when the message has no runs, in which case <see cref="Text"/> is the whole message.
+        /// </summary>
+        public IReadOnlyList<LiveChatReplayTextSegment> Segments { get; init; } = Array.Empty<LiveChatReplayTextSegment>();
 
         /// <summary>
         /// The paid amount for <see cref="LiveChatReplayMessageKind.Paid"/> and <see cref="LiveChatReplayMessageKind.Sticker"/> messages.
@@ -190,7 +245,8 @@ namespace AXPlayer.App.Online
             if (renderer.ValueKind != JsonValueKind.Object)
                 return null;
 
-            string text = extractText(renderer);
+            var segments = new List<LiveChatReplayTextSegment>();
+            string text = extractText(renderer, segments);
 
             if (string.IsNullOrEmpty(text))
             {
@@ -233,29 +289,32 @@ namespace AXPlayer.App.Online
                 AuthorChannelId = getString(renderer, "authorExternalChannelId"),
                 AuthorPhotoUrl = photoUrl,
                 Text = text,
+                Segments = segments,
                 AmountText = string.IsNullOrEmpty(amountText) ? null : amountText,
                 Badges = getBadges(renderer),
             };
         }
 
-        private static string extractText(JsonElement renderer)
+        private static string extractText(JsonElement renderer, List<LiveChatReplayTextSegment>? segments)
         {
             if (renderer.TryGetProperty("message", out JsonElement message))
-                return extractRunsText(message);
+                return extractRunsText(message, segments);
 
             return string.Empty;
         }
 
-        private static string extractRunsText(JsonElement container)
+        private static string extractRunsText(JsonElement container) => extractRunsText(container, null);
+
+        private static string extractRunsText(JsonElement container, List<LiveChatReplayTextSegment>? segments)
         {
             switch (container.ValueKind)
             {
                 case JsonValueKind.String:
-                    return container.GetString() ?? string.Empty;
+                    return appendText(container.GetString() ?? string.Empty, segments);
 
                 case JsonValueKind.Object:
                     if (container.TryGetProperty("simpleText", out JsonElement simpleText) && simpleText.ValueKind == JsonValueKind.String)
-                        return simpleText.GetString() ?? string.Empty;
+                        return appendText(simpleText.GetString() ?? string.Empty, segments);
 
                     if (!container.TryGetProperty("runs", out JsonElement runs) || runs.ValueKind != JsonValueKind.Array)
                         return string.Empty;
@@ -269,24 +328,17 @@ namespace AXPlayer.App.Online
 
                         if (run.TryGetProperty("text", out JsonElement text) && text.ValueKind == JsonValueKind.String)
                         {
-                            builder.Append(text.GetString());
+                            builder.Append(appendText(text.GetString() ?? string.Empty, segments));
                             continue;
                         }
 
                         if (!run.TryGetProperty("emoji", out JsonElement emoji))
                             continue;
 
-                        if (emoji.TryGetProperty("shortcuts", out JsonElement shortcuts)
-                            && shortcuts.ValueKind == JsonValueKind.Array
-                            && shortcuts.GetArrayLength() > 0
-                            && shortcuts[0].ValueKind == JsonValueKind.String)
-                        {
-                            builder.Append(shortcuts[0].GetString());
-                        }
-                        else if (emoji.TryGetProperty("emojiId", out JsonElement emojiId) && emojiId.ValueKind == JsonValueKind.String)
-                        {
-                            builder.Append(emojiId.GetString());
-                        }
+                        LiveChatReplayTextSegment segment = createEmojiSegment(emoji);
+
+                        builder.Append(segment.Text);
+                        segments?.Add(segment);
                     }
 
                     return builder.ToString();
@@ -294,6 +346,79 @@ namespace AXPlayer.App.Online
                 default:
                     return string.Empty;
             }
+        }
+
+        private static string appendText(string text, List<LiveChatReplayTextSegment>? segments)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            if (segments != null)
+            {
+                // Merge adjacent text runs so that messages do not end up with one segment per run.
+                if (segments.Count > 0 && segments[^1].Kind == LiveChatReplayTextSegmentKind.Text)
+                {
+                    LiveChatReplayTextSegment previous = segments[^1];
+
+                    segments[^1] = new LiveChatReplayTextSegment
+                    {
+                        Kind = LiveChatReplayTextSegmentKind.Text,
+                        Text = previous.Text + text,
+                    };
+                }
+                else
+                {
+                    segments.Add(new LiveChatReplayTextSegment
+                    {
+                        Kind = LiveChatReplayTextSegmentKind.Text,
+                        Text = text,
+                    });
+                }
+            }
+
+            return text;
+        }
+
+        private static LiveChatReplayTextSegment createEmojiSegment(JsonElement emoji)
+        {
+            string shortcut = string.Empty;
+
+            if (emoji.TryGetProperty("shortcuts", out JsonElement shortcuts)
+                && shortcuts.ValueKind == JsonValueKind.Array
+                && shortcuts.GetArrayLength() > 0
+                && shortcuts[0].ValueKind == JsonValueKind.String)
+            {
+                shortcut = shortcuts[0].GetString() ?? string.Empty;
+            }
+            else if (emoji.TryGetProperty("emojiId", out JsonElement emojiId) && emojiId.ValueKind == JsonValueKind.String)
+            {
+                shortcut = emojiId.GetString() ?? string.Empty;
+            }
+
+            string? imageUrl = null;
+            string? label = null;
+
+            if (emoji.TryGetProperty("image", out JsonElement image) && image.ValueKind == JsonValueKind.Object)
+            {
+                imageUrl = getThumbnailUrl(image);
+
+                if (image.TryGetProperty("accessibility", out JsonElement accessibility)
+                    && accessibility.TryGetProperty("accessibilityData", out JsonElement accessibilityData)
+                    && accessibilityData.TryGetProperty("label", out JsonElement accessibilityLabel)
+                    && accessibilityLabel.ValueKind == JsonValueKind.String)
+                    label = accessibilityLabel.GetString();
+            }
+
+            bool isCustomEmoji = emoji.TryGetProperty("isCustomEmoji", out JsonElement customEmoji) && customEmoji.ValueKind == JsonValueKind.True;
+
+            return new LiveChatReplayTextSegment
+            {
+                Kind = LiveChatReplayTextSegmentKind.Emoji,
+                Text = shortcut,
+                ImageUrl = imageUrl,
+                Label = label,
+                IsCustomEmoji = isCustomEmoji,
+            };
         }
 
         private static IReadOnlyList<LiveChatReplayBadge> getBadges(JsonElement renderer)
