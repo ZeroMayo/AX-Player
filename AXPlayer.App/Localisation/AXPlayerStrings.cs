@@ -1701,6 +1701,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString SmoothPlaybackSpeed => new TranslatableString(getKey(@"smooth_playback_speed"), @"Smooth playback speed adjustment");
 
         /// <summary>
+        /// "Show live chats in screenshots"
+        /// </summary>
+        public static LocalisableString ShowLiveChatsInScreenshots => new TranslatableString(getKey(@"show_live_chats_in_screenshots"), @"Show live chats in screenshots");
+
+        /// <summary>
         /// Gets the localized description for a global keyboard shortcut.
         /// </summary>
         public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(

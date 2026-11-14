@@ -151,6 +151,9 @@
   <data name="sfx_volume" xml:space="preserve">
     <value>音響効果ボリューム</value>
   </data>
+  <data name="show_live_chats_in_screenshots" xml:space="preserve">
+    <value>スクリーンショットにライブチャットを表示</value>
+  </data>
   <data name="ui_scaling" xml:space="preserve">
     <value>UIの表示倍率</value>
   </data>

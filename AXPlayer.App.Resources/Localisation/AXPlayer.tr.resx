@@ -151,6 +151,9 @@
   <data name="sfx_volume" xml:space="preserve">
     <value>SFX ses düzeyi</value>
   </data>
+  <data name="show_live_chats_in_screenshots" xml:space="preserve">
+    <value>Ekran görüntülerinde canlı sohbetleri göster</value>
+  </data>
   <data name="ui_scaling" xml:space="preserve">
     <value>Arayüz ölçeklendirmesi</value>
   </data>

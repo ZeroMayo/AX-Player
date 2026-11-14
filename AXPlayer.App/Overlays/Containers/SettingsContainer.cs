@@ -341,6 +341,8 @@ namespace AXPlayer.App.Overlays.Containers
 
         private Bindable<ScreenshotFormat> screenshotFormat;
 
+        private Bindable<bool> screenshotUIVisible;
+
         private void prepareSettingsTabs()
         {
             Drawable[] drawables = new Drawable[]
@@ -450,6 +452,7 @@ namespace AXPlayer.App.Overlays.Containers
             configReleaseStream = appConfig.GetBindable<ReleaseStream>(AXPlayerSetting.ReleaseStream);
 
             screenshotFormat = appConfig.GetBindable<ScreenshotFormat>(AXPlayerSetting.ScreenshotFormat);
+            screenshotUIVisible = appConfig.GetBindable<bool>(AXPlayerSetting.ScreenshotCaptureMenuCursor);
             window = host.Window;
 
             var reflexMode = config.GetBindable<LatencyMode>(FrameworkSetting.LatencyMode);
@@ -924,13 +927,32 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 }),
                                                             }
                                                         },
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        new SettingsItemV2(screenshotUIVisibleOption = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShowCursorInScreenshots,
                                                             Icon = FontAwesome.Solid.MousePointer,
-                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.ScreenshotCaptureMenuCursor),
+                                                            Current = screenshotUIVisible,
                                                             CornerType = FormControlCornerType.Bottom,
+                                                            DynamicCornerType = true,
                                                         }),
+                                                        screenshotUIOptions = new FillFlowContainer
+                                                        {
+                                                            Direction = FillDirection.Vertical,
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            Masking = true,
+                                                            Spacing = new Vector2(0, 4),
+                                                            Children = new Drawable[]
+                                                            {
+                                                                new SettingsItemV2(new FormCheckBox
+                                                                {
+                                                                    Caption = AXPlayerStrings.ShowLiveChatsInScreenshots,
+                                                                    Icon = FontAwesome.Solid.CommentAlt,
+                                                                    Current = appConfig.GetBindable<bool>(AXPlayerSetting.ScreenshotCaptureLiveChat),
+                                                                    CornerType = FormControlCornerType.Bottom,
+                                                                }),
+                                                            }
+                                                        },
                                                         new SettingsSectionHeader
                                                         {
                                                             Name = "Video Settings",
@@ -1433,11 +1455,11 @@ namespace AXPlayer.App.Overlays.Containers
                 }
             };
 
-            screenshotFormat.BindValueChanged(_ =>
+            screenshotUIVisible.BindValueChanged(_ =>
             {
-                screenshotOptions.ClearTransforms();
-                screenshotOptions.AutoSizeDuration = 400;
-                screenshotOptions.AutoSizeEasing = Easing.OutQuint;
+                screenshotUIOptions.ClearTransforms();
+                screenshotUIOptions.AutoSizeDuration = 400;
+                screenshotUIOptions.AutoSizeEasing = Easing.OutQuint;
 
                 updateScreenshotOptionsVisibility();
             }, true);
@@ -1716,6 +1738,12 @@ namespace AXPlayer.App.Overlays.Containers
                         screenshotOptions.ResizeHeightTo(0, 400, Easing.OutQuint);
 
                     screenshotOptions.AutoSizeAxes = screenshotFormat.Value == ScreenshotFormat.Jpg ? Axes.Y : Axes.None;
+
+                    if (screenshotUIVisible.Value != true)
+                        screenshotUIOptions.ResizeHeightTo(0, 400, Easing.OutQuint);
+
+                    screenshotUIOptions.AutoSizeAxes = screenshotUIVisible.Value == true ? Axes.Y : Axes.None;
+                    screenshotUIVisibleOption.CornerType = screenshotUIVisible.Value == true ? FormControlCornerType.Center : FormControlCornerType.Bottom;
                 }
                 catch
                 {
@@ -1759,6 +1787,7 @@ namespace AXPlayer.App.Overlays.Containers
 
         private bool automaticRendererInUse;
         private FormCheckBox hwAccelCheckbox;
+        private FormCheckBox screenshotUIVisibleOption;
         private Bindable<SettingsNote.Data> hwAccelNote = new Bindable<SettingsNote.Data>();
         private Bindable<SettingsNote.Data> reflexNotice = new Bindable<SettingsNote.Data>();
 
@@ -1841,7 +1870,7 @@ namespace AXPlayer.App.Overlays.Containers
         private Bindable<SettingsNote.Data> discordNotInstalledNote = new Bindable<SettingsNote.Data>();
         private LinkFlowContainer dislikeCounterCredits, madeByText, gameVersion;
         private FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode> discordRichPresenceDropdown;
-        private FillFlowContainer volumeOptions, screenshotOptions;
+        private FillFlowContainer volumeOptions, screenshotOptions, screenshotUIOptions;
 
         private FormEnumDropdown<GCLatencyMode> latencyModeDropdown;
 

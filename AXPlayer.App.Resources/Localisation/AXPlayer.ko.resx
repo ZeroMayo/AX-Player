@@ -151,6 +151,9 @@
   <data name="sfx_volume" xml:space="preserve">
     <value>효과음 음량</value>
   </data>
+  <data name="show_live_chats_in_screenshots" xml:space="preserve">
+    <value>스크린샷에 실시간 채팅 표시</value>
+  </data>
   <data name="ui_scaling" xml:space="preserve">
     <value>UI 크기 조정</value>
   </data>

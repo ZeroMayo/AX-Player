@@ -73,11 +73,14 @@ namespace AXPlayer.App.Graphics
 
         private Sample? shutter;
 
+        private Bindable<bool> isLiveChatInvisible = null!;
+
         [BackgroundDependencyLoader]
-        private void load(Storage storage, AudioManager audio)
+        private void load(Storage storage, AudioManager audio, SessionStatics sessionStatics)
         {
             this.storage = storage.GetStorageForDirectory(@"screenshots");
             shutter = audio.Samples.Get("UI/shutter");
+            isLiveChatInvisible = sessionStatics.GetBindable<bool>(Static.IsLiveChatInvisible);
         }
 
         public bool OnPressed(KeyBindingPressEvent<GlobalAction> e)
@@ -114,6 +117,7 @@ namespace AXPlayer.App.Graphics
 
             ScreenshotFormat screenshotFormat = config.Get<ScreenshotFormat>(AXPlayerSetting.ScreenshotFormat);
             bool captureMenuCursor = config.Get<bool>(AXPlayerSetting.ScreenshotCaptureMenuCursor);
+            bool captureLiveChat = config.Get<bool>(AXPlayerSetting.ScreenshotCaptureLiveChat);
 
             try
             {
@@ -124,6 +128,32 @@ namespace AXPlayer.App.Graphics
                     Schedule(() => onScreenDisplay.Hide());
                     Schedule(() => popupDialogOverlay?.Hide());
                     Schedule(() => restartDialogOverlay?.Hide());
+                    Schedule(() => isLiveChatInvisible.Value = true);
+
+                    // We need to wait for at most 3 draw nodes to be drawn, following which we can be assured at least one DrawNode has been generated/drawn with the set value
+                    const int frames_to_wait = 3;
+
+                    int framesWaited = 0;
+
+                    using (ManualResetEventSlim framesWaitedEvent = new ManualResetEventSlim(false))
+                    {
+                        ScheduledDelegate waitDelegate = host.DrawThread.Scheduler.AddDelayed(() =>
+                        {
+                            if (framesWaited++ >= frames_to_wait)
+                                // ReSharper disable once AccessToDisposedClosure
+                                framesWaitedEvent.Set();
+                        }, 10, true);
+
+                        if (!framesWaitedEvent.Wait(1000))
+                            throw new TimeoutException("Screenshot data did not arrive in a timely fashion");
+
+                        waitDelegate.Cancel();
+                    }
+                }
+
+                if (!captureLiveChat)
+                {
+                    Schedule(() => isLiveChatInvisible.Value = true);
 
                     // We need to wait for at most 3 draw nodes to be drawn, following which we can be assured at least one DrawNode has been generated/drawn with the set value
                     const int frames_to_wait = 3;
@@ -241,6 +271,7 @@ namespace AXPlayer.App.Graphics
                     Schedule(() => popupDialogOverlay?.Show());
                     Schedule(() => restartDialogOverlay?.Show());
                     Schedule(() => onScreenDisplay.Show());
+                    Schedule(() => isLiveChatInvisible.Value = false);
                 }
             }
         });

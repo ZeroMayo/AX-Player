@@ -151,6 +151,9 @@
   <data name="sfx_volume" xml:space="preserve">
     <value>Volumen de SFX</value>
   </data>
+  <data name="show_live_chats_in_screenshots" xml:space="preserve">
+    <value>Mostrar chats en directo en las capturas de pantalla</value>
+  </data>
   <data name="ui_scaling" xml:space="preserve">
     <value>Escala de usu</value>
   </data>

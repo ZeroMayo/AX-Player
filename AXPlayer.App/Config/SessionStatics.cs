@@ -20,6 +20,7 @@ namespace AXPlayer.App.Config
             SetDefault(Static.CurrentThumbnailUrl, string.Empty);
             SetDefault(Static.IsAnyOverlayOpen, false);
             SetDefault(Static.WindowIsTray, false);
+            SetDefault(Static.IsLiveChatInvisible, false);
         }
     }
 
@@ -35,5 +36,6 @@ namespace AXPlayer.App.Config
         CurrentThumbnailUrl,
         IsAnyOverlayOpen,
         WindowIsTray,
+        IsLiveChatInvisible,
     }
 }

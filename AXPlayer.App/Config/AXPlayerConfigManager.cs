@@ -55,6 +55,7 @@ namespace AXPlayer.App.Config
 
             SetDefault(AXPlayerSetting.ScreenshotFormat, ScreenshotFormat.Jpg);
             SetDefault(AXPlayerSetting.ScreenshotCaptureMenuCursor, true);
+            SetDefault(AXPlayerSetting.ScreenshotCaptureLiveChat, true);
 
             SetDefault(AXPlayerSetting.CursorRotation, true);
 
@@ -248,5 +249,6 @@ namespace AXPlayer.App.Config
         GlobalShortcutBindings,
         CheckUpdatesOnAppOpen,
         SmoothPlaybackSpeed,
+        ScreenshotCaptureLiveChat,
     }
 }

@@ -183,8 +183,10 @@ namespace AXPlayer.App.Graphics.Videos
             }
         }
 
+        private Bindable<bool> isLiveChatInvisible = null!;
+
         [BackgroundDependencyLoader]
-        private void load(ITrackStore tracks, AXPlayerConfigManager config, ScreenshotManager screenshotManager, OverlayColourProvider overlayColourProvider)
+        private void load(ITrackStore tracks, AXPlayerConfigManager config, ScreenshotManager screenshotManager, OverlayColourProvider overlayColourProvider, SessionStatics sessionStatics)
         {
             uiVisible = screenshotManager.CursorVisibility.GetBoundCopy();
             aspectRatioMethod = config.GetBindable<AspectRatioMethod>(AXPlayerSetting.AspectRatioMethod);
@@ -198,6 +200,8 @@ namespace AXPlayer.App.Graphics.Videos
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
             PlaybackSpeed = new Bindable<double>(1);
             uiLanguage = app.CurrentLanguage.GetBoundCopy();
+
+            isLiveChatInvisible = sessionStatics.GetBindable<bool>(Static.IsLiveChatInvisible);
 
             rateAdjustClock = new StopwatchClock(false);
             framedClock = new DecouplingFramedClock(rateAdjustClock);
@@ -332,11 +336,17 @@ namespace AXPlayer.App.Graphics.Videos
                     {
                         keyBindingAnimations.Show();
                         closedCaption.Show();
+
+                        if (!LiveChatOverlayVisible.Value && videoData.LiveStreamingDetails != null)
+                            liveChatToggleButton.Show();
                     }
                     else
                     {
                         keyBindingAnimations.Hide();
                         closedCaption.Hide();
+
+                        if (!LiveChatOverlayVisible.Value && videoData.LiveStreamingDetails != null)
+                            liveChatToggleButton.Hide();
                     }
 
                     updateLiveChatToggleVisibility();
@@ -366,6 +376,26 @@ namespace AXPlayer.App.Graphics.Videos
 
                 updateLiveChatToggleVisibility();
             }, true);
+
+            isLiveChatInvisible.BindValueChanged(invisible =>
+            {
+                if (invisible.NewValue)
+                {
+                    if (LiveChatOverlayVisible.Value)
+                        liveChatOverlayContainer.Hide();
+
+                    if (!LiveChatOverlayVisible.Value && videoData.LiveStreamingDetails != null)
+                        liveChatToggleButton.Hide();
+                }
+                else
+                {
+                    if (LiveChatOverlayVisible.Value)
+                        liveChatOverlayContainer.Show();
+
+                    if (!LiveChatOverlayVisible.Value && videoData.LiveStreamingDetails != null)
+                        liveChatToggleButton.Show();
+                }
+            });
 
             aspectRatioMethod.BindValueChanged(value =>
             {
