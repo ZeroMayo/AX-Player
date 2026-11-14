@@ -468,6 +468,7 @@ namespace AXPlayer.App.Overlays.Containers
 
             advancedSubtitles = appConfig.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
 
+            /*
             advancedSubtitles.BindValueChanged(value =>
             {
                 if (value.NewValue)
@@ -475,6 +476,7 @@ namespace AXPlayer.App.Overlays.Containers
                 else
                     srv3Notice.Value = null;
             }, true);
+            */
 
             var renderer = config.GetBindable<RendererType>(FrameworkSetting.Renderer);
             automaticRendererInUse = renderer.Value == RendererType.Automatic;

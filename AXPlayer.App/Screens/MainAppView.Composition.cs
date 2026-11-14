@@ -3846,7 +3846,7 @@ namespace AXPlayer.App.Screens
 
                             var trackLists = trackManifest.Tracks;
 
-                            var trackInfo = trackLists.Where(track => track.Language.Name == lang.NewValue.Name).First();
+                            var trackInfo = trackLists.Where(track => track.Language.Code == lang.NewValue.Hl).First();
 
                             ClosedCaptionTrack captionTrack = null;
 
@@ -3891,18 +3891,18 @@ namespace AXPlayer.App.Screens
 
                             if (settingsContainer.CaptionLangDropdown.Current.Value != null)
                             {
-                                preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Name.ToString();
+                                preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Hl.ToString();
                             }
                             else
                             {
-                                preferedLang = CultureInfo.CurrentCulture.EnglishName;
+                                preferedLang = CultureInfo.CurrentCulture.Name;
                             }
 
                             settingsContainer.CaptionLangDropdown.Current.Value = settingsContainer.CaptionLangDropdown.Items.Where(lang => lang.Hl.Contains(preferedLang)).First();
 
                             var trackLists = trackManifest.Tracks;
 
-                            var trackInfo = trackLists.Where(track => track.Language.Name.Contains(preferedLang)).First();
+                            var trackInfo = trackLists.Where(track => track.Language.Code.Contains(preferedLang)).First();
 
                             ClosedCaptionTrack captionTrack = null;
 
@@ -3953,18 +3953,18 @@ namespace AXPlayer.App.Screens
 
                             if (settingsContainer.CaptionLangDropdown.Current.Value != null)
                             {
-                                preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Name.ToString();
+                                preferedLang = settingsContainer.CaptionLangDropdown.Current.Value.Hl.ToString();
                             }
                             else
                             {
-                                preferedLang = CultureInfo.CurrentCulture.EnglishName;
+                                preferedLang = CultureInfo.CurrentCulture.Name;
                             }
 
                             settingsContainer.CaptionLangDropdown.Current.Value = settingsContainer.CaptionLangDropdown.Items.Where(lang => lang.Hl.Contains(preferedLang)).First();
 
                             var trackLists = trackManifest.Tracks;
 
-                            var trackInfo = trackLists.Where(track => track.Language.Name.Contains(preferedLang)).First();
+                            var trackInfo = trackLists.Where(track => track.Language.Code.Contains(preferedLang)).First();
 
                             ClosedCaptionTrack captionTrack = null;
 

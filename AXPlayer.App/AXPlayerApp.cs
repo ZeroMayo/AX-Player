@@ -208,11 +208,11 @@ namespace AXPlayer.App
             onScreenDisplay.BeginTracking(this, AudioEffectsConfig);
 
             loadComponentSingleFile(loadingOverlay, overlayContainer.Add, true);
-            loadComponentSingleFile(onScreenDisplay, topMostOverlayContent.Add, true);
             loadComponentSingleFile(notificationOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(popupDialogOverlay, overlayContainer.Add, true);
             loadComponentSingleFile(restartDialogOverlay, topMostOverlayContent.Add, true);
             loadComponentSingleFile(newToastOverlay, topMostOverlayContent.Add, true);
+            loadComponentSingleFile(onScreenDisplay, topMostOverlayContent.Add, true);
 
             loadComponentSingleFile(screenshotManager, Add, true);
 

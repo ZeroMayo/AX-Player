@@ -151,6 +151,7 @@ namespace AXPlayer.App.Config
         {
             new TrackedSetting<ClosedCaptionLanguage>(AXPlayerSetting.ClosedCaptionLanguage, v => new SettingDescription(v, AXPlayerStrings.CaptionLanguage, v.GetLocalisableDescription(), getShortcut(GlobalAction.CycleCaptionLanguage, "Shift+C"))),
             new TrackedSetting<AspectRatioMethod>(AXPlayerSetting.AspectRatioMethod, v => new SettingDescription(v, AXPlayerStrings.AspectRatioMethod, v.GetLocalisableDescription(), getShortcut(GlobalAction.CycleAspectRatio, "Ctrl+F6"))),
+            new TrackedSetting<DiscordRichPresenceMode>(AXPlayerSetting.DiscordRichPresence, v => new SettingDescription(v, AXPlayerStrings.DiscordRichPresence, v.GetLocalisableDescription())),
             new TrackedSetting<bool>(AXPlayerSetting.AdjustPitchOnSpeedChange, v => new SettingDescription(v, AXPlayerStrings.AdjustPitchOnSpeedChange, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.ToggleAdjustPitchOnSpeedChange, "Alt+P"))),
             new TrackedSetting<bool>(AXPlayerSetting.CaptionEnabled, v => new SettingDescription(v, AXPlayerStrings.ClosedCaptions, v == true ? AXPlayerStrings.Enabled.ToLower() : AXPlayerStrings.Disabled.ToLower(), getShortcut(GlobalAction.CycleCaptionLanguage, "Shift+C"))),
             new TrackedSetting<float>(AXPlayerSetting.UIScale, v => new SettingDescription(v, AXPlayerStrings.UIScaling, $@"{v:0.##}x")),

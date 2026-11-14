@@ -45,6 +45,13 @@ namespace AXPlayer.App.Graphics.Caption
         // because ClosedCaptionTrack does not expose SRV3's pen/span information.
         private Srv3CaptionTrack srv3Track;
 
+        // SRV3 documents can contain several <p> elements that are active at the
+        // same time, so each active cue is rendered by its own display instead of
+        // sharing a single text flow.
+        private Container srv3CaptionLayer;
+        private readonly Dictionary<Srv3Caption, Srv3CaptionDisplay> srv3Displays = new Dictionary<Srv3Caption, Srv3CaptionDisplay>();
+        private IReadOnlyList<Srv3Caption> lastSrv3Cues;
+
         private Bindable<bool> captionEnabled;
         private Bindable<CaptionFonts> captionFont;
         private BackdropBlurContainer captionContainer;
@@ -92,6 +99,7 @@ namespace AXPlayer.App.Graphics.Caption
         {
             srv3Track = null;
             this.captionTrack = captionTrack;
+            resetSrv3Captions();
         }
 
         /// <summary>
@@ -103,6 +111,7 @@ namespace AXPlayer.App.Graphics.Caption
             srv3Track = string.IsNullOrWhiteSpace(srv3Xml)
                 ? null
                 : Srv3CaptionTrack.Parse(srv3Xml);
+            resetSrv3Captions();
         }
 
         private Bindable<bool> controlsVisibleState = null!, smoothCaptionAnimation = null!;
@@ -125,6 +134,12 @@ namespace AXPlayer.App.Graphics.Caption
             captionBGRadius = config.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius);
             smoothCaptionAnimation = config.GetBindable<bool>(AXPlayerSetting.SmoothCaptionAnimation);
             closedCaptionsBackdropBlur = config.GetBindable<bool>(AXPlayerSetting.ClosedCaptionsBackdropBlur);
+
+            Add(srv3CaptionLayer = new Container
+            {
+                RelativeSizeAxes = Axes.Both,
+                Alpha = 0,
+            });
 
             Add(captionContainer = new BackdropBlurContainer
             {
@@ -168,21 +183,28 @@ namespace AXPlayer.App.Graphics.Caption
                 {
                     shadowOptions = spriteText => spriteText.Shadow = false;
                 }
+
+                // SRV3 displays bake the shadow option into their text, so they
+                // need to be rebuilt when the background opacity changes.
+                resetSrv3Captions();
             }, true);
 
             captionBGColor.BindValueChanged(colour =>
             {
                 bg.Colour = colour.NewValue;
+                applySrv3StyleToAll();
             }, true);
 
             captionBGRadius.BindValueChanged(corner =>
             {
                 captionContainer.CornerRadius = new CornersInfo(corner.NewValue);
+                applySrv3StyleToAll();
             }, true);
 
             closedCaptionsBackdropBlur.BindValueChanged(blur =>
             {
                 captionContainer.BlurSigma = new osuTK.Vector2(blur.NewValue ? 10 : 0);
+                applySrv3StyleToAll();
             }, true);
 
             smoothCaptionAnimation.BindValueChanged(enabled =>
@@ -194,6 +216,8 @@ namespace AXPlayer.App.Graphics.Caption
                 {
                     captionContainer.AutoSizeDuration = 0;
                 }
+
+                applySrv3StyleToAll();
             }, true);
 
             captionFont.BindValueChanged(v =>
@@ -252,6 +276,8 @@ namespace AXPlayer.App.Graphics.Caption
                         textCreationParameters = t => t.Font = AXPlayerApp.Fonts.GoogleSansFlex.With(size: 24);
                         break;
                 }
+
+                resetSrv3Captions();
             }, true);
 
             controlsVisibleState.BindValueChanged(v =>
@@ -265,6 +291,8 @@ namespace AXPlayer.App.Graphics.Caption
                 {
                     Bottom = v.NewValue
                 };
+
+                updateSrv3DisplayPositions();
             }, true);
         }
 
@@ -293,23 +321,28 @@ namespace AXPlayer.App.Graphics.Caption
 
                 if (srv3Track != null)
                 {
-                    Srv3Caption cue = srv3Track.TryGetByTime(TimeSpan.FromSeconds(time));
+                    // The legacy container is only used by YouTubeExplode tracks.
+                    if (captionContainer.Alpha != 0)
+                        captionContainer.Alpha = 0;
 
-                    if (cue != null)
+                    List<Srv3Caption> cues = srv3Track.GetByTime(TimeSpan.FromSeconds(time));
+
+                    syncSrv3Captions(cues);
+                    updateSrv3DisplayPositions();
+
+                    if (cues.Count > 0)
                     {
-                        renderSrv3Cue(cue);
-
                         if (smoothCaptionAnimation.Value)
-                            captionContainer.FadeIn(150, Easing.OutQuart);
+                            srv3CaptionLayer.FadeIn(150, Easing.OutQuart);
                         else
-                            captionContainer.FadeIn();
+                            srv3CaptionLayer.FadeIn();
                     }
                     else
                     {
                         if (smoothCaptionAnimation.Value)
-                            captionContainer.FadeOut(150, Easing.OutQuart);
+                            srv3CaptionLayer.FadeOut(150, Easing.OutQuart);
                         else
-                            captionContainer.FadeOut();
+                            srv3CaptionLayer.FadeOut();
                     }
 
                     return;
@@ -317,6 +350,10 @@ namespace AXPlayer.App.Graphics.Caption
 
                 if (captionTrack != null)
                 {
+                    if (srv3CaptionLayer.Alpha != 0)
+                        srv3CaptionLayer.Alpha = 0;
+
+
                     //fallback to bottom centere
                     captionContainer.Anchor = Anchor.BottomCentre;
                     captionContainer.Origin = Anchor.BottomCentre;
@@ -352,37 +389,106 @@ namespace AXPlayer.App.Graphics.Caption
             }
             catch
             {
+                Drawable target = srv3Track != null ? srv3CaptionLayer : captionContainer;
+
+                if (target == null)
+                    return;
+
                 if (smoothCaptionAnimation.Value)
-                    captionContainer.FadeOut(150, Easing.OutQuart);
+                    target.FadeOut(150, Easing.OutQuart);
                 else
-                    captionContainer.FadeOut();
+                    target.FadeOut();
             }
         }
 
-        private void renderSrv3Cue(Srv3Caption cue)
+        /// <summary>
+        /// Keeps the rendered displays in sync with the cues that are active at
+        /// the current playback position. Multiple cues may be active at once.
+        /// </summary>
+        private void syncSrv3Captions(IReadOnlyList<Srv3Caption> cues)
         {
-            spriteText.Text = string.Empty;
+            if (srv3CaptionLayer == null)
+                return;
 
-            // SRV3 wp uses a 3x3 anchor grid. wp 0 is the default position.
-            captionContainer.Anchor = cue.Anchor;
-            captionContainer.Origin = cue.Anchor;
+            if (sameSrv3Cues(cues))
+                return;
+
+            lastSrv3Cues = cues.ToArray();
+
+            double fadeDuration = smoothCaptionAnimation.Value ? 150 : 0;
+
+            // Retire displays whose cue is no longer active.
+            foreach (Srv3Caption cue in srv3Displays.Keys.ToArray())
+            {
+                if (cues.Contains(cue))
+                    continue;
+
+                Srv3CaptionDisplay display = srv3Displays[cue];
+                srv3Displays.Remove(cue);
+
+                if (fadeDuration > 0)
+                    display.Container.FadeOut(fadeDuration, Easing.OutQuart).Expire();
+                else
+                    display.Container.Expire();
+            }
+
+            // Create displays for newly active cues. Overlapping cues are kept
+            // as independent displays so identical SRV3 positions overlap.
+            foreach (Srv3Caption cue in cues)
+            {
+                if (srv3Displays.ContainsKey(cue))
+                    continue;
+
+                var display = new Srv3CaptionDisplay(cue, textCreationParameters);
+                populateSrv3Display(display);
+                applySrv3DisplayStyle(display);
+
+                srv3Displays[cue] = display;
+                srv3CaptionLayer.Add(display.Container);
+
+                if (fadeDuration > 0)
+                {
+                    display.Container.Alpha = 0;
+                    display.Container.FadeIn(fadeDuration, Easing.OutQuart);
+                }
+            }
+
+            updateSrv3DisplayPositions();
+        }
+
+        private bool sameSrv3Cues(IReadOnlyList<Srv3Caption> cues)
+        {
+            if (lastSrv3Cues == null || lastSrv3Cues.Count != cues.Count)
+                return false;
+
+            for (int i = 0; i < cues.Count; i++)
+            {
+                if (!ReferenceEquals(lastSrv3Cues[i], cues[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private void populateSrv3Display(Srv3CaptionDisplay display)
+        {
+            Srv3Caption cue = display.Cue;
+
+            display.Text.Text = string.Empty;
 
             // ws controls paragraph alignment. p/ws values are zero-based.
-            spriteText.TextAnchor = cue.TextAnchor;
+            display.Text.TextAnchor = cue.TextAnchor;
 
             foreach (Srv3Span span in cue.Spans)
             {
                 string text = span.Text;
-
-                if (span.BackgroundColour.HasValue)
-                    bg.Colour = span.BackgroundColour.Value;
 
                 // SRV3 uses U+200B as an explicit zero-width separator between
                 // styled spans in YouTube's generated timedtext.
                 if (text.Length == 0)
                     continue;
 
-                spriteText.AddText(text, t =>
+                Action<SpriteText> configure = t =>
                 {
                     textCreationParameters?.Invoke(t);
                     shadowOptions?.Invoke(t);
@@ -406,8 +512,76 @@ namespace AXPlayer.App.Graphics.Caption
                         t.Shadow = true;
                         t.ShadowColour = span.EdgeColour.Value;
                     }
-                });
+                };
+
+                // The pen background colours the caption's own background box.
+                display.Text.AddText(text, configure);
             }
+        }
+
+        private void applySrv3DisplayStyle(Srv3CaptionDisplay display)
+        {
+            if (display.Cue.BackgroundColour is { } penBackground)
+            {
+                // A pen's bc/bo values define the caption background, including
+                // its transparency, so they override the user's background opacity.
+                display.Background.Colour = penBackground;
+                display.Background.Alpha = 1f;
+            }
+            else
+            {
+                display.Background.Colour = captionBGColor.Value;
+                display.Background.Alpha = captionBGOpacity.Value;
+            }
+
+            display.Container.CornerRadius = new CornersInfo(captionBGRadius.Value);
+            display.Container.BlurSigma = new osuTK.Vector2(closedCaptionsBackdropBlur.Value ? 10 : 0);
+            display.Container.AutoSizeDuration = smoothCaptionAnimation.Value ? 350 : 0;
+            display.Container.AutoSizeEasing = Easing.OutQuart;
+        }
+
+        private void applySrv3StyleToAll()
+        {
+            foreach (Srv3CaptionDisplay display in srv3Displays.Values)
+                applySrv3DisplayStyle(display);
+        }
+
+        private void updateSrv3DisplayPositions()
+        {
+            if (srv3CaptionLayer == null)
+                return;
+
+            osuTK.Vector2 parentSize = srv3CaptionLayer.DrawSize;
+
+            foreach (Srv3CaptionDisplay display in srv3Displays.Values)
+            {
+                Srv3CaptionPosition position = display.Cue.Position;
+                osuTK.Vector2 size = display.Container.DrawSize;
+
+                // ah/av address the anchor point selected by ap within the video
+                // area. For example ap=4 (middle-centre) with ah=50 av=50 keeps
+                // the caption's centre exactly in the middle of the video.
+                float x = parentSize.X * position.HorizontalPercent / 100f - size.X * position.HorizontalFraction;
+                float y = parentSize.Y * position.VerticalPercent / 100f - size.Y * position.VerticalFraction;
+
+                if (position.MovesWithControls)
+                    y -= bottomMargin.Value;
+
+                x = Math.Clamp(x, 0, Math.Max(0, parentSize.X - size.X));
+                y = Math.Clamp(y, 0, Math.Max(0, parentSize.Y - size.Y));
+
+                display.Container.Position = new osuTK.Vector2(x, y);
+            }
+        }
+
+        private void resetSrv3Captions()
+        {
+            lastSrv3Cues = null;
+
+            foreach (Srv3CaptionDisplay display in srv3Displays.Values)
+                display.Container.Expire();
+
+            srv3Displays.Clear();
         }
 
         private FontUsage getSelectedFont(float size)
@@ -448,6 +622,43 @@ namespace AXPlayer.App.Graphics.Caption
                     return AXPlayerApp.Fonts.GoogleSansFlex.With(size: size);
             }
         }
+
+        private sealed class Srv3CaptionDisplay
+        {
+            public Srv3Caption Cue { get; }
+
+            public BackdropBlurContainer Container { get; }
+            public Box Background { get; }
+            public ProjectYomiTextFlowContainer Text { get; }
+
+            public Srv3CaptionDisplay(Srv3Caption cue, Action<SpriteText> textCreationParameters)
+            {
+                Cue = cue;
+
+                Container = new BackdropBlurContainer
+                {
+                    AutoSizeAxes = Axes.Both,
+                    AutoSizeDuration = 350,
+                    AutoSizeEasing = Easing.OutQuart,
+                    Masking = true,
+                    BlurSigma = new osuTK.Vector2(10),
+                };
+
+                Container.Add(Background = new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = Color4.Black,
+                    Alpha = 0.5f,
+                });
+
+                Container.Add(Text = new ProjectYomiTextFlowContainer(textCreationParameters)
+                {
+                    TextAnchor = cue.TextAnchor,
+                    AutoSizeAxes = Axes.Both,
+                    Margin = new MarginPadding(4),
+                });
+            }
+        }
     }
 
     /// <summary>
@@ -459,9 +670,22 @@ namespace AXPlayer.App.Graphics.Caption
     {
         private readonly List<Srv3Caption> captions;
 
+        // Running maximum of caption end times. It allows GetByTime to stop
+        // scanning backwards as soon as no earlier caption can still be active.
+        private readonly TimeSpan[] latestEnds;
+
         private Srv3CaptionTrack(List<Srv3Caption> captions)
         {
             this.captions = captions;
+            latestEnds = new TimeSpan[captions.Count];
+
+            TimeSpan running = TimeSpan.MinValue;
+
+            for (int i = 0; i < captions.Count; i++)
+            {
+                running = captions[i].End > running ? captions[i].End : running;
+                latestEnds[i] = running;
+            }
         }
 
         public static Srv3CaptionTrack Parse(string xml)
@@ -502,26 +726,50 @@ namespace AXPlayer.App.Graphics.Caption
             return new Srv3CaptionTrack(result);
         }
 
-        public Srv3Caption TryGetByTime(TimeSpan time)
+        /// <summary>
+        /// Returns every caption active at <paramref name="time"/>, ordered by
+        /// start time. SRV3 documents can contain several paragraphs that share
+        /// a start time (for example two speakers, or one caption per side of
+        /// the video), so a single-cue lookup would drop valid captions.
+        /// </summary>
+        public List<Srv3Caption> GetByTime(TimeSpan time)
         {
-            // Binary search keeps per-frame caption lookup cheap.
+            var result = new List<Srv3Caption>();
+
+            if (captions.Count == 0)
+                return result;
+
+            // Find the last caption that starts at or before the requested time.
             int low = 0;
             int high = captions.Count - 1;
+            int index = -1;
 
             while (low <= high)
             {
                 int middle = low + ((high - low) / 2);
-                Srv3Caption caption = captions[middle];
 
-                if (time < caption.Start)
-                    high = middle - 1;
-                else if (time >= caption.End)
+                if (captions[middle].Start <= time)
+                {
+                    index = middle;
                     low = middle + 1;
+                }
                 else
-                    return caption;
+                {
+                    high = middle - 1;
+                }
             }
 
-            return null;
+            // Walk backwards while earlier captions could still be running.
+            for (int i = index; i >= 0 && latestEnds[i] > time; i--)
+            {
+                Srv3Caption caption = captions[i];
+
+                if (time >= caption.Start && time < caption.End)
+                    result.Add(caption);
+            }
+
+            result.Sort((a, b) => a.Start.CompareTo(b.Start));
+            return result;
         }
     }
 
@@ -530,7 +778,8 @@ namespace AXPlayer.App.Graphics.Caption
         public TimeSpan Start { get; private set; }
         public TimeSpan Duration { get; private set; }
         public TimeSpan End => Start + Duration;
-        public Anchor Anchor { get; private set; }
+        public Srv3CaptionPosition Position { get; private set; } = Srv3CaptionPosition.Default;
+        public Color4? BackgroundColour { get; private set; }
         public Anchor TextAnchor { get; private set; }
         public List<Srv3Span> Spans { get; } = new List<Srv3Span>();
 
@@ -544,14 +793,14 @@ namespace AXPlayer.App.Graphics.Caption
             {
                 Start = milliseconds(element.Attribute("t")),
                 Duration = milliseconds(element.Attribute("d")),
-                Anchor = Anchor.BottomCentre,
+                Position = Srv3CaptionPosition.Default,
                 TextAnchor = Anchor.Centre
             };
 
             int positionId = integer(element.Attribute("wp"), 0);
 
             if (positions.TryGetValue(positionId, out Srv3Position position))
-                result.Anchor = position.Anchor;
+                result.Position = position.Position;
 
             int windowId = integer(element.Attribute("ws"), 0);
 
@@ -563,6 +812,8 @@ namespace AXPlayer.App.Graphics.Caption
                 ? pen
                 : Srv3Pen.Default;
 
+            result.BackgroundColour = paragraphStyle.BackgroundColour;
+
             if (element.Elements("s").Any())
             {
                 foreach (XElement span in element.Elements("s"))
@@ -571,6 +822,20 @@ namespace AXPlayer.App.Graphics.Caption
             else
             {
                 result.Spans.Add(new Srv3Span(element.Value, paragraphStyle));
+            }
+
+            // A single caption background box is used, so fall back to the first
+            // visible span background when the paragraph pen has none.
+            if (result.BackgroundColour is not { } paragraphBackground || paragraphBackground.A <= 0)
+            {
+                foreach (Srv3Span span in result.Spans)
+                {
+                    if (span.BackgroundColour is { } spanBackground && spanBackground.A > 0)
+                    {
+                        result.BackgroundColour = spanBackground;
+                        break;
+                    }
+                }
             }
 
             return result;
@@ -690,22 +955,50 @@ namespace AXPlayer.App.Graphics.Caption
 
         private static Color4 parseColour(string value, int alpha)
         {
+            float opacity = Math.Clamp(alpha, 0, 255) / 255f;
+
             if (string.IsNullOrWhiteSpace(value))
-                return new Color4(1, 1, 1, alpha / 255f);
+                return new Color4(1, 1, 1, opacity);
 
-            string hex = value.TrimStart('#');
+            string hex = value.Trim();
 
-            if (hex.Length != 6)
-                return new Color4(1, 1, 1, alpha / 255f);
+            if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                hex = hex.Substring(2);
+
+            hex = hex.TrimStart('#');
 
             if (!uint.TryParse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint rgb))
-                return new Color4(1, 1, 1, alpha / 255f);
+                return new Color4(1, 1, 1, opacity);
 
-            byte r = (byte)(rgb >> 16);
-            byte g = (byte)(rgb >> 8);
-            byte b = (byte)rgb;
+            switch (hex.Length)
+            {
+                case 3:
+                    // #RGB
+                    return new Color4(
+                        ((rgb >> 8) & 0xF) / 15f,
+                        ((rgb >> 4) & 0xF) / 15f,
+                        (rgb & 0xF) / 15f,
+                        opacity);
 
-            return new Color4(r / 255f, g / 255f, b / 255f, alpha / 255f);
+                case 6:
+                    // #RRGGBB, alpha comes from fo/bo.
+                    return new Color4(
+                        ((rgb >> 16) & 0xFF) / 255f,
+                        ((rgb >> 8) & 0xFF) / 255f,
+                        (rgb & 0xFF) / 255f,
+                        opacity);
+
+                case 8:
+                    // #RRGGBBAA, combine the embedded alpha with fo/bo.
+                    return new Color4(
+                        ((rgb >> 24) & 0xFF) / 255f,
+                        ((rgb >> 16) & 0xFF) / 255f,
+                        ((rgb >> 8) & 0xFF) / 255f,
+                        ((rgb & 0xFF) / 255f) * opacity);
+
+                default:
+                    return new Color4(1, 1, 1, opacity);
+            }
         }
 
         private static int integer(XAttribute attribute, int fallback)
@@ -764,38 +1057,26 @@ namespace AXPlayer.App.Graphics.Caption
     internal sealed class Srv3Position
     {
         public int Id { get; private set; }
-        public Anchor Anchor { get; private set; } = Anchor.BottomCentre;
+        public Srv3CaptionPosition Position { get; private set; } = Srv3CaptionPosition.Default;
 
         public static Srv3Position Parse(XElement element)
         {
+            // ap selects a point on a 3x3 anchor grid:
+            // 0 = bottom-left, 1 = bottom-centre, 2 = bottom-right,
+            // 3 = middle-left, 4 = centre, 5 = middle-right,
+            // 6 = top-left, 7 = top-centre, 8 = top-right.
             int ap = integer(element.Attribute("ap"), 1);
+
+            // ah/av are custom position percentages within the video area.
+            // 0..100 (values outside the range are clamped).
             int ah = integer(element.Attribute("ah"), 50);
             int av = integer(element.Attribute("av"), 100);
 
             return new Srv3Position
             {
                 Id = integer(element.Attribute("id"), 0),
-                Anchor = toAnchor(ap, ah, av)
+                Position = new Srv3CaptionPosition(ah, av, ap)
             };
-        }
-
-        private static Anchor toAnchor(int ap, int ah, int av)
-        {
-            // In SRV3, ah/av are the horizontal/vertical position percentages.
-            // The supplied test document demonstrates, for example, that
-            // ap=1 + av=40 is top-centre while ap=1 + av=70 is middle-centre.
-            bool left = ah < 33;
-            bool right = ah > 66;
-            bool top = av < 55;
-            bool bottom = av > 85;
-
-            if (top)
-                return left ? Anchor.TopLeft : right ? Anchor.TopRight : Anchor.TopCentre;
-
-            if (bottom)
-                return left ? Anchor.BottomLeft : right ? Anchor.BottomRight : Anchor.BottomCentre;
-
-            return left ? Anchor.CentreLeft : right ? Anchor.CentreRight : Anchor.Centre;
         }
 
         private static int integer(XAttribute attribute, int fallback)
@@ -807,5 +1088,62 @@ namespace AXPlayer.App.Graphics.Caption
                 ? value
                 : fallback;
         }
+    }
+
+    /// <summary>
+    /// A resolved SRV3 writing position. Unlike an <see cref="Anchor"/> it keeps
+    /// the original percentages, so a caption can be placed at any custom
+    /// coordinate rather than only on the nine built-in anchor points.
+    /// </summary>
+    internal readonly struct Srv3CaptionPosition : IEquatable<Srv3CaptionPosition>
+    {
+        public int HorizontalPercent { get; }
+        public int VerticalPercent { get; }
+
+        /// <summary>
+        /// SRV3's ap value, a point on a 3x3 anchor grid:
+        /// 0 = bottom-left, 1 = bottom-centre, 2 = bottom-right,
+        /// 3 = middle-left, 4 = centre, 5 = middle-right,
+        /// 6 = top-left, 7 = top-centre, 8 = top-right.
+        /// </summary>
+        public int AnchorPoint { get; }
+
+        public static Srv3CaptionPosition Default { get; } = new Srv3CaptionPosition(50, 100, 1);
+
+        /// <summary>
+        /// 0 = left edge, 1 = centre, 2 = right edge.
+        /// </summary>
+        public int HorizontalAlignment => AnchorPoint % 3;
+
+        public float HorizontalFraction => HorizontalAlignment * 0.5f;
+
+        /// <summary>
+        /// Fraction of the caption height to subtract from av: 1 = bottom edge,
+        /// 0.5 = middle, 0 = top edge.
+        /// </summary>
+        public float VerticalFraction => (2 - (AnchorPoint / 3)) * 0.5f;
+
+        /// <summary>
+        /// Whether the controls overlay should push this caption upwards.
+        /// </summary>
+        public bool MovesWithControls => VerticalFraction >= 1f && VerticalPercent > 85;
+
+        public Srv3CaptionPosition(int horizontalPercent, int verticalPercent, int anchorPoint)
+        {
+            HorizontalPercent = Math.Clamp(horizontalPercent, 0, 100);
+            VerticalPercent = Math.Clamp(verticalPercent, 0, 100);
+            AnchorPoint = Math.Clamp(anchorPoint, 0, 8);
+        }
+
+        public bool Equals(Srv3CaptionPosition other)
+            => HorizontalPercent == other.HorizontalPercent
+               && VerticalPercent == other.VerticalPercent
+               && AnchorPoint == other.AnchorPoint;
+
+        public override bool Equals(object obj)
+            => obj is Srv3CaptionPosition other && Equals(other);
+
+        public override int GetHashCode()
+            => HashCode.Combine(HorizontalPercent, VerticalPercent, AnchorPoint);
     }
 }
