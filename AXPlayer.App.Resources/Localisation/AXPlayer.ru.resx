@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>Поиск настроек</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>Голосовой поиск</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>Слушаю... Говорите.</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>Голосовой поиск недоступен на этом устройстве.</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>Речь не распознана. Попробуйте ещё раз.</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>Доступ к микрофону запрещён. Разрешите доступ к микрофону в настройках системы.</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>Не удалось выполнить голосовой поиск. Попробуйте ещё раз.</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>Нет настроек, соответствующих запросу</value>
   </data>

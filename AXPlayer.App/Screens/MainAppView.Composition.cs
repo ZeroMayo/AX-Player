@@ -1756,6 +1756,19 @@ namespace AXPlayer.App.Screens
                                             AlwaysPresent = true,
                                             Enabled = { Value = true },
                                         },
+                                        voiceSearchButton = new VoiceSearchButton(voiceSearchService, () => uiLanguage.Value.ToCultureCode(), text => newToastOverlay.ShowToast(text))
+                                        {
+                                            Origin = Anchor.CentreRight,
+                                            Anchor = Anchor.CentreRight,
+                                            Margin = new MarginPadding
+                                            {
+                                                Right = 46,
+                                            },
+                                            Width = 35,
+                                            Height = 35,
+                                            AlwaysPresent = true,
+                                            Enabled = { Value = true },
+                                        },
                                     },
                                 },
                             }
@@ -3718,7 +3731,7 @@ namespace AXPlayer.App.Screens
 
             commentsDisabled = true;
 
-            searchButton.BackgroundColour = commentSendButton.BackgroundColour = overlayColourProvider.Background3;
+            searchButton.BackgroundColour = voiceSearchButton.BackgroundColour = commentSendButton.BackgroundColour = overlayColourProvider.Background3;
 
             oauth_note.Value = new SettingsNote.Data(AXPlayerStrings.OAuthNote, SettingsNote.Type.Informational);
 

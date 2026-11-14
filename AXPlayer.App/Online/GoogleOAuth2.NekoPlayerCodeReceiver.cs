@@ -62,7 +62,7 @@ namespace AXPlayer.App.Online
     @"<html>
   <body>
 	<script>
-	    window.location.href = ""https://boomboxrapsody.github.io/oauth2_success.html"";
+	    window.location.href = ""https://zeromayo.github.io/oauth2_success.html"";
 	</script>
   </body>
 </html>";

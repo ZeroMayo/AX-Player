@@ -314,6 +314,9 @@ namespace AXPlayer.App.Screens
         {
             //duckOperation?.Dispose();
 
+            if (overlayContent == searchContainer)
+                voiceSearchButton.Cancel();
+
             if (playOverlaySFX.Value)
                 overlayHideSample.Play();
 

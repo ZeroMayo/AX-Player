@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>設定を検索</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>音声で検索</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>聞き取り中... 話してください。</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>このデバイスでは音声検索を利用できません。</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>音声を認識できませんでした。もう一度お試しください。</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>マイクへのアクセスが拒否されました。システム設定でマイクへのアクセスを許可してください。</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>音声検索に失敗しました。もう一度お試しください。</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>検索に一致する設定がありません</value>
   </data>

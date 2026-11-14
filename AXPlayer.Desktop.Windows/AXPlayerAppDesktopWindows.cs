@@ -7,6 +7,7 @@ using AXPlayer.App;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Updater;
 using AXPlayer.App.Utils;
+using AXPlayer.App.Utils.VoiceSearch;
 using AXPlayer.Desktop.Windows.Updater;
 
 namespace AXPlayer.Desktop.Windows
@@ -14,6 +15,8 @@ namespace AXPlayer.Desktop.Windows
     internal partial class AXPlayerAppDesktopWindows : AXPlayerApp
     {
         protected override UpdateManager CreateUpdateManager() => new VelopackUpdateManager();
+
+        protected override IVoiceSearchService CreateVoiceSearchService() => new WindowsVoiceSearchService();
 
         private TrayIconManager trayIconManager;
 

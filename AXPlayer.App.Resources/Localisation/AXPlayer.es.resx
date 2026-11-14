@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>Buscar ajustes</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>Buscar por voz</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>Escuchando... Habla ahora.</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>La búsqueda por voz no está disponible en este dispositivo.</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>No se reconoció ninguna voz. Inténtalo de nuevo.</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>Se denegó el acceso al micrófono. Permite el acceso al micrófono en la configuración del sistema.</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>La búsqueda por voz falló. Inténtalo de nuevo.</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>Ningún ajuste coincide con tu búsqueda</value>
   </data>

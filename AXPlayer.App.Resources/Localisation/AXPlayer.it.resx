@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>Cerca impostazioni</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>Cerca con la voce</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>In ascolto... Parla ora.</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>La ricerca vocale non è disponibile su questo dispositivo.</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>Nessuna voce riconosciuta. Riprova.</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>Accesso al microfono negato. Consenti l'accesso al microfono nelle impostazioni di sistema.</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>La ricerca vocale non è riuscita. Riprova.</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>Nessuna impostazione corrisponde alla ricerca</value>
   </data>

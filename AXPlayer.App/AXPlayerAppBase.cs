@@ -28,6 +28,7 @@ using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
 using AXPlayer.App.Resources;
 using AXPlayer.App.Utils;
+using AXPlayer.App.Utils.VoiceSearch;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -68,6 +69,16 @@ namespace AXPlayer.App
         protected GoogleOAuth2 GoogleOAuth2 { get; set; }
 
         protected GoogleTranslate TranslateAPI { get; set; }
+
+        /// <summary>
+        /// The speech recognition service used by the search interface.
+        /// </summary>
+        public IVoiceSearchService VoiceSearchService { get; private set; } = new UnsupportedVoiceSearchService();
+
+        /// <summary>
+        /// Creates the speech recognition service for the current platform.
+        /// </summary>
+        protected virtual IVoiceSearchService CreateVoiceSearchService() => new UnsupportedVoiceSearchService();
 
         /// <summary>
         /// The language in which the app is currently displayed in.
@@ -338,6 +349,7 @@ namespace AXPlayer.App
                 dependencies.Cache(TranslateAPI = new GoogleTranslate(this, frameworkConfig));
                 dependencies.Cache(YouTubeService = new YouTubeAPI(this, frameworkConfig, TranslateAPI, LocalConfig, GoogleOAuth2, !IsDeployedBuild, new HttpClient()));
                 dependencies.Cache(YouTubeClient = new YoutubeClient());
+                dependencies.CacheAs(VoiceSearchService = CreateVoiceSearchService());
 
                 dependencies.Cache(sentry = new SentryClient(this, GoogleOAuth2, YouTubeService, Storage));
 

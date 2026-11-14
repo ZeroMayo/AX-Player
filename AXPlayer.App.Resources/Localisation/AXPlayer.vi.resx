@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>Tìm kiếm cài đặt</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>Tìm kiếm bằng giọng nói</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>Đang nghe... Hãy nói.</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>Tìm kiếm bằng giọng nói không khả dụng trên thiết bị này.</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>Không nhận diện được giọng nói. Vui lòng thử lại.</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>Quyền truy cập micrô đã bị từ chối. Hãy cho phép truy cập micrô trong cài đặt hệ thống.</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>Tìm kiếm bằng giọng nói thất bại. Vui lòng thử lại.</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>Không có cài đặt nào khớp với tìm kiếm</value>
   </data>

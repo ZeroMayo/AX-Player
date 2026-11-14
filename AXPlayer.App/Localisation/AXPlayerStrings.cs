@@ -536,6 +536,36 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString SearchSettings => new TranslatableString(getKey(@"search_settings"), "Search settings");
 
         /// <summary>
+        /// "Search by voice"
+        /// </summary>
+        public static LocalisableString VoiceSearch => new TranslatableString(getKey(@"voice_search"), "Search by voice");
+
+        /// <summary>
+        /// "Listening... Speak now."
+        /// </summary>
+        public static LocalisableString VoiceSearchListening => new TranslatableString(getKey(@"voice_search_listening"), "Listening... Speak now.");
+
+        /// <summary>
+        /// "Voice search is not available on this device."
+        /// </summary>
+        public static LocalisableString VoiceSearchUnavailable => new TranslatableString(getKey(@"voice_search_unavailable"), "Voice search is not available on this device.");
+
+        /// <summary>
+        /// "No speech was recognized. Please try again."
+        /// </summary>
+        public static LocalisableString VoiceSearchNoSpeech => new TranslatableString(getKey(@"voice_search_no_speech"), "No speech was recognized. Please try again.");
+
+        /// <summary>
+        /// "Microphone access was denied. Allow microphone access in your system settings."
+        /// </summary>
+        public static LocalisableString VoiceSearchPermissionDenied => new TranslatableString(getKey(@"voice_search_permission_denied"), "Microphone access was denied. Allow microphone access in your system settings.");
+
+        /// <summary>
+        /// "Voice search failed. Please try again."
+        /// </summary>
+        public static LocalisableString VoiceSearchFailed => new TranslatableString(getKey(@"voice_search_failed"), "Voice search failed. Please try again.");
+
+        /// <summary>
         /// "No settings match your search"
         /// </summary>
         public static LocalisableString NoMatchingSettings => new TranslatableString(getKey(@"no_matching_settings"), "No settings match your search");

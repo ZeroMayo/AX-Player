@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>搜索设置</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>语音搜索</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>正在聆听...请说话。</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>此设备不支持语音搜索。</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>未能识别语音。请重试。</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>麦克风访问被拒绝。请在系统设置中允许访问麦克风。</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>语音搜索失败。请重试。</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>没有与搜索匹配的设置</value>
   </data>

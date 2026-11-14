@@ -487,6 +487,12 @@ namespace AXPlayer.App.Screens
                 Search();
             };
 
+            voiceSearchButton.SearchRequested = text =>
+            {
+                searchTextBox.Text = text;
+                Search();
+            };
+
             searchOpenButton.Action = () =>
             {
                 hideOverlays();

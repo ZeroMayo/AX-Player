@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>Ayarlarda ara</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>Sesle ara</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>Dinleniyor... Şimdi konuşun.</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>Bu cihazda sesle arama kullanılamıyor.</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>Konuşma algılanamadı. Lütfen tekrar deneyin.</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>Mikrofon erişimi reddedildi. Sistem ayarlarından mikrofon erişimine izin verin.</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>Sesle arama başarısız oldu. Lütfen tekrar deneyin.</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>Aramanızla eşleşen ayar yok</value>
   </data>

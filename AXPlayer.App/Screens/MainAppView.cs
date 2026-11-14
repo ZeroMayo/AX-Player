@@ -21,6 +21,7 @@ using AXPlayer.App.Online;
 using AXPlayer.App.Overlays;
 using AXPlayer.App.Overlays.Containers;
 using AXPlayer.App.Utils;
+using AXPlayer.App.Utils.VoiceSearch;
 using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
@@ -50,6 +51,7 @@ namespace AXPlayer.App.Screens
         private RoundedAltButton logoutButton, declineButton;
         private ControlBarIconButton prevVideoButton, nextVideoButton;
         private EnhancedFocusedTextBox videoIdBox, playlistIdBox, searchTextBox;
+        private VoiceSearchButton voiceSearchButton;
         private EnhancedFocusedTextBoxWithProfileImage commentTextBox;
         //private NekoPlayerLoadingSpinner spinner;
         private ScheduledDelegate spinnerShow;
@@ -125,6 +127,9 @@ namespace AXPlayer.App.Screens
 
         [Resolved]
         private Clipboard clipboard { get; set; } = null!;
+
+        [Resolved]
+        private IVoiceSearchService voiceSearchService { get; set; } = null!;
 
         private SmoothFadeInOutContainer videoLoadingProgressBase, muteStateOverlay;
         private AXPlayerLoadingSpinner videoLoadingProgressSpinner;

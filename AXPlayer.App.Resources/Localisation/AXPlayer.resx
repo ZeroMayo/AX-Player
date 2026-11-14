@@ -371,6 +371,24 @@
   <data name="search_settings" xml:space="preserve">
     <value>Search settings</value>
   </data>
+  <data name="voice_search" xml:space="preserve">
+    <value>Search by voice</value>
+  </data>
+  <data name="voice_search_listening" xml:space="preserve">
+    <value>Listening... Speak now.</value>
+  </data>
+  <data name="voice_search_unavailable" xml:space="preserve">
+    <value>Voice search is not available on this device.</value>
+  </data>
+  <data name="voice_search_no_speech" xml:space="preserve">
+    <value>No speech was recognized. Please try again.</value>
+  </data>
+  <data name="voice_search_permission_denied" xml:space="preserve">
+    <value>Microphone access was denied. Allow microphone access in your system settings.</value>
+  </data>
+  <data name="voice_search_failed" xml:space="preserve">
+    <value>Voice search failed. Please try again.</value>
+  </data>
   <data name="no_matching_settings" xml:space="preserve">
     <value>No settings match your search</value>
   </data>
