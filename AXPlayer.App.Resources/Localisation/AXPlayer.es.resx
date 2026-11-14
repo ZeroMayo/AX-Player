@@ -1108,6 +1108,16 @@
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Oscurecer el video</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>Aclarar el video</value></data>
   <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>Alternar el ajuste suave de la velocidad de reproducción</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset1" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 1</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset2" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 2</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset3" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 3</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset4" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 4</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset5" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 5</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset6" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 6</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset7" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 7</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset8" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 8</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset9" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 9</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset10" xml:space="preserve"><value>Aplicar la velocidad de reproducción personalizada 10</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>Restablecer todos los atajos</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>Cambiar</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Pulsa una combinación de teclas</value></data>

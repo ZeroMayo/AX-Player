@@ -1109,6 +1109,16 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>Làm tối video</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>Làm sáng video</value></data>
   <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>Bật/tắt điều chỉnh tốc độ phát mượt mà</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset1" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 1</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset2" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 2</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset3" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 3</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset4" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 4</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset5" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 5</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset6" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 6</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset7" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 7</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset8" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 8</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset9" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 9</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset10" xml:space="preserve"><value>Áp dụng tốc độ phát tùy chỉnh 10</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>Đặt lại tất cả phím tắt</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>Đổi</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>Nhấn tổ hợp phím</value></data>

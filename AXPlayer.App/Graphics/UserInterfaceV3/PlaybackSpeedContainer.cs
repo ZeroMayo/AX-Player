@@ -10,8 +10,10 @@ using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
+using AXPlayer.App.Input.Binding;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Overlays;
+using AXPlayer.App.Utils;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
@@ -28,8 +30,6 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 {
     public partial class PlaybackSpeedContainer : ProjectYomiClickableContainer, IHasPopover
     {
-        private static readonly double[] speed_presets = { 0.5, 0.75, 1, 1.25, 1.5, 2 };
-
         public Bindable<double> Current;
 
         [Resolved]
@@ -57,7 +57,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
         public Popover GetPopover()
         {
-            List<double> customPresets = parsePresets(config.Get<string>(AXPlayerSetting.CustomPlaybackSpeedPresets));
+            List<double> customPresets = PlaybackSpeedPresets.Parse(config.Get<string>(AXPlayerSetting.CustomPlaybackSpeedPresets));
             FillFlowContainer presetButtons = new FillFlowContainer
             {
                 AutoSizeAxes = Axes.X,
@@ -70,7 +70,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             {
                 presetButtons.Clear();
 
-                foreach (double speed in speed_presets)
+                foreach (double speed in PlaybackSpeedPresets.BUILT_IN)
                 {
                     presetButtons.Add(new RoundedButton
                     {
@@ -86,13 +86,15 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                     });
                 }
 
-                foreach (double speed in customPresets)
+                for (int i = 0; i < customPresets.Count; i++)
                 {
-                    presetButtons.Add(new FillFlowContainer
+                    double speed = customPresets[i];
+
+                    FillFlowContainer presetContent = new FillFlowContainer
                     {
                         AutoSizeAxes = Axes.Both,
-                        Direction = FillDirection.Horizontal,
-                        Spacing = new Vector2(2, 0),
+                        Direction = FillDirection.Vertical,
+                        Spacing = new Vector2(0, 4),
                         Children = new Drawable[]
                         {
                             new RoundedButton
@@ -107,6 +109,32 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                                 },
                                 BackgroundColour = overlayColourProvider.Background3,
                             },
+                        },
+                    };
+
+                    if (i < GlobalActionContainer.CUSTOM_PLAYBACK_SPEED_PRESET_SHORTCUT_COUNT)
+                    {
+                        presetContent.Add(new Container
+                        {
+                            Width = 60,
+                            AutoSizeAxes = Axes.Y,
+                            Child = new HotkeyDisplay
+                            {
+                                Anchor = Anchor.TopCentre,
+                                Origin = Anchor.TopCentre,
+                                Hotkey = new Hotkey((GlobalAction)((int)GlobalAction.ApplyCustomPlaybackSpeedPreset1 + i)),
+                            },
+                        });
+                    }
+
+                    presetButtons.Add(new FillFlowContainer
+                    {
+                        AutoSizeAxes = Axes.Both,
+                        Direction = FillDirection.Horizontal,
+                        Spacing = new Vector2(2, 0),
+                        Children = new Drawable[]
+                        {
+                            presetContent,
                             new RoundedIconOnlyButton(FontAwesome.Solid.Times)
                             {
                                 Width = 28,
@@ -125,8 +153,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
             void savePresets()
             {
-                config.GetBindable<string>(AXPlayerSetting.CustomPlaybackSpeedPresets).Value = string.Join(",",
-                    customPresets.Select(speed => speed.ToString("0.##", CultureInfo.InvariantCulture)));
+                config.GetBindable<string>(AXPlayerSetting.CustomPlaybackSpeedPresets).Value = PlaybackSpeedPresets.Serialize(customPresets);
                 refreshPresetButtons();
             }
 
@@ -137,7 +164,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                     return false;
 
                 speed = Math.Round(speed, 2);
-                return speed >= 0.1 && speed <= 8 && !speed_presets.Contains(speed) && !customPresets.Contains(speed);
+                return speed >= 0.1 && speed <= 8 && !PlaybackSpeedPresets.BUILT_IN.Contains(speed) && !customPresets.Contains(speed);
             }
 
             FormNumberBox speedInput = new FormNumberBox(allowDecimals: true)
@@ -167,7 +194,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             Drawable presetsContent = new Container
             {
                 RelativeSizeAxes = Axes.X,
-                Height = 50,
+                Height = 74,
                 Child = new ProjectYomiScrollContainer(Direction.Horizontal)
                 {
                     ProgressiveBlurEnabled = false,
@@ -342,24 +369,6 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             {
                 Child = content;
             }
-        }
-
-        private static List<double> parsePresets(string value)
-        {
-            List<double> presets = new List<double>();
-
-            foreach (string part in value.Split(','))
-            {
-                if (double.TryParse(part, NumberStyles.Float, CultureInfo.InvariantCulture, out double speed)
-                    && speed >= 0.1 && speed <= 8)
-                {
-                    speed = Math.Round(speed, 2);
-                    if (!speed_presets.Contains(speed) && !presets.Contains(speed))
-                        presets.Add(speed);
-                }
-            }
-
-            return presets;
         }
 
         private static string formatSpeed(double speed) => speed.ToString("0.##", CultureInfo.InvariantCulture) + "x";

@@ -1765,6 +1765,16 @@ namespace AXPlayer.App.Localisation
                 GlobalAction.DecreaseVideoDim => "Dim the video",
                 GlobalAction.IncreaseVideoDim => "Brighten the video",
                 GlobalAction.ToggleSmoothPlaybackSpeed => "Toggle smooth playback speed adjustment",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset1 => "Apply custom playback speed preset 1",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset2 => "Apply custom playback speed preset 2",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset3 => "Apply custom playback speed preset 3",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset4 => "Apply custom playback speed preset 4",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset5 => "Apply custom playback speed preset 5",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset6 => "Apply custom playback speed preset 6",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset7 => "Apply custom playback speed preset 7",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset8 => "Apply custom playback speed preset 8",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset9 => "Apply custom playback speed preset 9",
+                GlobalAction.ApplyCustomPlaybackSpeedPreset10 => "Apply custom playback speed preset 10",
                 _ => throw new System.ArgumentOutOfRangeException(nameof(action), action, "No shortcut description is defined."),
             });
 

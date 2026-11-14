@@ -57,6 +57,17 @@ namespace AXPlayer.App.Input.Binding
 
         public void OnReleased(KeyBindingReleaseEvent<GlobalAction> e) => handler?.OnReleased(e);
 
+        /// <summary>
+        /// Custom playback speed preset shortcuts are assigned to consecutive actions, with <c>Ctrl+0</c> applying the tenth preset.
+        /// </summary>
+        public const int CUSTOM_PLAYBACK_SPEED_PRESET_SHORTCUT_COUNT = 10;
+
+        public static bool TryGetCustomPlaybackSpeedPresetIndex(GlobalAction action, out int index)
+        {
+            index = action - GlobalAction.ApplyCustomPlaybackSpeedPreset1;
+            return index >= 0 && index < CUSTOM_PLAYBACK_SPEED_PRESET_SHORTCUT_COUNT;
+        }
+
         protected override bool OnKeyDown(KeyDownEvent e)
         {
             if (shortcutManager.CapturingAction.Value != null)
@@ -90,6 +101,17 @@ namespace AXPlayer.App.Input.Binding
 
             new KeyBinding(new[] { InputKey.Shift, InputKey.A }, GlobalAction.DecreasePlaybackSpeed2),
             new KeyBinding(new[] { InputKey.Shift, InputKey.D }, GlobalAction.IncreasePlaybackSpeed2),
+
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number1 }, GlobalAction.ApplyCustomPlaybackSpeedPreset1),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number2 }, GlobalAction.ApplyCustomPlaybackSpeedPreset2),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number3 }, GlobalAction.ApplyCustomPlaybackSpeedPreset3),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number4 }, GlobalAction.ApplyCustomPlaybackSpeedPreset4),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number5 }, GlobalAction.ApplyCustomPlaybackSpeedPreset5),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number6 }, GlobalAction.ApplyCustomPlaybackSpeedPreset6),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number7 }, GlobalAction.ApplyCustomPlaybackSpeedPreset7),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number8 }, GlobalAction.ApplyCustomPlaybackSpeedPreset8),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number9 }, GlobalAction.ApplyCustomPlaybackSpeedPreset9),
+            new KeyBinding(new[] { InputKey.Control, InputKey.Number0 }, GlobalAction.ApplyCustomPlaybackSpeedPreset10),
 
             new KeyBinding(new[] { InputKey.Shift, InputKey.P }, GlobalAction.PrevVideo),
             new KeyBinding(new[] { InputKey.Shift, InputKey.N }, GlobalAction.NextVideo),
@@ -229,5 +251,16 @@ namespace AXPlayer.App.Input.Binding
         DecreaseVideoDim,
         IncreaseVideoDim,
         ToggleSmoothPlaybackSpeed,
+
+        ApplyCustomPlaybackSpeedPreset1,
+        ApplyCustomPlaybackSpeedPreset2,
+        ApplyCustomPlaybackSpeedPreset3,
+        ApplyCustomPlaybackSpeedPreset4,
+        ApplyCustomPlaybackSpeedPreset5,
+        ApplyCustomPlaybackSpeedPreset6,
+        ApplyCustomPlaybackSpeedPreset7,
+        ApplyCustomPlaybackSpeedPreset8,
+        ApplyCustomPlaybackSpeedPreset9,
+        ApplyCustomPlaybackSpeedPreset10,
     }
 }

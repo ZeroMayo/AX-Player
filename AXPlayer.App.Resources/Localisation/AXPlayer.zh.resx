@@ -1109,6 +1109,16 @@
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>调暗视频</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>调亮视频</value></data>
   <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>切换平滑播放速度调整</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset1" xml:space="preserve"><value>应用自定义播放速度预设 1</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset2" xml:space="preserve"><value>应用自定义播放速度预设 2</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset3" xml:space="preserve"><value>应用自定义播放速度预设 3</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset4" xml:space="preserve"><value>应用自定义播放速度预设 4</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset5" xml:space="preserve"><value>应用自定义播放速度预设 5</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset6" xml:space="preserve"><value>应用自定义播放速度预设 6</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset7" xml:space="preserve"><value>应用自定义播放速度预设 7</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset8" xml:space="preserve"><value>应用自定义播放速度预设 8</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset9" xml:space="preserve"><value>应用自定义播放速度预设 9</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset10" xml:space="preserve"><value>应用自定义播放速度预设 10</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>重置所有快捷键</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>更改</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>请按下快捷键组合</value></data>

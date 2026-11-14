@@ -817,6 +817,36 @@
   <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve">
     <value>Toggle smooth playback speed adjustment</value>
   </data>
+  <data name="shortcut_applycustomplaybackspeedpreset1" xml:space="preserve">
+    <value>Apply custom playback speed preset 1</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset2" xml:space="preserve">
+    <value>Apply custom playback speed preset 2</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset3" xml:space="preserve">
+    <value>Apply custom playback speed preset 3</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset4" xml:space="preserve">
+    <value>Apply custom playback speed preset 4</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset5" xml:space="preserve">
+    <value>Apply custom playback speed preset 5</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset6" xml:space="preserve">
+    <value>Apply custom playback speed preset 6</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset7" xml:space="preserve">
+    <value>Apply custom playback speed preset 7</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset8" xml:space="preserve">
+    <value>Apply custom playback speed preset 8</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset9" xml:space="preserve">
+    <value>Apply custom playback speed preset 9</value>
+  </data>
+  <data name="shortcut_applycustomplaybackspeedpreset10" xml:space="preserve">
+    <value>Apply custom playback speed preset 10</value>
+  </data>
   <data name="menu" xml:space="preserve">
     <value>Menu</value>
   </data>

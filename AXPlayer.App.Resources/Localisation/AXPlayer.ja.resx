@@ -1108,6 +1108,16 @@
   <data name="shortcut_decreasevideodim" xml:space="preserve"><value>動画を暗くする</value></data>
   <data name="shortcut_increasevideodim" xml:space="preserve"><value>動画を明るくする</value></data>
   <data name="shortcut_togglesmoothplaybackspeed" xml:space="preserve"><value>再生速度のスムーズな調整を切り替え</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset1" xml:space="preserve"><value>カスタム再生速度プリセット1を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset2" xml:space="preserve"><value>カスタム再生速度プリセット2を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset3" xml:space="preserve"><value>カスタム再生速度プリセット3を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset4" xml:space="preserve"><value>カスタム再生速度プリセット4を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset5" xml:space="preserve"><value>カスタム再生速度プリセット5を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset6" xml:space="preserve"><value>カスタム再生速度プリセット6を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset7" xml:space="preserve"><value>カスタム再生速度プリセット7を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset8" xml:space="preserve"><value>カスタム再生速度プリセット8を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset9" xml:space="preserve"><value>カスタム再生速度プリセット9を適用</value></data>
+  <data name="shortcut_applycustomplaybackspeedpreset10" xml:space="preserve"><value>カスタム再生速度プリセット10を適用</value></data>
   <data name="shortcut_reset_all" xml:space="preserve"><value>すべてのショートカットをリセット</value></data>
   <data name="shortcut_change" xml:space="preserve"><value>変更</value></data>
   <data name="shortcut_press" xml:space="preserve"><value>キーの組み合わせを押してください</value></data>

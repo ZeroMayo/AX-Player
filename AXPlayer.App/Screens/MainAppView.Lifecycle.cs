@@ -18,6 +18,7 @@ using AXPlayer.App.Online;
 using AXPlayer.App.Overlays;
 using AXPlayer.App.Overlays.OSD;
 using AXPlayer.App.Updater;
+using AXPlayer.App.Utils;
 using DiscordRPC;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
@@ -594,7 +595,7 @@ namespace AXPlayer.App.Screens
             if (currentVideoSource == null || ((e.Target.GetType() == typeof(ProjectYomiTextBox)) || (e.Target.GetType() == typeof(FormTextBox)) || (e.Target.GetType() == typeof(FormNumberBox)) || (e.Target.GetType() == typeof(FormNumberBox.InnerNumberBox)) || (e.Target.GetType() == typeof(FormNumberBox.InnerTextBox))))
                 return true;
 
-            if (e.Key >= Key.Number0 && e.Key <= Key.Number9)
+            if (!e.ControlPressed && e.Key >= Key.Number0 && e.Key <= Key.Number9)
             {
                 int digit = e.Key - Key.Number0;
                 double target = currentVideoSource.VideoProgress.MaxValue * (digit / 10.0);
@@ -604,7 +605,7 @@ namespace AXPlayer.App.Screens
                 showControls();
             }
 
-            if (e.Key >= Key.Keypad0 && e.Key <= Key.Keypad9)
+            if (!e.ControlPressed && e.Key >= Key.Keypad0 && e.Key <= Key.Keypad9)
             {
                 int digit = e.Key - Key.Keypad0;
                 double target = currentVideoSource.VideoProgress.MaxValue * (digit / 10.0);
@@ -687,6 +688,19 @@ namespace AXPlayer.App.Screens
 
             if (e.Repeat)
                 return false;
+
+            if (GlobalActionContainer.TryGetCustomPlaybackSpeedPresetIndex(e.Action, out int presetIndex))
+            {
+                List<double> customPresets = PlaybackSpeedPresets.Parse(config.Get<string>(AXPlayerSetting.CustomPlaybackSpeedPresets));
+
+                if (presetIndex < customPresets.Count)
+                {
+                    playbackSpeed.Value = customPresets[presetIndex];
+                    newToastOverlay.ShowToast(AXPlayerStrings.PlaybackSpeed(playbackSpeed.Value));
+                }
+
+                return true;
+            }
 
             switch (e.Action)
             {
