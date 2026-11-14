@@ -3526,6 +3526,21 @@ namespace AXPlayer.App.Screens
                                         },
                                     }
                                 },
+                                new IconButton
+                                {
+                                    Enabled = { Value = true },
+                                    Origin = Anchor.TopRight,
+                                    Anchor = Anchor.TopRight,
+                                    Size = new Vector2(35, 35),
+                                    IconScale = new Vector2(0.8f),
+                                    Margin = new MarginPadding(14),
+                                    Icon = FontAwesome.Solid.Times,
+                                    BackgroundColour = overlayColourProvider.Background4,
+                                    Action = () =>
+                                    {
+                                        hideOverlayContainer(myChannelDialog);
+                                    }
+                                },
                             }
                         },
                     }
