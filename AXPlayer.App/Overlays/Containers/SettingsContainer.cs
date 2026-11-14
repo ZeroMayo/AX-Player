@@ -930,7 +930,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(screenshotUIVisibleOption = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShowCursorInScreenshots,
-                                                            Icon = FontAwesome.Solid.MousePointer,
+                                                            Icon = FontAwesome.Solid.WindowMaximize,
                                                             Current = screenshotUIVisible,
                                                             CornerType = FormControlCornerType.Bottom,
                                                             DynamicCornerType = true,
