@@ -272,6 +272,9 @@ namespace AXPlayer.App.Graphics.Caption
                     case CaptionFonts.Hippie:
                         textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Hippie.With(size: 24);
                         break;
+                    case CaptionFonts.GriunSobokhee:
+                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.GriunSobokhee.With(size: 24);
+                        break;
                     default:
                         textCreationParameters = t => t.Font = AXPlayerApp.Fonts.GoogleSansFlex.With(size: 24);
                         break;
@@ -618,6 +621,8 @@ namespace AXPlayer.App.Graphics.Caption
                     return AXPlayerApp.Fonts.GoogleSansFlexRounded.With(size: size);
                 case CaptionFonts.Hippie:
                     return AXPlayerApp.Fonts.Hippie.With(size: size);
+                case CaptionFonts.GriunSobokhee:
+                    return AXPlayerApp.Fonts.GriunSobokhee.With(size: size);
                 default:
                     return AXPlayerApp.Fonts.GoogleSansFlex.With(size: size);
             }

@@ -39,5 +39,7 @@ namespace AXPlayer.App.Config
         OwnglyphYuntaeng,
         [LocalisableDescription(typeof(CaptionFontStrings), nameof(CaptionFontStrings.Hippie))]
         Hippie,
+        [LocalisableDescription(typeof(CaptionFontStrings), nameof(CaptionFontStrings.GriunSobokhee))]
+        GriunSobokhee,
     }
 }
