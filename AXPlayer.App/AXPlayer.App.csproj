@@ -6,6 +6,9 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="AXPlayer.App.Tests" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\AXPlayer.App.Resources\AXPlayer.App.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -14,7 +17,6 @@
     <PackageReference Include="Crypto.AES" Version="1.0.4" />
     <PackageReference Include="ZeroMayo.DiscordRichPresence" Version="26.0.2" />
     <PackageReference Include="Google.Apis.Auth" Version="1.78.0" />
-    <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.78.0.1869" />
     <PackageReference Include="SharpCompress" Version="0.50.9" />
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.78.0.4325" />
     <PackageReference Include="Humanizer" Version="3.0.10" />

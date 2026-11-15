@@ -1,29 +1,25 @@
 // Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable enable
+
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using AXPlayer.App.Config;
 using AXPlayer.App.Online;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Auth.OAuth2.Flows;
-using Google.Apis.Auth.OAuth2.Requests;
-using Google.Apis.Auth.OAuth2.Responses;
-using Google.Apis.Util;
-using Google.Apis.Util.Store;
 using NUnit.Framework;
 using osu.Framework.Testing;
 
 namespace AXPlayer.App.Tests.Online
 {
+    /// <summary>
+    /// Covers the parts of the Innertube-era OAuth client that do not require network access.
+    /// </summary>
     [TestFixture]
     public class TestGoogleOAuth2
     {
-        private TemporaryNativeStorage storage;
-        private AXPlayerConfigManager config;
+        private TemporaryNativeStorage storage = null!;
+        private AXPlayerConfigManager config = null!;
 
         [SetUp]
         public void SetUp()
@@ -39,137 +35,80 @@ namespace AXPlayer.App.Tests.Online
         }
 
         [Test]
-        public void TestGetAccessTokenRefreshesStaleToken()
-        {
-            var flow = new FakeAuthorizationCodeFlow();
-            GoogleOAuth2 oauth = createSignedInOAuth(flow, createToken("stale", "refresh-token", TimeSpan.FromHours(2)));
-
-            Assert.That(oauth.GetAccessToken(), Is.EqualTo(@"refreshed"));
-            Assert.That(flow.RefreshCount, Is.EqualTo(1));
-            Assert.That(config.Get<string>(AXPlayerSetting.AccessToken), Is.EqualTo(@"refreshed"));
-        }
-
-        [Test]
-        public void TestGetAccessTokenDoesNotRefreshFreshToken()
-        {
-            var flow = new FakeAuthorizationCodeFlow();
-            GoogleOAuth2 oauth = createSignedInOAuth(flow, createToken("fresh", "refresh-token", TimeSpan.Zero));
-
-            Assert.That(oauth.GetAccessToken(), Is.EqualTo(@"fresh"));
-            Assert.That(flow.RefreshCount, Is.Zero);
-        }
-
-        [Test]
-        public void TestGetAccessTokenKeepsStaleTokenWhenRefreshTokenIsMissing()
-        {
-            var flow = new FakeAuthorizationCodeFlow();
-            GoogleOAuth2 oauth = createSignedInOAuth(flow, createToken("stale", null, TimeSpan.FromHours(2)));
-
-            Assert.That(oauth.GetAccessToken(), Is.EqualTo(@"stale"));
-            Assert.That(flow.RefreshCount, Is.Zero);
-        }
-
-        [Test]
         public void TestGetAccessTokenReturnsEmptyWhenSignedOut()
         {
             var oauth = new GoogleOAuth2(config, true);
 
             Assert.That(oauth.GetAccessToken(), Is.Empty);
+            Assert.That(oauth.GetAccessTokenAsync().GetAwaiter().GetResult(), Is.Empty);
         }
 
-        private GoogleOAuth2 createSignedInOAuth(FakeAuthorizationCodeFlow flow, TokenResponse token)
+        [Test]
+        public void TestHasStoredSessionReflectsTheRefreshToken()
         {
             var oauth = new GoogleOAuth2(config, true);
-            var credential = new UserCredential(flow, @"user", token);
 
-            // The credential is normally created by the interactive sign-in flow, which is not
-            // available in tests. Inject it so the token refresh path can be exercised offline.
-            typeof(GoogleOAuth2).GetField(@"credential", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(oauth, credential);
-            oauth.SignedIn.Value = true;
+            Assert.That(oauth.HasStoredSession, Is.False);
 
-            return oauth;
+            config.SetValue(AXPlayerSetting.RefreshToken, @"refresh-token");
+
+            Assert.That(oauth.HasStoredSession, Is.True);
         }
 
-        private static TokenResponse createToken(string accessToken, string refreshToken, TimeSpan age)
-            => new TokenResponse
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken,
-                TokenType = @"Bearer",
-                ExpiresInSeconds = 3600,
-                IssuedUtc = DateTime.UtcNow - age,
-            };
-
-        private class FakeAuthorizationCodeFlow : IAuthorizationCodeFlow
+        [Test]
+        public async Task TestRestoreSessionWithoutStoredTokenStaysSignedOut()
         {
-            public int RefreshCount { get; private set; }
+            var oauth = new GoogleOAuth2(config, true);
 
-            public IAccessMethod AccessMethod => null;
+            await oauth.RestoreSessionAsync();
 
-            public IClock Clock => SystemClock.Default;
-
-            public IDataStore DataStore { get; } = new MemoryDataStore();
-
-            public Task<TokenResponse> LoadTokenAsync(string userId, CancellationToken taskCancellationToken)
-                => Task.FromResult<TokenResponse>(null);
-
-            public Task DeleteTokenAsync(string userId, CancellationToken taskCancellationToken)
-                => Task.CompletedTask;
-
-            public AuthorizationCodeRequestUrl CreateAuthorizationCodeRequest(string redirectUri)
-                => throw new NotSupportedException();
-
-            public Task<TokenResponse> ExchangeCodeForTokenAsync(string userId, string code, string redirectUri, CancellationToken taskCancellationToken)
-                => throw new NotSupportedException();
-
-            public Task<TokenResponse> RefreshTokenAsync(string userId, string refreshToken, CancellationToken taskCancellationToken)
-            {
-                RefreshCount++;
-
-                return Task.FromResult(new TokenResponse
-                {
-                    AccessToken = @"refreshed",
-                    RefreshToken = refreshToken,
-                    TokenType = @"Bearer",
-                    ExpiresInSeconds = 3600,
-                    IssuedUtc = DateTime.UtcNow,
-                });
-            }
-
-            public Task RevokeTokenAsync(string userId, string token, CancellationToken taskCancellationToken)
-                => Task.CompletedTask;
-
-            public bool ShouldForceTokenRetrieval() => false;
-
-            public void Dispose()
-            {
-            }
+            Assert.That(oauth.SignedIn.Value, Is.False);
         }
 
-        private class MemoryDataStore : IDataStore
+        [Test]
+        public async Task TestSignOutClearsPersistedTokens()
         {
-            private readonly Dictionary<string, object> values = new Dictionary<string, object>();
+            config.SetValue(AXPlayerSetting.AccessToken, @"access-token");
+            config.SetValue(AXPlayerSetting.RefreshToken, @"refresh-token");
+            config.SetValue(AXPlayerSetting.AccessTokenExpiresAt, DateTimeOffset.UtcNow.ToString(@"o"));
 
-            public Task StoreAsync<T>(string key, T value)
-            {
-                values[key] = value;
-                return Task.CompletedTask;
-            }
+            var oauth = new GoogleOAuth2(config, true);
 
-            public Task<T> GetAsync<T>(string key)
-                => Task.FromResult(values.TryGetValue(key, out object value) ? (T)value : default);
+            await oauth.SignOut();
 
-            public Task DeleteAsync<T>(string key)
-            {
-                values.Remove(key);
-                return Task.CompletedTask;
-            }
+            Assert.That(oauth.SignedIn.Value, Is.False);
+            Assert.That(config.Get<string>(AXPlayerSetting.AccessToken), Is.Empty);
+            Assert.That(config.Get<string>(AXPlayerSetting.RefreshToken), Is.Empty);
+            Assert.That(config.Get<string>(AXPlayerSetting.AccessTokenExpiresAt), Is.Empty);
+        }
 
-            public Task ClearAsync()
-            {
-                values.Clear();
-                return Task.CompletedTask;
-            }
+        [Test]
+        public void TestCodeChallengeMatchesTheRfcVector()
+        {
+            // RFC 7636, appendix B.
+            Assert.That(
+                GoogleOAuth2.createCodeChallenge(@"dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"),
+                Is.EqualTo(@"E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"));
+        }
+
+        [Test]
+        public void TestCodeChallengeIsUrlSafe()
+        {
+            string challenge = GoogleOAuth2.createCodeChallenge(@"some-verifier-value");
+
+            Assert.That(challenge, Does.Not.Contain(@"+"));
+            Assert.That(challenge, Does.Not.Contain(@"/"));
+            Assert.That(challenge, Does.Not.Contain(@"="));
+        }
+
+        [Test]
+        public void TestExpiryIsParsed()
+        {
+            var expiry = new DateTimeOffset(2026, 1, 2, 3, 4, 5, TimeSpan.Zero);
+
+            Assert.That(GoogleOAuth2.parseExpiry(expiry.ToString(@"o")), Is.EqualTo(expiry));
+            Assert.That(GoogleOAuth2.parseExpiry(string.Empty), Is.EqualTo(default(DateTimeOffset)));
+            Assert.That(GoogleOAuth2.parseExpiry(null), Is.EqualTo(default(DateTimeOffset)));
         }
     }
 }

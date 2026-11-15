@@ -445,10 +445,9 @@ namespace AXPlayer.App.Screens
                     checkForUpdates().FireAndForget();
             }
 
-            if (appGlobalConfig.Get<string>(AXPlayerSetting.AccessToken) != string.Empty)
-            {
-                Task.Run(async () => await googleOAuth2.SignIn());
-            }
+            // Silently restores the persisted Google session (and imports a legacy one) without
+            // ever opening the consent screen.
+            Task.Run(async () => await googleOAuth2.RestoreSessionAsync());
 
             sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = true;
 

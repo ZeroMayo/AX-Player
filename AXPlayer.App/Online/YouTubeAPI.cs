@@ -1,19 +1,15 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable enable
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Crypto.AES;
-using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using AXPlayer.App.Config;
@@ -27,9 +23,15 @@ using YoutubeExplode.Exceptions;
 
 namespace AXPlayer.App.Online
 {
+    /// <summary>
+    /// The YouTube API layer of the player.
+    /// </summary>
+    /// <remarks>
+    /// Everything is backed by the internal Innertube API instead of the quota-limited
+    /// YouTube Data API v3. See <c>YouTubeAPI.Innertube.cs</c> for the transport and parsers.
+    /// </remarks>
     public partial class YouTubeAPI
     {
-        private YouTubeService youtubeService;
         private GoogleTranslate translateApi;
         private GoogleOAuth2 googleOAuth2;
 
@@ -45,78 +47,26 @@ namespace AXPlayer.App.Online
             this.translateApi = translateApi;
             this.appConfig = appConfig;
             this.googleOAuth2 = googleOAuth2;
-            var apiKey = isTestClient ? "K/1395zhx/B49AZcHQpAUn5HZSBGtbLrAHnY3QGYieBQpx0gOkZdL5xDPUB7+BnM" : "3T8gSwQR7sprXV/OZDZyTCqbT9Qrt/j8xd7prlHrFMh4Y8Dsp4H2HG+eu+UJ7FOb";
 
-            using (AES aes_1 = new AES("youtube-player-ex"))
+            // The resolved own channel belongs to the account that was signed in, so cache
+            // invalidation is tied to the sign-in state instead of the application lifetime.
+            googleOAuth2.SignedIn.BindValueChanged(_ =>
             {
-                string decryptedKey = aes_1.Decrypt("faF4XblghnrR37EA3y5Aag==");
-                using (AES aes = new AES(decryptedKey))
-                {
-                    string decryptedApiKey = aes.Decrypt(apiKey);
+                mineChannelIdCache = null;
+                mineChannelCache = null;
+            });
 
-                    youtubeService = new YouTubeService(new BaseClientService.Initializer()
-                    {
-                        ApiKey = decryptedApiKey,
-                        ApplicationName = GetType().ToString()
-                    });
-                }
-            }
-
-            Logger.Log($"Google Translate, YouTube API loaded");
+            Logger.Log(@"Google Translate, YouTube Innertube API loaded");
         }
 
         public Channel? TryGetChannel(string channelId)
             => GetChannel(channelId) ?? null;
 
         public Channel? GetChannel(string channelId)
-        {
-            var part = "statistics,snippet,brandingSettings,id,localizations,topicDetails";
-            var request = youtubeService.Channels.List(part);
-
-            request.Id = channelId;
-
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = request.Execute();
-
-            var result = response.Items.First();
-
-            if (result != null)
-                return result;
-
-            return null;
-        }
+            => runSync(() => fetchChannelAsync(channelId, CancellationToken.None));
 
         public bool GetChannelExistsViaHandle(string handle)
-        {
-            var part = "statistics,snippet,brandingSettings,id,localizations";
-            var request = youtubeService.Channels.List(part);
-
-            request.ForHandle = handle;
-
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = request.Execute();
-
-            if (response.Items.Count == 0)
-                return false;
-
-            return true;
-        }
-
-        public IList<I18nLanguage> GetAvailableLanguages()
-        {
-            var part = "snippet";
-            var request = youtubeService.I18nLanguages.List(part);
-
-            var response = request.Execute();
-
-            var result = response.Items;
-
-            return result;
-        }
+            => runSync(() => fetchChannelExistsViaHandleAsync(handle, CancellationToken.None));
 
         public Channel? TryToGetMineChannel()
         {
@@ -127,88 +77,32 @@ namespace AXPlayer.App.Online
         }
 
         public Channel GetMineChannel()
-        {
-            var part = "statistics,snippet,brandingSettings,id,localizations";
-            var request = youtubeService.Channels.List(part);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            request.Mine = true;
-
-            var response = request.Execute();
-
-            var result = response.Items.First();
-
-            return result;
-        }
+            => runSync(GetMineChannelAsync);
 
         public async Task<Channel> GetMineChannelAsync()
         {
-            var part = "statistics,snippet,brandingSettings,id,localizations";
-            var request = youtubeService.Channels.List(part);
+            Channel? channel = await fetchMineChannelAsync(CancellationToken.None).ConfigureAwait(false);
 
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            request.Mine = true;
-
-            var response = await request.ExecuteAsync();
-
-            var result = response.Items.First();
-
-            return result;
+            return channel ?? new Channel
+            {
+                Id = string.Empty,
+                Kind = @"youtube#channel",
+                Snippet = new ChannelSnippet
+                {
+                    Title = string.Empty,
+                    Description = string.Empty,
+                    Thumbnails = new ThumbnailDetails(),
+                },
+                Statistics = new ChannelStatistics(),
+                Localizations = new Dictionary<string, ChannelLocalization>(StringComparer.Ordinal),
+            };
         }
 
         public void SendComment(string videoId, string commentText)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return;
+            => runSync(() => sendCommentAsync(videoId, commentText, CancellationToken.None));
 
-            var part = "snippet";
-            var request = youtubeService.CommentThreads.Insert(new CommentThread
-            {
-                Snippet = new CommentThreadSnippet
-                {
-                    VideoId = videoId,
-                    TopLevelComment = new Comment
-                    {
-                        Snippet = new CommentSnippet
-                        {
-                            TextOriginal = commentText
-                        }
-                    }
-                }
-            }, part);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            request.Execute();
-        }
-
-        public async Task UpdatePlaylistInfo(string playlistId, string title, PrivacyStatus privacyStatus)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return;
-
-            string parsedPrivacyStatus = ParsePrivacyStatus(privacyStatus);
-
-            var part = "id,snippet,status";
-            var request = youtubeService.Playlists.Update(new Playlist
-            {
-                Id = playlistId,
-                Snippet = new()
-                {
-                    Title = title,
-                },
-                Status = new()
-                {
-                    PrivacyStatus = parsedPrivacyStatus,
-                }
-            }, part);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            await request.ExecuteAsync();
-        }
+        public Task UpdatePlaylistInfo(string playlistId, string title, PrivacyStatus privacyStatus)
+            => updatePlaylistInfoAsync(playlistId, title, privacyStatus, CancellationToken.None);
 
         public IList<VideoAbuseReportReasonItem>? TryToGetVideoAbuseReportReasons()
         {
@@ -218,271 +112,40 @@ namespace AXPlayer.App.Online
             return GetVideoAbuseReportReasons();
         }
 
-        public void ReportAbuse(string videoID, string reasonId, string? secondaryReasonId = null, string? comments = null)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return;
-
-            if (secondaryReasonId != null)
-            {
-                if (comments != null)
-                {
-                    var request = youtubeService.Videos.ReportAbuse(new VideoAbuseReport
-                    {
-                        VideoId = videoID,
-                        ReasonId = reasonId,
-                        SecondaryReasonId = secondaryReasonId,
-                        Comments = comments,
-                        Language = CultureInfo.CurrentCulture.Name,
-                    });
-
-                    request.AccessToken = googleOAuth2.GetAccessToken();
-                    request.Execute();
-                }
-                else
-                {
-                    var request = youtubeService.Videos.ReportAbuse(new VideoAbuseReport
-                    {
-                        VideoId = videoID,
-                        ReasonId = reasonId,
-                        SecondaryReasonId = secondaryReasonId,
-                        Language = CultureInfo.CurrentCulture.Name,
-                    });
-
-                    request.AccessToken = googleOAuth2.GetAccessToken();
-                    request.Execute();
-                }
-            }
-            else
-            {
-                if (comments != null)
-                {
-                    var request = youtubeService.Videos.ReportAbuse(new VideoAbuseReport
-                    {
-                        VideoId = videoID,
-                        ReasonId = reasonId,
-                        Comments = comments,
-                        Language = CultureInfo.CurrentCulture.Name,
-                    });
-
-                    request.AccessToken = googleOAuth2.GetAccessToken();
-                    request.Execute();
-                }
-                else
-                {
-                    var request = youtubeService.Videos.ReportAbuse(new VideoAbuseReport
-                    {
-                        VideoId = videoID,
-                        ReasonId = reasonId,
-                        Language = CultureInfo.CurrentCulture.Name,
-                    });
-
-                    request.AccessToken = googleOAuth2.GetAccessToken();
-                    request.Execute();
-                }
-            }
-        }
-
         public IList<VideoAbuseReportReasonItem> GetVideoAbuseReportReasons()
-        {
-            var part = "snippet";
-            var request = youtubeService.VideoAbuseReportReasons.List(part);
+            => getBuiltInAbuseReportReasons();
 
-            request.AccessToken = googleOAuth2.GetAccessToken();
-            request.Hl = frameworkConfig.Get<string>(FrameworkSetting.Locale);
+        public void ReportAbuse(string videoID, string reasonId, string? secondaryReasonId = null, string? comments = null)
+            => runSync(() => reportAbuseAsync(videoID, reasonId, secondaryReasonId, comments, CancellationToken.None));
 
-            Logger.Log($"Using access token {googleOAuth2.GetAccessToken()}");
-            Logger.Log($"called GetVideoAbuseReportReasons()");
-
-            var response = request.Execute();
-
-            IList<VideoAbuseReportReasonItem> result = new List<VideoAbuseReportReasonItem>();
-
-            try
-            {
-                foreach (VideoAbuseReportReason videoAbuseReportReason in response.Items)
-                {
-                    VideoAbuseReportReasonItem item = new VideoAbuseReportReasonItem
-                    {
-                        Id = videoAbuseReportReason.Id,
-                        Label = videoAbuseReportReason.Snippet.Label,
-                        ContainsSecondaryReasons = (videoAbuseReportReason.Snippet.SecondaryReasons != null)
-                    };
-                    Logger.Log($"Created new item instance: (Id: {videoAbuseReportReason.Id}, Label: {videoAbuseReportReason.Snippet.Label})");
-
-                    if (videoAbuseReportReason.Snippet.SecondaryReasons != null)
-                    {
-                        foreach (VideoAbuseReportSecondaryReason item1 in videoAbuseReportReason.Snippet.SecondaryReasons)
-                        {
-                            VideoAbuseReportReasonItem item2 = new VideoAbuseReportReasonItem
-                            {
-                                Id = item1.Id,
-                                Label = item1.Label
-                            };
-                            Logger.Log($"Created new sub item instance: (Id: {item1.Id}, Label: {item1.Label})");
-
-                            item.SecondaryReasons.Add(item2);
-                            Logger.Log($"SecondaryReasons added: {item1.Label}");
-                        }
-                    }
-
-                    result.Add(item);
-                    Logger.Log($"Reasons added: {item.Label}");
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, e.GetDescription());
-            }
-
-            Logger.Log($"Reasons all added!");
-            return result;
-        }
-
-        public async Task<CommentThreadListResponse> GetCommentThreadAsync(string videoId, string pageToken, CommentThreadsResource.ListRequest.OrderEnum orderEnum = CommentThreadsResource.ListRequest.OrderEnum.Time)
+        public Task<CommentThreadListResponse> GetCommentThreadAsync(string videoId, string pageToken, CommentThreadsResource.ListRequest.OrderEnum orderEnum = CommentThreadsResource.ListRequest.OrderEnum.Time)
         {
             Logger.Log($"[NekoPlayer] GetCommentThread called with params ({videoId}, {orderEnum.ToString()})");
-
-            var part = "snippet,replies";
-            var request = youtubeService.CommentThreads.List(part);
-
-            request.MaxResults = 10;
-            request.VideoId = videoId;
-            request.Order = orderEnum;
-
-            if (!string.IsNullOrEmpty(pageToken))
-                request.PageToken = pageToken;
-
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            return response;
+            return fetchCommentThreadsAsync(videoId, pageToken, orderEnum, CancellationToken.None);
         }
 
         public IList<SearchResult> GetSearchResult(string query, SearchResource.ListRequest.OrderEnum orderEnum)
-        {
-            //calling search on youtube api is 100 units is so intresting
-            var part = "snippet";
-            var request = youtubeService.Search.List(part);
+            => runSync(() => fetchSearchResultsAsync(query, orderEnum, CancellationToken.None));
 
-            request.MaxResults = 50; // <------ why 50? dues to quota limits
-            request.Q = query;
+        public Task<Comment> GetComment(string commentId)
+            => throw new NotSupportedException(@"Fetching a single comment is not supported by the Innertube API.");
 
-            request.Order = orderEnum;
+        public Task<bool> IsChannelSubscribed(string channelId)
+            => isChannelSubscribedAsync(channelId, CancellationToken.None);
 
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
+        public Task<string> GetSubscriptionId(string channelId)
+            => getSubscriptionIdAsync(channelId, CancellationToken.None);
 
-            var response = request.Execute();
+        public Task SubscribeChannel(string channelId)
+            => subscribeChannelAsync(channelId, CancellationToken.None);
 
-            var result = response.Items;
-
-            return result;
-        }
-
-        public async Task<Comment> GetComment(string commentId)
-        {
-            var part = "snippet";
-            var request = youtubeService.Comments.List(part);
-
-            request.Id = commentId;
-
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            var result = response.Items.First();
-
-            return result;
-        }
-
-        public async Task<bool> IsChannelSubscribed(string channelId)
-        {
-            if (googleOAuth2.SignedIn.Value == false)
-                return false;
-
-            var part = "snippet";
-            var request = youtubeService.Subscriptions.List(part);
-
-            request.ForChannelId = channelId;
-            request.Mine = true;
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            if (response.Items.Count > 0)
-                return true;
-            else
-                return false;
-        }
-
-        public async Task<string> GetSubscriptionId(string channelId)
-        {
-            if (googleOAuth2.SignedIn.Value == false)
-                return string.Empty;
-
-            var part = "snippet";
-            var request = youtubeService.Subscriptions.List(part);
-
-            request.ForChannelId = channelId;
-            request.Mine = true;
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            if (response.Items.Count > 0)
-                return response.Items.First().Id;
-            else
-                return string.Empty;
-        }
-
-        public async Task SubscribeChannel(string channelId)
-        {
-            if (googleOAuth2.SignedIn.Value == false)
-                return;
-
-            var body = new Subscription
-            {
-                Snippet = new()
-                {
-                    ResourceId = new()
-                    {
-                        Kind = "youtube#channel",
-                        ChannelId = channelId
-                    }
-                }
-            };
-
-            var part = "snippet";
-            var request = youtubeService.Subscriptions.Insert(body, part);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            await request.ExecuteAsync();
-
-            return;
-        }
-
-        public async Task UnsubscribeChannel(string subscriptionId)
-        {
-            if (googleOAuth2.SignedIn.Value == false)
-                return;
-
-            var request = youtubeService.Subscriptions.Delete(subscriptionId);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            await request.ExecuteAsync();
-
-            return;
-        }
+        public Task UnsubscribeChannel(string subscriptionId)
+            => unsubscribeChannelAsync(subscriptionId, CancellationToken.None);
 
         public string GetLocalizedChannelTitleDisplayBoth(Channel channel)
         {
             string language = frameworkConfig.Get<string>(FrameworkSetting.Locale);
+
             if (!string.IsNullOrEmpty(channel.Snippet.CustomUrl))
             {
                 try
@@ -494,22 +157,21 @@ namespace AXPlayer.App.Online
                     return channel.Snippet.Title.Normalize() + $" ({channel.Snippet.CustomUrl})";
                 }
             }
-            else
+
+            try
             {
-                try
-                {
-                    return channel.Localizations.Where(locale => locale.Key.Contains(language)).First().Value.Title.Normalize();
-                }
-                catch
-                {
-                    return channel.Snippet.Title.Normalize();
-                }
+                return channel.Localizations.Where(locale => locale.Key.Contains(language)).First().Value.Title.Normalize();
+            }
+            catch
+            {
+                return channel.Snippet.Title.Normalize();
             }
         }
 
         public string GetLocalizedChannelTitleOnlyOne(Channel channel)
         {
             string language = frameworkConfig.Get<string>(FrameworkSetting.Locale);
+
             try
             {
                 return channel.Localizations.Where(locale => locale.Key.Contains(language)).First().Value.Title.Normalize();
@@ -531,25 +193,23 @@ namespace AXPlayer.App.Online
                 {
                     return GetLocalizedChannelTitleDisplayBoth(channel);
                 }
-                else
-                {
-                    try
-                    {
-                        string originalTitle = channel.Snippet.Title.Normalize();
-                        string translatedTitle = translateApi.Translate(originalTitle, GoogleTranslateLanguage.auto);
 
-                        if (!string.IsNullOrEmpty(channel.Snippet.CustomUrl))
-                            return translatedTitle + $" ({channel.Snippet.CustomUrl})";
-                        else
-                            return translatedTitle;
-                    }
-                    catch
-                    {
-                        if (!string.IsNullOrEmpty(channel.Snippet.CustomUrl))
-                            return channel.Snippet.Title + $" ({channel.Snippet.CustomUrl})";
-                        else
-                            return channel.Snippet.Title;
-                    }
+                try
+                {
+                    string originalTitle = channel.Snippet.Title.Normalize();
+                    string translatedTitle = translateApi.Translate(originalTitle, GoogleTranslateLanguage.auto);
+
+                    if (!string.IsNullOrEmpty(channel.Snippet.CustomUrl))
+                        return translatedTitle + $" ({channel.Snippet.CustomUrl})";
+
+                    return translatedTitle;
+                }
+                catch
+                {
+                    if (!string.IsNullOrEmpty(channel.Snippet.CustomUrl))
+                        return channel.Snippet.Title + $" ({channel.Snippet.CustomUrl})";
+
+                    return channel.Snippet.Title;
                 }
             }
 
@@ -559,30 +219,26 @@ namespace AXPlayer.App.Online
                 {
                     return GetLocalizedChannelTitleOnlyOne(channel);
                 }
-                else
+
+                try
                 {
-                    try
-                    {
-                        string originalTitle = channel.Snippet.Title.Normalize();
-                        string translatedTitle = translateApi.Translate(originalTitle, GoogleTranslateLanguage.auto);
-                        return translatedTitle;
-                    }
-                    catch
-                    {
-                        return channel.Snippet.Title;
-                    }
+                    string originalTitle = channel.Snippet.Title.Normalize();
+                    string translatedTitle = translateApi.Translate(originalTitle, GoogleTranslateLanguage.auto);
+                    return translatedTitle;
+                }
+                catch
+                {
+                    return channel.Snippet.Title;
                 }
             }
-            else
-            {
-                if (forceUsernameDisplay)
-                    return GetLocalizedChannelTitleOnlyOne(channel);
 
-                if (!string.IsNullOrEmpty(channel.Snippet.CustomUrl))
-                    return channel.Snippet.CustomUrl;
-                else
-                    return GetLocalizedChannelTitleOnlyOne(channel);
-            }
+            if (forceUsernameDisplay)
+                return GetLocalizedChannelTitleOnlyOne(channel);
+
+            if (!string.IsNullOrEmpty(channel.Snippet.CustomUrl))
+                return channel.Snippet.CustomUrl;
+
+            return GetLocalizedChannelTitleOnlyOne(channel);
         }
 
         public string ParseCaptionLanguage(ClosedCaptionLanguage captionLanguage)
@@ -672,84 +328,25 @@ namespace AXPlayer.App.Online
         }
 
         public Video GetVideo(string videoId)
-        {
-            var part = "statistics,snippet,localizations,contentDetails,status,topicDetails,liveStreamingDetails";
-            var request = youtubeService.Videos.List(part);
-
-            request.Id = videoId;
-
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = request.Execute();
-
-            var result = response.Items.First();
-
-            return result;
-        }
+            => runSync(() => fetchVideoAsync(videoId, CancellationToken.None))
+               ?? throw new InvalidOperationException($@"The video '{videoId}' could not be loaded from YouTube.");
 
         public Playlist GetPlaylistInfo(string playlistId)
-        {
-            var part = "snippet,status";
-            var request = youtubeService.Playlists.List(part);
+            => runSync(() => fetchPlaylistInfoAsync(playlistId, CancellationToken.None));
 
-            request.Id = playlistId;
-
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = request.Execute();
-
-            var result = response.Items.First();
-
-            return result;
-        }
-
-        public async Task<IList<Playlist>> GetMyPlaylistItemsAsync()
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return new List<Playlist>();
-
-            var part = "snippet,status";
-            var request = youtubeService.Playlists.List(part);
-
-            request.Mine = true;
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            var result = response.Items;
-
-            return result;
-        }
+        public Task<IList<Playlist>> GetMyPlaylistItemsAsync()
+            => fetchMyPlaylistsAsync(CancellationToken.None);
 
         public IList<Playlist> GetMyPlaylistItems()
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return new List<Playlist>();
-
-            var part = "snippet,status";
-            var request = youtubeService.Playlists.List(part);
-
-            request.Mine = true;
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = request.Execute();
-
-            var result = response.Items;
-
-            return result;
-        }
+            => runSync(() => fetchMyPlaylistsAsync(CancellationToken.None));
 
         private string? _visitorData;
 
         protected HttpClient Http { get; }
 
         private async ValueTask<string> ResolveVisitorDataAsync(
-        CancellationToken cancellationToken = default
-    )
+            CancellationToken cancellationToken = default
+        )
         {
             if (!string.IsNullOrWhiteSpace(_visitorData))
                 return _visitorData;
@@ -768,8 +365,6 @@ namespace AXPlayer.App.Online
 
             if (googleOAuth2.SignedIn.Value)
             {
-                var plainTextBytes = Encoding.UTF8.GetBytes(googleOAuth2.GetAccessToken());
-
                 request.Headers.Add(
                     "Authorization",
                     $"Bearer {googleOAuth2.GetAccessToken()}"
@@ -797,9 +392,9 @@ namespace AXPlayer.App.Online
         }
 
         public async Task SendPlayerResponseAsync(
-        string videoId,
-        CancellationToken cancellationToken = default
-    )
+            string videoId,
+            CancellationToken cancellationToken = default
+        )
         {
             var visitorData = await ResolveVisitorDataAsync(cancellationToken);
 
@@ -848,8 +443,6 @@ namespace AXPlayer.App.Online
 
             if (googleOAuth2.SignedIn.Value)
             {
-                var plainTextBytes = Encoding.UTF8.GetBytes(googleOAuth2.GetAccessToken());
-
                 request.Headers.Add(
                     "Authorization",
                     $"Bearer {googleOAuth2.GetAccessToken()}"
@@ -863,75 +456,14 @@ namespace AXPlayer.App.Online
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task SaveVideoToPlaylist(string playlistId, string videoId)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return;
+        public Task SaveVideoToPlaylist(string playlistId, string videoId)
+            => saveVideoToPlaylistAsync(playlistId, videoId, CancellationToken.None);
 
-            PlaylistItem item = new PlaylistItem
-            {
-                Snippet = new()
-                {
-                    PlaylistId = playlistId,
-                    ResourceId = new()
-                    {
-                        Kind = "youtube#video",
-                        VideoId = videoId,
-                    }
-                }
-            };
+        public Task RemoveVideoFromPlaylist(string playlistId, string videoId)
+            => removeVideoFromPlaylistAsync(playlistId, videoId, CancellationToken.None);
 
-            var part = "snippet";
-            var request = youtubeService.PlaylistItems.Insert(item, part);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            await request.ExecuteAsync();
-        }
-
-        public async Task RemoveVideoFromPlaylist(string playlistId, string videoId)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return;
-
-            var part = "snippet";
-            var request = youtubeService.PlaylistItems.List(part);
-
-            request.PlaylistId = playlistId;
-            request.VideoId = videoId;
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            var result = response.Items.First();
-
-            var request2 = youtubeService.PlaylistItems.Delete(result.Id);
-
-            request2.OauthToken = googleOAuth2.GetAccessToken();
-
-            await request2.ExecuteAsync();
-        }
-
-        public async Task<bool> IsVideoExistsOnPlaylist(string playlistId, string videoId)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return false;
-
-            var part = "snippet";
-            var request = youtubeService.PlaylistItems.List(part);
-
-            request.PlaylistId = playlistId;
-            request.VideoId = videoId;
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            var result = response.Items;
-
-            return result.Count > 0;
-        }
+        public Task<bool> IsVideoExistsOnPlaylist(string playlistId, string videoId)
+            => isVideoExistsOnPlaylistAsync(playlistId, videoId, CancellationToken.None);
 
         public string ParsePrivacyStatus(PrivacyStatus privacyStatus)
         {
@@ -947,93 +479,16 @@ namespace AXPlayer.App.Online
             return string.Empty;
         }
 
-        public async Task AddPlaylist(string playlistTitle, PrivacyStatus privacyStatus)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return;
+        public Task AddPlaylist(string playlistTitle, PrivacyStatus privacyStatus)
+            => addPlaylistAsync(playlistTitle, privacyStatus, CancellationToken.None);
 
-            Playlist item = new Playlist
-            {
-                Snippet = new()
-                {
-                    Title = playlistTitle,
-                },
-                Status = new()
-                {
-                    PrivacyStatus = ParsePrivacyStatus(privacyStatus),
-                }
-            };
+        public Task<IList<PlaylistItem>> GetPlaylistItems(string playlistId)
+            => fetchPlaylistItemsAsync(playlistId, CancellationToken.None);
 
-            var part = "snippet,status";
-            var request = youtubeService.Playlists.Insert(item, part);
+        public Task<VideosResource.RateRequest.RatingEnum> GetVideoRating(string videoId)
+            => getVideoRatingAsync(videoId, CancellationToken.None);
 
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            await request.ExecuteAsync();
-        }
-
-        public async Task<IList<PlaylistItem>> GetPlaylistItems(string playlistId)
-        {
-            var part = "snippet,contentDetails";
-            var request = youtubeService.PlaylistItems.List(part);
-
-            request.MaxResults = 25; // <------ why 25? dues to quota limits
-            request.PlaylistId = playlistId;
-
-            if (googleOAuth2.SignedIn.Value == true)
-                request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            var result = response.Items;
-
-            return result;
-        }
-
-        public async Task<VideosResource.RateRequest.RatingEnum> GetVideoRating(string videoId)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return VideosResource.RateRequest.RatingEnum.None;
-
-            var request = youtubeService.Videos.GetRating(videoId);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            var response = await request.ExecuteAsync();
-
-            var result = response.Items.First();
-
-            switch (result.Rating)
-            {
-                case "none":
-                {
-                    return VideosResource.RateRequest.RatingEnum.None;
-                }
-                case "like":
-                {
-                    return VideosResource.RateRequest.RatingEnum.Like;
-                }
-                case "dislike":
-                {
-                    return VideosResource.RateRequest.RatingEnum.Dislike;
-                }
-                default:
-                {
-                    return VideosResource.RateRequest.RatingEnum.None;
-                }
-            }
-        }
-
-        public async Task RateVideo(string videoId, VideosResource.RateRequest.RatingEnum videoRating)
-        {
-            if (!googleOAuth2.SignedIn.Value)
-                return;
-
-            var request = youtubeService.Videos.Rate(videoId, videoRating);
-
-            request.AccessToken = googleOAuth2.GetAccessToken();
-
-            await request.ExecuteAsync();
-        }
+        public Task RateVideo(string videoId, VideosResource.RateRequest.RatingEnum videoRating)
+            => rateVideoAsync(videoId, videoRating, CancellationToken.None);
     }
 }
