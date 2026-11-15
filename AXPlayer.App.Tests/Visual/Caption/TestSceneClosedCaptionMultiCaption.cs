@@ -29,6 +29,7 @@ namespace AXPlayer.App.Tests.Visual.Caption
     <pen id=""0"" fc=""#FFFFFF"" fo=""255"" />
     <pen id=""1"" fc=""#FF0000"" fo=""255"" bc=""#000000"" bo=""0"" />
     <pen id=""2"" fc=""#00FF00"" fo=""128"" bc=""#0000FF"" bo=""128"" />
+    <pen id=""3"" fc=""#FFFFFF"" fo=""255"" b=""1"" />
     <ws id=""0"" ju=""0"" />
     <wp id=""0"" ap=""1"" ah=""50"" av=""100"" />
     <wp id=""1"" ap=""1"" ah=""50"" av=""20"" />
@@ -48,6 +49,7 @@ namespace AXPlayer.App.Tests.Visual.Caption
     <p t=""25000"" d=""3000"" wp=""4"" ws=""0"" p=""0"">Centered line</p>
     <p t=""28000"" d=""3000"" wp=""0"" ws=""0"" p=""0"">Overlap A</p>
     <p t=""28000"" d=""3000"" wp=""0"" ws=""0"" p=""0"">Overlap B</p>
+    <p t=""31000"" d=""3000"" wp=""0"" ws=""0"" p=""3"">Bold line</p>
   </body>
 </timedtext>";
 
@@ -60,7 +62,7 @@ namespace AXPlayer.App.Tests.Visual.Caption
         public TestSceneClosedCaptionMultiCaption()
         {
             videoPlayer = new YouTubeVideoPlayer(string.Empty, string.Empty, null!, srv3_xml, null!, 0);
-            videoPlayer.VideoProgress.MaxValue = 30;
+            videoPlayer.VideoProgress.MaxValue = 40;
 
             Add(captionContainer = new ClosedCaptionContainer(videoPlayer, srv3_xml));
         }
@@ -176,6 +178,28 @@ namespace AXPlayer.App.Tests.Visual.Caption
             AddStep("seek into same-position captions", () => videoPlayer.VideoProgress.Value = 29);
 
             AddUntilStep("both cues are rendered", () => renderedTexts().SequenceEqual(new[] { "Overlap A", "Overlap B" }));
+        }
+
+        [Test]
+        public void TestBoldSpanUsesBoldWeightForSupportedFonts()
+        {
+            AddStep("use Rubik", () => config.GetBindable<CaptionFonts>(AXPlayerSetting.CaptionFont).Value = CaptionFonts.Rubik);
+            AddStep("seek into bold caption", () => videoPlayer.VideoProgress.Value = 31.5);
+
+            AddUntilStep("bold cue is rendered", () => renderedTexts().SequenceEqual(new[] { "Bold line" }));
+
+            AddAssert("Rubik bold instance is used", () => renderedSpriteTexts().Single().Font.Weight == "Bold");
+        }
+
+        [Test]
+        public void TestBoldSpanIsIgnoredForFontsWithoutBoldInstance()
+        {
+            AddStep("use Hungeul", () => config.GetBindable<CaptionFonts>(AXPlayerSetting.CaptionFont).Value = CaptionFonts.Hungeul);
+            AddStep("seek into bold caption", () => videoPlayer.VideoProgress.Value = 31.5);
+
+            AddUntilStep("bold cue is rendered", () => renderedTexts().SequenceEqual(new[] { "Bold line" }));
+
+            AddAssert("Hungeul keeps its regular weight", () => renderedSpriteTexts().Single().Font.Weight != "Bold");
         }
 
         private static bool approximately(Color4 actual, Color4 expected)

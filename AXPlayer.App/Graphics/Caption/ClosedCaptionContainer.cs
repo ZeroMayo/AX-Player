@@ -498,12 +498,16 @@ namespace AXPlayer.App.Graphics.Caption
 
                     t.Colour = span.ForegroundColour;
 
+                    // SRV3's bold flag can only be honoured by the caption fonts
+                    // that ship a Bold instance. Other caption fonts ignore it.
+                    bool bold = span.Bold && supportsSrv3Bold;
+
                     // SRV3's fs is a font-size family/index. sz is a percentage
                     // size multiplier. The test document uses 30/100/300.
-                    if (span.SizeMultiplier.HasValue)
+                    if (span.SizeMultiplier.HasValue || bold)
                     {
-                        float size = 24 * span.SizeMultiplier.Value;
-                        t.Font = getSelectedFont(size);
+                        float size = 24 * (span.SizeMultiplier ?? 1f);
+                        t.Font = getSelectedFont(size, bold);
                     }
 
                     // osu!framework SpriteText exposes Shadow, which is the safest
@@ -587,14 +591,29 @@ namespace AXPlayer.App.Graphics.Caption
             srv3Displays.Clear();
         }
 
-        private FontUsage getSelectedFont(float size)
+        /// <summary>
+        /// Whether the selected caption font provides a Bold instance that can be
+        /// addressed through <see cref="FontUsage.Weight"/>.
+        /// </summary>
+        private bool supportsSrv3Bold => captionFont.Value is CaptionFonts.Rubik
+            or CaptionFonts.Pretendard
+            or CaptionFonts.GoogleSansFlexRounded
+            or CaptionFonts.GoogleSansFlex
+            or CaptionFonts.Roboto;
+
+        private FontUsage getSelectedFont(float size, bool bold = false)
         {
+            bool useBold = bold && supportsSrv3Bold;
+
+            FontUsage withSizeAndWeight(FontUsage font)
+                => useBold ? font.With(size: size, weight: "Bold") : font.With(size: size);
+
             switch (captionFont.Value)
             {
                 case CaptionFonts.Rubik:
-                    return AXPlayerApp.Fonts.Rubik.With(size: size);
+                    return withSizeAndWeight(AXPlayerApp.Fonts.Rubik);
                 case CaptionFonts.Pretendard:
-                    return AXPlayerApp.Fonts.Pretendard.With(size: size);
+                    return withSizeAndWeight(AXPlayerApp.Fonts.Pretendard);
                 case CaptionFonts.Hungeul:
                     return AXPlayerApp.Fonts.Hungeul.With(size: size);
                 case CaptionFonts.Ownglyph_PDH:
@@ -608,7 +627,7 @@ namespace AXPlayer.App.Graphics.Caption
                 case CaptionFonts.Cafe24Syongsyong:
                     return AXPlayerApp.Fonts.Cafe24Syongsyong.With(size: size);
                 case CaptionFonts.Roboto:
-                    return AXPlayerApp.Fonts.Roboto.With(size: size);
+                    return withSizeAndWeight(AXPlayerApp.Fonts.Roboto);
                 case CaptionFonts.DreamHeumulKR:
                     return AXPlayerApp.Fonts.DreamHeumulKR.With(size: size);
                 case CaptionFonts.Hakgyoansim_ManitoR:
@@ -618,13 +637,13 @@ namespace AXPlayer.App.Graphics.Caption
                 case CaptionFonts.OwnglyphYuntaeng:
                     return AXPlayerApp.Fonts.OwnglyphYuntaeng.With(size: size);
                 case CaptionFonts.GoogleSansFlexRounded:
-                    return AXPlayerApp.Fonts.GoogleSansFlexRounded.With(size: size);
+                    return withSizeAndWeight(AXPlayerApp.Fonts.GoogleSansFlexRounded);
                 case CaptionFonts.Hippie:
                     return AXPlayerApp.Fonts.Hippie.With(size: size);
                 case CaptionFonts.GriunSobokhee:
                     return AXPlayerApp.Fonts.GriunSobokhee.With(size: size);
                 default:
-                    return AXPlayerApp.Fonts.GoogleSansFlex.With(size: size);
+                    return withSizeAndWeight(AXPlayerApp.Fonts.GoogleSansFlex);
             }
         }
 
@@ -895,6 +914,7 @@ namespace AXPlayer.App.Graphics.Caption
         public Color4? EdgeColour => Pen.EdgeColour;
         public int EdgeType => Pen.EdgeType;
         public float? SizeMultiplier => Pen.SizeMultiplier;
+        public bool Bold => Pen.Bold;
 
         public Srv3Span(string text, Srv3Pen pen, int offsetMilliseconds = 0)
         {
