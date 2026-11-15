@@ -75,6 +75,8 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.AudioNormalization, true);
 
             SetDefault(AXPlayerSetting.AccessToken, string.Empty);
+            SetDefault(AXPlayerSetting.RefreshToken, string.Empty);
+            SetDefault(AXPlayerSetting.AccessTokenExpiresAt, string.Empty);
             SetDefault(AXPlayerSetting.AudioQuality, AudioQuality.PreferHighQuality);
             SetDefault(AXPlayerSetting.CloseButtonAction, CloseButtonAction.HideToTrayIcon);
             SetDefault(AXPlayerSetting.ColourScheme, OverlayColourScheme.Lime);
@@ -213,6 +215,8 @@ namespace AXPlayer.App.Config
         AudioNormalization,
 
         AccessToken,
+        RefreshToken,
+        AccessTokenExpiresAt,
         AudioQuality,
         CloseButtonAction,
         ColourScheme,
