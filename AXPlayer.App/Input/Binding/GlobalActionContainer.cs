@@ -145,6 +145,7 @@ namespace AXPlayer.App.Input.Binding
             new KeyBinding(new[] { InputKey.Slash }, GlobalAction.OpenSearch),
 
             new KeyBinding(new[] { InputKey.Alt, InputKey.M }, GlobalAction.OpenMyPlaylists),
+            new KeyBinding(new[] { InputKey.Alt, InputKey.H }, GlobalAction.OpenWatchHistory),
             new KeyBinding(new[] { InputKey.Control, InputKey.M }, GlobalAction.AddPlaylistKey),
             new KeyBinding(new[] { InputKey.Alt, InputKey.S }, GlobalAction.SaveVideoToPlaylist),
             new KeyBinding(new[] { InputKey.Alt, InputKey.R }, GlobalAction.ToggleRepeatVideo),
@@ -226,6 +227,7 @@ namespace AXPlayer.App.Input.Binding
         OpenLoadVideo,
         OpenSearch,
         OpenMyPlaylists,
+        OpenWatchHistory,
         AddPlaylistKey,
         SaveVideoToPlaylist,
         ToggleRepeatVideo,

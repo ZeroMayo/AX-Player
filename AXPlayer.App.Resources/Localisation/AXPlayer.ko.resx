@@ -1176,4 +1176,16 @@
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>이 동영상에서는 실시간 채팅 다시보기를 사용할 수 없습니다.</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>시청 기록</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>더 불러오기</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>아직 시청 기록이 없습니다...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>시청한 동영상이 여기에 표시됩니다.</value>
+  </data>
 </root>

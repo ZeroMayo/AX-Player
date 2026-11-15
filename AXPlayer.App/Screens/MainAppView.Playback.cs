@@ -59,6 +59,8 @@ namespace AXPlayer.App.Screens
 
             videoContainer.Add(currentVideoSource);
 
+            recordWatchHistory(videoId);
+
             videoLoadingProgressBase.Hide();
             Schedule(() => videoLoadingProgress.Text = "");
 
@@ -558,6 +560,8 @@ namespace AXPlayer.App.Screens
             }
 
             updateVideoMetadata(videoId);
+
+            recordWatchHistory(videoId);
             updatePresence(discordRichPresence.Value);
         }
 

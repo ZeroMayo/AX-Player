@@ -1177,4 +1177,16 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="no_audio_effect_presets" xml:space="preserve">
     <value>Không có cài đặt trước nào được lưu</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>Lịch sử xem</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>Tải thêm</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>Chưa có lịch sử xem...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>Các video bạn xem sẽ xuất hiện ở đây.</value>
+  </data>
 </root>

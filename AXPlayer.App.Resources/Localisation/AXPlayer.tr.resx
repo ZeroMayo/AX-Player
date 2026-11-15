@@ -1176,4 +1176,16 @@
   <data name="no_audio_effect_presets" xml:space="preserve">
     <value>Kayıtlı ayar yok</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>İzleme geçmişi</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>Daha fazla yükle</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>Henüz izleme geçmişi yok...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>İzlediğiniz videolar burada görünecek.</value>
+  </data>
 </root>

@@ -1176,4 +1176,16 @@
   <data name="no_audio_effect_presets" xml:space="preserve">
     <value>No hay preajustes guardados</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>Historial de reproducción</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>Cargar más</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>Aún no hay historial de reproducción...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>Los videos que veas aparecerán aquí.</value>
+  </data>
 </root>

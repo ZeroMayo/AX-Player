@@ -60,7 +60,7 @@ namespace AXPlayer.App.Screens
         private DrawSizePreservingFillContainer uiGradientContainer;
         private SettingsContainer settingsContainer;
         private OverlayContainer loadVideoContainer, videoDescriptionContainer, commentsContainer, searchContainer, reportAbuseOverlay, loadPlaylistContainer, unsubscribeDialog, addPlaylistOverlay, videoSaveLocationOverlay, myChannelDialog, editPlaylistOverlay, downloadReadyContainer, downloadOverlay, downloadCompletedOverlay;
-        private SideOverlayContainer playlistOverlay, audioEffectsOverlay, menuOverlay, myPlaylistsOverlay, exitOptions;
+        private SideOverlayContainer playlistOverlay, audioEffectsOverlay, menuOverlay, myPlaylistsOverlay, watchHistoryOverlay, exitOptions;
         private LiveChatReplayOverlay liveChatReplayOverlay;
         private ShortcutHelpOverlay shortcutHelpOverlay;
         private UpdaterOverlay updaterOverlay;
@@ -74,7 +74,7 @@ namespace AXPlayer.App.Screens
         [Resolved]
         private PopupDialogOverlay popupDialogOverlay { get; set; }
 
-        private MenuButtonItem loadBtnOverlayShow, settingsOverlayShowBtn, commentOpenButton, searchOpenButton, reportOpenButton, playlistOpenButton, audioEffectsOpenButton, saveVideoOpenButton, newPlaylistOpenButton, myPlaylistsOpenButton, copyVideoUrlButton, liveChatOpenButton;
+        private MenuButtonItem loadBtnOverlayShow, settingsOverlayShowBtn, commentOpenButton, searchOpenButton, reportOpenButton, playlistOpenButton, audioEffectsOpenButton, saveVideoOpenButton, newPlaylistOpenButton, myPlaylistsOpenButton, watchHistoryOpenButton, copyVideoUrlButton, liveChatOpenButton;
         private VideoMetadataDisplayWithoutProfile videoMetadataDisplay;
         private VideoMetadataDisplay videoMetadataDisplayDetails;
         private RoundedButtonContainer commentOpenButtonDetails, likeButton;
@@ -109,6 +109,8 @@ namespace AXPlayer.App.Screens
             overlayShowSample.Dispose();
             overlayHideSample.Dispose();
 
+            watchHistoryTrackingProcess?.Cancel();
+
             currentVideoSource?.Dispose();
             currentVideoSource = null;
         }
@@ -137,7 +139,9 @@ namespace AXPlayer.App.Screens
         private OdometerTextTicker volumeText;
         private OdometerTextTicker speedText;
         private LinkFlowContainer videoDescription;
-        private FillFlowContainer commentContainer, searchResultContainer, playlistItemsView, myPlaylistItemsView;
+        private FillFlowContainer commentContainer, searchResultContainer, playlistItemsView, myPlaylistItemsView, watchHistoryItemsView;
+        private RoundedButton watchHistoryLoadMoreButton;
+        private Container watchHistoryEmpty;
 
         [Resolved]
         private GoogleOAuth2 googleOAuth2 { get; set; } = null!;

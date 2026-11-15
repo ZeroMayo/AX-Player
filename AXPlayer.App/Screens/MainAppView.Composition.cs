@@ -2185,6 +2185,143 @@ namespace AXPlayer.App.Screens
                                 },
                             }
                         },
+                        watchHistoryOverlay = new SideOverlayContainer
+                        {
+                            Size = new Vector2(1f, 1f),
+                            Width = 400,
+                            RelativeSizeAxes = Axes.Y,
+                            CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS, AXPlayerApp.UI_CORNER_RADIUS, 0, 0),
+                            Masking = true,
+                            Origin = Anchor.CentreRight,
+                            Anchor = Anchor.CentreRight,
+                            Children = new Drawable[]
+                            {
+                                new OverlayBackground
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                },
+                                new Container
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Children = new Drawable[]
+                                    {
+                                        new ProjectYomiScrollContainer
+                                        {
+                                            RelativeSizeAxes = Axes.Both,
+                                            ScrollbarVisible = false,
+                                            Padding = new MarginPadding
+                                            {
+                                                Bottom = 56,
+                                                Top = 56,
+                                                Horizontal = 16,
+                                            },
+                                            Children = new Drawable[]
+                                            {
+                                                new FillFlowContainer
+                                                {
+                                                    RelativeSizeAxes = Axes.X,
+                                                    AutoSizeAxes = Axes.Y,
+                                                    Direction = FillDirection.Vertical,
+                                                    Spacing = new Vector2(4),
+                                                    Children = new Drawable[]
+                                                    {
+                                                        watchHistoryItemsView = new FillFlowContainer
+                                                        {
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            Direction = FillDirection.Vertical,
+                                                            Spacing = new Vector2(4),
+                                                            Children = Array.Empty<Drawable>()
+                                                        },
+                                                        watchHistoryLoadMoreButton = new RoundedButton
+                                                        {
+                                                            Enabled = { Value = false },
+                                                            RelativeSizeAxes = Axes.X,
+                                                            Height = 40,
+                                                            Text = AXPlayerStrings.WatchHistoryLoadMore,
+                                                            Margin = new MarginPadding { Top = 8, Bottom = 8 },
+                                                            Alpha = 0,
+                                                            Action = () => fetchWatchHistory(false),
+                                                        },
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                watchHistoryEmpty = new Container
+                                {
+                                    RelativeSizeAxes = Axes.Both,
+                                    Padding = new MarginPadding { Top = 120, Horizontal = 24 },
+                                    Alpha = 0,
+                                    Children = new Drawable[]
+                                    {
+                                        new ProjectYomiSpriteText
+                                        {
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            Text = AXPlayerStrings.WatchHistoryEmptyTitle,
+                                            Font = AXPlayerApp.DefaultFont.With(size: 22, weight: "ExtraBold"),
+                                            Colour = overlayColourProvider.Content2,
+                                        },
+                                        new ProjectYomiTextFlowContainer(f =>
+                                        {
+                                            f.Font = AXPlayerApp.DefaultFont.With(size: 14, weight: "Regular");
+                                            f.Colour = overlayColourProvider.Background1;
+                                        })
+                                        {
+                                            Origin = Anchor.TopCentre,
+                                            Anchor = Anchor.TopCentre,
+                                            Position = new Vector2(0, 40),
+                                            TextAnchor = Anchor.TopCentre,
+                                            Text = AXPlayerStrings.WatchHistoryEmptyDescription,
+                                            RelativeSizeAxes = Axes.X,
+                                            AutoSizeAxes = Axes.Y,
+                                        },
+                                    }
+                                },
+                                new Box
+                                {
+                                    Name = "masking of overlay",
+                                    RelativeSizeAxes = Axes.X,
+                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5, overlayColourProvider.Background5.Opacity(0)),
+                                    Height = 56 + 20,
+                                },
+                                new Box
+                                {
+                                    Name = "masking of overlay",
+                                    RelativeSizeAxes = Axes.X,
+                                    Anchor = Anchor.BottomCentre,
+                                    Origin = Anchor.BottomCentre,
+                                    Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
+                                    Height = 56 + 20,
+                                },
+                                new IconButton
+                                {
+                                    Enabled = { Value = true },
+                                    Origin = Anchor.TopRight,
+                                    Anchor = Anchor.TopRight,
+                                    Margin = new MarginPadding(14),
+                                    Size = new Vector2(35, 35),
+                                    IconScale = new Vector2(0.8f),
+                                    Icon = FontAwesome.Solid.Times,
+                                    BackgroundColour = overlayColourProvider.Background4,
+                                    Action = () =>
+                                    {
+                                        hideOverlayContainer(watchHistoryOverlay);
+                                    }
+                                },
+                                new ProjectYomiSpriteText
+                                {
+                                    Origin = Anchor.TopCentre,
+                                    Anchor = Anchor.TopCentre,
+                                    Text = AXPlayerStrings.WatchHistory,
+                                    Margin = new MarginPadding(16),
+                                    Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
+                                    Colour = overlayColourProvider.Content2,
+                                },
+                            }
+                        },
                         loadPlaylistContainer = new BottomOverlayContainer
                         {
                             Size = new Vector2(0.7f, 1f),
@@ -3238,6 +3375,23 @@ namespace AXPlayer.App.Screens
                                                                 showOverlayContainer(myPlaylistsOverlay);
                                                             }
                                                         },
+                                                        watchHistoryOpenButton = new MenuButtonItem
+                                                        {
+                                                            Enabled = { Value = false },
+                                                            Origin = Anchor.TopRight,
+                                                            Anchor = Anchor.TopRight,
+                                                            Size = new Vector2(1, 45),
+                                                            RelativeSizeAxes = Axes.X,
+                                                            Icon = FontAwesome.Solid.History,
+                                                            IconScale = new Vector2(1.2f),
+                                                            Text = AXPlayerStrings.WatchHistory,
+                                                            Hotkey = new Hotkey(GlobalAction.OpenWatchHistory),
+                                                            RoundCorner = new CornersInfo(8, 8, 8, 8),
+                                                            Action = () =>
+                                                            {
+                                                                openWatchHistory();
+                                                            }
+                                                        },
                                                         audioEffectsOpenButton = new MenuButtonItem
                                                         {
                                                             Enabled = { Value = true },
@@ -3641,6 +3795,7 @@ namespace AXPlayer.App.Screens
                     #region playlists
 
                     Schedule(() => myPlaylistsOpenButton.Enabled.Value = true);
+                    Schedule(() => watchHistoryOpenButton.Enabled.Value = true);
 
                     fetchMyPlaylists();
                     #endregion
@@ -3686,7 +3841,17 @@ namespace AXPlayer.App.Screens
                     Schedule(() => reportOpenButton.Enabled.Value = false);
                     Schedule(() => newPlaylistOpenButton.Enabled.Value = false);
                     Schedule(() => myPlaylistsOpenButton.Enabled.Value = false);
+                    Schedule(() => watchHistoryOpenButton.Enabled.Value = false);
                     Schedule(() => quickLikeButton.Enabled.Value = false);
+
+                    Schedule(() =>
+                    {
+                        watchHistoryItemsView.Clear();
+                        watchHistoryContinuation = null;
+                        watchHistoryLoading = false;
+                        watchHistoryEmpty.Hide();
+                        watchHistoryLoadMoreButton.Hide();
+                    });
                     Schedule(() => quickDislikeButton.Enabled.Value = false);
 
                     foreach (var item in myPlaylistItemsView.Children)

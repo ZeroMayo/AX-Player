@@ -1313,4 +1313,16 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="live_chat_replay_unavailable" xml:space="preserve">
     <value>Live chat replay is not available for this video.</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>Watch history</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>Load more</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>No watch history yet...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>Videos you watch will show up here.</value>
+  </data>
 </root>

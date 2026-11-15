@@ -1177,4 +1177,16 @@
   <data name="no_audio_effect_presets" xml:space="preserve">
     <value>没有已保存的预设</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>观看记录</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>加载更多</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>暂无观看记录...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>您观看的视频将显示在这里。</value>
+  </data>
 </root>

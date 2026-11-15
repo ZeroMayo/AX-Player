@@ -1177,4 +1177,16 @@
   <data name="no_audio_effect_presets" xml:space="preserve">
     <value>Нет сохранённых пресетов</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>История просмотров</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>Загрузить ещё</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>История просмотров пока пуста...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>Просмотренные видео появятся здесь.</value>
+  </data>
 </root>

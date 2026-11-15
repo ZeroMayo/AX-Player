@@ -1176,4 +1176,16 @@
   <data name="no_audio_effect_presets" xml:space="preserve">
     <value>Nessun preset salvato</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>Cronologia</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>Carica altro</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>Nessuna cronologia ancora...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>I video che guardi appariranno qui.</value>
+  </data>
 </root>

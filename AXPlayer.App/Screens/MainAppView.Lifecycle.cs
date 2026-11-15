@@ -415,6 +415,7 @@ namespace AXPlayer.App.Screens
             RegisterOverlayContainer(menuOverlay);
             RegisterOverlayContainer(myChannelDialog);
             RegisterOverlayContainer(myPlaylistsOverlay);
+            RegisterOverlayContainer(watchHistoryOverlay);
             RegisterOverlayContainer(exitOptions);
             RegisterOverlayContainer(editPlaylistOverlay);
             RegisterOverlayContainer(shortcutHelpOverlay);
@@ -789,6 +790,17 @@ namespace AXPlayer.App.Screens
                     }
                     else
                         hideOverlayContainer(myPlaylistsOverlay);
+
+                    return true;
+
+                case GlobalAction.OpenWatchHistory:
+                    if (signedIn.Value == false)
+                        return true;
+
+                    if (!watchHistoryOverlay.IsVisible)
+                        openWatchHistory();
+                    else
+                        hideOverlayContainer(watchHistoryOverlay);
 
                     return true;
 

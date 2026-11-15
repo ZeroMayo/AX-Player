@@ -1176,4 +1176,16 @@
   <data name="no_audio_effect_presets" xml:space="preserve">
     <value>保存されたプリセットはありません</value>
   </data>
+  <data name="watch_history" xml:space="preserve">
+    <value>視聴履歴</value>
+  </data>
+  <data name="watch_history_load_more" xml:space="preserve">
+    <value>さらに読み込む</value>
+  </data>
+  <data name="watch_history_empty_title" xml:space="preserve">
+    <value>視聴履歴はまだありません...</value>
+  </data>
+  <data name="watch_history_empty_description" xml:space="preserve">
+    <value>視聴した動画がここに表示されます。</value>
+  </data>
 </root>

@@ -239,7 +239,7 @@ namespace AXPlayer.App.Online
             return null;
         }
 
-        private async Task<JsonDocument?> sendInnertubeRequestAsync(string endpoint, object payload, CancellationToken cancellationToken)
+        private async Task<JsonDocument?> sendInnertubeRequestAsync(string endpoint, object payload, CancellationToken cancellationToken, bool authenticate = false)
         {
             try
             {
@@ -251,16 +251,21 @@ namespace AXPlayer.App.Online
                 request.Headers.TryAddWithoutValidation(@"X-Youtube-Client-Name", @"1");
                 request.Headers.TryAddWithoutValidation(@"X-Youtube-Client-Version", web_client_version);
 
-                /*
-                if (googleOAuth2.SignedIn.Value)
-                    request.Headers.TryAddWithoutValidation(@"Authorization", $@"Bearer {googleOAuth2.GetAccessToken()}");
-                */
+                if (authenticate && googleOAuth2.SignedIn.Value)
+                {
+                    string accessToken = googleOAuth2.GetAccessToken();
+
+                    request.Headers.TryAddWithoutValidation(@"Authorization", $@"Bearer {accessToken}");
+                    request.Headers.TryAddWithoutValidation(@"X-Goog-AuthUser", @"0");
+                    request.Headers.TryAddWithoutValidation(@"X-Youtube-Bootstrap-Logged-In", @"true");
+                    request.Headers.TryAddWithoutValidation(@"Origin", @"https://www.youtube.com");
+                }
 
                 using HttpResponseMessage response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    Logger.Log($@"Live chat replay request to '{endpoint}' failed with status code {(int)response.StatusCode}.", LoggingTarget.Network);
+                    Logger.Log($@"Innertube request to '{endpoint}' failed with status code {(int)response.StatusCode}.", LoggingTarget.Network);
                     return null;
                 }
 
@@ -274,7 +279,7 @@ namespace AXPlayer.App.Online
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, $@"Live chat replay request to '{endpoint}' failed: {exception.GetDescription()}");
+                Logger.Error(exception, $@"Innertube request to '{endpoint}' failed: {exception.GetDescription()}");
                 return null;
             }
         }

@@ -1046,6 +1046,26 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString MyPlaylists => new TranslatableString(getKey(@"my_playlists"), @"My playlists");
 
         /// <summary>
+        /// "Watch history"
+        /// </summary>
+        public static LocalisableString WatchHistory => new TranslatableString(getKey(@"watch_history"), @"Watch history");
+
+        /// <summary>
+        /// "Load more"
+        /// </summary>
+        public static LocalisableString WatchHistoryLoadMore => new TranslatableString(getKey(@"watch_history_load_more"), @"Load more");
+
+        /// <summary>
+        /// "No watch history yet..."
+        /// </summary>
+        public static LocalisableString WatchHistoryEmptyTitle => new TranslatableString(getKey(@"watch_history_empty_title"), @"No watch history yet...");
+
+        /// <summary>
+        /// "Videos you watch will show up here."
+        /// </summary>
+        public static LocalisableString WatchHistoryEmptyDescription => new TranslatableString(getKey(@"watch_history_empty_description"), @"Videos you watch will show up here.");
+
+        /// <summary>
         /// "playlist not loaded!"
         /// </summary>
         public static LocalisableString PlaylistNotLoaded => new TranslatableString(getKey(@"playlist_not_loaded"), @"playlist not loaded!");
@@ -1809,6 +1829,7 @@ namespace AXPlayer.App.Localisation
                 GlobalAction.OpenLoadVideo => "Open video or playlist",
                 GlobalAction.OpenSearch => "Open search",
                 GlobalAction.OpenMyPlaylists => "Open your playlists",
+                GlobalAction.OpenWatchHistory => "Open your watch history",
                 GlobalAction.AddPlaylistKey => "Create a playlist",
                 GlobalAction.SaveVideoToPlaylist => "Save the video to a playlist",
                 GlobalAction.ToggleRepeatVideo => "Toggle video repeat",
