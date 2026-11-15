@@ -77,7 +77,7 @@ namespace AXPlayer.App.Overlays
 
             Add(overlayContainer = new OverlayContainer
             {
-                Width = 396 + 32,
+                Width = 396 + 64,
                 AutoSizeAxes = Axes.Y,
                 Origin = Anchor.Centre,
                 Anchor = Anchor.Centre,
