@@ -196,6 +196,127 @@ namespace AXPlayer.App.Online
         }
 
         /// <summary>
+        /// The origin of the YouTube Data API, which is the interface that accepts the access token of
+        /// the signed-in account.
+        /// </summary>
+        private const string data_api_origin = @"https://www.googleapis.com/youtube/v3";
+
+        /// <summary>
+        /// Sends a write to the YouTube Data API and returns its response.
+        /// </summary>
+        /// <remarks>
+        /// The Innertube endpoints belong to the web session of a browser and refuse a request that is
+        /// authorised with the access token of the account: they answer <c>400 INVALID_ARGUMENT</c> even
+        /// when the payload is the one the web player sends itself. The Data API is the interface that
+        /// the token was issued for, so the writes that need the account go through it.
+        /// </remarks>
+        private Task<JsonDocument?> sendDataApiWriteAsync(string endpoint, object payload, CancellationToken cancellationToken, HttpMethod? method = null)
+            => sendDataApiAsync(endpoint, payload, method ?? HttpMethod.Post, cancellationToken);
+
+        /// <summary>
+        /// Sends a read to the YouTube Data API and returns its response. The endpoint has to carry the
+        /// query string the request needs.
+        /// </summary>
+        private Task<JsonDocument?> sendDataApiReadAsync(string endpoint, CancellationToken cancellationToken)
+            => sendDataApiAsync(endpoint, null, HttpMethod.Get, cancellationToken);
+
+        private async Task<JsonDocument?> sendDataApiAsync(string endpoint, object? payload, HttpMethod method, CancellationToken cancellationToken)
+        {
+            if (!googleOAuth2.SignedIn.Value)
+            {
+                Logger.Log($@"The YouTube Data API request to '{endpoint}' was skipped because no account is signed in.", LoggingTarget.Network);
+                return null;
+            }
+
+            string accessToken = await googleOAuth2.GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
+
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                Logger.Log($@"The YouTube Data API request to '{endpoint}' was skipped because no access token is available.", LoggingTarget.Network);
+                return null;
+            }
+
+            try
+            {
+                using var request = new HttpRequestMessage(method, $@"{data_api_origin}/{endpoint}&key={apiKey}");
+
+                if (payload != null)
+                    request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, @"application/json");
+
+                request.Headers.TryAddWithoutValidation(@"Authorization", $@"Bearer {accessToken}");
+                request.Headers.TryAddWithoutValidation(@"User-Agent", web_user_agent);
+                request.Headers.TryAddWithoutValidation(@"Accept", @"application/json");
+
+                using HttpResponseMessage response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+
+                string body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Logger.Log($@"The YouTube Data API request to '{endpoint}' failed with status {(int)response.StatusCode} ({response.StatusCode}): {(body.Length > 400 ? body[..400] : body)}",
+                        LoggingTarget.Network);
+                    return null;
+                }
+
+                return JsonDocument.Parse(body);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, $@"The YouTube Data API request to '{endpoint}' failed: {exception.GetDescription()}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// The privacy of a playlist as the Data API spells it.
+        /// </summary>
+        private static string toDataApiPrivacy(PrivacyStatus privacyStatus)
+            => toInnertubePrivacy(privacyStatus).ToLowerInvariant();
+
+        /// <summary>
+        /// The body of <c>commentThreads.insert</c>, which carries the text of the comment.
+        /// </summary>
+        internal static object buildCommentInsertPayload(string videoId, string commentText)
+        {
+            return new Dictionary<string, object?>
+            {
+                [@"snippet"] = new Dictionary<string, object?>
+                {
+                    [@"videoId"] = videoId,
+                    [@"topLevelComment"] = new Dictionary<string, object?>
+                    {
+                        [@"snippet"] = new Dictionary<string, object?>
+                        {
+                            [@"textOriginal"] = commentText,
+                        },
+                    },
+                },
+            };
+        }
+
+        /// <summary>
+        /// The body of <c>playlists.insert</c>, which carries the title and the privacy of the playlist.
+        /// </summary>
+        internal static object buildPlaylistInsertPayload(string playlistTitle, PrivacyStatus privacyStatus)
+        {
+            return new Dictionary<string, object?>
+            {
+                [@"snippet"] = new Dictionary<string, object?>
+                {
+                    [@"title"] = playlistTitle,
+                },
+                [@"status"] = new Dictionary<string, object?>
+                {
+                    [@"privacyStatus"] = toDataApiPrivacy(privacyStatus),
+                },
+            };
+        }
+
+        /// <summary>
         /// Whether raw Innertube responses are written to <c>%TEMP%/axplayer-innertube</c>.
         /// The dumps are always written; <c>AXPLAYER_INNERTUBE_DUMP=0</c> turns them off.
         /// </summary>
@@ -297,7 +418,12 @@ namespace AXPlayer.App.Online
             string accessToken = await googleOAuth2.GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(accessToken))
+            {
+                // A request that silently loses its credentials looks like a permission problem of the
+                // content, so the missing token is reported.
+                Logger.Log(@"The request is sent without credentials because no access token is available.", LoggingTarget.Network);
                 return;
+            }
 
             request.Headers.TryAddWithoutValidation(@"Authorization", $@"Bearer {accessToken}");
             request.Headers.TryAddWithoutValidation(@"X-Goog-AuthUser", @"0");
@@ -511,33 +637,9 @@ namespace AXPlayer.App.Online
 
         internal static void applyWatchMetadata(Video video, JsonElement root)
         {
-            // Comment count is only exposed when the uploader allows comments, mirroring the
-            // behaviour of the Data API (null comment count == comments disabled).
-            ulong? commentCount = null;
-
-            foreach (JsonElement header in enumerateRenderers(root, @"commentsEntryPointHeaderRenderer"))
-            {
-                if (header.TryGetProperty(@"commentCount", out JsonElement countElement))
-                {
-                    commentCount = parseRoughCount(extractText(countElement));
-
-                    if (commentCount != null)
-                        break;
-                }
-            }
-
-            if (commentCount == null)
-            {
-                foreach (JsonElement value in enumeratePropertyValues(root, @"commentCount"))
-                {
-                    commentCount = parseRoughCount(extractText(value));
-
-                    if (commentCount != null)
-                        break;
-                }
-            }
-
-            video.Statistics.CommentCount = commentCount;
+            // A null comment count means "comments are disabled" for the player, mirroring the
+            // behaviour of the Data API, so the count has to be read wherever the page renders it.
+            video.Statistics.CommentCount = findCommentCount(root);
 
             ulong? likeCount = findLikeCount(root);
 
@@ -546,6 +648,48 @@ namespace AXPlayer.App.Online
 
             if (video.TopicDetails.TopicCategories.Count == 0 && hasMusicCategoryRow(root))
                 video.TopicDetails.TopicCategories.Add(music_topic_category);
+        }
+
+        /// <summary>
+        /// Reads the amount of comments from a watch page.
+        /// </summary>
+        /// <remarks>
+        /// Older responses rendered a comments entry point next to the player, while the current ones
+        /// only render the count into the title header of the comment engagement panel
+        /// (<c>contextualInfo</c>) and have no <c>commentCount</c> property at all.
+        /// </remarks>
+        internal static ulong? findCommentCount(JsonElement root)
+        {
+            foreach (string rendererName in new[] { @"commentsEntryPointHeaderRenderer", @"commentsEntryPointRenderer" })
+            {
+                foreach (JsonElement entryPoint in enumerateRenderers(root, rendererName))
+                {
+                    if (entryPoint.TryGetProperty(@"commentCount", out JsonElement countElement)
+                        && parseRoughCount(extractText(countElement)) is { } count)
+                        return count;
+                }
+            }
+
+            foreach (JsonElement value in enumeratePropertyValues(root, @"commentCount"))
+            {
+                if (parseRoughCount(extractText(value)) is { } count)
+                    return count;
+            }
+
+            foreach (JsonElement panel in enumerateRenderers(root, @"engagementPanelSectionListRenderer"))
+            {
+                if (!isCommentPanel(panel))
+                    continue;
+
+                if (getObject(panel, @"header") is not { } header
+                    || getObject(header, @"engagementPanelTitleHeaderRenderer") is not { } titleHeader)
+                    continue;
+
+                if (parseRoughCount(extractText(getObject(titleHeader, @"contextualInfo") ?? default)) is { } count)
+                    return count;
+            }
+
+            return null;
         }
 
         private static ulong? findLikeCount(JsonElement root)
@@ -801,15 +945,20 @@ namespace AXPlayer.App.Online
                 if (start < 0 || length <= 0 || start + length > content.Length)
                     continue;
 
+                string label = content.Substring(start, length);
                 string? url = findDescriptionLink(run);
 
                 if (string.IsNullOrEmpty(url))
                     continue;
 
-                if (!tryResolveTruncatedUrl(content.Substring(start, length), url, out string replacement))
+                if (tryResolveTruncatedUrl(label, url, out string replacement))
+                {
+                    links.Add((start, length, replacement));
                     continue;
+                }
 
-                links.Add((start, length, replacement));
+                if (shouldReplaceDescriptionLabel(label, url))
+                    links.Add((start, length, replaceDescriptionLabel(label, url)));
             }
 
             if (links.Count == 0)
@@ -842,10 +991,22 @@ namespace AXPlayer.App.Online
                 string text = getString(run, @"text") ?? string.Empty;
                 string? url = findDescriptionLink(run);
 
-                if (!string.IsNullOrEmpty(url) && tryResolveTruncatedUrl(text, url, out string replacement))
-                    builder.Append(replacement);
-                else
-                    builder.Append(text);
+                if (!string.IsNullOrEmpty(url))
+                {
+                    if (tryResolveTruncatedUrl(text, url, out string replacement))
+                    {
+                        builder.Append(replacement);
+                        continue;
+                    }
+
+                    if (shouldReplaceDescriptionLabel(text, url))
+                    {
+                        builder.Append(replaceDescriptionLabel(text, url));
+                        continue;
+                    }
+                }
+
+                builder.Append(text);
             }
 
             return builder.ToString();
@@ -891,6 +1052,64 @@ namespace AXPlayer.App.Online
 
             replacement = string.Concat(text.AsSpan(0, start), url, text.AsSpan(end));
             return true;
+        }
+
+        /// <summary>
+        /// Whether the label of a description link has to be replaced by the URL it points at.
+        /// </summary>
+        /// <remarks>
+        /// The description renders the label of a link instead of its target, so a handle
+        /// (<c>/cametek</c>), a call-to-action link (the one YouTube renders as
+        /// <c>ytAttributedStringLink ytAttributedStringLinkCallToActionColor</c>, for example
+        /// <c>Visit my shop</c>) or a video link would hide where it leads. Timestamps and hashtags
+        /// are readable on their own and keep their label.
+        /// </remarks>
+        private static bool shouldReplaceDescriptionLabel(string label, string url)
+        {
+            string trimmed = label.Trim();
+
+            if (trimmed.Length == 0)
+                return false;
+
+            if (trimmed.StartsWith('#') || trimmed.StartsWith('＃'))
+                return false;
+
+            // Already the full target, so replacing it would not show anything new.
+            if (string.Equals(trimmed, url, StringComparison.Ordinal))
+                return false;
+
+            return !isDescriptionTimestamp(trimmed, url);
+        }
+
+        /// <summary>
+        /// Puts the target of a link in place of its label, keeping the whitespace that surrounds the
+        /// label (the runs of a description are padded with spaces).
+        /// </summary>
+        private static string replaceDescriptionLabel(string label, string url)
+        {
+            int start = 0;
+
+            while (start < label.Length && char.IsWhiteSpace(label[start]))
+                start++;
+
+            int end = label.Length;
+
+            while (end > start && char.IsWhiteSpace(label[end - 1]))
+                end--;
+
+            return string.Concat(label.AsSpan(0, start), url, label.AsSpan(end));
+        }
+
+        /// <summary>
+        /// Whether a description link jumps into the video at an offset, which is rendered as a
+        /// timestamp (for example <c>1:23</c>) instead of its URL.
+        /// </summary>
+        private static bool isDescriptionTimestamp(string label, string url)
+        {
+            if (Regex.IsMatch(label, @"^\[?[0-9]{1,2}(:[0-9]{2}){1,2}\]?$"))
+                return true;
+
+            return Regex.IsMatch(url, @"[?&](t|start|time_continue)=[0-9]", RegexOptions.IgnoreCase);
         }
 
         private static bool isUrlLabel(string label)
@@ -1892,42 +2111,54 @@ namespace AXPlayer.App.Online
             };
 
             string? continuation = pageToken;
+            comment_page page = comment_page.Empty;
 
             if (string.IsNullOrEmpty(continuation))
             {
-                continuation = await resolveCommentsContinuationAsync(videoId, cancellationToken).ConfigureAwait(false);
+                List<string> candidates = await resolveCommentsContinuationCandidatesAsync(videoId, cancellationToken).ConfigureAwait(false);
 
-                if (string.IsNullOrEmpty(continuation))
+                if (candidates.Count == 0)
                 {
                     Logger.Log($@"The comments continuation for '{videoId}' could not be resolved.", LoggingTarget.Network);
                     return response;
                 }
+
+                // The section token and the token of the panel are different continuations and only
+                // one of them belongs to the comment section, so the first one that returns comments
+                // is adopted.
+                foreach (string candidate in candidates)
+                {
+                    comment_page candidatePage = await fetchCommentPageAsync(candidate, cancellationToken).ConfigureAwait(false);
+
+                    if (!containsCommentItems(candidatePage.Items))
+                    {
+                        Logger.Log($@"The comment continuation candidate '{describeToken(candidate)}' of '{videoId}' returned no comments.",
+                            LoggingTarget.Network);
+                        continue;
+                    }
+
+                    page = candidatePage;
+                    continuation = candidate;
+                    break;
+                }
+            }
+            else
+            {
+                // A continuation token keeps the order it was created with.
+                page = await fetchContinuationItemsAsync(continuation, cancellationToken).ConfigureAwait(false);
             }
 
-            comment_page page;
+            if (string.IsNullOrEmpty(continuation))
+            {
+                Logger.Log($@"None of the comment continuations of '{videoId}' returned comments.", LoggingTarget.Network);
+                return response;
+            }
 
             if (string.IsNullOrEmpty(pageToken) && orderEnum == CommentThreadsResource.ListRequest.OrderEnum.Time)
             {
                 // The sort menu is rendered in the section header, which is not part of the
                 // continuation items, so it has to be resolved from the page response itself.
-                page = await fetchCommentPageAsync(continuation, cancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                page = await fetchContinuationItemsAsync(continuation, cancellationToken).ConfigureAwait(false);
-            }
-
-            string? newestFirst = page.NewestSortContinuation;
-
-            if (!string.IsNullOrEmpty(newestFirst) && newestFirst != continuation)
-            {
-                comment_page sortedPage = await fetchContinuationItemsAsync(newestFirst, cancellationToken).ConfigureAwait(false);
-
-                if (sortedPage.Items.Count > 0)
-                {
-                    page = sortedPage;
-                    continuation = newestFirst;
-                }
+                page = await switchCommentOrderAsync(page, continuation, videoId, cancellationToken).ConfigureAwait(false);
             }
 
             List<JsonElement> items = page.Items;
@@ -1935,55 +2166,72 @@ namespace AXPlayer.App.Online
 
             var replyContinuations = new Dictionary<string, string>(StringComparer.Ordinal);
             int parsedThreads = 0;
+            int threadsWithoutText = 0;
 
             foreach (JsonElement item in items)
             {
                 if (item.ValueKind != JsonValueKind.Object)
                     continue;
 
-                bool isThread = item.TryGetProperty(@"commentThreadRenderer", out JsonElement threadRenderer);
-                bool isFlatComment = item.TryGetProperty(@"commentViewModel", out _);
-
-                if (isThread || isFlatComment)
+                // Either a thread, a comment that a reply page returned on its own, or the trailing
+                // continuation item of the page.
+                if (tryGetCommentElement(item) == null)
                 {
-                    CommentThread? thread = parseCommentThread(isThread ? threadRenderer : item, videoId, entities);
+                    if (item.TryGetProperty(@"continuationItemRenderer", out JsonElement continuationRenderer)
+                        && findContinuation(continuationRenderer) is { Length: > 0 } nextPageToken)
+                        response.NextPageToken = nextPageToken;
 
-                    if (thread == null)
-                        continue;
+                    continue;
+                }
 
-                    parsedThreads++;
+                CommentThread? thread = parseCommentThread(item, videoId, entities);
 
-                    if (thread.Snippet?.TopLevelComment != null)
-                        response.Items.Add(thread);
+                if (thread == null)
+                    continue;
 
-                    // Older responses returned a handful of replies inline instead of a continuation.
-                    List<Comment>? inlineReplies = parseInlineReplies(threadRenderer, videoId, thread.Id, entities);
+                parsedThreads++;
 
-                    if (inlineReplies != null)
+                if (thread.Snippet?.TopLevelComment != null)
+                {
+                    // A thread whose text could not be resolved would render an empty row, so it is
+                    // left out and counted below instead.
+                    if (string.IsNullOrEmpty(thread.Snippet.TopLevelComment.Snippet?.TextDisplay))
                     {
-                        thread.Replies = new CommentThreadReplies
-                        {
-                            Comments = inlineReplies,
-                        };
+                        threadsWithoutText++;
+                        continue;
                     }
 
-                    string? repliesContinuation = findRepliesContinuation(threadRenderer);
-                    string threadId = thread.Id ?? string.Empty;
-
-                    if (!string.IsNullOrEmpty(repliesContinuation) && !string.IsNullOrEmpty(threadId))
-                        replyContinuations[threadId] = repliesContinuation;
+                    response.Items.Add(thread);
                 }
-                else if (item.TryGetProperty(@"continuationItemRenderer", out JsonElement continuationRenderer))
+
+                // Older responses returned a handful of replies inline instead of a continuation.
+                List<Comment>? inlineReplies = parseInlineReplies(item, videoId, thread.Id, entities);
+
+                if (inlineReplies != null)
                 {
-                    string? nextPageToken = findContinuation(continuationRenderer);
-
-                    if (!string.IsNullOrEmpty(nextPageToken))
-                        response.NextPageToken = nextPageToken;
+                    thread.Replies = new CommentThreadReplies
+                    {
+                        Comments = inlineReplies,
+                    };
                 }
+
+                string? repliesContinuation = findRepliesContinuation(item);
+                string threadId = thread.Id ?? string.Empty;
+
+                if (!string.IsNullOrEmpty(repliesContinuation) && !string.IsNullOrEmpty(threadId))
+                    replyContinuations[threadId] = repliesContinuation;
             }
 
             if (items.Count > 0 && parsedThreads == 0)
                 logUnparsedCommentItems(items, entities.Count);
+
+            // A comment whose text is missing was parsed without its entity payload, which means the
+            // keys of the item and the keys of the frameworkUpdates do not match.
+            if (threadsWithoutText > 0)
+            {
+                Logger.Log($@"{threadsWithoutText} of the {parsedThreads} comment threads of '{videoId}' have no text "
+                           + $@"(entity payloads: {entities.Count}).", LoggingTarget.Network);
+            }
 
             if (replyContinuations.Count > 0)
             {
@@ -2009,18 +2257,19 @@ namespace AXPlayer.App.Online
 
         private async Task<comment_page> fetchContinuationItemsAsync(string continuation, CancellationToken cancellationToken)
         {
-            using JsonDocument? document = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
-            {
-                [@"continuation"] = continuation,
-                [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
-            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
+            using JsonDocument? document = await sendCommentsContinuationAsync(continuation, cancellationToken).ConfigureAwait(false);
 
             if (document == null)
                 return comment_page.Empty;
 
-            // Only the first page of the "newest first" order has to be resolved through the sort menu,
-            // so a plain continuation never replaces the order the caller asked for.
-            return readCommentPage(document.RootElement) with
+            comment_page page = readCommentPage(document.RootElement);
+
+            if (page.Items.Count == 0)
+                logEmptyPage(document.RootElement, continuation);
+
+            // Only the first page of a requested order has to be resolved through the sort menu, so a
+            // plain continuation never replaces the order the caller asked for.
+            return page with
             {
                 NewestSortContinuation = null,
             };
@@ -2028,11 +2277,7 @@ namespace AXPlayer.App.Online
 
         private async Task<comment_page> fetchCommentPageAsync(string continuation, CancellationToken cancellationToken)
         {
-            using JsonDocument? document = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
-            {
-                [@"continuation"] = continuation,
-                [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
-            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
+            using JsonDocument? document = await sendCommentsContinuationAsync(continuation, cancellationToken).ConfigureAwait(false);
 
             if (document == null)
                 return comment_page.Empty;
@@ -2041,6 +2286,94 @@ namespace AXPlayer.App.Online
             {
                 NewestSortContinuation = tryFindNewestSortContinuation(document.RootElement),
             };
+        }
+
+        /// <summary>
+        /// Sends a comment continuation, trying every endpoint and token spelling the responses are
+        /// known to use.
+        /// </summary>
+        /// <remarks>
+        /// A continuation is accepted when it returns comments, because the responses echo the tokens
+        /// of their menus percent-encoded and only one of the two endpoints serves the section.
+        /// </remarks>
+        private async Task<JsonDocument?> sendCommentsContinuationAsync(string continuation, CancellationToken cancellationToken)
+        {
+            JsonDocument? fallback = null;
+
+            foreach (string token in new[] { continuation, normalizeContinuationToken(continuation) })
+            {
+                if (string.IsNullOrEmpty(token))
+                    continue;
+
+                foreach (string endpoint in new[] { @"next", @"browse" })
+                {
+                    JsonDocument? document = await sendInnertubeAsync(endpoint, new Dictionary<string, object?>
+                    {
+                        [@"continuation"] = token,
+                        [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
+                    }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
+
+                    if (document == null)
+                        continue;
+
+                    List<JsonElement> items = detachItems(extractContinuationItems(document.RootElement));
+
+                    if (containsCommentItems(items))
+                    {
+                        fallback?.Dispose();
+                        return document;
+                    }
+
+                    // A response without any item belongs to another endpoint or token, so the next
+                    // combination is worth a try. A page with items is kept as the answer.
+                    if (items.Count == 0)
+                        document.Dispose();
+                    else if (fallback == null)
+                        fallback = document;
+                    else
+                        document.Dispose();
+                }
+            }
+
+            return fallback;
+        }
+
+        private static bool containsCommentItems(List<JsonElement> items)
+            => items.Any(item => tryGetCommentElement(item) != null);
+
+        private static string describeToken(string token)
+            => token.Length <= 40 ? token : $@"{token[..40]}…";
+
+        /// <summary>
+        /// Logs the shape of a comment response that did not return any item.
+        /// </summary>
+        private static void logEmptyPage(JsonElement root, string continuation)
+        {
+            Logger.Log($@"The comment continuation '{describeToken(continuation)}' returned no items (response: {describeElement(root)}).",
+                LoggingTarget.Network);
+        }
+
+        /// <summary>
+        /// Switches a comment page to the newest first order, if the requested order is not the one
+        /// the section opened with.
+        /// </summary>
+        private async Task<comment_page> switchCommentOrderAsync(comment_page page, string continuation, string videoId, CancellationToken cancellationToken)
+        {
+            string? sortContinuation = page.NewestSortContinuation;
+
+            if (string.IsNullOrEmpty(sortContinuation) || sortContinuation == continuation)
+                return page;
+
+            comment_page sortedPage = await fetchContinuationItemsAsync(sortContinuation, cancellationToken).ConfigureAwait(false);
+
+            // An empty answer means the order could not be switched, so the page that was already read
+            // is kept instead of showing no comments at all.
+            if (containsCommentItems(sortedPage.Items))
+                return sortedPage;
+
+            Logger.Log($@"Switching the comments of '{videoId}' to the newest first order returned no comments.", LoggingTarget.Network);
+
+            return page;
         }
 
         /// <summary>
@@ -2093,8 +2426,13 @@ namespace AXPlayer.App.Online
                              getString(properties ?? default, @"commentId"),
                          })
                 {
-                    if (!string.IsNullOrEmpty(key))
-                        entities[key] = detached;
+                    if (string.IsNullOrEmpty(key))
+                        continue;
+
+                    // The items reference their payload with a percent-encoded key, so both spellings
+                    // have to lead to the same entity.
+                    entities[key] = detached;
+                    entities[normalizeEntityKey(key)] = detached;
                 }
             }
 
@@ -2111,20 +2449,55 @@ namespace AXPlayer.App.Online
 
             foreach (string propertyName in new[] { @"commentKey", @"commentId" })
             {
-                if (getString(item, propertyName) is { Length: > 0 } key && entities.TryGetValue(key, out JsonElement entity))
+                if (getString(item, propertyName) is not { Length: > 0 } key)
+                    continue;
+
+                if (entities.TryGetValue(key, out JsonElement entity))
                     return entity;
+
+                if (entities.TryGetValue(normalizeEntityKey(key), out JsonElement normalized))
+                    return normalized;
             }
 
             JsonElement? nested = getObject(item, @"properties");
 
-            foreach (string propertyName in new[] { @"commentKey", @"commentId" })
+            foreach (string propertyName in new[] { @"commentKey", @"commentId", @"toolbarStateKey" })
             {
-                if (getString(nested ?? default, propertyName) is { Length: > 0 } key && entities.TryGetValue(key, out JsonElement entity))
+                if (getString(nested ?? default, propertyName) is not { Length: > 0 } key)
+                    continue;
+
+                if (entities.TryGetValue(key, out JsonElement entity))
                     return entity;
+
+                if (entities.TryGetValue(normalizeEntityKey(key), out JsonElement normalized))
+                    return normalized;
             }
 
             return null;
         }
+
+        /// <summary>
+        /// Decodes the percent-encoding of an entity key or continuation token, because the responses
+        /// echo the identifiers of their children escaped (<c>%3D</c> for the padding of a base64
+        /// key).
+        /// </summary>
+        internal static string normalizeEntityKey(string key)
+        {
+            if (string.IsNullOrEmpty(key) || !key.Contains('%'))
+                return key;
+
+            try
+            {
+                return Uri.UnescapeDataString(key);
+            }
+            catch (UriFormatException)
+            {
+                return key;
+            }
+        }
+
+        internal static string normalizeContinuationToken(string token)
+            => normalizeEntityKey(token);
 
         internal static List<JsonElement> detachItems(IEnumerable<JsonElement> items)
             => items.Select(item => item.Clone()).ToList();
@@ -2133,18 +2506,76 @@ namespace AXPlayer.App.Online
         {
             var items = new List<JsonElement>();
 
-            if (root.TryGetProperty(@"onResponseReceivedEndpoints", out JsonElement endpoints) && endpoints.ValueKind == JsonValueKind.Array)
+            // A browse continuation appends its items through "onResponseReceivedActions" instead of
+            // "onResponseReceivedEndpoints".
+            foreach (string arrayName in new[] { @"onResponseReceivedEndpoints", @"onResponseReceivedActions" })
             {
-                foreach (JsonElement endpoint in endpoints.EnumerateArray())
-                {
-                    collectContinuationItems(endpoint, items);
-                }
+                if (!root.TryGetProperty(arrayName, out JsonElement actions) || actions.ValueKind != JsonValueKind.Array)
+                    continue;
+
+                foreach (JsonElement action in actions.EnumerateArray())
+                    collectContinuationItems(action, items);
             }
 
             collectContinuationItems(root, items);
 
             return items;
         }
+
+        /// <summary>
+        /// Adds the items of a <c>continuationContents</c> renderer, which an older response returns
+        /// instead of a continuation command.
+        /// </summary>
+        private static void addContinuationItems(JsonElement renderer, List<JsonElement> items)
+        {
+            foreach (string propertyName in new[] { @"continuationItems", @"contents" })
+            {
+                if (!renderer.TryGetProperty(propertyName, out JsonElement container) || container.ValueKind != JsonValueKind.Array)
+                    continue;
+
+                foreach (JsonElement item in container.EnumerateArray())
+                {
+                    if (!items.Any(existing => JsonElement.DeepEquals(existing, item)))
+                        items.Add(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Describes the shape of an element for the diagnostics of a response that could not be
+        /// read.
+        /// </summary>
+        internal static string describeElement(JsonElement element)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Object:
+                    var parts = new List<string>();
+
+                    foreach (JsonProperty property in element.EnumerateObject())
+                        parts.Add($@"{property.Name}: {describeValue(property.Value)}");
+
+                    return $@"{{{string.Join(@", ", parts)}}}";
+
+                case JsonValueKind.Array:
+                    return $@"[{element.GetArrayLength()} items]";
+
+                case JsonValueKind.Undefined:
+                    return @"Undefined";
+
+                default:
+                    return element.ValueKind.ToString();
+            }
+        }
+
+        private static string describeValue(JsonElement value)
+            => value.ValueKind switch
+            {
+                JsonValueKind.Object => @"object",
+                JsonValueKind.Array => $@"[{value.GetArrayLength()} items]",
+                JsonValueKind.String => @"string",
+                _ => value.ValueKind.ToString(),
+            };
 
         private static void collectContinuationItems(JsonElement element, List<JsonElement> items)
         {
@@ -2172,35 +2603,40 @@ namespace AXPlayer.App.Online
             if (!element.TryGetProperty(@"continuationContents", out JsonElement continuationContents) || continuationContents.ValueKind != JsonValueKind.Object)
                 return;
 
-            if (!continuationContents.TryGetProperty(@"commentSectionContents", out JsonElement sectionContents)
-                || !sectionContents.TryGetProperty(@"continuationItems", out JsonElement sectionItems)
-                || sectionItems.ValueKind != JsonValueKind.Array)
-                return;
-
-            foreach (JsonElement item in sectionItems.EnumerateArray())
+            foreach (string rendererName in new[] { @"commentSectionContents", @"commentSectionRenderer", @"commentRepliesRenderer", @"commentThreadRenderer" })
             {
-                if (!items.Any(existing => JsonElement.DeepEquals(existing, item)))
-                    items.Add(item);
+                if (getObject(continuationContents, rendererName) is { } renderer)
+                    addContinuationItems(renderer, items);
             }
         }
 
         private async Task<string?> resolveCommentsContinuationAsync(string videoId, CancellationToken cancellationToken)
+            => (await resolveCommentsContinuationCandidatesAsync(videoId, cancellationToken).ConfigureAwait(false)).FirstOrDefault();
+
+        /// <summary>
+        /// Resolves every continuation that can open the comment section of a video.
+        /// </summary>
+        /// <remarks>
+        /// The section and the engagement panel of the current watch page carry different tokens, and
+        /// only the one of the panel targets the comment section, so the caller tries all of them.
+        /// </remarks>
+        private async Task<List<string>> resolveCommentsContinuationCandidatesAsync(string videoId, CancellationToken cancellationToken, bool authenticate = false)
         {
             using JsonDocument? document = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
             {
                 [@"videoId"] = videoId,
                 [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
-            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
+            }, cancellationToken, innertube_client.Web, authenticate, comments_dump_tag).ConfigureAwait(false);
 
             if (document == null)
-                return null;
+                return new List<string>();
 
-            string? continuation = tryFindCommentsContinuation(document.RootElement);
+            List<string> candidates = tryFindCommentContinuations(document.RootElement);
 
-            if (string.IsNullOrEmpty(continuation))
+            if (candidates.Count == 0)
                 logCommentsContinuationDiagnostics(document.RootElement);
 
-            return continuation;
+            return candidates;
         }
 
         private static void logCommentsContinuationDiagnostics(JsonElement root)
@@ -2235,58 +2671,57 @@ namespace AXPlayer.App.Online
         }
 
         /// <summary>
-        /// Finds the continuation that opens the comment section of a watch page.
+        /// Finds the first continuation that opens the comment section of a watch page.
+        /// </summary>
+        internal static string? tryFindCommentsContinuation(JsonElement root)
+            => tryFindCommentContinuations(root).FirstOrDefault();
+
+        /// <summary>
+        /// Finds every continuation that can open the comment section of a watch page.
         /// </summary>
         /// <remarks>
-        /// Older responses rendered the section as an <c>itemSectionRenderer</c>, while current ones
-        /// open it as an engagement panel and only keep a teaser next to the player.
+        /// The section renders one continuation in its content, while the panel of the current watch
+        /// page and its sort menu render others. They are not interchangeable - only the panel token
+        /// carries the target of the section - so all of them are kept as candidates and the response
+        /// that returns comments decides which one is used.
         /// </remarks>
-        internal static string? tryFindCommentsContinuation(JsonElement root)
+        internal static List<string> tryFindCommentContinuations(JsonElement root)
         {
+            var continuations = new List<string>();
+
+            void add(string? continuation)
+            {
+                if (string.IsNullOrEmpty(continuation) || continuations.Contains(continuation, StringComparer.Ordinal))
+                    return;
+
+                continuations.Add(continuation);
+            }
+
             foreach (JsonElement section in enumerateRenderers(root, @"itemSectionRenderer"))
             {
-                if (!string.Equals(getString(section, @"sectionIdentifier"), @"comment-item-section", StringComparison.Ordinal))
-                    continue;
-
-                string? continuation = findContinuation(section);
-
-                if (!string.IsNullOrEmpty(continuation))
-                    return continuation;
+                if (string.Equals(getString(section, @"sectionIdentifier"), @"comment-item-section", StringComparison.Ordinal))
+                    add(findContinuation(section));
             }
 
             foreach (JsonElement panel in enumerateRenderers(root, @"engagementPanelSectionListRenderer"))
             {
-                if (!isCommentPanel(panel))
-                    continue;
-
-                string? continuation = findContinuation(panel);
-
-                if (!string.IsNullOrEmpty(continuation))
-                    return continuation;
+                if (isCommentPanel(panel))
+                    add(findContinuation(panel));
             }
+
+            // The order the section opens with is the selected entry of the sort menu.
+            add(findSelectedSortContinuation(root));
 
             foreach (JsonElement header in enumerateRenderers(root, @"commentsHeaderRenderer"))
-            {
-                string? continuation = findContinuation(header);
-
-                if (!string.IsNullOrEmpty(continuation))
-                    return continuation;
-            }
+                add(findContinuation(header));
 
             foreach (string rendererName in new[] { @"commentsEntryPointHeaderRenderer", @"commentsEntryPointTeaserRenderer" })
             {
-                JsonElement? entryPoint = findProperty(root, rendererName);
-
-                if (entryPoint == null)
-                    continue;
-
-                string? continuation = findContinuation(entryPoint.Value);
-
-                if (!string.IsNullOrEmpty(continuation))
-                    return continuation;
+                if (findProperty(root, rendererName) is { } entryPoint)
+                    add(findContinuation(entryPoint));
             }
 
-            return null;
+            return continuations;
         }
 
         private static bool isCommentPanel(JsonElement panel)
@@ -2299,31 +2734,96 @@ namespace AXPlayer.App.Online
         }
 
         /// <summary>
-        /// Finds the continuation that switches the comment section to "newest first".
+        /// The words the "newest first" entry of a comment sort menu is rendered with.
         /// </summary>
-        /// <remarks>
-        /// The sort menu is rendered in the section header, not in the continuation items, and its
-        /// label is localized, so the entry other than the selected one is used instead of
-        /// matching a hard-coded label.
-        /// </remarks>
-        internal static string? tryFindNewestSortContinuation(JsonElement root)
+        private static readonly string[] newest_sort_keywords =
+        {
+            @"newest", @"new", @"recent", @"최신", @"최근", @"最新", @"新着", @"新しい", @"neueste", @"nyeste", @"récents", @"recientes", @"recenti", @"новые",
+        };
+
+        /// <summary>
+        /// The words the "top comments" entry of a comment sort menu is rendered with.
+        /// </summary>
+        private static readonly string[] top_sort_keywords =
+        {
+            @"top", @"best", @"인기", @"人気", @"トップ", @"熱門", @"热门", @"最熱", @"beliebt", @"pertinent", @"principales", @"populaires", @"melhores", @"популярн",
+        };
+
+        private static string? findSelectedSortContinuation(JsonElement root)
         {
             foreach (JsonElement menu in enumerateRenderers(root, @"sortFilterSubMenuRenderer"))
             {
-                if (!menu.TryGetProperty(@"subMenuItems", out JsonElement subMenuItems) || subMenuItems.ValueKind != JsonValueKind.Array || subMenuItems.GetArrayLength() < 2)
+                if (!menu.TryGetProperty(@"subMenuItems", out JsonElement subMenuItems) || subMenuItems.ValueKind != JsonValueKind.Array)
                     continue;
 
                 foreach (JsonElement subMenuItem in subMenuItems.EnumerateArray())
                 {
-                    if (getBool(subMenuItem, @"selected"))
-                        continue;
-
-                    string? continuation = findContinuation(subMenuItem);
-
-                    if (!string.IsNullOrEmpty(continuation))
+                    if (getBool(subMenuItem, @"selected") && findContinuation(subMenuItem) is { Length: > 0 } continuation)
                         return continuation;
                 }
             }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the continuation that switches the comment section to the requested order.
+        /// </summary>
+        /// <param name="root">The response that renders the sort menu.</param>
+        /// <param name="newestFirst">Whether the newest comments come first.</param>
+        /// <returns>The continuation, or <see langword="null" /> when the order is already shown.</returns>
+        /// <remarks>
+        /// The menu is rendered in the section header, not in the continuation items, and its label
+        /// is localized, so an unknown translation is resolved by the position of the entry: YouTube
+        /// renders "top comments" first and "newest first" second.
+        /// </remarks>
+        internal static string? tryFindSortContinuation(JsonElement root, bool newestFirst)
+        {
+            string[] keywords = newestFirst ? newest_sort_keywords : top_sort_keywords;
+
+            foreach (JsonElement menu in enumerateRenderers(root, @"sortFilterSubMenuRenderer"))
+            {
+                if (!menu.TryGetProperty(@"subMenuItems", out JsonElement subMenuItems) || subMenuItems.ValueKind != JsonValueKind.Array)
+                    continue;
+
+                var entries = new List<(string Title, bool Selected, string? Continuation)>();
+
+                foreach (JsonElement subMenuItem in subMenuItems.EnumerateArray())
+                {
+                    entries.Add((
+                        extractText(subMenuItem.TryGetProperty(@"title", out JsonElement title) ? title : default) ?? string.Empty,
+                        getBool(subMenuItem, @"selected"),
+                        findContinuation(subMenuItem)));
+                }
+
+                if (entries.Count == 0)
+                    continue;
+
+                foreach ((string title, bool selected, string? continuation) in entries)
+                {
+                    if (string.IsNullOrEmpty(title) || !keywords.Any(keyword => title.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+                        continue;
+
+                    // Switching to the order that is already shown would request the opposite one.
+                    return selected || string.IsNullOrEmpty(continuation) ? null : continuation;
+                }
+
+                if (entries.Count < 2)
+                    continue;
+
+                (string entryTitle, bool entrySelected, string? entryContinuation) = entries[newestFirst ? 1 : 0];
+
+                if (string.IsNullOrEmpty(entryTitle))
+                    continue;
+
+                if (!entrySelected && !string.IsNullOrEmpty(entryContinuation))
+                    return entryContinuation;
+
+                return null;
+            }
+
+            if (!newestFirst)
+                return null;
 
             foreach (JsonElement chip in enumerateRenderers(root, @"chipCloudChipRenderer"))
             {
@@ -2332,43 +2832,39 @@ namespace AXPlayer.App.Online
 
                 string text = extractText(chip.TryGetProperty(@"text", out JsonElement textElement) ? textElement : default) ?? string.Empty;
 
-                if (!text.Contains(@"newest", StringComparison.OrdinalIgnoreCase)
-                    && !text.Contains(@"최신", StringComparison.Ordinal)
-                    && !text.Contains(@"最新", StringComparison.Ordinal))
+                if (!newest_sort_keywords.Any(keyword => text.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
                     continue;
 
-                string? continuation = findContinuation(chip);
-
-                if (!string.IsNullOrEmpty(continuation))
+                if (findContinuation(chip) is { Length: > 0 } continuation)
                     return continuation;
             }
 
             return null;
         }
 
+        /// <summary>
+        /// Finds the continuation that switches the comment section to "newest first".
+        /// </summary>
+        internal static string? tryFindNewestSortContinuation(JsonElement root)
+            => tryFindSortContinuation(root, true);
+
         internal static CommentThread? parseCommentThread(JsonElement threadRenderer, string videoId, IReadOnlyDictionary<string, JsonElement>? entities = null)
         {
-            JsonElement? commentRenderer = null;
+            JsonElement? commentElement = tryGetCommentElement(threadRenderer);
 
-            if (threadRenderer.TryGetProperty(@"comment", out JsonElement commentWrapper)
-                && commentWrapper.TryGetProperty(@"commentRenderer", out JsonElement renderer))
-                commentRenderer = renderer;
-            else if (threadRenderer.TryGetProperty(@"commentViewModel", out JsonElement commentViewModel))
-                commentRenderer = commentViewModel;
-
-            if (commentRenderer == null)
+            if (commentElement == null)
                 return null;
 
-            JsonElement? entity = findCommentEntity(commentRenderer.Value, entities);
+            JsonElement? entity = findCommentEntity(commentElement.Value, entities);
 
-            Comment? comment = parseComment(commentRenderer.Value, videoId, null, entity);
+            Comment? comment = parseComment(commentElement.Value, videoId, null, entity);
 
             if (comment == null)
                 return null;
 
-            ulong? replyCount = parseUlong(commentRenderer.Value.TryGetProperty(@"replyCount", out JsonElement replyCountElement) ? replyCountElement : default);
+            ulong? replyCount = parseUlong(commentElement.Value.TryGetProperty(@"replyCount", out JsonElement replyCountElement) ? replyCountElement : default);
 
-            if (replyCount == null && commentRenderer.Value.TryGetProperty(@"viewReplies", out JsonElement viewReplies))
+            if (replyCount == null && findProperty(threadRenderer, @"viewReplies") is { } viewReplies)
             {
                 JsonElement? buttonRenderer = findProperty(viewReplies, @"buttonRenderer");
 
@@ -2395,6 +2891,51 @@ namespace AXPlayer.App.Online
                 },
             };
         }
+
+        /// <summary>
+        /// Locates the element that describes a single comment within a comment item.
+        /// </summary>
+        /// <remarks>
+        /// The wrappers differ between the responses: a thread keeps the view model in
+        /// <c>commentThreadRenderer.commentViewModel</c> and that view model can itself be wrapped
+        /// into another <c>commentViewModel</c>, an older response keeps a <c>commentRenderer</c> in
+        /// <c>commentThreadRenderer.comment</c>, and a reply page returns the comment itself. The
+        /// chain is therefore followed until the element that carries the identifiers of the comment
+        /// (and with them the key of its entity payload) is reached.
+        /// </remarks>
+        internal static JsonElement? tryGetCommentElement(JsonElement element)
+        {
+            if (getObject(element, @"commentThreadRenderer") is { } threadRenderer)
+                element = threadRenderer;
+
+            JsonElement? current = getObject(element, @"comment") ?? element;
+
+            for (int depth = 0; depth < comment_wrapper_max_depth && current != null; depth++)
+            {
+                JsonElement value = current.Value;
+
+                if (isCommentElement(value))
+                    return value;
+
+                current = getObject(value, @"commentViewModel")
+                          ?? getObject(value, @"commentRenderer")
+                          ?? getObject(value, @"comment");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// The amount of view model wrappers a comment item is nested in. The current watch page
+        /// nests two of them, so a few more are allowed before the element is given up on.
+        /// </summary>
+        private const int comment_wrapper_max_depth = 4;
+
+        private static bool isCommentElement(JsonElement element)
+            => element.ValueKind == JsonValueKind.Object
+               && (element.TryGetProperty(@"commentId", out _)
+                   || element.TryGetProperty(@"commentKey", out _)
+                   || element.TryGetProperty(@"contentText", out _));
 
         internal static Comment? parseComment(JsonElement renderer, string? videoId, string? parentId, JsonElement? entity = null)
         {
@@ -2518,30 +3059,60 @@ namespace AXPlayer.App.Online
             };
         }
 
-        private static List<Comment>? parseInlineReplies(JsonElement threadRenderer, string videoId, string? threadId, IReadOnlyDictionary<string, JsonElement>? entities = null)
+        /// <summary>
+        /// Reads the replies that an older thread rendered inline instead of returning a continuation.
+        /// </summary>
+        /// <param name="threadItem">The whole thread item, which can be flat or wrapped.</param>
+        internal static List<Comment>? parseInlineReplies(JsonElement threadItem, string videoId, string? threadId, IReadOnlyDictionary<string, JsonElement>? entities = null)
         {
-            if (!threadRenderer.TryGetProperty(@"replies", out JsonElement replies))
+            if (threadItem.ValueKind != JsonValueKind.Object)
                 return null;
 
+            if (getObject(threadItem, @"commentThreadRenderer") is { } threadRenderer)
+                threadItem = threadRenderer;
+
+            // The replies renderer sits in the thread of an older response and inside the view model
+            // of the current one, so the whole item is searched.
             var result = new List<Comment>();
 
-            foreach (JsonElement commentRenderer in enumerateRenderers(replies, @"commentRenderer").Concat(enumerateRenderers(replies, @"commentViewModel")))
+            foreach (JsonElement replies in enumerateRenderers(threadItem, @"commentRepliesRenderer"))
             {
-                Comment? comment = parseComment(commentRenderer, videoId, threadId, findCommentEntity(commentRenderer, entities));
+                foreach (JsonElement commentRenderer in enumerateRenderers(replies, @"commentRenderer").Concat(enumerateRenderers(replies, @"commentViewModel")))
+                {
+                    JsonElement? element = tryGetCommentElement(commentRenderer);
 
-                if (comment != null)
-                    result.Add(comment);
+                    if (element == null)
+                        continue;
+
+                    Comment? comment = parseComment(element.Value, videoId, threadId, findCommentEntity(element.Value, entities));
+
+                    if (comment != null)
+                        result.Add(comment);
+                }
             }
 
             return result.Count > 0 ? result : null;
         }
 
-        internal static string? findRepliesContinuation(JsonElement threadRenderer)
+        internal static string? findRepliesContinuation(JsonElement threadItem)
         {
-            if (!threadRenderer.TryGetProperty(@"replies", out JsonElement replies))
+            if (threadItem.ValueKind != JsonValueKind.Object)
                 return null;
 
-            return findContinuation(replies);
+            if (getObject(threadItem, @"commentThreadRenderer") is { } threadRenderer)
+                threadItem = threadRenderer;
+
+            if (getObject(threadItem, @"replies") is { } replies && findContinuation(replies) is { Length: > 0 } token)
+                return token;
+
+            // The current view model nests the replies renderer, so every one of them is checked.
+            foreach (JsonElement repliesRenderer in enumerateRenderers(threadItem, @"commentRepliesRenderer"))
+            {
+                if (findContinuation(repliesRenderer) is { Length: > 0 } nested)
+                    return nested;
+            }
+
+            return null;
         }
 
         private async Task<Dictionary<string, List<Comment>>> fetchRepliesAsync(Dictionary<string, string> continuations, string videoId, CancellationToken cancellationToken)
@@ -2588,18 +3159,15 @@ namespace AXPlayer.App.Online
                     if (replies.Count >= maxReplies)
                         break;
 
-                    if (item.ValueKind != JsonValueKind.Object)
+                    JsonElement? element = tryGetCommentElement(item);
+
+                    if (element == null)
                         continue;
 
-                    if (!item.TryGetProperty(@"commentRenderer", out JsonElement commentRenderer))
-                    {
-                        if (!item.TryGetProperty(@"commentViewModel", out commentRenderer))
-                            continue;
-                    }
+                    Comment? comment = parseComment(element.Value, videoId, threadId, findCommentEntity(element.Value, page.Entities));
 
-                    Comment? comment = parseComment(commentRenderer, videoId, threadId, findCommentEntity(commentRenderer, page.Entities));
-
-                    if (comment != null)
+                    // A reply whose text could not be resolved would render an empty row.
+                    if (comment != null && !string.IsNullOrEmpty(comment.Snippet?.TextDisplay))
                         replies.Add(comment);
                 }
             }
@@ -2615,47 +3183,186 @@ namespace AXPlayer.App.Online
             return (threadId, replies);
         }
 
+        /// <summary>
+        /// Posts a comment under a video.
+        /// </summary>
+        /// <remarks>
+        /// The comment is posted through the Data API, which is the interface that accepts the access
+        /// token of the account. The comment section of the watch page only renders
+        /// <c>createCommentParams</c> for a session that it recognises as signed in, which a request
+        /// authorised with that token is not, so the Innertube route stays as a fallback.
+        /// </remarks>
         private async Task sendCommentAsync(string videoId, string commentText, CancellationToken cancellationToken)
         {
             if (!googleOAuth2.SignedIn.Value)
-                return;
-
-            string? continuation = await resolveCommentsContinuationAsync(videoId, cancellationToken).ConfigureAwait(false);
-
-            if (string.IsNullOrEmpty(continuation))
             {
-                Logger.Log($@"Cannot post a comment because no comments continuation is available for '{videoId}'.", LoggingTarget.Network);
+                Logger.Log($@"Cannot post a comment to '{videoId}' because no account is signed in.", LoggingTarget.Network);
                 return;
             }
 
-            using JsonDocument? comments = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
-            {
-                [@"continuation"] = continuation,
-                [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
-            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
+            if (await postCommentThroughDataApiAsync(videoId, commentText, cancellationToken).ConfigureAwait(false))
+                return;
 
-            string? createCommentParams = comments != null ? findFirstString(comments.RootElement, new[] { @"createCommentParams" }) : null;
+            await postCommentThroughInnertubeAsync(videoId, commentText, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Posts a comment through <c>commentThreads.insert</c> of the Data API.
+        /// </summary>
+        private async Task<bool> postCommentThroughDataApiAsync(string videoId, string commentText, CancellationToken cancellationToken)
+        {
+            using JsonDocument? document = await sendDataApiWriteAsync(@"commentThreads?part=snippet", buildCommentInsertPayload(videoId, commentText),
+                cancellationToken).ConfigureAwait(false);
+
+            if (document == null)
+                return false;
+
+            string? commentId = findFirstString(document.RootElement, new[] { @"id" });
+
+            Logger.Log(string.IsNullOrEmpty(commentId)
+                    ? $@"Posted a comment to '{videoId}' (the response carries no id)."
+                    : $@"Posted a comment to '{videoId}' as '{commentId}'.",
+                LoggingTarget.Network);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Posts a comment through <c>comment/create_comment</c>, which the web player uses when its
+        /// session is signed in.
+        /// </summary>
+        private async Task postCommentThroughInnertubeAsync(string videoId, string commentText, CancellationToken cancellationToken)
+        {
+            object context = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false);
+
+            (string? createCommentParams, bool composerRendered) = await resolveCreateCommentParamsAsync(videoId, context, cancellationToken).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(createCommentParams))
             {
-                Logger.Log($@"Cannot post a comment because no createCommentParams were returned for '{videoId}'.", LoggingTarget.Network);
+                // The composer answers with the sign-in prompt when the request was not recognised as
+                // the signed-in account, which is what keeps it from rendering its parameters.
+                Logger.Log(composerRendered
+                        ? $@"Cannot post a comment to '{videoId}' because the request was not recognised as the signed-in account (the composer only rendered the sign-in prompt)."
+                        : $@"Cannot post a comment to '{videoId}' because the comment section rendered no composer.",
+                    LoggingTarget.Network);
                 return;
             }
 
-            using JsonDocument? response = await sendAuthenticatedInnertubeAsync(@"comment/create_comment", client => new Dictionary<string, object?>
+            using JsonDocument? response = await sendInnertubeAsync(@"comment/create_comment", new Dictionary<string, object?>
             {
+                [@"context"] = context,
                 [@"createCommentParams"] = createCommentParams,
                 [@"richTextBody"] = new Dictionary<string, object?>
                 {
                     [@"message"] = commentText,
                 },
-                [@"context"] = client == innertube_client.Tv ? createTvBrowseContext() : createWebClientContext(null),
-            }, cancellationToken, comments_dump_tag).ConfigureAwait(false);
+            }, cancellationToken, innertube_client.Web, true, comments_dump_tag).ConfigureAwait(false);
 
             if (response == null)
-                Logger.Log($@"Posting the comment to '{videoId}' failed.", LoggingTarget.Network);
-            else
-                Logger.Log($@"Posted a comment to '{videoId}'.", LoggingTarget.Network);
+            {
+                Logger.Log($@"Posting the comment to '{videoId}' failed through Innertube.", LoggingTarget.Network);
+                return;
+            }
+
+            if (findCommentPostError(response.RootElement) is { Length: > 0 } error)
+            {
+                Logger.Log($@"Posting the comment to '{videoId}' was rejected: {error}", LoggingTarget.Network);
+                return;
+            }
+
+            if (!hasCreatedComment(response.RootElement))
+            {
+                // A request that is answered without a comment and without a reason did not post it.
+                Logger.Log($@"Posting the comment to '{videoId}' returned no created comment ({describeElement(response.RootElement)}).",
+                    LoggingTarget.Network);
+                return;
+            }
+
+            Logger.Log($@"Posted a comment to '{videoId}'.", LoggingTarget.Network);
+        }
+
+        /// <summary>
+        /// Reads the parameters that allow posting a comment, which the composer of the comment section
+        /// renders next to its placeholder for a signed-in account.
+        /// </summary>
+        /// <returns>The parameters and whether a composer was rendered at all.</returns>
+        private async Task<(string? Params, bool ComposerRendered)> resolveCreateCommentParamsAsync(string videoId, object context, CancellationToken cancellationToken)
+        {
+            var candidates = new List<string>();
+            bool composerRendered = false;
+
+            using (JsonDocument? watchPage = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
+                   {
+                       [@"videoId"] = videoId,
+                       [@"context"] = context,
+                   }, cancellationToken, innertube_client.Web, true, comments_dump_tag).ConfigureAwait(false))
+            {
+                if (watchPage == null)
+                    return (null, false);
+
+                string? paramsFromWatchPage = findFirstString(watchPage.RootElement, new[] { @"createCommentParams" });
+
+                if (!string.IsNullOrEmpty(paramsFromWatchPage))
+                    return (paramsFromWatchPage, true);
+
+                composerRendered = hasCommentComposer(watchPage.RootElement);
+                candidates = tryFindCommentContinuations(watchPage.RootElement);
+            }
+
+            // The composer of an opened section is rendered into the first page of the section.
+            foreach (string candidate in candidates)
+            {
+                using JsonDocument? comments = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
+                {
+                    [@"continuation"] = candidate,
+                    [@"context"] = context,
+                }, cancellationToken, innertube_client.Web, true, comments_dump_tag).ConfigureAwait(false);
+
+                if (comments == null)
+                    continue;
+
+                string? paramsFromSection = findFirstString(comments.RootElement, new[] { @"createCommentParams" });
+
+                if (!string.IsNullOrEmpty(paramsFromSection))
+                    return (paramsFromSection, true);
+
+                composerRendered |= hasCommentComposer(comments.RootElement);
+            }
+
+            return (null, composerRendered);
+        }
+
+        /// <summary>
+        /// Whether a response renders the composer of a comment section. For a signed-out session the
+        /// composer only renders the prompt that leads to the sign-in form.
+        /// </summary>
+        internal static bool hasCommentComposer(JsonElement root)
+            => enumerateRenderers(root, @"commentSimpleboxRenderer").Any();
+
+        /// <summary>
+        /// Whether a response of <c>comment/create_comment</c> carries the comment it created.
+        /// </summary>
+        internal static bool hasCreatedComment(JsonElement root)
+            => enumeratePropertyValues(root, @"createCommentAction").Any()
+               || enumeratePropertyValues(root, @"commentEntityPayload").Any();
+
+        /// <summary>
+        /// Reads the reason a comment was rejected, which a failing request reports instead of the
+        /// created comment.
+        /// </summary>
+        internal static string? findCommentPostError(JsonElement root)
+        {
+            if (getObject(root, @"error") is { } error)
+                return getString(error, @"message") ?? describeElement(error);
+
+            foreach (string rendererName in new[] { @"alertWithButtonRenderer", @"alertRenderer", @"errorScreenRenderer" })
+            {
+                if (findProperty(root, rendererName) is { } alert
+                    && findFirstString(alert, new[] { @"text", @"message" }) is { Length: > 0 } message)
+                    return message;
+            }
+
+            return null;
         }
 
         #endregion
@@ -2670,6 +3377,20 @@ namespace AXPlayer.App.Online
             {
                 Logger.Log(@"The playlist library was skipped because no account is signed in.", LoggingTarget.Network);
                 return playlists;
+            }
+
+            // The Data API reports the privacy of every playlist as the account set it. The library pages
+            // of the web client only render a badge for the playlists that are not public, so they cannot
+            // tell a public playlist from an unlisted one.
+            IList<Playlist>? ownPlaylists = await fetchOwnPlaylistsThroughDataApiAsync(cancellationToken).ConfigureAwait(false);
+
+            if (ownPlaylists is { Count: > 0 })
+            {
+                foreach (Playlist playlist in ownPlaylists)
+                    playlistLibraryCache[playlist.Id] = playlist;
+
+                Logger.Log($@"Read the {ownPlaylists.Count} own playlists with their privacy status.", LoggingTarget.Network);
+                return ownPlaylists;
             }
 
             foreach ((string browseId, innertube_client client) in playlist_library_pages)
@@ -2729,6 +3450,8 @@ namespace AXPlayer.App.Online
                     if (!string.IsNullOrEmpty(ownChannelId))
                         applyOwnerToPlaylists(playlists, ownChannelId, mineChannelCache?.Snippet?.Title);
 
+                    removePlaylistsThatWereNotCreated(playlists, ownChannelId);
+
                     foreach (Playlist playlist in playlists)
                         playlistLibraryCache[playlist.Id] = playlist;
 
@@ -2743,6 +3466,194 @@ namespace AXPlayer.App.Online
 
             return playlists;
         }
+
+        /// <summary>
+        /// The number of playlists that one page of <c>playlists.list</c> returns.
+        /// </summary>
+        private const int playlists_per_page = 50;
+
+        /// <summary>
+        /// The number of pages that are read from the own playlists.
+        /// </summary>
+        private const int playlists_max_pages = 20;
+
+        /// <summary>
+        /// Reads the playlists of the account through <c>playlists.list</c> of the Data API, which reports
+        /// the privacy of each playlist.
+        /// </summary>
+        /// <returns>The playlists, or <see langword="null" /> when the Data API did not answer.</returns>
+        private async Task<IList<Playlist>?> fetchOwnPlaylistsThroughDataApiAsync(CancellationToken cancellationToken)
+        {
+            var playlists = new List<Playlist>();
+            string? pageToken = null;
+            bool answered = false;
+
+            for (int page = 0; page < playlists_max_pages; page++)
+            {
+                string query = $@"playlists?part=snippet,status,contentDetails&mine=true&maxResults={playlists_per_page}";
+
+                if (!string.IsNullOrEmpty(pageToken))
+                    query += $@"&pageToken={Uri.EscapeDataString(pageToken)}";
+
+                using JsonDocument? document = await sendDataApiReadAsync(query, cancellationToken).ConfigureAwait(false);
+
+                if (document == null)
+                    break;
+
+                answered = true;
+
+                foreach (JsonElement item in getArray(document.RootElement, @"items"))
+                {
+                    Playlist? playlist = parseDataApiPlaylist(item);
+
+                    if (playlist != null && playlists.All(existing => existing.Id != playlist.Id))
+                        playlists.Add(playlist);
+                }
+
+                pageToken = getString(document.RootElement, @"nextPageToken");
+
+                if (string.IsNullOrEmpty(pageToken))
+                    break;
+            }
+
+            if (answered)
+            {
+                string? ownChannelId = await resolveOwnChannelIdAsync(cancellationToken).ConfigureAwait(false);
+
+                if (!string.IsNullOrEmpty(ownChannelId))
+                    applyOwnerToPlaylists(playlists, ownChannelId, mineChannelCache?.Snippet?.Title);
+
+                // <c>mine=true</c> also returns the playlists that YouTube keeps for the account itself,
+                // such as the liked videos and the watch later list, which the account did not create.
+                int before = playlists.Count;
+
+                removePlaylistsThatWereNotCreated(playlists, ownChannelId);
+
+                if (before > playlists.Count)
+                    Logger.Log($@"Left out the {before - playlists.Count} playlists of the account that the account did not create.", LoggingTarget.Network);
+            }
+
+            return answered ? playlists : null;
+        }
+
+        /// <summary>
+        /// Removes the playlists of the account that the account did not create itself, which are the
+        /// liked videos and the watch later list, and the playlists of another channel.
+        /// </summary>
+        internal static void removePlaylistsThatWereNotCreated(List<Playlist> playlists, string? ownChannelId)
+            => playlists.RemoveAll(playlist => !isOwnCreatedPlaylist(playlist, ownChannelId));
+
+        /// <summary>
+        /// Whether a playlist row is a playlist the account created itself.
+        /// </summary>
+        /// <remarks>
+        /// The playlist IDs of the lists that YouTube keeps for the account are <c>WL</c> for the watch
+        /// later list, <c>LL</c> followed by the channel ID for the liked videos, and <c>FL</c> for the
+        /// favourites of older accounts. The rows of the own library do not always carry their owner, so
+        /// a row without one is kept.
+        /// </remarks>
+        internal static bool isOwnCreatedPlaylist(Playlist playlist, string? ownChannelId)
+        {
+            if (playlist?.Id is not { Length: > 0 } playlistId)
+                return false;
+
+            if (string.Equals(playlistId, @"WL", StringComparison.Ordinal)
+                || string.Equals(playlistId, @"FL", StringComparison.Ordinal)
+                || playlistId.StartsWith(@"LL", StringComparison.Ordinal)
+                || playlistId.StartsWith(@"FL", StringComparison.Ordinal))
+                return false;
+
+            string? channelId = playlist.Snippet?.ChannelId;
+
+            return string.IsNullOrEmpty(ownChannelId)
+                   || string.IsNullOrEmpty(channelId)
+                   || string.Equals(channelId, ownChannelId, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Reads a playlist of <c>playlists.list</c>. Its <c>status.privacyStatus</c> is one of
+        /// <c>public</c>, <c>unlisted</c> and <c>private</c>.
+        /// </summary>
+        internal static Playlist? parseDataApiPlaylist(JsonElement item)
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+                return null;
+
+            string? playlistId = getString(item, @"id");
+
+            if (string.IsNullOrEmpty(playlistId))
+                return null;
+
+            JsonElement snippet = getObject(item, @"snippet") ?? default;
+            JsonElement status = getObject(item, @"status") ?? default;
+            JsonElement contentDetails = getObject(item, @"contentDetails") ?? default;
+
+            return new Playlist
+            {
+                Id = playlistId,
+                Kind = @"youtube#playlist",
+                Snippet = new PlaylistSnippet
+                {
+                    Title = getString(snippet, @"title"),
+                    Description = getString(snippet, @"description"),
+                    ChannelId = getString(snippet, @"channelId"),
+                    ChannelTitle = getString(snippet, @"channelTitle"),
+                    PublishedAtDateTimeOffset = parseDateTimeOffset(getString(snippet, @"publishedAt")),
+                    Thumbnails = createDataApiThumbnails(snippet),
+                },
+                Status = new PlaylistStatus
+                {
+                    PrivacyStatus = normalizePrivacyStatus(getString(status, @"privacyStatus")) ?? @"public",
+                },
+                ContentDetails = new PlaylistContentDetails
+                {
+                    ItemCount = toLong(parseLong(getString(contentDetails, @"itemCount"))),
+                },
+                Localizations = new Dictionary<string, PlaylistLocalization>(StringComparer.Ordinal),
+            };
+        }
+
+        /// <summary>
+        /// Reads the thumbnails of a <c>playlists.list</c> item, which renders them as named sizes.
+        /// </summary>
+        private static ThumbnailDetails createDataApiThumbnails(JsonElement snippet)
+            => createThumbnailDetails(readThumbnailUrl(snippet, @"maxres")
+                                      ?? readThumbnailUrl(snippet, @"standard")
+                                      ?? readThumbnailUrl(snippet, @"high")
+                                      ?? readThumbnailUrl(snippet, @"medium")
+                                      ?? readThumbnailUrl(snippet, @"default"));
+
+        private static string? readThumbnailUrl(JsonElement snippet, string size)
+        {
+            if (getObject(snippet, @"thumbnails") is not { } thumbnails)
+                return null;
+
+            return getObject(thumbnails, size) is { } thumbnail ? getString(thumbnail, @"url") : null;
+        }
+
+        /// <summary>
+        /// Lowercases a privacy status and keeps it only when it is one of the three the API knows.
+        /// </summary>
+        internal static string? normalizePrivacyStatus(string? value)
+        {
+            switch (value?.Trim().ToLowerInvariant())
+            {
+                case @"public":
+                    return @"public";
+
+                case @"unlisted":
+                    return @"unlisted";
+
+                case @"private":
+                    return @"private";
+
+                default:
+                    return null;
+            }
+        }
+
+        private static ulong? parseLong(string? value)
+            => ulong.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out ulong parsed) ? parsed : null;
 
         /// <summary>
         /// Finds the continuation of the "playlists" tab of a library page.
@@ -3439,6 +4350,17 @@ namespace AXPlayer.App.Online
             if (!googleOAuth2.SignedIn.Value)
                 return;
 
+            using (JsonDocument? updated = await sendDataApiWriteAsync(@"playlists?part=snippet,status", new Dictionary<string, object?>
+                   {
+                       [@"id"] = playlistId,
+                       [@"snippet"] = new Dictionary<string, object?> { [@"title"] = title },
+                       [@"status"] = new Dictionary<string, object?> { [@"privacyStatus"] = toDataApiPrivacy(privacyStatus) },
+                   }, cancellationToken, HttpMethod.Put).ConfigureAwait(false))
+            {
+                if (updated != null)
+                    return;
+            }
+
             var payload = new
             {
                 context = createTvBrowseContext(),
@@ -3464,26 +4386,188 @@ namespace AXPlayer.App.Online
                 Logger.Log($@"Updating the playlist '{playlistId}' failed.", LoggingTarget.Network);
         }
 
-        private async Task addPlaylistAsync(string playlistTitle, PrivacyStatus privacyStatus, CancellationToken cancellationToken)
+        /// <summary>
+        /// Creates a playlist in the library of the signed-in account.
+        /// </summary>
+        /// <remarks>
+        /// YouTube creates a playlist through different requests: the TV client edits its playlists
+        /// through <c>browse/edit_playlist</c> with <c>ACTION_CREATE_PLAYLIST</c>, and the TV and the web
+        /// clients each expose <c>playlist/create</c>. The shapes are tried in order until one of them
+        /// accepts the request, and the accepted one is logged, because a rejected shape answers with
+        /// <c>INVALID_ARGUMENT</c> and creates nothing.
+        /// </remarks>
+        /// <returns>Whether a playlist was created.</returns>
+        private async Task<bool> addPlaylistAsync(string playlistTitle, PrivacyStatus privacyStatus, CancellationToken cancellationToken)
         {
             if (!googleOAuth2.SignedIn.Value)
-                return;
-
-            using JsonDocument? document = await sendTvInnertubeAsync(@"playlist/create", new Dictionary<string, object?>
             {
-                [@"title"] = playlistTitle,
-                [@"privacy"] = toInnertubePrivacy(privacyStatus),
-                [@"context"] = createTvBrowseContext(),
-            }, cancellationToken).ConfigureAwait(false);
+                Logger.Log(@"Cannot create a playlist because no account is signed in.", LoggingTarget.Network);
+                return false;
+            }
+
+            // The Data API is the interface the access token of the account belongs to, so the playlist
+            // is created through it. The Innertube shapes stay as a fallback for a session that the
+            // watch page recognises as signed in.
+            string? dataApiId = await insertPlaylistThroughDataApiAsync(playlistTitle, privacyStatus, cancellationToken).ConfigureAwait(false);
+
+            if (dataApiId != null)
+                return true;
+
+            var attempts = new playlist_request[]
+            {
+                new(innertube_client.Tv, @"browse/edit_playlist", null),
+                new(innertube_client.Tv, @"playlist/create", @"privacy"),
+                new(innertube_client.Web, @"playlist/create", @"privacy"),
+            };
+
+            foreach (playlist_request attempt in attempts)
+            {
+                playlist_creation creation = await createPlaylistAsync(playlistTitle, privacyStatus, attempt, cancellationToken).ConfigureAwait(false);
+
+                if (!creation.Accepted)
+                    continue;
+
+                Logger.Log($@"Created the playlist '{playlistTitle}' through the {attempt.Describe()}"
+                           + (string.IsNullOrEmpty(creation.Id) ? @" (the response carries no playlist id)." : $@" as '{creation.Id}'."),
+                    LoggingTarget.Network);
+
+                // The playlist is created with the default privacy, so the requested one is applied
+                // afterwards.
+                if (!string.IsNullOrEmpty(creation.Id) && privacyStatus != PrivacyStatus.Private)
+                    await updatePlaylistInfoAsync(creation.Id, playlistTitle, privacyStatus, cancellationToken).ConfigureAwait(false);
+
+                return true;
+            }
+
+            Logger.Log($@"Creating the playlist '{playlistTitle}' failed ({string.Join(@", ", attempts.Select(attempt => attempt.Describe()))}).",
+                LoggingTarget.Network);
+            return false;
+        }
+
+        /// <summary>
+        /// Creates a playlist through <c>playlists.insert</c> of the Data API.
+        /// </summary>
+        /// <returns>The id of the created playlist, or <see langword="null" /> when it was not created.</returns>
+        private async Task<string?> insertPlaylistThroughDataApiAsync(string playlistTitle, PrivacyStatus privacyStatus, CancellationToken cancellationToken)
+        {
+            using JsonDocument? document = await sendDataApiWriteAsync(@"playlists?part=snippet,status", buildPlaylistInsertPayload(playlistTitle, privacyStatus),
+                cancellationToken).ConfigureAwait(false);
 
             if (document == null)
-                Logger.Log(@"Creating the playlist failed.", LoggingTarget.Network);
+                return null;
+
+            string? playlistId = findFirstString(document.RootElement, new[] { @"id" });
+
+            Logger.Log(string.IsNullOrEmpty(playlistId)
+                    ? $@"Created the playlist '{playlistTitle}' (the response carries no playlist id)."
+                    : $@"Created the playlist '{playlistTitle}' as '{playlistId}'.",
+                LoggingTarget.Network);
+
+            return playlistId ?? string.Empty;
         }
+
+        /// <summary>
+        /// One request that can create a playlist.
+        /// </summary>
+        /// <param name="Client">The client that sends it.</param>
+        /// <param name="Endpoint">The endpoint it is sent to.</param>
+        /// <param name="PrivacyProperty">The property the endpoint expects for the privacy, when it takes one.</param>
+        private sealed record playlist_request(innertube_client Client, string Endpoint, string? PrivacyProperty)
+        {
+            public string Describe()
+            {
+                string client = Client == innertube_client.Tv ? @"TV" : @"WEB";
+
+                return PrivacyProperty == null
+                    ? $@"{client} '{Endpoint}'"
+                    : $@"{client} '{Endpoint}' with '{PrivacyProperty}'";
+            }
+        }
+
+        /// <summary>
+        /// The outcome of one attempt to create a playlist.
+        /// </summary>
+        /// <param name="Accepted">Whether the request created the playlist.</param>
+        /// <param name="Id">The id of the created playlist, when the response carried it.</param>
+        private sealed record playlist_creation(bool Accepted, string? Id);
+
+        private async Task<playlist_creation> createPlaylistAsync(string playlistTitle, PrivacyStatus privacyStatus, playlist_request request, CancellationToken cancellationToken)
+        {
+            if (request.PrivacyProperty == null)
+            {
+                using JsonDocument? editDocument = await sendTvEditRequestAsync(new
+                {
+                    context = createTvBrowseContext(),
+                    actions = new object[]
+                    {
+                        new
+                        {
+                            action = @"ACTION_CREATE_PLAYLIST",
+                            playlistName = playlistTitle,
+                        },
+                    },
+                }, cancellationToken).ConfigureAwait(false);
+
+                if (editDocument == null)
+                    return new playlist_creation(false, null);
+
+                string? editId = findFirstString(editDocument.RootElement, new[] { @"playlistId" });
+
+                if (!string.IsNullOrEmpty(editId) || hasEditActions(editDocument.RootElement))
+                    return new playlist_creation(true, editId);
+
+                return new playlist_creation(false, null);
+            }
+
+            using JsonDocument? document = await sendInnertubeAsync(request.Endpoint, new Dictionary<string, object?>
+            {
+                [@"context"] = request.Client == innertube_client.Tv ? createTvBrowseContext() : createWebClientContext(null),
+                [@"title"] = playlistTitle,
+                [request.PrivacyProperty] = toInnertubePrivacy(privacyStatus),
+            }, cancellationToken, request.Client, true).ConfigureAwait(false);
+
+            if (document == null)
+                return new playlist_creation(false, null);
+
+            string? createdId = findFirstString(document.RootElement, new[] { @"playlistId" });
+
+            if (!string.IsNullOrEmpty(createdId))
+                return new playlist_creation(true, createdId);
+
+            return new playlist_creation(false, null);
+        }
+
+        /// <summary>
+        /// Whether an edit response accepted the action it was asked to perform. The TV edit endpoint
+        /// answers with the actions it carried out instead of the result of a single action.
+        /// </summary>
+        internal static bool hasEditActions(JsonElement root)
+            => root.ValueKind == JsonValueKind.Object
+               && root.TryGetProperty(@"actions", out JsonElement actions)
+               && actions.ValueKind == JsonValueKind.Array
+               && actions.GetArrayLength() > 0;
 
         private async Task saveVideoToPlaylistAsync(string playlistId, string videoId, CancellationToken cancellationToken)
         {
             if (!googleOAuth2.SignedIn.Value)
                 return;
+
+            using (JsonDocument? added = await sendDataApiWriteAsync(@"playlistItems?part=snippet", new Dictionary<string, object?>
+                   {
+                       [@"snippet"] = new Dictionary<string, object?>
+                       {
+                           [@"playlistId"] = playlistId,
+                           [@"resourceId"] = new Dictionary<string, object?>
+                           {
+                               [@"kind"] = @"youtube#video",
+                               [@"videoId"] = videoId,
+                           },
+                       },
+                   }, cancellationToken).ConfigureAwait(false))
+            {
+                if (added != null)
+                    return;
+            }
 
             var payload = new
             {
@@ -3583,26 +4667,75 @@ namespace AXPlayer.App.Online
 
         private static string? findPrivacyStatus(JsonElement root)
         {
-            foreach (string propertyName in new[] { @"privacy", @"privacyStatus", @"visibility" })
+            // The library pages of the web client render the privacy as the name of a badge icon, for
+            // example PRIVACY_PRIVATE, and as the text of the badge, which is localised.
+            foreach (string propertyName in new[] { @"privacy", @"privacyStatus", @"visibility", @"badgeText", @"imageName", @"iconType" })
             {
                 foreach (JsonElement value in enumeratePropertyValues(root, propertyName))
                 {
-                    string? text = getStringValue(value)?.ToLowerInvariant();
-
-                    if (text is @"public" or @"unlisted" or @"private")
-                        return text;
+                    if (tryMapPrivacyToken(getStringValue(value)) is { } status)
+                        return status;
                 }
             }
 
             foreach (JsonElement value in enumeratePropertyValues(root, @"content"))
             {
-                string? text = getStringValue(value)?.ToLowerInvariant();
-
-                if (text is @"public" or @"unlisted" or @"private")
-                    return text;
+                if (tryMapPrivacyToken(getStringValue(value)) is { } status)
+                    return status;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Maps the name of a privacy badge or its localised text onto one of <c>public</c>,
+        /// <c>unlisted</c> and <c>private</c>.
+        /// </summary>
+        internal static string? tryMapPrivacyToken(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+
+            string token = value.Trim();
+
+            if (token.Contains(@"PRIVACY_PRIVATE", StringComparison.OrdinalIgnoreCase))
+                return @"private";
+
+            if (token.Contains(@"PRIVACY_UNLISTED", StringComparison.OrdinalIgnoreCase))
+                return @"unlisted";
+
+            if (token.Contains(@"PRIVACY_PUBLIC", StringComparison.OrdinalIgnoreCase))
+                return @"public";
+
+            // The badge text is shown in the language of the interface, so the words the player knows
+            // are read as well. Only whole texts are compared, because "공개" is part of "비공개".
+            switch (token.ToLowerInvariant())
+            {
+                case @"private":
+                case @"비공개":
+                case @"非公開":
+                case @"不公開":
+                case @"隐藏":
+                case @"私人影片":
+                    return @"private";
+
+                case @"unlisted":
+                case @"일부 공개":
+                case @"限定公開":
+                case @"不公开":
+                case @"unlisted video":
+                    return @"unlisted";
+
+                case @"public":
+                case @"전체 공개":
+                case @"公開":
+                case @"公开":
+                case @"공개":
+                    return @"public";
+
+                default:
+                    return null;
+            }
         }
 
         #endregion
@@ -3924,6 +5057,19 @@ namespace AXPlayer.App.Online
             return value;
         }
 
+        /// <summary>
+        /// Reads the items of an array property, or an empty sequence when it is missing.
+        /// </summary>
+        internal static JsonElement[] getArray(JsonElement element, string propertyName)
+        {
+            if (element.ValueKind != JsonValueKind.Object
+                || !element.TryGetProperty(propertyName, out JsonElement value)
+                || value.ValueKind != JsonValueKind.Array)
+                return Array.Empty<JsonElement>();
+
+            return value.EnumerateArray().ToArray();
+        }
+
         private static JsonElement? getNestedObject(JsonElement element, params string[] propertyPath)
         {
             JsonElement current = element;
@@ -4006,7 +5152,7 @@ namespace AXPlayer.App.Online
             return null;
         }
 
-        private static string? findFirstString(JsonElement root, IEnumerable<string> propertyNames)
+        internal static string? findFirstString(JsonElement root, IEnumerable<string> propertyNames)
         {
             foreach (string propertyName in propertyNames)
             {

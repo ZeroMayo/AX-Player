@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.YouTube.v3.Data;
 using AXPlayer.App.Config;
+using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
@@ -329,7 +330,10 @@ namespace AXPlayer.App.Graphics.UserInterface
                 try
                 {
                     Channel channelData = api.GetChannel(Data.Snippet.ChannelId);
-                    playlistData = api.GetPlaylistInfo(Data.Id);
+
+                    // A playlist whose details were not loaded keeps the values of its row, which now
+                    // carry the privacy the API reported.
+                    playlistData = api.GetPlaylistInfo(Data.Id) ?? Data;
 
                     Schedule(() =>
                     {
@@ -337,27 +341,8 @@ namespace AXPlayer.App.Graphics.UserInterface
 
                         //channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
                         playlistNameText.Text = playlistData.Snippet.Title;
-#pragma warning disable CS8629 // Nullable 값 형식이 null일 수 있습니다.
-                        try
-                        {
-                            switch (playlistData.Status.PrivacyStatus)
-                            {
-                                case "public":
-                                    privacyStatusText.Text = AXPlayerStrings.Public;
-                                    break;
-                                case "unlisted":
-                                    privacyStatusText.Text = AXPlayerStrings.Unlisted;
-                                    break;
-                                case "private":
-                                    privacyStatusText.Text = AXPlayerStrings.Private;
-                                    break;
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.Error(e, e.GetDescription());
-                        }
-#pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
+                        privacyStatusText.Text = playlistData.Status?.PrivacyStatus.toPrivacyLabel()
+                                                 ?? string.Empty;
 
                         uiLanguage.BindValueChanged(locale =>
                         {

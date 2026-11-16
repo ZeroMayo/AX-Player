@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using AXPlayer.App.Online;
 using Google.Apis.YouTube.v3.Data;
@@ -784,6 +785,37 @@ namespace AXPlayer.App.Tests.Online
         }
 
         [Test]
+        public void TestPublishedAtKeepsTheNumericOffsetOfTheMicroformat()
+        {
+            // The microformat writes its timestamp with a numeric offset, which a DateTime cannot hold.
+            // Parsing it with "yyyy-MM-dd\THH:mm:ss\Z" fails - the pattern ends with a literal 'Z' - and
+            // leaves the default value 0001-01-01 behind, so the offset aware timestamp is used.
+            const string player_response = """
+            {
+              "videoDetails": { "videoId": "v", "title": "t", "lengthSeconds": "10" },
+              "microformat": { "playerMicroformatRenderer": { "publishDate": "2026-09-27T05:27:05-07:00" } }
+            }
+            """;
+
+            const string hour_only_offset = """
+            {
+              "videoDetails": { "videoId": "v", "title": "t", "lengthSeconds": "10" },
+              "microformat": { "playerMicroformatRenderer": { "publishDate": "2026-09-27T05:27:05-07" } }
+            }
+            """;
+
+            foreach (string response in new[] { player_response, hour_only_offset })
+            {
+                Video video = YouTubeAPI.parseVideo(parse(response), "v")!;
+
+                Assert.That(video.Snippet.PublishedAtDateTimeOffset, Is.Not.Null, response);
+                Assert.That(video.Snippet.PublishedAtDateTimeOffset!.Value.Offset, Is.EqualTo(TimeSpan.FromHours(-7)), response);
+                Assert.That(video.Snippet.PublishedAtDateTimeOffset.Value.ToUniversalTime(),
+                    Is.EqualTo(new DateTimeOffset(2026, 9, 27, 12, 27, 5, TimeSpan.Zero)), response);
+            }
+        }
+
+        [Test]
         public void TestPublishedAtFallsBackToTheRelativeDate()
         {
             const string player_without_dates = """
@@ -1219,6 +1251,110 @@ namespace AXPlayer.App.Tests.Online
 
             // The amount of replies is only rendered into the button of the replies renderer.
             Assert.That(thread.Snippet.TotalReplyCount, Is.EqualTo(3));
+        }
+
+        [Test]
+        public void TestCreateCommentParamsAreReadFromTheCommentComposer()
+        {
+            // The composer of the comment section renders the parameters that allow posting a comment
+            // next to its placeholder. They only exist for a signed-in session, which is why the
+            // request that reads them has to be authenticated.
+            const string signed_in = """
+            {
+              "onResponseReceivedEndpoints": [
+                {
+                  "reloadContinuationItemsCommand": {
+                    "continuationItems": [
+                      {
+                        "commentsHeaderRenderer": {
+                          "createRenderer": {
+                            "commentSimpleboxRenderer": {
+                              "placeholderText": { "runs": [ { "text": "Add a comment..." } ] },
+                              "createCommentParams": "CglWSURFT19JRA%3D%3D"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+            """;
+
+            const string signed_out = """
+            {
+              "commentsHeaderRenderer": {
+                "createRenderer": {
+                  "commentSimpleboxRenderer": {
+                    "placeholderText": { "runs": [ { "text": "Add a comment..." } ] },
+                    "prepareAccountEndpoint": { "modalEndpoint": { "modal": {} } }
+                  }
+                }
+              }
+            }
+            """;
+
+            Assert.That(YouTubeAPI.findFirstString(parse(signed_in), new[] { "createCommentParams" }), Is.EqualTo("CglWSURFT19JRA%3D%3D"));
+            Assert.That(YouTubeAPI.findFirstString(parse(signed_out), new[] { "createCommentParams" }), Is.Null);
+        }
+
+        [Test]
+        public void TestEditActionsAreRecognised()
+        {
+            // The TV edit endpoint answers with the actions it carried out, which is how a created
+            // playlist is recognised when the response does not echo its id.
+            Assert.That(YouTubeAPI.hasEditActions(parse("""{ "actions": [ { "clickTrackingParams": "x" } ] }""")), Is.True);
+            Assert.That(YouTubeAPI.hasEditActions(parse("""{ "actions": [] }""")), Is.False);
+            Assert.That(YouTubeAPI.hasEditActions(parse("""{ "responseContext": {} }""")), Is.False);
+        }
+
+        [Test]
+        public void TestCommentComposerIsDetected()
+        {
+            // The composer renders the sign-in prompt instead of its parameters for a signed-out
+            // session, so its presence tells the two cases apart.
+            Assert.That(YouTubeAPI.hasCommentComposer(parse("""
+            { "commentsHeaderRenderer": { "createRenderer": { "commentSimpleboxRenderer": { "placeholderText": { "simpleText": "Add a comment..." } } } } }
+            """)), Is.True);
+
+            Assert.That(YouTubeAPI.hasCommentComposer(parse("""{ "commentsHeaderRenderer": { "createRenderer": {} } }""")), Is.False);
+            Assert.That(YouTubeAPI.hasCommentComposer(parse("""{ "commentsHeaderRenderer": {} }""")), Is.False);
+        }
+
+        [Test]
+        public void TestCreatedCommentIsDetected()
+        {
+            Assert.That(YouTubeAPI.hasCreatedComment(parse("""{ "actions": [ { "createCommentAction": { "comment": { "commentId": "Ugx1" } } } ] }""")), Is.True);
+            Assert.That(YouTubeAPI.hasCreatedComment(parse("""
+            { "frameworkUpdates": { "entityBatchUpdate": { "mutations": [ { "payload": { "commentEntityPayload": { "properties": { "commentId": "Ugx1" } } } } ] } } }
+            """)), Is.True);
+
+            // An answer without the created comment did not post it.
+            Assert.That(YouTubeAPI.hasCreatedComment(parse("""{ "actions": [] }""")), Is.False);
+            Assert.That(YouTubeAPI.hasCreatedComment(parse("""{ "responseContext": {} }""")), Is.False);
+        }
+
+        [Test]
+        public void TestRejectedCommentReportsItsReason()
+        {
+            // A rejected comment is answered with the reason instead of the created comment.
+            Assert.That(YouTubeAPI.findCommentPostError(parse("""{ "error": { "code": 400, "message": "Comment text cannot be empty" } }""")),
+                Is.EqualTo("Comment text cannot be empty"));
+
+            Assert.That(YouTubeAPI.findCommentPostError(parse("""
+            {
+              "actions": [
+                { "alertWithButtonRenderer": { "text": { "runs": [ { "text": "Comments are turned off" } ] } } }
+              ]
+            }
+            """)), Is.EqualTo("Comments are turned off"));
+
+            Assert.That(YouTubeAPI.findCommentPostError(parse("""
+            {
+              "actions": [ { "createCommentAction": { "comment": { "commentId": "Ugx1" } } } ]
+            }
+            """)), Is.Null);
         }
 
         [Test]
@@ -2266,6 +2402,119 @@ namespace AXPlayer.App.Tests.Online
             Assert.That(YouTubeAPI.isPlaylistLockup(parse("""{ "contentId": "PLone", "contentType": "LOCKUP_CONTENT_TYPE_PLAYLIST" }""")), Is.True);
             Assert.That(YouTubeAPI.isPlaylistLockup(parse("""{ "contentId": "PLone" }""")), Is.True);
             Assert.That(YouTubeAPI.isPlaylistLockup(parse("""{ "contentId": "dQw4w9WgXcQ", "contentType": "LOCKUP_CONTENT_TYPE_VIDEO" }""")), Is.False);
+        }
+
+        [Test]
+        public void TestCommentInsertPayloadCarriesTheTextAndTheVideo()
+        {
+            string json = JsonSerializer.Serialize(YouTubeAPI.buildCommentInsertPayload("dQw4w9WgXcQ", "hello"));
+
+            using JsonDocument document = JsonDocument.Parse(json);
+            JsonElement snippet = document.RootElement.GetProperty("snippet");
+
+            Assert.That(snippet.GetProperty("videoId").GetString(), Is.EqualTo("dQw4w9WgXcQ"));
+            Assert.That(snippet.GetProperty("topLevelComment").GetProperty("snippet").GetProperty("textOriginal").GetString(), Is.EqualTo("hello"));
+        }
+
+        [Test]
+        public void TestPlaylistInsertPayloadCarriesTheTitleAndThePrivacy()
+        {
+            string json = JsonSerializer.Serialize(YouTubeAPI.buildPlaylistInsertPayload("test2", PrivacyStatus.Unlisted));
+
+            using JsonDocument document = JsonDocument.Parse(json);
+
+            Assert.That(document.RootElement.GetProperty("snippet").GetProperty("title").GetString(), Is.EqualTo("test2"));
+            Assert.That(document.RootElement.GetProperty("status").GetProperty("privacyStatus").GetString(), Is.EqualTo("unlisted"));
+        }
+
+        [Test]
+        public void TestOwnPlaylistKeepsThePrivacyOfTheDataApi()
+        {
+            const string response = """
+                                     {
+                                       "id": "PLpublic",
+                                       "snippet": {
+                                         "title": "open list",
+                                         "channelId": "UCme",
+                                         "publishedAt": "2026-11-16T09:30:12Z",
+                                         "thumbnails": { "high": { "url": "https://example.com/p.jpg" }, "default": { "url": "https://example.com/s.jpg" } }
+                                       },
+                                       "status": { "privacyStatus": "unlisted" },
+                                       "contentDetails": { "itemCount": 25 }
+                                     }
+                                     """;
+
+            Playlist? playlist = YouTubeAPI.parseDataApiPlaylist(parse(response));
+
+            Assert.That(playlist, Is.Not.Null);
+            Assert.That(playlist!.Id, Is.EqualTo("PLpublic"));
+            Assert.That(playlist.Status.PrivacyStatus, Is.EqualTo("unlisted"));
+            Assert.That(playlist.Snippet.Title, Is.EqualTo("open list"));
+            Assert.That(playlist.Snippet.ChannelId, Is.EqualTo("UCme"));
+            Assert.That(playlist.Snippet.Thumbnails.High.Url, Is.EqualTo("https://example.com/p.jpg"));
+            Assert.That(playlist.ContentDetails.ItemCount, Is.EqualTo(25));
+            Assert.That(playlist.Snippet.PublishedAtDateTimeOffset, Is.Not.Null);
+        }
+
+        [Test]
+        public void TestPrivacyStatusIsReadForEverySpelling()
+        {
+            Assert.That(YouTubeAPI.parseDataApiPlaylist(parse("""{ "id": "PLone", "status": { "privacyStatus": "PRIVATE" } }"""))!.Status.PrivacyStatus,
+                Is.EqualTo("private"));
+
+            Assert.That(YouTubeAPI.parseDataApiPlaylist(parse("""{ "id": "PLone", "status": { "privacyStatus": "public" } }"""))!.Status.PrivacyStatus,
+                Is.EqualTo("public"));
+
+            // A response without the field is a playlist whose privacy was not reported.
+            Assert.That(YouTubeAPI.parseDataApiPlaylist(parse("""{ "id": "PLone" }"""))!.Status.PrivacyStatus, Is.EqualTo("public"));
+        }
+
+        [Test]
+        public void TestPrivacyIsReadFromTheBadgeOfALibraryPage()
+        {
+            Assert.That(YouTubeAPI.tryMapPrivacyToken("PRIVACY_PRIVATE"), Is.EqualTo("private"));
+            Assert.That(YouTubeAPI.tryMapPrivacyToken("PRIVACY_UNLISTED"), Is.EqualTo("unlisted"));
+            Assert.That(YouTubeAPI.tryMapPrivacyToken("PRIVACY_PUBLIC"), Is.EqualTo("public"));
+            Assert.That(YouTubeAPI.tryMapPrivacyToken("비공개"), Is.EqualTo("private"));
+            Assert.That(YouTubeAPI.tryMapPrivacyToken("일부 공개"), Is.EqualTo("unlisted"));
+            Assert.That(YouTubeAPI.tryMapPrivacyToken("전체 공개"), Is.EqualTo("public"));
+
+            // "비공개" contains "공개", so only whole texts may be compared.
+            Assert.That(YouTubeAPI.tryMapPrivacyToken("동영상 25개"), Is.Null);
+        }
+
+        [Test]
+        public void TestOnlyThePlaylistsThatTheAccountCreatedAreKept()
+        {
+            const string own_channel = "UCme";
+
+            var playlists = new List<Playlist>
+            {
+                new Playlist { Id = "PLcreated", Snippet = new PlaylistSnippet { ChannelId = own_channel } },
+                new Playlist { Id = "PLwithoutOwner", Snippet = new PlaylistSnippet() },
+                new Playlist { Id = "PLotherChannel", Snippet = new PlaylistSnippet { ChannelId = "UCother" } },
+                new Playlist { Id = "WL", Snippet = new PlaylistSnippet { ChannelId = own_channel } },
+                new Playlist { Id = "LL" + own_channel, Snippet = new PlaylistSnippet { ChannelId = own_channel } },
+                new Playlist { Id = "FL", Snippet = new PlaylistSnippet { ChannelId = own_channel } },
+            };
+
+            YouTubeAPI.removePlaylistsThatWereNotCreated(playlists, own_channel);
+
+            Assert.That(playlists.Select(playlist => playlist.Id), Is.EqualTo(new[] { "PLcreated", "PLwithoutOwner" }));
+        }
+
+        [Test]
+        public void TestTheListsOfTheAccountItselfAreNotCreatedOnes()
+        {
+            Assert.That(YouTubeAPI.isOwnCreatedPlaylist(new Playlist { Id = "WL" }, null), Is.False);
+            Assert.That(YouTubeAPI.isOwnCreatedPlaylist(new Playlist { Id = "LLUCme" }, null), Is.False);
+            Assert.That(YouTubeAPI.isOwnCreatedPlaylist(new Playlist { Id = "FL" }, null), Is.False);
+            Assert.That(YouTubeAPI.isOwnCreatedPlaylist(new Playlist { Id = "PLone" }, null), Is.True);
+            Assert.That(YouTubeAPI.isOwnCreatedPlaylist(new Playlist { Id = string.Empty }, null), Is.False);
+
+            // A row of another channel is not a playlist the account created.
+            Assert.That(YouTubeAPI.isOwnCreatedPlaylist(new Playlist { Id = "PLone", Snippet = new PlaylistSnippet { ChannelId = "UCother" } }, "UCme"), Is.False);
+            Assert.That(YouTubeAPI.isOwnCreatedPlaylist(new Playlist { Id = "PLone", Snippet = new PlaylistSnippet { ChannelId = "UCme" } }, "UCme"), Is.True);
         }
 
         [Test]

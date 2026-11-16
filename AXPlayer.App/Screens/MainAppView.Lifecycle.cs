@@ -1107,12 +1107,7 @@ namespace AXPlayer.App.Screens
 
         public async Task SetPlaylistItems(IList<PlaylistItem> playlists)
         {
-            this.playlists = playlists;
-
-            Schedule(async () =>
-            {
-                SetVideoSource(playlists[0].Snippet.ResourceId.VideoId);
-            });
+            this.playlists = playlists ?? new List<PlaylistItem>();
 
             playlistItemViews.Clear();
 
@@ -1121,9 +1116,34 @@ namespace AXPlayer.App.Screens
                 Schedule(() => item.Expire());
             }
 
+            // A playlist that could not be read or has no entry must not start a video that does
+            // not exist.
+            if (this.playlists.Count == 0)
+            {
+                Logger.Log(@"The playlist holds no item, so nothing is played.", LoggingTarget.Network);
+
+                Schedule(() =>
+                {
+                    playlistName.Text = AXPlayerStrings.PlaylistNotLoaded;
+                    playlistAuthor.Text = AXPlayerStrings.PlaylistNotLoadedDesc;
+                    prevVideoButton.Enabled.Value = false;
+                    nextVideoButton.Enabled.Value = false;
+                });
+
+                return;
+            }
+
+            Schedule(() =>
+            {
+                // The index of the previous playlist is meaningless for the loaded one, and an index
+                // past its entries used to throw when the item views were marked.
+                playlistItemIndex = 0;
+                SetVideoSource(this.playlists[0].Snippet.ResourceId.VideoId);
+            });
+
             int i = 0;
 
-            foreach (var item in playlists)
+            foreach (var item in this.playlists)
             {
                 try
                 {

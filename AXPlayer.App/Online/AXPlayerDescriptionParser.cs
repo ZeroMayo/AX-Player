@@ -68,9 +68,15 @@ namespace AXPlayer.App.Online
             return false;
         }
 
-        public static List<YouTubeDescriptionTextToken> Parse(string input)
+        public static List<YouTubeDescriptionTextToken> Parse(string? input)
         {
             var tokens = new List<YouTubeDescriptionTextToken>();
+
+            // The text of a description or of a comment can be missing, for example when the response
+            // did not carry the entity payload of the comment.
+            if (string.IsNullOrEmpty(input))
+                return tokens;
+
             var regex = new Regex(@"https?://[^\s]+|@\w+|#\w+|\d{1,2}:\d{2}(?::\d{2})?");
 
             int lastIndex = 0;

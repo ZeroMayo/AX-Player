@@ -332,9 +332,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         {
                             channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
                             videoNameText.Text = api.GetLocalizedVideoTitle(videoData);
-#pragma warning disable CS8629 // Nullable 값 형식이 null일 수 있습니다.
-                            viewsText.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(Convert.ToInt32(videoData.Statistics.ViewCount).ToStandardFormattedString(0), dateTime.Value.DateTime.Humanize(dateToCompareAgainst: now));
-#pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
+                            viewsText.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(videoData.Statistics.ViewCount.toFormattedCount(), dateTime.toRelativeDate(now));
                         });
 
                         uiLanguage.BindValueChanged(locale =>
@@ -343,7 +341,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                             {
                                 channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
                                 videoNameText.Text = api.GetLocalizedVideoTitle(videoData);
-                                viewsText.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(Convert.ToInt32(videoData.Statistics.ViewCount).ToStandardFormattedString(0), dateTime.Value.DateTime.Humanize(dateToCompareAgainst: now));
+                                viewsText.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(videoData.Statistics.ViewCount.toFormattedCount(), dateTime.toRelativeDate(now));
                             });
                         });
                     });

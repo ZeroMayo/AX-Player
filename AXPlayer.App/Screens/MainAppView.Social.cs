@@ -816,13 +816,18 @@ namespace AXPlayer.App.Screens
                 }
                 */
 
-                string uploadDateRaw = videoData.Snippet.PublishedAtRaw;
+                // The raw timestamp of a watch page is written with a numeric offset
+                // ("2026-09-27T05:27:05-07:00"), which a DateTime cannot hold and which the format
+                // "yyyy-MM-dd\THH:mm:ss\Z" never matched ("\Z" is a literal 'Z', not the offset), so
+                // the timestamp the parser already resolved is used instead.
+                DateTimeOffset uploadDate = videoData.Snippet.PublishedAtDateTimeOffset ?? default;
 
-                DateTime.TryParseExact(uploadDateRaw, @"yyyy-MM-dd\THH:mm:ss\Z", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var uploadDate);
+                // The offset is lost by a DateTime, so the local time is rendered instead.
+                string uploadDateText = uploadDate == default ? string.Empty : uploadDate.LocalDateTime.ToString(CultureInfo.CurrentCulture);
 
                 //likeCount.Text = videoData.Statistics.LikeCount != null ? Convert.ToDouble(videoData.Statistics.LikeCount).ToMetric(decimals: 2) : Convert.ToDouble(ReturnYouTubeDislike.GetDislikes(videoId).RawLikes).ToMetric(decimals: 2);
                 //commentsContainerTitle.Text = NekoPlayerStrings.Comments(videoData.Statistics.CommentCount != null ? Convert.ToInt32(videoData.Statistics.CommentCount).ToStandardFormattedString(0) : NekoPlayerStrings.Disabled);
-                videoInfoDetails.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(Convert.ToInt32(videoData.Statistics.ViewCount).ToStandardFormattedString(0), uploadDate.ToString());
+                videoInfoDetails.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(videoData.Statistics.ViewCount.toFormattedCount(), uploadDateText);
 
                 updateComments(videoId).FireAndForget();
 
@@ -991,7 +996,7 @@ namespace AXPlayer.App.Screens
                                     text.Colour = overlayColourProvider1.Background1;
                                 }));
                             }
-                            videoInfoDetails.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(Convert.ToInt32(videoData.Statistics.ViewCount).ToStandardFormattedString(0), uploadDate.ToString());
+                            videoInfoDetails.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(videoData.Statistics.ViewCount.toFormattedCount(), uploadDateText);
                         });
                     });
                 });
