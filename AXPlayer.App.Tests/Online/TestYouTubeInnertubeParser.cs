@@ -448,6 +448,78 @@ namespace AXPlayer.App.Tests.Online
         }
 
         [Test]
+        public void TestCommentCountAndContinuationAreReadFromTheCommentPanel()
+        {
+            // The current watch page has no "commentCount" property: the count and the sort menu only
+            // exist inside the engagement panel of the comments, and its section renders a single
+            // continuation item instead of the items themselves.
+            const string watch_page = """
+            {
+              "engagementPanels": [
+                {
+                  "engagementPanelSectionListRenderer": {
+                    "panelIdentifier": "engagement-panel-comments-section",
+                    "targetId": "engagement-panel-comments-section",
+                    "header": {
+                      "engagementPanelTitleHeaderRenderer": {
+                        "title": { "runs": [ { "text": "댓글" } ] },
+                        "contextualInfo": { "runs": [ { "text": "25" } ] },
+                        "menu": {
+                          "sortFilterSubMenuRenderer": {
+                            "subMenuItems": [
+                              { "title": "인기 댓글", "selected": true, "serviceEndpoint": { "continuationCommand": { "token": "top-token" } } },
+                              { "title": "최신순", "serviceEndpoint": { "continuationCommand": { "token": "newest-token" } } }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "content": {
+                      "sectionListRenderer": {
+                        "contents": [
+                          {
+                            "itemSectionRenderer": {
+                              "sectionIdentifier": "comment-item-section",
+                              "targetId": "engagement-panel-comments-section",
+                              "contents": [
+                                { "continuationItemRenderer": { "continuationEndpoint": { "continuationCommand": { "token": "section-token" } } } }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+            """;
+
+            var video = new Video
+            {
+                Id = "dQw4w9WgXcQ",
+                Statistics = new VideoStatistics(),
+                TopicDetails = new VideoTopicDetails
+                {
+                    TopicCategories = new List<string>(),
+                },
+            };
+
+            YouTubeAPI.applyWatchMetadata(video, parse(watch_page));
+
+            // A null comment count means "comments are disabled" for the player, so the count of the
+            // panel header has to be read.
+            Assert.That(video.Statistics.CommentCount, Is.EqualTo(25UL));
+            Assert.That(YouTubeAPI.findCommentCount(parse("""{ "contents": [] }""")), Is.Null);
+
+            Assert.That(YouTubeAPI.tryFindCommentContinuations(parse(watch_page)), Is.EqualTo(new[] { "section-token", "top-token" }));
+
+            // The requested order is already selected, and the newest one is reachable.
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse(watch_page), false), Is.Null);
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse(watch_page), true), Is.EqualTo("newest-token"));
+        }
+
+        [Test]
         public void TestChannelIsMapped()
         {
             Channel channel = YouTubeAPI.parseChannel(parse(channel_response), "UCuAXFkgsw1L7xaCfnd5JJOw")!;
@@ -899,6 +971,257 @@ namespace AXPlayer.App.Tests.Online
         }
 
         [Test]
+        public void TestCommentThreadOfTheCurrentWatchPageIsMapped()
+        {
+            // The current watch page returns the pages through reloadContinuationItemsCommand of the
+            // comments section, nests the view model of a thread into another view model
+            // (commentViewModel.commentViewModel) and keeps the text, the author and the counters in
+            // a commentEntityPayload that is referenced by the percent-encoded commentKey.
+            const string response = """
+            {
+              "onResponseReceivedEndpoints": [
+                {
+                  "reloadContinuationItemsCommand": {
+                    "targetId": "comments-section",
+                    "continuationItems": [ { "commentsHeaderRenderer": { "countText": { "simpleText": "25 Comments" } } } ]
+                  }
+                },
+                {
+                  "reloadContinuationItemsCommand": {
+                    "targetId": "comments-section",
+                    "continuationItems": [
+                      {
+                        "commentThreadRenderer": {
+                          "trackingParams": "thread-tracking",
+                          "isModeratedElqComment": false,
+                          "commentViewModel": {
+                            "commentViewModel": {
+                              "commentId": "UgwY7bWm7zRZO7J4PBV4AaABAg",
+                              "commentKey": "EhpVZ3dZN2JXbTd6UlpPN0o0UEJWNEFhQUJBZyAoKAE%3D",
+                              "inlineRepliesKey": "empty_inline_replies",
+                              "toolbarStateKey": "EhpVZ3dZN2JXbTd6UlpPN0o0UEJWNEFhQUJBZyAsKAE%3D"
+                            }
+                          },
+                          "loggingDirectives": { "trackingParams": "thread-logging" }
+                        }
+                      },
+                      { "continuationItemRenderer": { "continuationEndpoint": { "continuationCommand": { "token": "NEXT-PAGE" } } } }
+                    ]
+                  }
+                }
+              ],
+              "frameworkUpdates": {
+                "entityBatchUpdate": {
+                  "mutations": [
+                    {
+                      "entityKey": "EgAgKygB",
+                      "type": "ENTITY_MUTATION_TYPE_REPLACE",
+                      "payload": { "commentSharedEntityPayload": { "key": "EgAgKygB", "clientName": "WEB" } }
+                    },
+                    {
+                      "entityKey": "EhpVZ3dZN2JXbTd6UlpPN0o0UEJWNEFhQUJBZyAoKAE%3D",
+                      "type": "ENTITY_MUTATION_TYPE_REPLACE",
+                      "payload": {
+                        "commentEntityPayload": {
+                          "key": "EhpVZ3dZN2JXbTd6UlpPN0o0UEJWNEFhQUJBZyAoKAE%3D",
+                          "properties": {
+                            "commentId": "UgwY7bWm7zRZO7J4PBV4AaABAg",
+                            "content": { "content": "I have no idea how this song is this underrated" },
+                            "publishedTime": "1 year ago (edited)",
+                            "replyLevel": 0
+                          },
+                          "author": {
+                            "channelId": "UCmigaisnotacat",
+                            "displayName": "@migaisnotacat",
+                            "avatarThumbnailUrl": "https://example.com/avatar.jpg"
+                          },
+                          "toolbar": {
+                            "likeCountNotliked": "1.2K",
+                            "replyCount": "3"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+            """;
+
+            JsonElement document = parse(response);
+            Dictionary<string, JsonElement> entities = YouTubeAPI.extractCommentEntities(document);
+            List<JsonElement> items = YouTubeAPI.detachItems(YouTubeAPI.extractContinuationItems(document));
+
+            Assert.That(items, Has.Count.EqualTo(3));
+
+            CommentThread? thread = YouTubeAPI.parseCommentThread(items[1], "video", entities);
+
+            Assert.That(thread, Is.Not.Null);
+            Assert.That(thread!.Id, Is.EqualTo("UgwY7bWm7zRZO7J4PBV4AaABAg"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.TextDisplay, Is.EqualTo("I have no idea how this song is this underrated"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.AuthorDisplayName, Is.EqualTo("@migaisnotacat"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.AuthorChannelId!.Value, Is.EqualTo("UCmigaisnotacat"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.AuthorProfileImageUrl, Is.EqualTo("https://example.com/avatar.jpg"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.LikeCount, Is.EqualTo(1200));
+            Assert.That(thread.Snippet.TotalReplyCount, Is.EqualTo(3));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.PublishedAtDateTimeOffset, Is.Not.Null);
+
+            // The token of the next page comes from the trailing continuation item of the page.
+            Assert.That(YouTubeAPI.tryGetCommentElement(items[2]), Is.Null);
+            Assert.That(YouTubeAPI.tryFindContinuationToken(items[2]), Is.EqualTo("NEXT-PAGE"));
+        }
+
+        [Test]
+        public void TestCommentThreadIsReadFromTheNestedViewModel()
+        {
+            // Current responses nest the view model into "comment" and keep the replies of the
+            // thread inside that view model.
+            const string response = """
+            {
+              "onResponseReceivedEndpoints": [
+                {
+                  "reloadContinuationItemsCommand": {
+                    "targetId": "comments-section",
+                    "continuationItems": [
+                      {
+                        "commentThreadRenderer": {
+                          "comment": {
+                            "commentViewModel": {
+                              "commentId": "UgxThread1",
+                              "commentKey": "Eg0Sthread1",
+                              "replies": {
+                                "commentRepliesRenderer": {
+                                  "contents": [
+                                    { "continuationItemRenderer": { "continuationEndpoint": { "continuationCommand": { "token": "REPLY-TOKEN" } } } }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      { "continuationItemRenderer": { "continuationEndpoint": { "continuationCommand": { "token": "NEXT-PAGE" } } } }
+                    ]
+                  }
+                }
+              ],
+              "frameworkUpdates": {
+                "entityBatchUpdate": {
+                  "mutations": [
+                    {
+                      "entityKey": "Eg0Sthread1",
+                      "payload": {
+                        "commentEntityPayload": {
+                          "key": "Eg0Sthread1",
+                          "properties": {
+                            "commentId": "UgxThread1",
+                            "content": { "content": "nested text" },
+                            "publishedTime": "1 day ago"
+                          },
+                          "author": { "channelId": "UCnested", "displayName": "Nested" },
+                          "toolbar": { "replyCount": "7" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+            """;
+
+            JsonElement document = parse(response);
+            Dictionary<string, JsonElement> entities = YouTubeAPI.extractCommentEntities(document);
+            List<JsonElement> items = YouTubeAPI.detachItems(YouTubeAPI.extractContinuationItems(document));
+
+            Assert.That(items, Has.Count.EqualTo(2));
+
+            CommentThread thread = YouTubeAPI.parseCommentThread(items[0], "video", entities)!;
+
+            Assert.That(thread.Id, Is.EqualTo("UgxThread1"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.TextDisplay, Is.EqualTo("nested text"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.AuthorDisplayName, Is.EqualTo("Nested"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.AuthorChannelId!.Value, Is.EqualTo("UCnested"));
+            Assert.That(thread.Snippet.TotalReplyCount, Is.EqualTo(7));
+            Assert.That(YouTubeAPI.findRepliesContinuation(items[0]), Is.EqualTo("REPLY-TOKEN"));
+        }
+
+        [Test]
+        public void TestPercentEncodedEntityKeysAreMatched()
+        {
+            // The responses keep the keys of the items percent-encoded, while the payload can keep
+            // the plain form, so both sides have to be compared unescaped.
+            const string response = """
+            {
+              "onResponseReceivedEndpoints": [
+                {
+                  "reloadContinuationItemsCommand": {
+                    "continuationItems": [
+                      { "commentThreadRenderer": { "comment": { "commentViewModel": { "commentId": "Ugx1", "commentKey": "Eg0Skey%3D" } } } }
+                    ]
+                  }
+                }
+              ],
+              "frameworkUpdates": {
+                "entityBatchUpdate": {
+                  "mutations": [
+                    {
+                      "entityKey": "Eg0Skey=",
+                      "payload": {
+                        "commentEntityPayload": {
+                          "key": "Eg0Skey=",
+                          "properties": { "commentId": "Ugx1", "content": { "content": "encoded key" } },
+                          "author": { "displayName": "Author" }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+            """;
+
+            JsonElement document = parse(response);
+            Dictionary<string, JsonElement> entities = YouTubeAPI.extractCommentEntities(document);
+            List<JsonElement> items = YouTubeAPI.detachItems(YouTubeAPI.extractContinuationItems(document));
+
+            CommentThread thread = YouTubeAPI.parseCommentThread(items[0], "video", entities)!;
+
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.TextDisplay, Is.EqualTo("encoded key"));
+            Assert.That(thread.Snippet.TopLevelComment.Snippet.AuthorDisplayName, Is.EqualTo("Author"));
+        }
+
+        [Test]
+        public void TestInlineRepliesAreReadFromTheRepliesRenderer()
+        {
+            const string item = """
+            {
+              "commentThreadRenderer": {
+                "comment": { "commentViewModel": { "commentId": "UgxThread1", "commentKey": "Eg0Sthread1" } },
+                "replies": {
+                  "commentRepliesRenderer": {
+                    "contents": [
+                      { "commentRenderer": { "commentId": "UgxReply1", "contentText": { "runs": [ { "text": "first reply" } ] } } }
+                    ],
+                    "viewReplies": { "buttonRenderer": { "text": { "simpleText": "3 replies" } } }
+                  }
+                }
+              }
+            }
+            """;
+
+            CommentThread thread = YouTubeAPI.parseCommentThread(parse(item), "video")!;
+            List<Comment> replies = YouTubeAPI.parseInlineReplies(parse(item), "video", thread.Id)!;
+
+            Assert.That(replies, Has.Count.EqualTo(1));
+            Assert.That(replies[0].Id, Is.EqualTo("UgxReply1"));
+            Assert.That(replies[0].Snippet.TextDisplay, Is.EqualTo("first reply"));
+            Assert.That(replies[0].Snippet.ParentId, Is.EqualTo("UgxThread1"));
+
+            // The amount of replies is only rendered into the button of the replies renderer.
+            Assert.That(thread.Snippet.TotalReplyCount, Is.EqualTo(3));
+        }
+
+        [Test]
         public void TestDumpsAreWrittenWithoutTheEnvironmentVariable()
         {
             Assert.That(YouTubeAPI.shouldDumpInnertube(null), Is.True);
@@ -1169,10 +1492,10 @@ namespace AXPlayer.App.Tests.Online
         }
 
         [Test]
-        public void TestFullDescriptionKeepsTheLabelOfANonUrlLink()
+        public void TestFullDescriptionShowsTheUrlOfLinksWithALabel()
         {
-            // A link whose label is a channel name or a hashtag is not a link placeholder, so its
-            // text has to stay untouched.
+            // A handle and a hashtag are both rendered as a label; the handle has to show its target,
+            // while the hashtag is readable on its own.
             const string content = "Twitter /cametek #nanahira";
             const string watch_page = """
             {
@@ -1184,7 +1507,7 @@ namespace AXPlayer.App.Tests.Online
                       "commandRuns": [
                         {
                           "startIndex": 8,
-                          "length": 9,
+                          "length": 8,
                           "onTap": {
                             "innertubeCommand": {
                               "urlEndpoint": { "url": "https://www.youtube.com/redirect?q=https%3A%2F%2Ftwitter.com%2Fcametek" }
@@ -1192,7 +1515,7 @@ namespace AXPlayer.App.Tests.Online
                           }
                         },
                         {
-                          "startIndex": 18,
+                          "startIndex": 17,
                           "length": 9,
                           "onTap": {
                             "innertubeCommand": {
@@ -1208,7 +1531,157 @@ namespace AXPlayer.App.Tests.Online
             }
             """;
 
-            Assert.That(YouTubeAPI.extractFullDescription(parse(watch_page)), Is.EqualTo(content));
+            Assert.That(YouTubeAPI.extractFullDescription(parse(watch_page)), Is.EqualTo("Twitter https://twitter.com/cametek #nanahira"));
+        }
+
+        [Test]
+        public void TestFullDescriptionKeepsThePaddingOfAReplacedLabel()
+        {
+            // The runs of a description are padded with non-breaking spaces, so the replacement keeps
+            // them instead of joining the neighbouring text.
+            const string watch_page = """
+            {
+              "contents": [
+                {
+                  "videoSecondaryInfoRenderer": {
+                    "attributedDescription": {
+                      "content": "\u00a0\u00a0/\u00a0cametek\u00a0\u00a0",
+                      "commandRuns": [
+                        {
+                          "startIndex": 0,
+                          "length": 13,
+                          "onTap": {
+                            "innertubeCommand": {
+                              "urlEndpoint": { "url": "https://www.youtube.com/redirect?q=https%3A%2F%2Ftwitter.com%2Fcametek" }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+            """;
+
+            Assert.That(YouTubeAPI.extractFullDescription(parse(watch_page)),
+                Is.EqualTo("\u00a0\u00a0https://twitter.com/cametek\u00a0\u00a0"));
+        }
+
+        [Test]
+        public void TestFullDescriptionKeepsTimestamps()
+        {
+            // A timestamp link jumps into the video, so its label is kept instead of the URL, while a
+            // video link shows its target.
+            const string watch_page = """
+            {
+              "contents": [
+                {
+                  "videoSecondaryInfoRenderer": {
+                    "attributedDescription": {
+                      "content": "Intro 1:23 Part",
+                      "commandRuns": [
+                        {
+                          "startIndex": 6,
+                          "length": 4,
+                          "onTap": {
+                            "innertubeCommand": {
+                              "urlEndpoint": { "url": "https://www.youtube.com/watch?v=abc&t=83s" }
+                            }
+                          }
+                        },
+                        {
+                          "startIndex": 11,
+                          "length": 4,
+                          "onTap": {
+                            "innertubeCommand": {
+                              "urlEndpoint": { "url": "https://www.youtube.com/watch?v=abc" }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+            """;
+
+            Assert.That(YouTubeAPI.extractFullDescription(parse(watch_page)),
+                Is.EqualTo("Intro 1:23 https://www.youtube.com/watch?v=abc"));
+        }
+
+        [Test]
+        public void TestFullDescriptionShowsTheTargetOfACallToActionLink()
+        {
+            // A call-to-action link (the one YouTube renders as
+            // "ytAttributedStringLink ytAttributedStringLinkCallToActionColor") keeps an arbitrary
+            // label like "Visit my shop", so its target replaces the label.
+            const string watch_page = """
+            {
+              "contents": [
+                {
+                  "videoSecondaryInfoRenderer": {
+                    "attributedDescription": {
+                      "content": "Merch store\nVisit my shop Watch the video",
+                      "commandRuns": [
+                        {
+                          "startIndex": 12,
+                          "length": 13,
+                          "onTap": {
+                            "innertubeCommand": {
+                              "urlEndpoint": { "url": "https://www.youtube.com/redirect?q=https%3A%2F%2Fshop.example.com%2Fmerch" }
+                            }
+                          }
+                        },
+                        {
+                          "startIndex": 26,
+                          "length": 15,
+                          "onTap": {
+                            "innertubeCommand": {
+                              "urlEndpoint": { "url": "https://www.youtube.com/watch?v=abc" }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+            """;
+
+            Assert.That(YouTubeAPI.extractFullDescription(parse(watch_page)),
+                Is.EqualTo("Merch store\nhttps://shop.example.com/merch https://www.youtube.com/watch?v=abc"));
+        }
+
+        [Test]
+        public void TestFullDescriptionShowsTheTargetOfALegacyCallToActionLink()
+        {
+            const string watch_page = """
+            {
+              "contents": [
+                {
+                  "videoSecondaryInfoRenderer": {
+                    "description": {
+                      "runs": [
+                        { "text": "Tickets: " },
+                        {
+                          "text": "Buy now",
+                          "navigationEndpoint": {
+                            "urlEndpoint": { "url": "https://www.youtube.com/redirect?q=https%3A%2F%2Ftickets.example.com%2Fbuy" }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+            """;
+
+            Assert.That(YouTubeAPI.extractFullDescription(parse(watch_page)),
+                Is.EqualTo("Tickets: https://tickets.example.com/buy"));
         }
 
         [Test]
@@ -1429,8 +1902,179 @@ namespace AXPlayer.App.Tests.Online
             }
             """;
 
-            Assert.That(YouTubeAPI.tryFindNewestSortContinuation(parse(comments_page)), Is.EqualTo("newest-token"));
-            Assert.That(YouTubeAPI.tryFindNewestSortContinuation(parse("""{ "header": {} }""")), Is.Null);
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse(comments_page), true), Is.EqualTo("newest-token"));
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse("""{ "header": {} }"""), true), Is.Null);
+        }
+
+        [Test]
+        public void TestSortContinuationIsNotRequestedWhenTheOrderIsAlreadySelected()
+        {
+            const string newest_is_selected = """
+            {
+              "header": {
+                "commentsHeaderRenderer": {
+                  "sortMenu": {
+                    "sortFilterSubMenuRenderer": {
+                      "subMenuItems": [
+                        { "title": "Top comments", "serviceEndpoint": { "continuationCommand": { "token": "top-token" } } },
+                        { "title": "Newest first", "selected": true }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            // Switching away from an order that is already selected would show the opposite order.
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse(newest_is_selected), true), Is.Null);
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse(newest_is_selected), false), Is.EqualTo("top-token"));
+        }
+
+        [Test]
+        public void TestSortContinuationFallsBackToTheMenuPosition()
+        {
+            // The labels are localized, so an unknown translation has to be resolved by the position
+            // of the entry: YouTube renders "top comments" first.
+            const string localized_menu = """
+            {
+              "header": {
+                "commentsHeaderRenderer": {
+                  "sortMenu": {
+                    "sortFilterSubMenuRenderer": {
+                      "subMenuItems": [
+                        { "title": { "simpleText": "Pertinenteste" }, "selected": true },
+                        { "title": { "simpleText": "Nyeste" }, "serviceEndpoint": { "continuationCommand": { "token": "newest-token" } } }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+            """;
+
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse(localized_menu), true), Is.EqualTo("newest-token"));
+            Assert.That(YouTubeAPI.tryFindSortContinuation(parse(localized_menu), false), Is.Null);
+        }
+
+        [Test]
+        public void TestContinuationItemsAreReadFromResponseActions()
+        {
+            // A browse continuation appends its items through "onResponseReceivedActions" instead of
+            // "onResponseReceivedEndpoints".
+            const string response = """
+            {
+              "onResponseReceivedActions": [
+                { "appendContinuationItemsAction": { "continuationItems": [ { "lockupViewModel": { "contentId": "PLone" } } ] } }
+              ]
+            }
+            """;
+
+            List<JsonElement> items = YouTubeAPI.detachItems(YouTubeAPI.extractContinuationItems(parse(response)));
+
+            Assert.That(items, Has.Count.EqualTo(1));
+            Assert.That(items[0].TryGetProperty("lockupViewModel", out _), Is.True);
+        }
+
+        [Test]
+        public void TestCommentContinuationsKeepTheSectionAndThePanelToken()
+        {
+            // A watch page renders the section as an engagement panel that carries one continuation
+            // in its content and the sort continuations in its header, so both are kept as
+            // candidates instead of picking one.
+            const string watch_page = """
+            {
+              "engagementPanels": [
+                {
+                  "engagementPanelSectionListRenderer": {
+                    "panelIdentifier": "comment-item-section",
+                    "header": {
+                      "engagementPanelTitleHeaderRenderer": {
+                        "menu": {
+                          "sortFilterSubMenuRenderer": {
+                            "subMenuItems": [
+                              { "title": "Top", "selected": true, "continuation": { "reloadContinuationData": { "continuation": "top-token" } } },
+                              { "title": "Newest", "continuation": { "reloadContinuationData": { "continuation": "newest-token" } } }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "content": {
+                      "sectionListRenderer": {
+                        "contents": [
+                          {
+                            "itemSectionRenderer": {
+                              "continuations": [ { "reloadContinuationData": { "continuation": "section-token" } } ],
+                              "sectionIdentifier": "comment-item-section"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+            """;
+
+            List<string> continuations = YouTubeAPI.tryFindCommentContinuations(parse(watch_page));
+
+            Assert.That(continuations, Is.EqualTo(new[] { "section-token", "top-token" }));
+            Assert.That(YouTubeAPI.tryFindCommentsContinuation(parse(watch_page)), Is.EqualTo("section-token"));
+        }
+
+        [Test]
+        public void TestPercentEncodedContinuationTokensAreDecoded()
+        {
+            // The responses echo the tokens of the sort menu percent-encoded.
+            Assert.That(YouTubeAPI.normalizeContinuationToken("Eg0Skey%3D"), Is.EqualTo("Eg0Skey="));
+            Assert.That(YouTubeAPI.normalizeContinuationToken("Eg0Skey"), Is.EqualTo("Eg0Skey"));
+        }
+
+        [Test]
+        public void TestContinuationContentsAreReadFromTheSectionAndReplyRenderers()
+        {
+            const string section_page = """
+            {
+              "continuationContents": {
+                "commentSectionRenderer": {
+                  "contents": [ { "commentThreadRenderer": { "comment": { "commentRenderer": { "commentId": "c1" } } } } ]
+                }
+              }
+            }
+            """;
+
+            const string reply_page = """
+            {
+              "continuationContents": {
+                "commentRepliesRenderer": {
+                  "contents": [ { "commentRenderer": { "commentId": "r1" } } ]
+                }
+              }
+            }
+            """;
+
+            List<JsonElement> items = YouTubeAPI.detachItems(YouTubeAPI.extractContinuationItems(parse(section_page)));
+            List<JsonElement> replies = YouTubeAPI.detachItems(YouTubeAPI.extractContinuationItems(parse(reply_page)));
+
+            Assert.That(items, Has.Count.EqualTo(1));
+            Assert.That(items[0].TryGetProperty("commentThreadRenderer", out _), Is.True);
+
+            Assert.That(replies, Has.Count.EqualTo(1));
+            Assert.That(replies[0].GetProperty("commentRenderer").GetProperty("commentId").GetString(), Is.EqualTo("r1"));
+        }
+
+        [Test]
+        public void TestResponseShapeDescriptionsDoNotThrow()
+        {
+            // The diagnostics are logged for responses of an unknown shape, so they have to survive
+            // any value kind.
+            Assert.That(YouTubeAPI.describeElement(parse("""{ "onResponseReceivedEndpoints": [], "frameworkUpdates": { "entityBatchUpdate": { "mutations": [] } } }""")),
+                Does.Contain("onResponseReceivedEndpoints: [0 items]"));
+
+            Assert.That(YouTubeAPI.describeElement(parse("""[1, 2]""")), Is.EqualTo("[2 items]"));
+            Assert.That(YouTubeAPI.describeElement(default), Is.EqualTo("Undefined"));
         }
 
         [Test]

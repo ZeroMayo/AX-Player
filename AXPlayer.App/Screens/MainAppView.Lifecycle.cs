@@ -1172,7 +1172,7 @@ namespace AXPlayer.App.Screens
                 playlistThumbnail.Texture = textureStore.Get(playlist.Snippet.Thumbnails.High.Url);
                 playlistName.Text = playlist.Snippet.Title;
                 playlistAuthor.Text = string.Empty;
-                playlistAuthor.AddLink(playlist.Snippet.ChannelTitle, $"https://www.youtube.com/channel/{playlist.Snippet.ChannelId}");
+                playlistAuthor.AddLink(api.GetLocalizedChannelTitle(api.GetChannel(playlist.Snippet.ChannelId)), $"https://www.youtube.com/channel/{playlist.Snippet.ChannelId}");
             });
         }
 

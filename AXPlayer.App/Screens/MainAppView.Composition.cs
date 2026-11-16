@@ -651,7 +651,7 @@ namespace AXPlayer.App.Screens
                                                                                         quickCommentOpenButton = new ControlBarIconButton(false)
                                                                                         {
                                                                                             Width = 50,
-                                                                                            Enabled = { Value = true },
+                                                                                            Enabled = { Value = false },
                                                                                             Icon = FontAwesome.Regular.CommentAlt,
                                                                                             TooltipText = AXPlayerStrings.Comments("0"),
                                                                                             IconColour = overlayColourProvider.Content2,
