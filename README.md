@@ -21,7 +21,7 @@
 | [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) |
 |--------------------------------------------------------------------------------------|
 
-The YouTube API Daily Quota fills up very fast (Google has a hard limit of 10,000 units). Please do not ask about this.
+If your platform is unsupported or not listed above, there is still a chance you can run the release or manually build it by following the instructions below.
 
 ## Developing AX Player
 

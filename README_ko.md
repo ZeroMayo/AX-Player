@@ -21,7 +21,7 @@
 | [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) |
 |--------------------------------------------------------------------------------------|
 
-YouTube API Daily Quota는 매우 빠르게 차버립니다(구글은 10,000단위의 엄격한 제한을 두고 있습니다). 이에 대해 묻지 마세요.
+사용하시는 플랫폼이 지원되지 않거나 위에 나열되어 있지 않더라도 아래 지침에 따라 릴리스 버전을 실행하거나 수동으로 빌드할 수 있는 가능성이 있습니다.
 
 ## AX Player 개발
 
