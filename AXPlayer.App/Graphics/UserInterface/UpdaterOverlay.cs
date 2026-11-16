@@ -80,6 +80,10 @@ namespace AXPlayer.App.Graphics.UserInterface
                 new ProjectYomiScrollContainer
                 {
                     RelativeSizeAxes = Axes.Both,
+                    Padding = new MarginPadding
+                    {
+                        Bottom = 56,
+                    },
                     Child = new FillFlowContainer
                     {
                         RelativeSizeAxes = Axes.X,
@@ -376,21 +380,30 @@ namespace AXPlayer.App.Graphics.UserInterface
             });
         }
 
+        private void clearUpdateList()
+        {
+            foreach (var item in updatingList.Children)
+                item.Expire();
+        }
+
         public void UpdateStatus(UpdaterStatus updaterStatus)
         {
             switch (updaterStatus)
             {
                 case UpdaterStatus.NoUpdates:
+                    clearUpdateList();
                     updateStatusContainer.Show();
                     updateInfoContainer.Hide();
                     updateStatusText.Text = AXPlayerStrings.RunningLatestReleaseWithoutVersion;
                     break;
                 case UpdaterStatus.Error:
+                    clearUpdateList();
                     updateStatusContainer.Show();
                     updateInfoContainer.Hide();
                     updateStatusText.Text = AXPlayerStrings.UpdateFailed;
                     break;
                 case UpdaterStatus.Checking:
+                    clearUpdateList();
                     updateStatusContainer.Show();
                     updateInfoContainer.Hide();
                     updateStatusText.Text = AXPlayerStrings.CheckingUpdate;

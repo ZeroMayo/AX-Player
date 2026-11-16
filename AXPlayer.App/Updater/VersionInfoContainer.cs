@@ -34,7 +34,7 @@ namespace AXPlayer.App.Updater
         [BackgroundDependencyLoader]
         private void load(AXPlayerAppBase game, OverlayColourProvider overlayColourProvider)
         {
-            RelativeSizeAxes = osu.Framework.Graphics.Axes.X;
+            //RelativeSizeAxes = osu.Framework.Graphics.Axes.X;
             AutoSizeAxes = osu.Framework.Graphics.Axes.Y;
             Masking = true;
             CornerRadius = AXPlayerApp.UI_CORNER_RADIUS;
@@ -58,25 +58,41 @@ namespace AXPlayer.App.Updater
                     {
                         new FillFlowContainer
                         {
-                            AutoSizeAxes = Axes.Both,
+                            RelativeSizeAxes = Axes.X,
+                            AutoSizeAxes = Axes.Y,
                             Direction = FillDirection.Vertical,
                             Spacing = new Vector2(0, 4),
                             Children = new Drawable[]
                             {
                                 new ProjectYomiTextFlowContainer(text => text.Font = text.Font.With(weight: "Bold", size: 24))
                                 {
-                                    AutoSizeAxes = Axes.Both,
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Padding = new MarginPadding
+                                    {
+                                        Right = 120,
+                                    },
                                     Text = updateInfo.Version
                                 },
                                 new ProjectYomiTextFlowContainer
                                 {
-                                    AutoSizeAxes = Axes.Both,
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Padding = new MarginPadding
+                                    {
+                                        Right = 120,
+                                    },
                                     Text = FormatFileSize(updateInfo.UpdateFileSize),
                                 },
                                 updateStateTextContainer = new ProjectYomiTextFlowContainer
                                 {
-                                    AutoSizeAxes = Axes.Both,
-                                    Text = AXPlayerStrings.Updating,
+                                    RelativeSizeAxes = Axes.X,
+                                    AutoSizeAxes = Axes.Y,
+                                    Padding = new MarginPadding
+                                    {
+                                        Right = 120,
+                                    },
+                                    Text = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
                                 }
                             }
                         },

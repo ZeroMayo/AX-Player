@@ -25,7 +25,10 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
                 UpdateFileSize = 1024,
                 IsBetaVersion = true,
                 Version = "a.b.c-stream",
-            }));
+            })
+            {
+                Width = 450,
+            });
         }
 
         [Test]
