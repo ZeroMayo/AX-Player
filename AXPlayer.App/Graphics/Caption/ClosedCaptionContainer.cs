@@ -21,6 +21,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
+using osu.Framework.Logging;
 using osuTK.Graphics;
 using YoutubeExplode.Videos.ClosedCaptions;
 using AXPlayer.App.Config;
@@ -111,6 +112,14 @@ namespace AXPlayer.App.Graphics.Caption
             srv3Track = string.IsNullOrWhiteSpace(srv3Xml)
                 ? null
                 : Srv3CaptionTrack.Parse(srv3Xml);
+
+            // Which document the captions come from decides whether the pen attributes of the document
+            // are honoured at all, so the choice is reported.
+            Logger.Log(srv3Track == null
+                    ? @"The captions are rendered from the closed caption track (no SRV3 document was given)."
+                    : $@"The captions are rendered from an SRV3 document with {srv3Track.DescribeBackgrounds()}.",
+                LoggingTarget.Runtime);
+
             resetSrv3Captions();
         }
 
@@ -445,6 +454,7 @@ namespace AXPlayer.App.Graphics.Caption
                 var display = new Srv3CaptionDisplay(cue, textCreationParameters);
                 populateSrv3Display(display);
                 applySrv3DisplayStyle(display);
+                logSrv3CueWithoutBackground(cue, display);
 
                 srv3Displays[cue] = display;
                 srv3CaptionLayer.Add(display.Container);
@@ -526,6 +536,26 @@ namespace AXPlayer.App.Graphics.Caption
             }
         }
 
+        /// <summary>
+        /// Reports a cue that is drawn without a background, so a caption whose pen asks for no
+        /// background can be told apart from one that keeps the background of the player.
+        /// </summary>
+        private static void logSrv3CueWithoutBackground(Srv3Caption cue, Srv3CaptionDisplay display)
+        {
+            if (display.Background.Alpha > 0)
+                return;
+
+            string text = string.Concat(cue.Spans.Select(span => span.Text)).Trim();
+
+            if (text.Length > 24)
+                text = text[..24] + @"…";
+
+            Logger.Log($@"The SRV3 cue at {cue.Start.TotalSeconds:0.###}s is drawn without a background "
+                       + $@"('{text}', background {(cue.BackgroundColour is { } background ? background.ToHex() : @"none")}, "
+                       + $@"box alpha {display.Background.Alpha:0.###}, blur {display.Container.BlurSigma.X:0}).",
+                LoggingTarget.Runtime);
+        }
+
         private void applySrv3DisplayStyle(Srv3CaptionDisplay display)
         {
             if (display.Cue.BackgroundColour is { } penBackground)
@@ -533,19 +563,46 @@ namespace AXPlayer.App.Graphics.Caption
                 // A pen's bc/bo values define the caption background, including
                 // its transparency, so they override the user's background opacity.
                 display.Background.Colour = penBackground;
-                display.Background.Alpha = 1f;
             }
             else
             {
                 display.Background.Colour = captionBGColor.Value;
-                display.Background.Alpha = captionBGOpacity.Value;
             }
 
+            float alpha = backgroundAlpha(display.Cue.BackgroundColour, captionBGOpacity.Value);
+
+            display.Background.Alpha = alpha;
+
             display.Container.CornerRadius = new CornersInfo(captionBGRadius.Value);
-            display.Container.BlurSigma = new osuTK.Vector2(closedCaptionsBackdropBlur.Value ? 10 : 0);
+
+            // The container blurs the video behind the caption, which shows as a background of its own,
+            // so a caption without a background must not blur it either.
+            display.Container.BlurSigma = new osuTK.Vector2(closedCaptionsBackdropBlur.Value && alpha > 0 ? 10 : 0);
             display.Container.AutoSizeDuration = smoothCaptionAnimation.Value ? 350 : 0;
             display.Container.AutoSizeEasing = Easing.OutQuart;
         }
+
+        /// <summary>
+        /// The alpha the background box of a caption is drawn with.
+        /// </summary>
+        /// <remarks>
+        /// A pen that states <c>bo="0"</c> asks for no background at all, so its box is hidden instead of
+        /// being drawn with the transparency of its colour. A pen that states no background leaves the box
+        /// to the background opacity of the player.
+        /// </remarks>
+        internal static float backgroundAlpha(Color4? penBackground, float configuredOpacity)
+            => penBackground is { } background ? (background.A > 0 ? 1f : 0f) : configuredOpacity;
+
+        /// <summary>
+        /// The alpha of the background box of every rendered SRV3 caption, in rendering order.
+        /// </summary>
+        internal float[] Srv3BackgroundAlphas => srv3Displays.Values.Select(display => display.Background.Alpha).ToArray();
+
+        /// <summary>
+        /// The blur that the container of every rendered SRV3 caption applies to the video behind it, in
+        /// rendering order. A caption without a background must not blur the video either.
+        /// </summary>
+        internal float[] Srv3BackgroundBlurs => srv3Displays.Values.Select(display => display.Container.BlurSigma.X).ToArray();
 
         private void applySrv3StyleToAll()
         {
@@ -693,6 +750,24 @@ namespace AXPlayer.App.Graphics.Caption
     internal sealed class Srv3CaptionTrack
     {
         private readonly List<Srv3Caption> captions;
+
+        /// <summary>
+        /// The number of cues of the document.
+        /// </summary>
+        public int Count => captions.Count;
+
+        /// <summary>
+        /// Describes how the cues of the document state their background, which tells a cue without a
+        /// background apart from one that only hides the background of the player.
+        /// </summary>
+        public string DescribeBackgrounds()
+        {
+            int transparent = captions.Count(cue => cue.BackgroundColour is { } background && background.A <= 0);
+            int visible = captions.Count(cue => cue.BackgroundColour is { } background && background.A > 0);
+            int player = captions.Count - transparent - visible;
+
+            return $@"{captions.Count} cues ({transparent} without a background, {visible} with one, {player} with the background of the player)";
+        }
 
         // Running maximum of caption end times. It allows GetByTime to stop
         // scanning backwards as soon as no earlier caption can still be active.
@@ -930,6 +1005,11 @@ namespace AXPlayer.App.Graphics.Caption
 
         public int Id { get; private set; }
         public Color4 ForegroundColour { get; private set; } = Color4.White;
+
+        /// <summary>
+        /// The background of the pen, which SRV3 states as <c>bc</c> and <c>bo</c>. A pen that states
+        /// neither has no background of its own, so its caption keeps the background of the player.
+        /// </summary>
         public Color4? BackgroundColour { get; private set; }
         public Color4? EdgeColour { get; private set; }
         public int EdgeType { get; private set; }
@@ -955,9 +1035,18 @@ namespace AXPlayer.App.Graphics.Caption
             };
 
             string background = element.Attribute("bc")?.Value;
+            XAttribute backgroundOpacity = element.Attribute("bo");
 
             if (background != null)
-                pen.BackgroundColour = parseColour(background, opacity(element.Attribute("bo"), 255));
+            {
+                pen.BackgroundColour = parseColour(background, opacity(backgroundOpacity, 255));
+            }
+            else if (backgroundOpacity != null)
+            {
+                // A pen that states only the opacity of its background keeps the default background
+                // colour of SRV3, which is black, so bo="0" hides the background on its own.
+                pen.BackgroundColour = parseColour("#000000", opacity(backgroundOpacity, 255));
+            }
 
             string edge = element.Attribute("ec")?.Value;
 
