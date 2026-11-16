@@ -199,7 +199,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         public async Task GetThumbnail(string url, CancellationToken cancellationToken = default)
         {
             Schedule(() => loading.Show());
-            Texture north = await textureStore.GetAsync(Data.Snippet.Thumbnails.High.Url, cancellationToken);
+            Texture north = await textureStore.GetAsync(Data.bestThumbnailUrl(), cancellationToken);
             Schedule(() => { thumbnail.Texture = north; });
             Schedule(() => loading.Hide());
         }
@@ -286,8 +286,11 @@ namespace AXPlayer.App.Graphics.UserInterface
                     var cachePath = app.Host.CacheStorage.GetStorageForDirectory("playlistThumbnailCache").GetFullPath($"{Data.Id}-MyPlaylistView.png");
 
                     using (var httpClient = new System.Net.Http.HttpClient())
+                    using (System.Net.Http.HttpResponseMessage response = await httpClient.GetAsync(Data.bestThumbnailUrl()))
                     {
-                        var imageBytes = await httpClient.GetByteArrayAsync(Data.Snippet.Thumbnails.High.Url);
+                        response.EnsureSuccessStatusCode();
+
+                        var imageBytes = await response.Content.ReadAsByteArrayAsync();
                         await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
                     }
 
@@ -329,8 +332,6 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 try
                 {
-                    Channel channelData = api.GetChannel(Data.Snippet.ChannelId);
-
                     // A playlist whose details were not loaded keeps the values of its row, which now
                     // carry the privacy the API reported.
                     playlistData = api.GetPlaylistInfo(Data.Id) ?? Data;
@@ -354,7 +355,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         });
                     });
 
-                    await GetThumbnail(Data.Snippet.Thumbnails.High.Url);
+                    await GetThumbnail(Data.bestThumbnailUrl());
                 }
                 catch
                 {

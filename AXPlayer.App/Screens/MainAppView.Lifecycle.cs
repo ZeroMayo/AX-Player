@@ -1189,10 +1189,31 @@ namespace AXPlayer.App.Screens
         {
             Schedule(() =>
             {
-                playlistThumbnail.Texture = textureStore.Get(playlist.Snippet.Thumbnails.High.Url);
-                playlistName.Text = playlist.Snippet.Title;
+                if (playlist == null)
+                {
+                    // Without the playlist the header would keep the values of the previous one.
+                    Logger.Log(@"The information of the playlist could not be read.", LoggingTarget.Network);
+
+                    playlistName.Text = string.Empty;
+                    playlistAuthor.Text = string.Empty;
+                    playlistThumbnail.Texture = null;
+                    return;
+                }
+
+                playlistName.Text = playlist.Snippet?.Title ?? string.Empty;
                 playlistAuthor.Text = string.Empty;
-                playlistAuthor.AddLink(api.GetLocalizedChannelTitle(api.GetChannel(playlist.Snippet.ChannelId)), $"https://www.youtube.com/channel/{playlist.Snippet.ChannelId}");
+
+                if (playlist.bestThumbnailUrl() is { Length: > 0 } thumbnailUrl)
+                    playlistThumbnail.Texture = textureStore.Get(thumbnailUrl);
+
+                string? channelId = playlist.Snippet?.ChannelId;
+
+                if (string.IsNullOrEmpty(channelId))
+                    return;
+
+                Channel channel = api.GetChannel(channelId);
+
+                playlistAuthor.AddLink(channel == null ? channelId : api.GetLocalizedChannelTitle(channel), $@"https://www.youtube.com/channel/{channelId}");
             });
         }
 
