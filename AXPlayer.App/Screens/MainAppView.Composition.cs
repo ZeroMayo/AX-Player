@@ -1636,7 +1636,7 @@ namespace AXPlayer.App.Screens
                                             ScrollbarVisible = false,
                                             Padding = new MarginPadding
                                             {
-                                                Top = (56 * 2),
+                                                Top = 56,
                                                 Bottom = 56 + 6,
                                                 Horizontal = 16,
                                             },
