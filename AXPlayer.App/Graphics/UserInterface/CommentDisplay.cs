@@ -318,7 +318,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private Container replyCountBox;
 
-        private void setText(string text)
+        private void setText(string? text)
         {
             commentText.Text = "";
             List<YouTubeDescriptionTextToken> list = AXPlayerDescriptionParser.Parse(text);
@@ -349,6 +349,23 @@ namespace AXPlayer.App.Graphics.UserInterface
             }
         }
 
+        /// <summary>
+        /// Renders the publish date of a comment, which a response can omit.
+        /// </summary>
+        private static string formatCommentDate(DateTimeOffset? published, DateTimeOffset now)
+            => published is { } value ? value.DateTime.Humanize(dateToCompareAgainst: now.DateTime) : string.Empty;
+
+        /// <summary>
+        /// Shows the avatar of the author, which a comment without its entity payload does not have.
+        /// </summary>
+        private void updateProfileImage(string? channelId)
+        {
+            if (string.IsNullOrEmpty(channelId))
+                return;
+
+            profileImage.UpdateProfileImage(channelId);
+        }
+
         public void UpdateData()
         {
             Task.Run(async () =>
@@ -377,12 +394,12 @@ namespace AXPlayer.App.Graphics.UserInterface
                             }
                             channelName.AddText(" • ", f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
 #pragma warning disable CS8629 // Nullable 값 형식이 null일 수 있습니다.
-                            channelName.AddText(dateTime.Value.Humanize(dateToCompareAgainst: now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
+                            channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
 #pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
                             setText(commentData2 != null ? commentData2.Snippet.TextOriginal : commentData.Snippet.TopLevelComment.Snippet.TextOriginal);
                             likeCount.Text = Convert.ToInt32(commentData2 != null ? commentData2.Snippet.LikeCount : commentData.Snippet.TopLevelComment.Snippet.LikeCount).ToStandardFormattedString(0);
                             translateToText.Text = AXPlayerStrings.TranslateTo(app.CurrentLanguage.Value.GetLocalisableDescription());
-                            profileImage.UpdateProfileImage(commentData2 != null ? commentData2.Snippet.AuthorChannelId.Value : commentData.Snippet.TopLevelComment.Snippet.AuthorChannelId.Value);
+                            updateProfileImage(commentData2?.Snippet.AuthorChannelId?.Value ?? commentData.Snippet.TopLevelComment.Snippet.AuthorChannelId?.Value);
                             replyCount.Text = Convert.ToInt32(commentData2 != null ? 0 : commentData.Snippet.TotalReplyCount).ToStandardFormattedString(0);
 
                             /*
@@ -394,7 +411,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     channelName.Text = commentData.Snippet.TopLevelComment.Snippet.AuthorDisplayName;
                                     //channelName.Text = channelData != null ? api.GetLocalizedChannelTitle(channelData) : commentData.Snippet.TopLevelComment.Snippet.AuthorDisplayName;
                                     channelName.AddText(" • ", f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
-                                    channelName.AddText(dateTime.Value.Humanize(dateToCompareAgainst: now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
+                                    channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
                                 });
                             }, true);
                             */
@@ -414,7 +431,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     }
                                     //channelName.Text = channelData != null ? api.GetLocalizedChannelTitle(channelData) : commentData.Snippet.TopLevelComment.Snippet.AuthorDisplayName;
                                     channelName.AddText(" • ", f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
-                                    channelName.AddText(dateTime.Value.Humanize(dateToCompareAgainst: now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
+                                    channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
                                     translateToText.Text = AXPlayerStrings.TranslateTo(app.CurrentLanguage.Value.GetLocalisableDescription());
                                 });
                             });
@@ -430,12 +447,12 @@ namespace AXPlayer.App.Graphics.UserInterface
                             channelName.Text = commentData.Snippet.TopLevelComment.Snippet.AuthorDisplayName;
                             channelName.AddText(" • ", f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
 #pragma warning disable CS8629 // Nullable 값 형식이 null일 수 있습니다.
-                            channelName.AddText(dateTime.Value.Humanize(dateToCompareAgainst: now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
+                            channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
 #pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
                             setText(commentData.Snippet.TopLevelComment.Snippet.TextOriginal);
                             likeCount.Text = Convert.ToInt32(commentData.Snippet.TopLevelComment.Snippet.LikeCount).ToStandardFormattedString(0);
                             translateToText.Text = AXPlayerStrings.TranslateTo(app.CurrentLanguage.Value.GetLocalisableDescription());
-                            profileImage.UpdateProfileImage(commentData.Snippet.TopLevelComment.Snippet.AuthorChannelId.Value);
+                            updateProfileImage(commentData.Snippet.TopLevelComment.Snippet.AuthorChannelId?.Value);
                             replyCount.Text = Convert.ToInt32(commentData.Snippet.TotalReplyCount).ToStandardFormattedString(0);
 
                             usernameDisplayMode.BindValueChanged(locale =>
@@ -445,7 +462,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     channelName.Text = string.Empty;
                                     channelName.Text = commentData.Snippet.TopLevelComment.Snippet.AuthorDisplayName;
                                     channelName.AddText(" • ", f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
-                                    channelName.AddText(dateTime.Value.Humanize(dateToCompareAgainst: now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
+                                    channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
                                 });
                             }, true);
 
@@ -456,7 +473,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     channelName.Text = string.Empty;
                                     channelName.Text = commentData.Snippet.TopLevelComment.Snippet.AuthorDisplayName;
                                     channelName.AddText(" • ", f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
-                                    channelName.AddText(dateTime.Value.Humanize(dateToCompareAgainst: now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
+                                    channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
                                     translateToText.Text = AXPlayerStrings.TranslateTo(app.CurrentLanguage.Value.GetLocalisableDescription());
                                 });
                             });

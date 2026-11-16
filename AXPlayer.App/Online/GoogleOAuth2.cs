@@ -1,260 +1,652 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-#nullable disable
+#nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Crypto.AES;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Auth.OAuth2.Flows;
-using Google.Apis.Auth.OAuth2.Responses;
-using Google.Apis.Util.Store;
-using osu.Framework.Bindables;
-using osu.Framework.Logging;
 using AXPlayer.App.Config;
-using osu.Framework.Development;
+using osu.Framework.Bindables;
+using osu.Framework.Extensions;
+using osu.Framework.Logging;
 
 namespace AXPlayer.App.Online
 {
+    /// <summary>
+    /// Google OAuth 2.0 client used for the Innertube backend.
+    /// </summary>
+    /// <remarks>
+    /// Innertube only needs a Google Bearer access token, so this class implements the pieces
+    /// the player actually uses instead of going through the Google API client libraries:
+    /// <list type="bullet">
+    /// <item>authorization code flow with PKCE and a loopback redirect,</item>
+    /// <item>direct token exchange/refresh against the OAuth token endpoint,</item>
+    /// <item>persisting the refresh token so the session survives restarts,</item>
+    /// <item>revocation on sign-out.</item>
+    /// </list>
+    /// The access token is handed to <see cref="YouTubeAPI" />, which sends it as a Bearer
+    /// token to the TVHTML5 Innertube client.
+    /// </remarks>
     public partial class GoogleOAuth2
     {
-        private const string user_id = @"user";
+        private const string authorization_endpoint = @"https://accounts.google.com/o/oauth2/v2/auth";
+        private const string token_endpoint = @"https://oauth2.googleapis.com/token";
+        private const string revocation_endpoint = @"https://oauth2.googleapis.com/revoke";
+
+        /// <summary>
+        /// Same scope the player requested from the Data API, so existing grants keep working.
+        /// </summary>
+        private const string youtube_scope = @"https://www.googleapis.com/auth/youtube.force-ssl";
+
+        /// <summary>
+        /// Access tokens are refreshed this long before they actually expire so a request
+        /// cannot be sent with a token that expires while it is in flight.
+        /// </summary>
+        private const int refresh_skew_seconds = 120;
+
+        private static readonly string[] permanent_refresh_errors =
+        {
+            @"invalid_grant",
+            @"invalid_client",
+            @"unauthorized_client",
+        };
 
         private readonly AXPlayerConfigManager appConfig;
         private readonly bool isTestClient;
 
-        // Guards the credential reference and serialises token refreshes, so concurrent
-        // API calls don't all try to refresh the same expired access token.
-        private readonly object credentialLock = new object();
+        private readonly HttpClient httpClient = new HttpClient
+        {
+            Timeout = TimeSpan.FromSeconds(30),
+        };
 
-        private UserCredential credential;
+        // Serialises refreshes so concurrent Innertube requests cannot rotate the token twice.
+        private readonly SemaphoreSlim refreshLock = new SemaphoreSlim(1, 1);
+
+        private OAuthToken? token;
 
         public GoogleOAuth2(AXPlayerConfigManager appConfig, bool isTestClient)
         {
             this.appConfig = appConfig;
             this.isTestClient = isTestClient;
 
-            Logger.Log($"🗝️ Google OAuth system loaded");
+            Logger.Log(@"🗝️ Google OAuth 2.0 (Innertube) system loaded");
         }
 
-        public BindableBool SignedIn { get; private set; } = new BindableBool();
+        public BindableBool SignedIn { get; } = new BindableBool();
 
+        /// <summary>
+        /// Whether a refresh token is persisted, i.e. a silent session restore is possible.
+        /// </summary>
+        /// <summary>
+        /// Whether a refresh token is persisted in the player configuration.
+        /// </summary>
+        /// <remarks>
+        /// A legacy credential store from an older build is imported by <see cref="RestoreSessionAsync" />,
+        /// so it is not included here.
+        /// </remarks>
+        public bool HasStoredSession => !string.IsNullOrEmpty(appConfig.Get<string>(AXPlayerSetting.RefreshToken));
+
+        /// <summary>
+        /// Signs in interactively, or silently restores the persisted session when possible.
+        /// </summary>
         public async Task SignIn()
         {
-            UserCredential newCredential;
-
-            try
-            {
-                newCredential = await getUserCredentialAsync().ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, "Failed to sign in to Google");
-                SignedIn.Value = false;
+            if (SignedIn.Value)
                 return;
-            }
 
-            // Access tokens are short-lived and the persisted one may have expired while the
-            // app was closed. Refresh it up front so the first API calls after launch succeed.
-            // A refresh failure here is not fatal: the credential keeps its refresh token and
-            // will retry on the next API call.
             try
             {
-                await ensureValidAccessTokenAsync(newCredential).ConfigureAwait(false);
+                OAuthToken? restored = tryRestorePersistedToken();
+
+                if (restored != null)
+                {
+                    token = restored;
+                    OAuthToken? valid = isExpiring(restored)
+                        ? await refreshAsync(CancellationToken.None).ConfigureAwait(false)
+                        : restored;
+
+                    if (valid != null)
+                    {
+                        SignedIn.Value = true;
+                        Logger.Log(@"signed in to google (restored session)");
+                        return;
+                    }
+                }
+
+                OAuthToken? authorized = await authorizeInteractiveAsync(CancellationToken.None).ConfigureAwait(false);
+
+                if (authorized == null)
+                {
+                    SignedIn.Value = false;
+                    return;
+                }
+
+                token = authorized;
+                persist(authorized);
+                SignedIn.Value = true;
+
+                Logger.Log(@"signed in to google");
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Failed to refresh the Google OAuth access token during sign-in");
+                Logger.Error(e, @"Failed to sign in to Google");
+                SignedIn.Value = false;
             }
+        }
 
-            lock (credentialLock)
+        /// <summary>
+        /// Restores the persisted session without ever showing the consent screen. Used on launch.
+        /// </summary>
+        public async Task RestoreSessionAsync()
+        {
+            if (SignedIn.Value)
+                return;
+
+            try
             {
-                credential = newCredential;
+                OAuthToken? restored = tryRestorePersistedToken();
+
+                if (restored == null)
+                {
+                    SignedIn.Value = false;
+                    return;
+                }
+
+                token = restored;
+
+                OAuthToken? valid = isExpiring(restored)
+                    ? await refreshAsync(CancellationToken.None).ConfigureAwait(false)
+                    : restored;
+
+                SignedIn.Value = valid != null;
+
+                if (valid != null)
+                    Logger.Log(@"restored the google session");
             }
-
-            SignedIn.Value = true;
-            persistAccessToken(newCredential);
-
-            Logger.Log("signed in to google");
+            catch (Exception e)
+            {
+                Logger.Error(e, @"Failed to restore the Google session");
+                SignedIn.Value = false;
+            }
         }
 
         public async Task SignOut()
         {
-            UserCredential currentCredential;
+            OAuthToken? current = token;
 
-            lock (credentialLock)
-            {
-                currentCredential = credential;
-                credential = null;
-            }
+            token = null;
+            SignedIn.Value = false;
 
-            if (currentCredential != null)
+            if (current != null)
             {
                 try
                 {
-                    await currentCredential.RevokeTokenAsync(CancellationToken.None).ConfigureAwait(false);
+                    await revokeAsync(current).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
                     // Revocation requires network access. Even if it fails, the user should
                     // still be signed out locally.
-                    Logger.Error(e, "Failed to revoke the Google OAuth token");
-                }
-
-                try
-                {
-                    // Delete the stored refresh token so it can't silently sign the user back in.
-                    await currentCredential.Flow.DeleteTokenAsync(user_id, CancellationToken.None).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, "Failed to delete the stored Google OAuth token");
+                    Logger.Error(e, @"Failed to revoke the Google OAuth token");
                 }
             }
 
-            SignedIn.Value = false;
-            appConfig.SetValue<string>(AXPlayerSetting.AccessToken, string.Empty);
+            clearPersisted();
 
-            Logger.Log("signed out to google");
+            Logger.Log(@"signed out to google");
         }
 
+        /// <summary>
+        /// Returns a usable access token, refreshing it synchronously when it is about to expire.
+        /// </summary>
+        /// <remarks>
+        /// The refresh runs on the thread pool so callers on the update thread cannot deadlock
+        /// waiting for a continuation that needs that same thread.
+        /// </remarks>
         public string GetAccessToken()
         {
-            UserCredential currentCredential;
-
-            lock (credentialLock)
-            {
-                currentCredential = credential;
-            }
-
-            if (!SignedIn.Value || currentCredential == null)
+            if (!SignedIn.Value)
                 return string.Empty;
+
+            OAuthToken? current = token;
+
+            if (current == null)
+                return string.Empty;
+
+            if (!isExpiring(current))
+                return current.AccessToken;
 
             try
             {
-                refreshAccessTokenIfStale(currentCredential);
+                OAuthToken? refreshed = Task.Run(() => refreshAsync(CancellationToken.None)).GetAwaiter().GetResult();
+                return refreshed?.AccessToken ?? string.Empty;
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Failed to refresh the Google OAuth access token");
+                Logger.Error(e, @"Failed to refresh the Google OAuth access token");
+                return string.Empty;
             }
-
-            return currentCredential.Token?.AccessToken ?? string.Empty;
         }
 
-        public UserCredential GetCredential()
+        /// <summary>
+        /// Asynchronous counterpart of <see cref="GetAccessToken" /> for request pipelines.
+        /// </summary>
+        public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default)
         {
-            UserCredential currentCredential;
+            if (!SignedIn.Value)
+                return string.Empty;
 
-            lock (credentialLock)
+            OAuthToken? current = token;
+
+            if (current == null)
+                return string.Empty;
+
+            if (!isExpiring(current))
+                return current.AccessToken;
+
+            OAuthToken? refreshed = await refreshAsync(cancellationToken).ConfigureAwait(false);
+            return refreshed?.AccessToken ?? string.Empty;
+        }
+
+        #region authorization
+
+        private async Task<OAuthToken?> authorizeInteractiveAsync(CancellationToken cancellationToken)
+        {
+            ClientCredentials credentials = getAuthConfig();
+
+            string codeVerifier = createRandomToken(32);
+            string codeChallenge = createCodeChallenge(codeVerifier);
+            string state = createRandomToken(16);
+
+            using LoopbackReceiver receiver = LoopbackReceiver.Start();
+
+            string authorizationUrl = buildAuthorizationUrl(credentials.ClientId, receiver.RedirectUri, codeChallenge, state);
+
+            Logger.Log($@"Opening the browser for Google authorization: {authorizationUrl}");
+
+            if (!openBrowser(authorizationUrl))
+                throw new NotSupportedException(@"Failed to launch a browser for the Google authorization.");
+
+            Dictionary<string, string> callback = await receiver.WaitForCallbackAsync(cancellationToken).ConfigureAwait(false);
+
+            if (callback.TryGetValue(@"error", out string? error))
+                throw new InvalidOperationException($@"Google authorization was rejected: {error}");
+
+            if (!callback.TryGetValue(@"state", out string? returnedState) || !string.Equals(returnedState, state, StringComparison.Ordinal))
+                throw new InvalidOperationException(@"The Google authorization response contained an unexpected state value.");
+
+            if (!callback.TryGetValue(@"code", out string? code) || string.IsNullOrEmpty(code))
+                throw new InvalidOperationException(@"The Google authorization response did not contain a code.");
+
+            return await exchangeCodeAsync(credentials, code, codeVerifier, receiver.RedirectUri, cancellationToken).ConfigureAwait(false);
+        }
+
+        private string buildAuthorizationUrl(string clientId, string redirectUri, string codeChallenge, string state)
+        {
+            string scope = Uri.EscapeDataString(youtube_scope);
+
+            return $@"{authorization_endpoint}"
+                   + $@"?client_id={Uri.EscapeDataString(clientId)}"
+                   + $@"&redirect_uri={Uri.EscapeDataString(redirectUri)}"
+                   + @"&response_type=code"
+                   + $@"&scope={scope}"
+                   + @"&access_type=offline"
+                   // Force the consent screen so Google always returns a refresh token.
+                   + @"&prompt=consent"
+                   + @"&include_granted_scopes=true"
+                   + $@"&state={state}"
+                   + $@"&code_challenge={codeChallenge}"
+                   + @"&code_challenge_method=S256";
+        }
+
+        private async Task<OAuthToken?> exchangeCodeAsync(ClientCredentials credentials, string code, string codeVerifier, string redirectUri, CancellationToken cancellationToken)
+        {
+            TokenRequestResult result = await requestTokenAsync(new Dictionary<string, string>
             {
-                currentCredential = credential;
-            }
+                [@"grant_type"] = @"authorization_code",
+                [@"code"] = code,
+                [@"client_id"] = credentials.ClientId,
+                [@"client_secret"] = credentials.ClientSecret,
+                [@"redirect_uri"] = redirectUri,
+                [@"code_verifier"] = codeVerifier,
+            }, cancellationToken).ConfigureAwait(false);
 
-            if (!SignedIn.Value || currentCredential == null)
-                throw new InvalidOperationException("Not signed in to Google.");
+            if (result.Token == null)
+                throw new InvalidOperationException($@"Failed to exchange the Google authorization code: {result.Error ?? @"unknown error"}");
 
-            return currentCredential;
+            return result.Token;
         }
 
-        private void refreshAccessTokenIfStale(UserCredential userCredential)
+        #endregion
+
+        #region token refresh
+
+        private async Task<OAuthToken?> refreshAsync(CancellationToken cancellationToken)
         {
-            lock (credentialLock)
+            await refreshLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+            try
             {
-                TokenResponse token = userCredential.Token;
+                OAuthToken? current = token;
 
-                if (token == null || !token.IsStale)
-                    return;
+                if (current == null || string.IsNullOrEmpty(current.RefreshToken))
+                {
+                    clearSession(deletePersistedTokens: false);
+                    return null;
+                }
 
-                if (string.IsNullOrEmpty(token.RefreshToken))
-                    throw new InvalidOperationException("The Google OAuth refresh token is unavailable. Sign in again.");
+                // Another request may have refreshed the token while this one was waiting.
+                if (!isExpiring(current))
+                    return current;
 
-                // Refresh on the thread pool so callers on the update thread don't deadlock
-                // waiting for a continuation that can't run until the update thread is free.
-                bool refreshed = Task.Run(() => userCredential.RefreshTokenAsync(CancellationToken.None)).GetAwaiter().GetResult();
+                ClientCredentials credentials = getAuthConfig();
 
-                if (!refreshed)
-                    throw new InvalidOperationException("Failed to refresh the Google OAuth access token. Sign in again.");
+                TokenRequestResult result = await requestTokenAsync(new Dictionary<string, string>
+                {
+                    [@"grant_type"] = @"refresh_token",
+                    [@"refresh_token"] = current.RefreshToken,
+                    [@"client_id"] = credentials.ClientId,
+                    [@"client_secret"] = credentials.ClientSecret,
+                }, cancellationToken).ConfigureAwait(false);
 
-                persistAccessToken(userCredential);
+                if (result.Token == null)
+                {
+                    bool permanent = result.Error != null && permanent_refresh_errors.Contains(result.Error);
+
+                    Logger.Log($@"Failed to refresh the Google OAuth access token ({result.Error ?? @"unknown error"}).");
+
+                    if (permanent)
+                    {
+                        // A revoked/expired refresh token can never recover, so drop the session.
+                        clearSession(deletePersistedTokens: true);
+                    }
+                    else
+                    {
+                        // Network failures are retried by the next request, so keep the session.
+                        Logger.Log(@"Keeping the Google session so the refresh can be retried.");
+                    }
+
+                    return null;
+                }
+
+                // Google only returns a new refresh token when it rotates one.
+                OAuthToken refreshed = string.IsNullOrEmpty(result.Token.RefreshToken)
+                    ? result.Token with { RefreshToken = current.RefreshToken }
+                    : result.Token;
+
+                token = refreshed;
+                persist(refreshed);
+
+                return refreshed;
+            }
+            finally
+            {
+                refreshLock.Release();
             }
         }
 
-        private static async Task ensureValidAccessTokenAsync(UserCredential userCredential)
+        private async Task<TokenRequestResult> requestTokenAsync(Dictionary<string, string> form, CancellationToken cancellationToken)
         {
-            TokenResponse token = userCredential.Token;
+            try
+            {
+                using var content = new FormUrlEncodedContent(form);
+                using HttpResponseMessage response = await httpClient.PostAsync(token_endpoint, content, cancellationToken).ConfigureAwait(false);
 
-            if (token == null || !token.IsStale)
+                string body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+                if (!response.IsSuccessStatusCode)
+                    return new TokenRequestResult(null, parseErrorCode(body) ?? ((int)response.StatusCode).ToString(CultureInfo.InvariantCulture));
+
+                return new TokenRequestResult(parseToken(body), null);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, $@"The Google OAuth token request failed: {exception.GetDescription()}");
+                return new TokenRequestResult(null, @"network_error");
+            }
+        }
+
+        private static OAuthToken? parseToken(string body)
+        {
+            try
+            {
+                using JsonDocument document = JsonDocument.Parse(body);
+                JsonElement root = document.RootElement;
+
+                string? accessToken = getString(root, @"access_token");
+
+                if (string.IsNullOrEmpty(accessToken))
+                    return null;
+
+                string refreshToken = getString(root, @"refresh_token") ?? string.Empty;
+                long expiresIn = getInt64(root, @"expires_in") ?? 3600;
+
+                return new OAuthToken(accessToken, refreshToken, DateTimeOffset.UtcNow.AddSeconds(expiresIn));
+            }
+            catch (JsonException exception)
+            {
+                Logger.Error(exception, @"The Google OAuth token response could not be parsed.");
+                return null;
+            }
+        }
+
+        private static string? parseErrorCode(string body)
+        {
+            try
+            {
+                using JsonDocument document = JsonDocument.Parse(body);
+                return getString(document.RootElement, @"error");
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+        }
+
+        private async Task revokeAsync(OAuthToken current)
+        {
+            string target = string.IsNullOrEmpty(current.RefreshToken) ? current.AccessToken : current.RefreshToken;
+
+            if (string.IsNullOrEmpty(target))
                 return;
 
-            if (string.IsNullOrEmpty(token.RefreshToken))
-                throw new InvalidOperationException("The Google OAuth refresh token is unavailable. Sign in again.");
+            using var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                [@"token"] = target,
+            });
 
-            if (!await userCredential.RefreshTokenAsync(CancellationToken.None).ConfigureAwait(false))
-                throw new InvalidOperationException("Failed to refresh the Google OAuth access token. Sign in again.");
+            using HttpResponseMessage response = await httpClient.PostAsync(revocation_endpoint, content, CancellationToken.None).ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+                Logger.Log($@"Revoking the Google OAuth token failed with status {(int)response.StatusCode}.", LoggingTarget.Network);
         }
 
-        private void persistAccessToken(UserCredential userCredential)
-            => appConfig.SetValue<string>(AXPlayerSetting.AccessToken, userCredential.Token?.AccessToken ?? string.Empty);
+        private bool isExpiring(OAuthToken candidate)
+            => candidate.ExpiresAtUtc == default || candidate.ExpiresAtUtc <= DateTimeOffset.UtcNow.AddSeconds(refresh_skew_seconds);
 
-        private ClientSecrets getAuthConfig()
+        private void clearSession(bool deletePersistedTokens)
         {
-            ClientSecrets wth = new ClientSecrets();
+            token = null;
+            SignedIn.Value = false;
 
-            string str1 = !isTestClient ? "ZZLYQ+6EpclmaSSEKGqfVglCIf3Qhk9C744YKjGg8nZ6GkIq/S5v6NMRLEiTO0L/bp/dIZCP/oZGgsfZO1EF8ngylv7MYPJswUrQand0plM=" : "GkAYdCHFjxBARXzB9XFVpm2jNC9hMnyTECc1mo36Xb841Qomeo7RVLqz/bbBs9TadbhgkqbrEuYNMJHLklgae11ToWTmc3VtYOiyyELMy6Q=";
-            string str2 = isTestClient ? "NKGBVZGTYD2i++0r+GzyNiK6nFEgiIqvBcgKIUqS844d6X4Js0U4tykxMMzFsZdG" : "Hmg9SjNCg5BT774C1H0VEwcFTi5JLiBhyP++dnYnAqZkiPXA7VwCyW7aPHZxfIYf";
+            if (deletePersistedTokens)
+                clearPersisted();
+        }
 
-            using (AES aes_1 = new AES("youtube-player-ex"))
+        #endregion
+
+        #region persistence
+
+        private OAuthToken? tryRestorePersistedToken()
+        {
+            string refreshToken = appConfig.Get<string>(AXPlayerSetting.RefreshToken);
+
+            if (string.IsNullOrEmpty(refreshToken))
+                refreshToken = tryMigrateLegacyRefreshToken() ?? string.Empty;
+
+            if (string.IsNullOrEmpty(refreshToken))
+                return null;
+
+            string accessToken = appConfig.Get<string>(AXPlayerSetting.AccessToken);
+            DateTimeOffset expiresAt = parseExpiry(appConfig.Get<string>(AXPlayerSetting.AccessTokenExpiresAt));
+
+            return new OAuthToken(accessToken, refreshToken, expiresAt);
+        }
+
+        private void persist(OAuthToken value)
+        {
+            appConfig.SetValue(AXPlayerSetting.AccessToken, value.AccessToken);
+            appConfig.SetValue(AXPlayerSetting.RefreshToken, value.RefreshToken);
+            appConfig.SetValue(AXPlayerSetting.AccessTokenExpiresAt, value.ExpiresAtUtc.ToString(@"o", CultureInfo.InvariantCulture));
+        }
+
+        private void clearPersisted()
+        {
+            appConfig.SetValue(AXPlayerSetting.AccessToken, string.Empty);
+            appConfig.SetValue(AXPlayerSetting.RefreshToken, string.Empty);
+            appConfig.SetValue(AXPlayerSetting.AccessTokenExpiresAt, string.Empty);
+        }
+
+        internal static DateTimeOffset parseExpiry(string? raw)
+            => DateTimeOffset.TryParse(raw, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTimeOffset value) ? value : default;
+
+        /// <summary>
+        /// Imports the refresh token an older build stored with the Google client library
+        /// (<c>FileDataStore</c>), so users are not signed out by the migration.
+        /// </summary>
+        private string? tryMigrateLegacyRefreshToken()
+        {
+            foreach (string folder in legacy_token_folders)
             {
-                string decrypted_key = aes_1.Decrypt("MXvS9pkr+girnFMRjlUauQ==");
-                using (AES aes = new AES(decrypted_key))
+                try
                 {
-                    string decrypted_str1 = aes.Decrypt(str1);
-                    string decrypted_str2 = aes.Decrypt(str2);
+                    string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), folder, @"OAuth2", @"Google.Apis.Auth.OAuth2.Responses.TokenResponse-user");
 
-                    wth.ClientId = decrypted_str1;
-                    wth.ClientSecret = decrypted_str2;
+                    if (!File.Exists(path))
+                        continue;
 
-                    return wth;
+                    using JsonDocument document = JsonDocument.Parse(File.ReadAllText(path));
+                    string? refreshToken = getString(document.RootElement, @"refresh_token");
+
+                    if (string.IsNullOrEmpty(refreshToken))
+                        continue;
+
+                    Logger.Log($@"Imported the Google OAuth session from the legacy credential store ({folder}).");
+                    appConfig.SetValue(AXPlayerSetting.RefreshToken, refreshToken);
+
+                    return refreshToken;
+                }
+                catch (Exception exception)
+                {
+                    Logger.Error(exception, $@"Failed to import the legacy Google OAuth session from '{folder}'.");
                 }
             }
+
+            return null;
         }
 
-        private async Task<UserCredential> getUserCredentialAsync()
+        #endregion
+
+        #region client credentials
+
+        private ClientCredentials? cachedCredentials;
+
+        private ClientCredentials getAuthConfig()
         {
-            GoogleAuthorizationCodeFlow flow = createAuthorizationCodeFlow();
+            if (cachedCredentials != null)
+                return cachedCredentials;
 
-            TokenResponse storedToken = await flow.LoadTokenAsync(user_id, CancellationToken.None).ConfigureAwait(false);
+            string encryptedClientId = !isTestClient
+                ? @"ZZLYQ+6EpclmaSSEKGqfVglCIf3Qhk9C744YKjGg8nZ6GkIq/S5v6NMRLEiTO0L/bp/dIZCP/oZGgsfZO1EF8ngylv7MYPJswUrQand0plM="
+                : @"GkAYdCHFjxBARXzB9XFVpm2jNC9hMnyTECc1mo36Xb841Qomeo7RVLqz/bbBs9TadbhgkqbrEuYNMJHLklgae11ToWTmc3VtYOiyyELMy6Q=";
 
-            // Credentials created before offline access was requested have no refresh token,
-            // which means they can never be renewed silently. Drop them so the next
-            // authorization grants a refresh token.
-            if (storedToken != null && string.IsNullOrEmpty(storedToken.RefreshToken))
+            string encryptedClientSecret = isTestClient
+                ? @"NKGBVZGTYD2i++0r+GzyNiK6nFEgiIqvBcgKIUqS844d6X4Js0U4tykxMMzFsZdG"
+                : @"Hmg9SjNCg5BT774C1H0VEwcFTi5JLiBhyP++dnYnAqZkiPXA7VwCyW7aPHZxfIYf";
+
+            using (AES outerAes = new AES(@"youtube-player-ex"))
             {
-                Logger.Log("Stored Google OAuth credential has no refresh token. Requesting a new one.");
-                await flow.DeleteTokenAsync(user_id, CancellationToken.None).ConfigureAwait(false);
+                string decryptedKey = outerAes.Decrypt(@"MXvS9pkr+girnFMRjlUauQ==");
+
+                using (AES aes = new AES(decryptedKey))
+                {
+                    cachedCredentials = new ClientCredentials(
+                        aes.Decrypt(encryptedClientId),
+                        aes.Decrypt(encryptedClientSecret));
+                }
             }
 
-            var installedApp = new AuthorizationCodeInstalledApp(flow, new NekoPlayerCodeReceiver());
-
-            return await installedApp.AuthorizeAsync(user_id, CancellationToken.None).ConfigureAwait(false);
+            return cachedCredentials;
         }
 
-        private GoogleAuthorizationCodeFlow createAuthorizationCodeFlow()
+        #endregion
+
+        #region helpers
+
+        private static string createRandomToken(int byteCount)
         {
-            string credPath = (isTestClient || DebugUtils.IsDebugBuild) ? @"AXPlayer-development/OAuth2" : @"AXPlayer/OAuth2";
+            var bytes = new byte[byteCount];
+            RandomNumberGenerator.Fill(bytes);
 
-            return new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
-            {
-                ClientSecrets = getAuthConfig(),
-                Scopes = new[] { Google.Apis.YouTube.v3.YouTubeService.Scope.YoutubeForceSsl },
-                DataStore = new FileDataStore(credPath, false),
-                // Force the consent screen so Google always returns a refresh token. Without
-                // this it is only returned the first time a user authorises the app.
-                Prompt = "consent",
-            });
+            return base64UrlEncode(bytes);
         }
+
+        internal static string createCodeChallenge(string codeVerifier)
+            => base64UrlEncode(SHA256.HashData(Encoding.ASCII.GetBytes(codeVerifier)));
+
+        private static string base64UrlEncode(byte[] bytes)
+            => Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+
+        private static string? getString(JsonElement element, string propertyName)
+            => element.ValueKind == JsonValueKind.Object
+               && element.TryGetProperty(propertyName, out JsonElement value)
+               && value.ValueKind == JsonValueKind.String
+                ? value.GetString()
+                : null;
+
+        private static long? getInt64(JsonElement element, string propertyName)
+        {
+            if (element.ValueKind != JsonValueKind.Object || !element.TryGetProperty(propertyName, out JsonElement value))
+                return null;
+
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.Number when value.TryGetInt64(out long number):
+                    return number;
+
+                case JsonValueKind.String when long.TryParse(value.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long parsed):
+                    return parsed;
+
+                default:
+                    return null;
+            }
+        }
+
+        private static readonly string[] legacy_token_folders =
+        {
+            @"AXPlayer",
+            @"AXPlayer-development",
+        };
+
+        private sealed record ClientCredentials(string ClientId, string ClientSecret);
+
+        private sealed record OAuthToken(string AccessToken, string RefreshToken, DateTimeOffset ExpiresAtUtc);
+
+        private sealed record TokenRequestResult(OAuthToken? Token, string? Error);
+
+        #endregion
     }
 }

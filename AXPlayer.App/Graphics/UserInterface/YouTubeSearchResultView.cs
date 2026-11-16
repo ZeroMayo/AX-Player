@@ -18,6 +18,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
+using osu.Framework.Localisation;
 using osuTK;
 using osuTK.Graphics;
 using AXPlayer.App.Config;
@@ -213,6 +214,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 ClickAction?.Invoke(this);
         }
 
+
         public Action<YouTubeSearchResultView>? ClickAction { get; set; }
 
         protected override bool OnClick(ClickEvent e)
@@ -240,15 +242,20 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Channel channelData = api.GetChannel(Data.Snippet.ChannelId);
                         Video videoData = api.GetVideo(Data.Id.VideoId);
 
+                        // The text is built here, where a throw is still caught: a search result may arrive
+                        // without a publish date or a view counter, and an exception on the update thread
+                        // ends the game instead.
+                        LocalisableString metadataText = AXPlayerStrings.VideoMetadataDescWithoutChannelName(
+                            videoData.Statistics.ViewCount.toFormattedCount(),
+                            dateTime.toRelativeDate(now));
+
                         Schedule(() =>
                         {
                             Schedule(() =>
                             {
                                 channelNameText.Text = api.GetLocalizedChannelTitle(channelData, true);
                                 videoNameText.Text = api.GetLocalizedVideoTitle(videoData);
-#pragma warning disable CS8629 // Nullable 값 형식이 null일 수 있습니다.
-                                viewsText.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(Convert.ToInt32(videoData.Statistics.ViewCount).ToStandardFormattedString(0), dateTime.Value.DateTime.Humanize(dateToCompareAgainst: now));
-#pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
+                                viewsText.Text = metadataText;
                             });
 
                             uiLanguage.BindValueChanged(locale =>
@@ -257,7 +264,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 {
                                     channelNameText.Text = api.GetLocalizedChannelTitle(channelData, true);
                                     videoNameText.Text = api.GetLocalizedVideoTitle(videoData);
-                                    viewsText.Text = AXPlayerStrings.VideoMetadataDescWithoutChannelName(Convert.ToInt32(videoData.Statistics.ViewCount).ToStandardFormattedString(0), dateTime.Value.DateTime.Humanize(dateToCompareAgainst: now));
+                                    viewsText.Text = metadataText;
                                 });
                             });
                         });

@@ -30,6 +30,7 @@ namespace AXPlayer.App.Tests.Visual.Caption
     <pen id=""1"" fc=""#FF0000"" fo=""255"" bc=""#000000"" bo=""0"" />
     <pen id=""2"" fc=""#00FF00"" fo=""128"" bc=""#0000FF"" bo=""128"" />
     <pen id=""3"" fc=""#FFFFFF"" fo=""255"" b=""1"" />
+    <pen id=""4"" fc=""#FFFFFF"" fo=""255"" bo=""0"" />
     <ws id=""0"" ju=""0"" />
     <wp id=""0"" ap=""1"" ah=""50"" av=""100"" />
     <wp id=""1"" ap=""1"" ah=""50"" av=""20"" />
@@ -50,6 +51,8 @@ namespace AXPlayer.App.Tests.Visual.Caption
     <p t=""28000"" d=""3000"" wp=""0"" ws=""0"" p=""0"">Overlap A</p>
     <p t=""28000"" d=""3000"" wp=""0"" ws=""0"" p=""0"">Overlap B</p>
     <p t=""31000"" d=""3000"" wp=""0"" ws=""0"" p=""3"">Bold line</p>
+    <p t=""34000"" d=""1000"" wp=""0"" ws=""0"" p=""1"">No background</p>
+    <p t=""36000"" d=""1000"" wp=""0"" ws=""0"" p=""4"">Opacity only</p>
   </body>
 </timedtext>";
 
@@ -150,6 +153,61 @@ namespace AXPlayer.App.Tests.Visual.Caption
                                                                                             .Any(box => box.Colour.AverageColour.SRGB.B > 0.9f
                                                                                                         && box.Colour.AverageColour.SRGB.R < 0.1f
                                                                                                         && Math.Abs(box.Alpha * box.Colour.AverageColour.SRGB.A - 128 / 255f) < 0.02f));
+        }
+
+        [Test]
+        public void TestAPenWithZeroBackgroundOpacityHidesTheBox()
+        {
+            AddStep("use a visible base background", () =>
+            {
+                config.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor).Value = Colour4.Black;
+                config.GetBindable<float>(AXPlayerSetting.CaptionBGOpacity).Value = 0.5f;
+                config.GetBindable<bool>(AXPlayerSetting.ClosedCaptionsBackdropBlur).Value = true;
+            });
+
+            // Pen 1 states bc="#000000" bo="0", which asks for no background at all.
+            AddStep("seek into the caption of the transparent pen", () => videoPlayer.VideoProgress.Value = 34.5);
+
+            AddUntilStep("the cue is drawn", () => captionContainer.Srv3BackgroundAlphas.Length, () => Is.EqualTo(1));
+
+            AddAssert("the background box of the cue is hidden", () => captionContainer.Srv3BackgroundAlphas, () => Is.EqualTo(new[] { 0f }));
+            AddAssert("the video behind the cue is not blurred", () => captionContainer.Srv3BackgroundBlurs, () => Is.EqualTo(new[] { 0f }));
+        }
+
+        [Test]
+        public void TestAPenWithBackgroundOpacityKeepsTheBox()
+        {
+            AddStep("use a visible base background", () =>
+            {
+                config.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor).Value = Colour4.Black;
+                config.GetBindable<float>(AXPlayerSetting.CaptionBGOpacity).Value = 0.5f;
+            });
+
+            // The spans of this cue state bc="#0000FF" bo="128", so the box is drawn.
+            AddStep("seek into the caption of the coloured spans", () => videoPlayer.VideoProgress.Value = 21);
+
+            AddUntilStep("the cue is drawn", () => captionContainer.Srv3BackgroundAlphas.Length, () => Is.EqualTo(1));
+
+            AddAssert("the background box of the cue is drawn", () => captionContainer.Srv3BackgroundAlphas, () => Is.EqualTo(new[] { 1f }));
+            AddAssert("the video behind the cue is blurred", () => captionContainer.Srv3BackgroundBlurs, () => Is.EqualTo(new[] { 10f }));
+        }
+
+        [Test]
+        public void TestAPenWithOnlyBackgroundOpacityHidesTheBox()
+        {
+            AddStep("use a visible base background", () =>
+            {
+                config.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor).Value = Colour4.Black;
+                config.GetBindable<float>(AXPlayerSetting.CaptionBGOpacity).Value = 0.5f;
+            });
+
+            // Pen 4 states only bo="0", without a background colour, which hides the background too.
+            AddStep("seek into the caption of the opacity-only pen", () => videoPlayer.VideoProgress.Value = 36.5);
+
+            AddUntilStep("the cue is drawn", () => captionContainer.Srv3BackgroundAlphas.Length, () => Is.EqualTo(1));
+
+            AddAssert("the background box of the cue is hidden", () => captionContainer.Srv3BackgroundAlphas, () => Is.EqualTo(new[] { 0f }));
+            AddAssert("the video behind the cue is not blurred", () => captionContainer.Srv3BackgroundBlurs, () => Is.EqualTo(new[] { 0f }));
         }
 
         [Test]

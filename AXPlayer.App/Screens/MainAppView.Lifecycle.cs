@@ -445,10 +445,9 @@ namespace AXPlayer.App.Screens
                     checkForUpdates().FireAndForget();
             }
 
-            if (appGlobalConfig.Get<string>(AXPlayerSetting.AccessToken) != string.Empty)
-            {
-                Task.Run(async () => await googleOAuth2.SignIn());
-            }
+            // Silently restores the persisted Google session (and imports a legacy one) without
+            // ever opening the consent screen.
+            Task.Run(async () => await googleOAuth2.RestoreSessionAsync());
 
             sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = true;
 
@@ -1108,12 +1107,7 @@ namespace AXPlayer.App.Screens
 
         public async Task SetPlaylistItems(IList<PlaylistItem> playlists)
         {
-            this.playlists = playlists;
-
-            Schedule(async () =>
-            {
-                SetVideoSource(playlists[0].Snippet.ResourceId.VideoId);
-            });
+            this.playlists = playlists ?? new List<PlaylistItem>();
 
             playlistItemViews.Clear();
 
@@ -1122,9 +1116,34 @@ namespace AXPlayer.App.Screens
                 Schedule(() => item.Expire());
             }
 
+            // A playlist that could not be read or has no entry must not start a video that does
+            // not exist.
+            if (this.playlists.Count == 0)
+            {
+                Logger.Log(@"The playlist holds no item, so nothing is played.", LoggingTarget.Network);
+
+                Schedule(() =>
+                {
+                    playlistName.Text = AXPlayerStrings.PlaylistNotLoaded;
+                    playlistAuthor.Text = AXPlayerStrings.PlaylistNotLoadedDesc;
+                    prevVideoButton.Enabled.Value = false;
+                    nextVideoButton.Enabled.Value = false;
+                });
+
+                return;
+            }
+
+            Schedule(() =>
+            {
+                // The index of the previous playlist is meaningless for the loaded one, and an index
+                // past its entries used to throw when the item views were marked.
+                playlistItemIndex = 0;
+                SetVideoSource(this.playlists[0].Snippet.ResourceId.VideoId);
+            });
+
             int i = 0;
 
-            foreach (var item in playlists)
+            foreach (var item in this.playlists)
             {
                 try
                 {
@@ -1170,10 +1189,31 @@ namespace AXPlayer.App.Screens
         {
             Schedule(() =>
             {
-                playlistThumbnail.Texture = textureStore.Get(playlist.Snippet.Thumbnails.High.Url);
-                playlistName.Text = playlist.Snippet.Title;
+                if (playlist == null)
+                {
+                    // Without the playlist the header would keep the values of the previous one.
+                    Logger.Log(@"The information of the playlist could not be read.", LoggingTarget.Network);
+
+                    playlistName.Text = string.Empty;
+                    playlistAuthor.Text = string.Empty;
+                    playlistThumbnail.Texture = null;
+                    return;
+                }
+
+                playlistName.Text = playlist.Snippet?.Title ?? string.Empty;
                 playlistAuthor.Text = string.Empty;
-                playlistAuthor.AddLink(playlist.Snippet.ChannelTitle, $"https://www.youtube.com/channel/{playlist.Snippet.ChannelId}");
+
+                if (playlist.bestThumbnailUrl() is { Length: > 0 } thumbnailUrl)
+                    playlistThumbnail.Texture = textureStore.Get(thumbnailUrl);
+
+                string? channelId = playlist.Snippet?.ChannelId;
+
+                if (string.IsNullOrEmpty(channelId))
+                    return;
+
+                Channel channel = api.GetChannel(channelId);
+
+                playlistAuthor.AddLink(channel == null ? channelId : api.GetLocalizedChannelTitle(channel), $@"https://www.youtube.com/channel/{channelId}");
             });
         }
 

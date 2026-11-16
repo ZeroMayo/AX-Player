@@ -61,18 +61,9 @@ namespace AXPlayer.App.Screens
                                 hideOverlays();
 
                                 editPlaylistTitleBox.Current.Value = data.Snippet.Title;
-                                switch (data.Status.PrivacyStatus)
-                                {
-                                    case "public":
-                                        editPlaylistPrivacyStatusDropdown.Current.Value = PrivacyStatus.Public;
-                                        break;
-                                    case "unlisted":
-                                        editPlaylistPrivacyStatusDropdown.Current.Value = PrivacyStatus.Unlisted;
-                                        break;
-                                    case "private":
-                                        editPlaylistPrivacyStatusDropdown.Current.Value = PrivacyStatus.Private;
-                                        break;
-                                }
+
+                                if (data.Status?.PrivacyStatus.toPrivacyStatus() is { } privacyStatus)
+                                    editPlaylistPrivacyStatusDropdown.Current.Value = privacyStatus;
 
                                 showOverlayContainer(editPlaylistOverlay);
 

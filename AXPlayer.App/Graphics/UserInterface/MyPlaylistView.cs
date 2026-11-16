@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Google.Apis.YouTube.v3.Data;
 using AXPlayer.App.Config;
+using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
@@ -112,7 +113,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 },
                                 thumbnail = new Sprite
                                 {
-                                    Size = new Vector2(1, 1.5f),
+                                    Size = new Vector2(1f),
                                     Origin = Anchor.Centre,
                                     Anchor = Anchor.Centre,
                                     RelativeSizeAxes = Axes.Both,
@@ -121,12 +122,14 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 loading = new AXPlayerLoadingLayer(true, false, false)
                             },
                         },
-                        new Container
+                        new FillFlowContainer
                         {
                             RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
                             Padding = new MarginPadding
                             {
-                                Top = 25,
+                                Top = 5,
                                 Bottom = 5,
                                 Left = 200,
                                 Right = 5,
@@ -135,21 +138,17 @@ namespace AXPlayer.App.Graphics.UserInterface
                             {
                                 playlistNameText = new TruncatingSpriteText
                                 {
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
                                     RelativeSizeAxes = Axes.X,
                                     Font = AXPlayerApp.DefaultFont.With(size: 17, weight: "Bold"),
                                     Colour = overlayColourProvider.Content2,
                                 },
-                                channelNameText = new TruncatingSpriteText
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    Position = new Vector2(0, 17),
-                                    Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"),
-                                    Colour = overlayColourProvider.Background1,
-                                },
                                 privacyStatusText = new TruncatingSpriteText
                                 {
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
                                     RelativeSizeAxes = Axes.X,
-                                    Position = new Vector2(0, (17 + 13)),
                                     Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"),
                                     Colour = overlayColourProvider.Background1,
                                 },
@@ -200,7 +199,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         public async Task GetThumbnail(string url, CancellationToken cancellationToken = default)
         {
             Schedule(() => loading.Show());
-            Texture north = await textureStore.GetAsync(Data.Snippet.Thumbnails.High.Url, cancellationToken);
+            Texture north = await textureStore.GetAsync(Data.bestThumbnailUrl(), cancellationToken);
             Schedule(() => { thumbnail.Texture = north; });
             Schedule(() => loading.Hide());
         }
@@ -287,8 +286,11 @@ namespace AXPlayer.App.Graphics.UserInterface
                     var cachePath = app.Host.CacheStorage.GetStorageForDirectory("playlistThumbnailCache").GetFullPath($"{Data.Id}-MyPlaylistView.png");
 
                     using (var httpClient = new System.Net.Http.HttpClient())
+                    using (System.Net.Http.HttpResponseMessage response = await httpClient.GetAsync(Data.bestThumbnailUrl()))
                     {
-                        var imageBytes = await httpClient.GetByteArrayAsync(Data.Snippet.Thumbnails.High.Url);
+                        response.EnsureSuccessStatusCode();
+
+                        var imageBytes = await response.Content.ReadAsByteArrayAsync();
                         await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
                     }
 
@@ -310,7 +312,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         bgLayer.Alpha = 1;
                         bgLayer.Colour = ColourInfo.GradientHorizontal(bgColor, bgColor.Darken(1f));
                         playlistNameText.Colour = (textColor);
-                        channelNameText.Colour = (textColor);
+                        //channelNameText.Colour = (textColor);
                         privacyStatusText.Colour = (textColor);
                     }
                 }
@@ -330,48 +332,30 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 try
                 {
-                    Channel channelData = api.GetChannel(Data.Snippet.ChannelId);
-                    playlistData = api.GetPlaylistInfo(Data.Id);
+                    // A playlist whose details were not loaded keeps the values of its row, which now
+                    // carry the privacy the API reported.
+                    playlistData = api.GetPlaylistInfo(Data.Id) ?? Data;
 
                     Schedule(() =>
                     {
                         GetPalette();
 
-                        channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
+                        //channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
                         playlistNameText.Text = playlistData.Snippet.Title;
-#pragma warning disable CS8629 // Nullable 값 형식이 null일 수 있습니다.
-                        try
-                        {
-                            switch (playlistData.Status.PrivacyStatus)
-                            {
-                                case "public":
-                                    privacyStatusText.Text = AXPlayerStrings.Public;
-                                    break;
-                                case "unlisted":
-                                    privacyStatusText.Text = AXPlayerStrings.Unlisted;
-                                    break;
-                                case "private":
-                                    privacyStatusText.Text = AXPlayerStrings.Private;
-                                    break;
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.Error(e, e.GetDescription());
-                        }
-#pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
+                        privacyStatusText.Text = playlistData.Status?.PrivacyStatus.toPrivacyLabel()
+                                                 ?? string.Empty;
 
                         uiLanguage.BindValueChanged(locale =>
                         {
                             Schedule(() =>
                             {
-                                channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
+                                //channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
                                 playlistNameText.Text = playlistData.Snippet.Title;
                             });
                         });
                     });
 
-                    await GetThumbnail(Data.Snippet.Thumbnails.High.Url);
+                    await GetThumbnail(Data.bestThumbnailUrl());
                 }
                 catch
                 {

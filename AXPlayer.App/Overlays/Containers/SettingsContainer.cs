@@ -1499,7 +1499,7 @@ namespace AXPlayer.App.Overlays.Containers
             }
 
             madeByText.AddText("made by ");
-            madeByText.AddLink("Mayo_0x0 (ZeroMayo)", "https://github.com/ZeroMayo/", AXPlayerStrings.ViewGitHubProfile);
+            madeByText.AddLink("ZeroMayo", "https://github.com/ZeroMayo/", AXPlayerStrings.ViewGitHubProfile);
 
             if (discordRPC != null)
             {
