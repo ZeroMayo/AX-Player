@@ -121,12 +121,14 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 loading = new AXPlayerLoadingLayer(true, false, false)
                             },
                         },
-                        new Container
+                        new FillFlowContainer
                         {
                             RelativeSizeAxes = Axes.Both,
+                            Anchor = Anchor.CentreLeft,
+                            Origin = Anchor.CentreLeft,
                             Padding = new MarginPadding
                             {
-                                Top = 25,
+                                Top = 5,
                                 Bottom = 5,
                                 Left = 200,
                                 Right = 5,
@@ -135,21 +137,17 @@ namespace AXPlayer.App.Graphics.UserInterface
                             {
                                 playlistNameText = new TruncatingSpriteText
                                 {
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
                                     RelativeSizeAxes = Axes.X,
                                     Font = AXPlayerApp.DefaultFont.With(size: 17, weight: "Bold"),
                                     Colour = overlayColourProvider.Content2,
                                 },
-                                channelNameText = new TruncatingSpriteText
-                                {
-                                    RelativeSizeAxes = Axes.X,
-                                    Position = new Vector2(0, 17),
-                                    Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"),
-                                    Colour = overlayColourProvider.Background1,
-                                },
                                 privacyStatusText = new TruncatingSpriteText
                                 {
+                                    Anchor = Anchor.CentreLeft,
+                                    Origin = Anchor.CentreLeft,
                                     RelativeSizeAxes = Axes.X,
-                                    Position = new Vector2(0, (17 + 13)),
                                     Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"),
                                     Colour = overlayColourProvider.Background1,
                                 },
@@ -310,7 +308,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         bgLayer.Alpha = 1;
                         bgLayer.Colour = ColourInfo.GradientHorizontal(bgColor, bgColor.Darken(1f));
                         playlistNameText.Colour = (textColor);
-                        channelNameText.Colour = (textColor);
+                        //channelNameText.Colour = (textColor);
                         privacyStatusText.Colour = (textColor);
                     }
                 }
@@ -337,7 +335,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     {
                         GetPalette();
 
-                        channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
+                        //channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
                         playlistNameText.Text = playlistData.Snippet.Title;
 #pragma warning disable CS8629 // Nullable 값 형식이 null일 수 있습니다.
                         try
@@ -365,7 +363,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         {
                             Schedule(() =>
                             {
-                                channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
+                                //channelNameText.Text = api.GetLocalizedChannelTitle(channelData);
                                 playlistNameText.Text = playlistData.Snippet.Title;
                             });
                         });
