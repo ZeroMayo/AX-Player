@@ -61,6 +61,7 @@ namespace AXPlayer.Desktop.Updater
                 {
                     log("Update check cancelled");
                     scheduleNextUpdateCheck();
+                    game.UpdateStatus.Value = UpdaterStatus.NoUpdates;
                     return true;
                 }
 
@@ -69,6 +70,7 @@ namespace AXPlayer.Desktop.Updater
                     // No update is available.
                     log("No update found");
                     scheduleNextUpdateCheck();
+                    game.UpdateStatus.Value = UpdaterStatus.NoUpdates;
                     return false;
                 }
 

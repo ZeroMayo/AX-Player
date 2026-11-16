@@ -60,6 +60,7 @@ namespace AXPlayer.App.Updater
         /// </returns>
         public async Task<bool> CheckForUpdateAsync(CancellationToken cancellationToken = default) => await Task.Run(async () =>
         {
+            app.UpdateStatus.Value = UpdaterStatus.Checking;
             if (!CanCheckForUpdate)
                 return false;
 
