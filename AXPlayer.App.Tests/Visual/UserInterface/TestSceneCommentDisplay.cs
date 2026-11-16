@@ -204,6 +204,39 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
         }
 
         [Test]
+        public void TestCommentWithoutItsEntityPayloadIsRendered()
+        {
+            // A comment whose entity payload is missing arrives without text, date, author channel and
+            // counters, which used to throw while the row was filled in.
+            AddStep("show a comment that arrived without its entity payload", () =>
+            {
+                commentRows.Clear();
+
+                var thread = new CommentThread
+                {
+                    Id = "UgxWithoutPayload",
+                    Snippet = new CommentThreadSnippet
+                    {
+                        VideoId = "dQw4w9WgXcQ",
+                        TopLevelComment = new Comment
+                        {
+                            Id = "UgxWithoutPayload",
+                            Snippet = new CommentSnippet
+                            {
+                                VideoId = "dQw4w9WgXcQ",
+                                AuthorDisplayName = "@unknown",
+                            },
+                        },
+                    },
+                };
+
+                commentRows.Add(new CommentDisplay(thread));
+            });
+
+            AddAssert("the row is shown", () => commentRows.Count, () => Is.EqualTo(1));
+        }
+
+        [Test]
         public void TestThreadOfTheCurrentWatchPage()
         {
             CommentThread current = null!;

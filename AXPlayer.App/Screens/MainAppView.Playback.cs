@@ -519,7 +519,7 @@ namespace AXPlayer.App.Screens
             if (smartCrossfadeNormalizeVolume.HasValue)
                 app.CurrentTrackNormalizeVolume.Value = smartCrossfadeNormalizeVolume.Value;
 
-            if (playlistItemViews.Count > 0)
+            if (playlistItemIndex >= 0 && playlistItemIndex < playlistItemViews.Count)
             {
                 foreach (PlaylistItemView playlistItemView in playlistItemViews)
                 {
@@ -549,7 +549,7 @@ namespace AXPlayer.App.Screens
             smartCrossfadeSourceSwitched = true;
             queueNextPlaylistVideoForCrossfade();
 
-            if (playlistItemViews.Count > 0)
+            if (playlistItemIndex >= 0 && playlistItemIndex < playlistItemViews.Count)
             {
                 foreach (PlaylistItemView playlistItemView in playlistItemViews)
                 {
@@ -799,7 +799,7 @@ namespace AXPlayer.App.Screens
                         Schedule(() => nextVideoButton.Enabled.Value = false);
                     }
 
-                    if (playlistItemViews.Count > 0)
+                    if (playlistItemIndex >= 0 && playlistItemIndex < playlistItemViews.Count)
                     {
                         foreach (PlaylistItemView playlistItemView in playlistItemViews)
                         {

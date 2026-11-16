@@ -3150,7 +3150,11 @@ namespace AXPlayer.App.Screens
                                                                     Action = async () =>
                                                                     {
                                                                         hideOverlays();
-                                                                        await api.AddPlaylist(playlistTitleBox.Current.Value, playlistPrivacyStatusDropdown.Current.Value);
+
+                                                                        // The playlist only shows up in the library once it is reloaded, so the
+                                                                        // list is refreshed after a successful creation.
+                                                                        if (await api.AddPlaylist(playlistTitleBox.Current.Value, playlistPrivacyStatusDropdown.Current.Value))
+                                                                            fetchMyPlaylists();
                                                                     }
                                                                 },
                                                             },

@@ -10,12 +10,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
-using Google.Apis.YouTube.v3;
-using Google.Apis.YouTube.v3.Data;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Utils;
+using Crypto.AES;
+using Google.Apis.YouTube.v3;
+using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Configuration;
 using osu.Framework.Extensions;
 using osu.Framework.Logging;
@@ -39,6 +40,8 @@ namespace AXPlayer.App.Online
         private AXPlayerConfigManager appConfig;
         private AXPlayerAppBase app;
 
+        private string apiKey;
+
         public YouTubeAPI(AXPlayerAppBase app, FrameworkConfigManager frameworkConfig, GoogleTranslate translateApi, AXPlayerConfigManager appConfig, GoogleOAuth2 googleOAuth2, bool isTestClient, HttpClient httpClient)
         {
             Http = httpClient;
@@ -47,6 +50,17 @@ namespace AXPlayer.App.Online
             this.translateApi = translateApi;
             this.appConfig = appConfig;
             this.googleOAuth2 = googleOAuth2;
+
+            var encryptedApiKey = isTestClient ? "K/1395zhx/B49AZcHQpAUn5HZSBGtbLrAHnY3QGYieBQpx0gOkZdL5xDPUB7+BnM" : "3T8gSwQR7sprXV/OZDZyTCqbT9Qrt/j8xd7prlHrFMh4Y8Dsp4H2HG+eu+UJ7FOb";
+
+            using (AES aes_1 = new AES("youtube-player-ex"))
+            {
+                string decryptedKey = aes_1.Decrypt("faF4XblghnrR37EA3y5Aag==");
+                using (AES aes = new AES(decryptedKey))
+                {
+                    apiKey = aes.Decrypt(encryptedApiKey);
+                }
+            }
 
             // The resolved own channel belongs to the account that was signed in, so cache
             // invalidation is tied to the sign-in state instead of the application lifetime.
@@ -489,7 +503,11 @@ namespace AXPlayer.App.Online
             return string.Empty;
         }
 
-        public Task AddPlaylist(string playlistTitle, PrivacyStatus privacyStatus)
+        /// <summary>
+        /// Creates a playlist in the library of the signed-in account.
+        /// </summary>
+        /// <returns>Whether the playlist was created.</returns>
+        public Task<bool> AddPlaylist(string playlistTitle, PrivacyStatus privacyStatus)
             => addPlaylistAsync(playlistTitle, privacyStatus, CancellationToken.None);
 
         public Task<IList<PlaylistItem>> GetPlaylistItems(string playlistId)
