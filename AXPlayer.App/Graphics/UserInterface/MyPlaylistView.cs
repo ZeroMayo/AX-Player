@@ -112,7 +112,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 },
                                 thumbnail = new Sprite
                                 {
-                                    Size = new Vector2(1, 1.5f),
+                                    Size = new Vector2(1f),
                                     Origin = Anchor.Centre,
                                     Anchor = Anchor.Centre,
                                     RelativeSizeAxes = Axes.Both,

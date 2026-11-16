@@ -365,17 +365,22 @@ namespace AXPlayer.App.Online
 
             if (googleOAuth2.SignedIn.Value)
             {
-                request.Headers.Add(
-                    "Authorization",
-                    $"Bearer {googleOAuth2.GetAccessToken()}"
-                );
+                string accessToken = await googleOAuth2.GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
+
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    request.Headers.Add(
+                        "Authorization",
+                        $"Bearer {accessToken}"
+                    );
+                }
             }
 
-            using var response = await Http.SendAsync(request, cancellationToken);
+            using var response = await Http.SendAsync(request, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             // TODO: move this to a bridge wrapper
-            var jsonString = await response.Content.ReadAsStringAsync(cancellationToken);
+            var jsonString = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             if (jsonString.StartsWith(")]}'"))
                 jsonString = jsonString[4..];
 
@@ -396,7 +401,7 @@ namespace AXPlayer.App.Online
             CancellationToken cancellationToken = default
         )
         {
-            var visitorData = await ResolveVisitorDataAsync(cancellationToken);
+            var visitorData = await ResolveVisitorDataAsync(cancellationToken).ConfigureAwait(false);
 
             // The most optimal client to impersonate is any mobile client, because they
             // don't require signature deciphering (for both normal and n-parameter signatures).
@@ -443,13 +448,18 @@ namespace AXPlayer.App.Online
 
             if (googleOAuth2.SignedIn.Value)
             {
-                request.Headers.Add(
-                    "Authorization",
-                    $"Bearer {googleOAuth2.GetAccessToken()}"
-                );
+                string accessToken = await googleOAuth2.GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
+
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    request.Headers.Add(
+                        "Authorization",
+                        $"Bearer {accessToken}"
+                    );
+                }
             }
 
-            using var response = await Http.SendAsync(request, cancellationToken);
+            using var response = await Http.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
             Logger.Log(response.ToString());
 

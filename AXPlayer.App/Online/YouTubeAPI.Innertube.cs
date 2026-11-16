@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 using AXPlayer.App.Extensions;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
+using osu.Framework.Configuration;
 using osu.Framework.Extensions;
 using osu.Framework.Logging;
 
@@ -38,14 +40,51 @@ namespace AXPlayer.App.Online
             Tv,
         }
 
+        /// <summary>
+        /// The words that a relative timestamp is rendered with, per interface language, paired with
+        /// the unit they stand for (0 = second, 1 = minute, 2 = hour, 3 = day, 4 = week, 5 = month,
+        /// 6 = year). The words of a shorter unit have to be matched first because some of them are a
+        /// substring of a longer one.
+        /// </summary>
+        private static readonly (string[] Keywords, int Unit)[] relative_date_units =
+        {
+            (new[] { @"second", @"sec", @"초", @"秒", @"sekunde", @"seconde", @"segundo", @"secondo" }, 0),
+            (new[] { @"minute", @"min", @"분", @"分", @"minuto" }, 1),
+            (new[] { @"hour", @"시간", @"時間", @"小时", @"小時", @"stunde", @"heure", @"hora", @"ora" }, 2),
+            (new[] { @"day", @"일", @"日", @"天", @"tag", @"jour", @"día", @"dia", @"giorno" }, 3),
+            (new[] { @"week", @"주", @"週", @"周", @"woche", @"semaine", @"semana", @"settimana" }, 4),
+            (new[] { @"month", @"개월", @"달", @"か月", @"ヶ月", @"カ月", @"个月", @"個月", @"monat", @"mois", @"mese", @"mes" }, 5),
+            (new[] { @"year", @"년", @"年", @"jahr", @"año", @"ano", @"anno" }, 6),
+        };
+
         private const string youtube_origin = @"https://www.youtube.com";
         private const string music_topic_category = @"https://en.wikipedia.org/wiki/Music";
+
+        /// <summary>
+        /// The words that precede the subscriber count of a channel, in the languages the page can be
+        /// rendered in. The count itself is read from the page header (see
+        /// <see cref="findCountWithKeyword" />).
+        /// </summary>
+        private static readonly string[] subscriber_count_keywords = { @"subscriber", @"구독자", @"登録者", @"チャンネル登録", @"abonn", @"подписчик", @"订阅", @"訂閱" };
+
+        /// <summary>
+        /// The words that follow the video count of a channel, in the languages the page can be
+        /// rendered in.
+        /// </summary>
+        private static readonly string[] video_count_keywords = { @"video", @"동영상", @"動画", @"vídeo", @"vidéo", @"видео", @"视频", @"影片" };
 
         private readonly Dictionary<string, bool> subscriptionStateCache = new Dictionary<string, bool>(StringComparer.Ordinal);
         private readonly Dictionary<string, VideosResource.RateRequest.RatingEnum> ratingStateCache = new Dictionary<string, VideosResource.RateRequest.RatingEnum>(StringComparer.Ordinal);
 
         private string? mineChannelIdCache;
         private Channel? mineChannelCache;
+
+        /// <summary>
+        /// The playlists read from the library tabs, keyed by ID. They carry the title and thumbnail
+        /// of the playlist, which are used as a fallback when the playlist page cannot be loaded
+        /// (for example for an unlisted playlist of another account).
+        /// </summary>
+        private readonly Dictionary<string, Playlist> playlistLibraryCache = new Dictionary<string, Playlist>(StringComparer.Ordinal);
 
         /// <summary>
         /// The "your playlists" library pages, paired with the client that natively serves them.
@@ -57,9 +96,29 @@ namespace AXPlayer.App.Online
         /// </remarks>
         private static readonly (string BrowseId, innertube_client Client)[] playlist_library_pages =
         {
-            (@"FEplaylists", innertube_client.Web),
             (@"FEmy_youtube", innertube_client.Tv),
+            (@"FEplaylists", innertube_client.Web),
         };
+
+        /// <summary>
+        /// Upper bound for the playlist library continuations, so a broken chain cannot keep the
+        /// library fetching forever.
+        /// </summary>
+        private const int playlist_library_max_pages = 10;
+
+        /// <summary>
+        /// The amount of search results a single <c>GetSearchResult</c> call collects, matching what
+        /// the Data API returned before the API layer moved to Innertube.
+        /// </summary>
+        private const int search_max_results = 50;
+
+        private const int search_max_pages = 5;
+
+        /// <summary>
+        /// The upper bound of the pages that are fetched for a single playlist. A page holds up to a
+        /// hundred items, so this covers playlists of up to two thousand items.
+        /// </summary>
+        private const int playlist_item_max_pages = 20;
 
         /// <summary>
         /// Endpoints that expose the identities of the signed-in account.
@@ -70,9 +129,24 @@ namespace AXPlayer.App.Online
             @"account/accounts_list",
         };
 
+        /// <summary>
+        /// Prefixes the watch page renders in front of the publish date.
+        /// </summary>
+        private static readonly string[] date_text_prefixes =
+        {
+            @"Streamed live on ",
+            @"Started streaming on ",
+            @"Streamed live ",
+            @"Premiered on ",
+            @"Premiered ",
+            @"Scheduled for ",
+            @"Published on ",
+            @"Uploaded on ",
+        };
+
         #region transport
 
-        private async Task<JsonDocument?> sendInnertubeAsync(string endpoint, object payload, CancellationToken cancellationToken, innertube_client client = innertube_client.Web, bool authenticate = false)
+        private async Task<JsonDocument?> sendInnertubeAsync(string endpoint, object payload, CancellationToken cancellationToken, innertube_client client = innertube_client.Web, bool authenticate = false, string? dumpTag = null)
         {
             bool tv = client == innertube_client.Tv;
 
@@ -105,6 +179,9 @@ namespace AXPlayer.App.Online
 
                 await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 
+                if (innertube_dump_enabled)
+                    return await dumpAndParseResponseAsync(endpoint, dumpTag, stream, cancellationToken).ConfigureAwait(false);
+
                 return await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -118,6 +195,61 @@ namespace AXPlayer.App.Online
             }
         }
 
+        /// <summary>
+        /// Whether raw Innertube responses are written to <c>%TEMP%/axplayer-innertube</c>.
+        /// The dumps are always written; <c>AXPLAYER_INNERTUBE_DUMP=0</c> turns them off.
+        /// </summary>
+        private static readonly bool innertube_dump_enabled = shouldDumpInnertube(Environment.GetEnvironmentVariable(@"AXPLAYER_INNERTUBE_DUMP"));
+
+        /// <summary>
+        /// Reads whether the dumps are enabled from the value of the <c>AXPLAYER_INNERTUBE_DUMP</c>
+        /// environment variable. Only an explicit <c>0</c> disables them.
+        /// </summary>
+        internal static bool shouldDumpInnertube(string? environmentValue)
+            => !string.Equals(environmentValue?.Trim(), @"0", StringComparison.Ordinal);
+
+        /// <summary>
+        /// The tag that marks the dumps of the comment requests in their file name.
+        /// </summary>
+        internal const string comments_dump_tag = @"comments";
+
+        /// <summary>
+        /// Builds the file name of a dumped response, for example
+        /// <c>20261115-074244-461-next (comments).json</c>.
+        /// </summary>
+        internal static string buildDumpFileName(string endpoint, string? dumpTag, DateTime utcNow)
+        {
+            string name = $@"{utcNow:yyyyMMdd-HHmmss-fff}-{endpoint.Replace('/', '_')}";
+
+            if (!string.IsNullOrEmpty(dumpTag))
+                name += $@" ({dumpTag})";
+
+            return name + @".json";
+        }
+
+        private static async Task<JsonDocument> dumpAndParseResponseAsync(string endpoint, string? dumpTag, Stream stream, CancellationToken cancellationToken)
+        {
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            string json = await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+
+            try
+            {
+                string directory = Path.Combine(Path.GetTempPath(), @"axplayer-innertube");
+                Directory.CreateDirectory(directory);
+
+                string path = Path.Combine(directory, buildDumpFileName(endpoint, dumpTag, DateTime.UtcNow));
+                File.WriteAllText(path, json);
+
+                Logger.Log($@"Dumped the Innertube response for '{endpoint}' to '{path}'.", LoggingTarget.Network);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, $@"Failed to dump the Innertube response for '{endpoint}': {exception.GetDescription()}");
+            }
+
+            return JsonDocument.Parse(json);
+        }
+
         private async Task<JsonDocument?> sendTvInnertubeAsync(string endpoint, object payload, CancellationToken cancellationToken)
             => await sendInnertubeAsync(endpoint, payload, cancellationToken, innertube_client.Tv, googleOAuth2.SignedIn.Value).ConfigureAwait(false);
 
@@ -125,14 +257,14 @@ namespace AXPlayer.App.Online
         /// Sends an authenticated request as the TV client, then retries as the web client when
         /// the endpoint is not supported by the TV client.
         /// </summary>
-        private async Task<JsonDocument?> sendAuthenticatedInnertubeAsync(string endpoint, Func<innertube_client, object> payloadFactory, CancellationToken cancellationToken)
+        private async Task<JsonDocument?> sendAuthenticatedInnertubeAsync(string endpoint, Func<innertube_client, object> payloadFactory, CancellationToken cancellationToken, string? dumpTag = null)
         {
-            JsonDocument? document = await sendInnertubeAsync(endpoint, payloadFactory(innertube_client.Tv), cancellationToken, innertube_client.Tv, true).ConfigureAwait(false);
+            JsonDocument? document = await sendInnertubeAsync(endpoint, payloadFactory(innertube_client.Tv), cancellationToken, innertube_client.Tv, true, dumpTag).ConfigureAwait(false);
 
             if (document != null)
                 return document;
 
-            return await sendInnertubeAsync(endpoint, payloadFactory(innertube_client.Web), cancellationToken, innertube_client.Web, true).ConfigureAwait(false);
+            return await sendInnertubeAsync(endpoint, payloadFactory(innertube_client.Web), cancellationToken, innertube_client.Web, true, dumpTag).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -172,13 +304,13 @@ namespace AXPlayer.App.Online
             request.Headers.TryAddWithoutValidation(@"X-Youtube-Bootstrap-Logged-In", @"true");
         }
 
-        private object createWebClientContext(string? visitorData)
+        private object createWebClientContext(string? visitorData, string? interfaceLanguage = null)
         {
             var client = new Dictionary<string, object?>
             {
                 [@"clientName"] = @"WEB",
                 [@"clientVersion"] = web_client_version,
-                [@"hl"] = @"en",
+                [@"hl"] = string.IsNullOrEmpty(interfaceLanguage) ? @"en" : interfaceLanguage,
                 [@"gl"] = @"US",
             };
 
@@ -216,6 +348,11 @@ namespace AXPlayer.App.Online
 
             string? visitorData = await tryResolveVisitorDataAsync(cancellationToken).ConfigureAwait(false);
 
+            // The player response is requested with the original interface language so the snippet
+            // keeps the original title/description, while the watch-next response is requested in
+            // the player's language to expose the translated title/description (localizations).
+            string? interfaceLanguage = getInterfaceLanguage();
+
             Task<JsonDocument?> playerTask = sendInnertubeAsync(@"player", new Dictionary<string, object?>
             {
                 [@"videoId"] = videoId,
@@ -227,7 +364,7 @@ namespace AXPlayer.App.Online
             Task<JsonDocument?> nextTask = sendInnertubeAsync(@"next", new Dictionary<string, object?>
             {
                 [@"videoId"] = videoId,
-                [@"context"] = createWebClientContext(visitorData),
+                [@"context"] = createWebClientContext(visitorData, interfaceLanguage),
             }, cancellationToken);
 
             await Task.WhenAll(playerTask, nextTask).ConfigureAwait(false);
@@ -244,9 +381,45 @@ namespace AXPlayer.App.Online
                 return null;
 
             if (next != null)
+            {
                 applyWatchMetadata(video, next.RootElement);
+                applyFullDescription(video, next.RootElement);
+            }
+
+            applyPublishedAt(video, player.RootElement, next?.RootElement);
+            applyLiveStreamingDetails(video, player.RootElement, next?.RootElement);
+            applyLocalizations(video, next?.RootElement, interfaceLanguage, getFrameworkLocale());
 
             return video;
+        }
+
+        /// <summary>
+        /// Returns the primary language subtag of the framework locale (for example <c>ko</c> for
+        /// <c>ko-KR</c>), which is what the Innertube <c>hl</c> parameter expects.
+        /// </summary>
+        private string? getInterfaceLanguage()
+        {
+            string? locale = getFrameworkLocale();
+
+            if (string.IsNullOrWhiteSpace(locale))
+                return null;
+
+            int separator = locale.IndexOfAny(new[] { '-', '_' });
+
+            return separator > 0 ? locale[..separator] : locale;
+        }
+
+        private string? getFrameworkLocale()
+        {
+            try
+            {
+                return frameworkConfig.Get<string>(FrameworkSetting.Locale);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, $@"Failed to read the framework locale: {exception.GetDescription()}");
+                return null;
+            }
         }
 
         internal static Video? parseVideo(JsonElement root, string videoId)
@@ -266,6 +439,16 @@ namespace AXPlayer.App.Online
                                         && microformatRoot.TryGetProperty(@"playerMicroformatRenderer", out JsonElement renderer)
                 ? renderer
                 : null;
+
+            // shortDescription is truncated for long descriptions, while the microformat copy is
+            // usually the complete text.
+            if (microformat != null)
+            {
+                string? microformatDescription = extractText(getObject(microformat.Value, @"description") ?? default);
+
+                if (!string.IsNullOrEmpty(microformatDescription) && microformatDescription.Length > description.Length)
+                    description = microformatDescription;
+            }
 
             string? publishDate = microformat != null ? getString(microformat.Value, @"publishDate") : null;
             string? uploadDate = microformat != null ? getString(microformat.Value, @"uploadDate") : null;
@@ -315,19 +498,7 @@ namespace AXPlayer.App.Online
                 Localizations = new Dictionary<string, VideoLocalization>(StringComparer.Ordinal),
             };
 
-            if (isLiveContent)
-            {
-                DateTimeOffset? start = parseDateTimeOffset(getLiveBroadcastTimestamp(microformat, @"startTimestamp"));
-
-                video.LiveStreamingDetails = new VideoLiveStreamingDetails
-                {
-                    ActualStartTimeRaw = start?.ToString(@"o", CultureInfo.InvariantCulture),
-                    ActualStartTimeDateTimeOffset = start,
-                    ScheduledStartTimeRaw = start?.ToString(@"o", CultureInfo.InvariantCulture),
-                    ScheduledStartTimeDateTimeOffset = start,
-                    ConcurrentViewers = isLiveNow ? parseRoughCount(getString(details, @"viewCount")) : null,
-                };
-            }
+            applyLiveStreamingDetails(video, root, null);
 
             bool categoryIsMusic = microformat != null
                                    && string.Equals(getString(microformat.Value, @"category"), @"Music", StringComparison.OrdinalIgnoreCase);
@@ -401,7 +572,10 @@ namespace AXPlayer.App.Online
                     {
                         string? text = extractText(value);
 
-                        if (string.IsNullOrEmpty(text) || !text.Contains(@"like", StringComparison.OrdinalIgnoreCase))
+                        if (string.IsNullOrEmpty(text)
+                            || !(text.Contains(@"like", StringComparison.OrdinalIgnoreCase)
+                                 || text.Contains(@"좋아요", StringComparison.Ordinal)
+                                 || text.Contains(@"高評価", StringComparison.Ordinal)))
                             continue;
 
                         ulong? count = parseRoughCount(text);
@@ -424,7 +598,9 @@ namespace AXPlayer.App.Online
 
                 string title = extractText(titleElement) ?? string.Empty;
 
-                if (!title.Equals(@"Category", StringComparison.OrdinalIgnoreCase))
+                if (!title.Equals(@"Category", StringComparison.OrdinalIgnoreCase)
+                    && !title.Equals(@"카테고리", StringComparison.Ordinal)
+                    && !title.Equals(@"カテゴリ", StringComparison.Ordinal))
                     continue;
 
                 if (!metadataRow.TryGetProperty(@"contents", out JsonElement contents) || contents.ValueKind != JsonValueKind.Array)
@@ -432,7 +608,11 @@ namespace AXPlayer.App.Online
 
                 foreach (JsonElement content in contents.EnumerateArray())
                 {
-                    if (string.Equals(extractText(content), @"Music", StringComparison.OrdinalIgnoreCase))
+                    string value = extractText(content) ?? string.Empty;
+
+                    if (string.Equals(value, @"Music", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(value, @"음악", StringComparison.Ordinal)
+                        || string.Equals(value, @"音楽", StringComparison.Ordinal))
                         return true;
                 }
             }
@@ -440,15 +620,492 @@ namespace AXPlayer.App.Online
             return false;
         }
 
-        private static string? getLiveBroadcastTimestamp(JsonElement? microformat, string propertyName)
+        /// <summary>
+        /// Fills <see cref="Video.LiveStreamingDetails"/> from the player and watch-next responses.
+        /// </summary>
+        /// <remarks>
+        /// The Data API returned these values as a single <c>liveStreamingDetails</c> object, while
+        /// Innertube spreads them over the response: the broadcast timestamps live in
+        /// <c>microformat.liveBroadcastDetails</c>, an upcoming stream exposes its start in
+        /// <c>playabilityStatus</c> and the watch-next response carries the live viewer count.
+        /// </remarks>
+        internal static void applyLiveStreamingDetails(Video video, JsonElement playerRoot, JsonElement? nextRoot)
         {
-            if (microformat == null)
+            JsonElement details = getObject(playerRoot, @"videoDetails") ?? default;
+            JsonElement liveBroadcast = getNestedObject(playerRoot, @"microformat", @"playerMicroformatRenderer", @"liveBroadcastDetails") ?? default;
+
+            JsonElement offlineSlate = getNestedObject(playerRoot, @"playabilityStatus", @"liveStreamability", @"liveStreamabilityRenderer", @"offlineSlate",
+                @"liveStreamOfflineSlateRenderer") ?? default;
+
+            JsonElement playability = getObject(playerRoot, @"playabilityStatus") ?? default;
+
+            JsonElement primaryInfo = nextRoot != null ? firstRenderer(nextRoot.Value, @"videoPrimaryInfoRenderer") ?? default : default;
+            JsonElement upcoming = getObject(primaryInfo, @"upcomingEventData") ?? default;
+            JsonElement viewerCountRenderer = getNestedObject(primaryInfo, @"viewCount", @"videoViewCountRenderer") ?? default;
+
+            bool isLiveNow = getBool(details, @"isLive")
+                             || getBool(liveBroadcast, @"isLiveNow")
+                             || getBool(viewerCountRenderer, @"isLive");
+
+            DateTimeOffset? broadcastStart = parseDateTimeOffset(getString(liveBroadcast, @"startTimestamp"));
+            DateTimeOffset? broadcastEnd = parseDateTimeOffset(getString(liveBroadcast, @"endTimestamp"));
+
+            // An upcoming stream has no broadcast timestamps yet, only the (re)scheduled start.
+            DateTimeOffset? scheduledStart = parseEpochSeconds(getString(offlineSlate, @"scheduledStartTime"))
+                                             ?? parseEpochSeconds(getString(upcoming, @"startTime"));
+
+            bool isUpcoming = !isLiveNow
+                              && broadcastEnd == null
+                              && (offlineSlate.ValueKind == JsonValueKind.Object
+                                  || upcoming.ValueKind == JsonValueKind.Object
+                                  || string.Equals(getString(playability, @"status"), @"LIVE_STREAM_OFFLINE", StringComparison.Ordinal));
+
+            bool isLiveContent = getBool(details, @"isLiveContent")
+                                 || liveBroadcast.ValueKind == JsonValueKind.Object
+                                 || isUpcoming;
+
+            if (!isLiveContent)
+            {
+                video.LiveStreamingDetails = null;
+                return;
+            }
+
+            DateTimeOffset? actualStart = null;
+            DateTimeOffset? actualEnd = null;
+            ulong? concurrentViewers = null;
+
+            if (isLiveNow)
+            {
+                actualStart = broadcastStart ?? scheduledStart;
+
+                concurrentViewers = parseRoughCount(getString(details, @"viewCount"))
+                                    ?? parseRoughCount(extractText(getObject(viewerCountRenderer, @"viewCount") ?? viewerCountRenderer));
+            }
+            else if (isUpcoming)
+            {
+                // Only the schedule is known before the broadcast starts.
+                scheduledStart ??= broadcastStart;
+            }
+            else
+            {
+                actualStart = broadcastStart ?? scheduledStart;
+
+                if (broadcastEnd != null)
+                {
+                    actualEnd = broadcastEnd;
+                }
+                else if (actualStart != null)
+                {
+                    // A finished stream keeps the length of the VOD, which is the stream duration.
+                    double lengthSeconds = getDouble(details, @"lengthSeconds");
+
+                    if (lengthSeconds > 0)
+                        actualEnd = actualStart.Value.AddSeconds(lengthSeconds);
+                }
+            }
+
+            // YouTube treats the schedule of a broadcast that already started as its start time.
+            scheduledStart ??= actualStart;
+
+            video.LiveStreamingDetails = new VideoLiveStreamingDetails
+            {
+                ActualStartTimeRaw = formatTimestamp(actualStart),
+                ActualStartTimeDateTimeOffset = actualStart,
+                ActualEndTimeRaw = formatTimestamp(actualEnd),
+                ActualEndTimeDateTimeOffset = actualEnd,
+                ScheduledStartTimeRaw = formatTimestamp(scheduledStart),
+                ScheduledStartTimeDateTimeOffset = scheduledStart,
+                ConcurrentViewers = isLiveNow ? concurrentViewers : null,
+            };
+        }
+
+        private static DateTimeOffset? parseEpochSeconds(string? raw)
+        {
+            if (!long.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out long seconds) || seconds <= 0)
                 return null;
 
-            if (!microformat.Value.TryGetProperty(@"liveBroadcastDetails", out JsonElement details))
+            return DateTimeOffset.FromUnixTimeSeconds(seconds);
+        }
+
+        private static string? formatTimestamp(DateTimeOffset? value)
+            => value?.ToString(@"o", CultureInfo.InvariantCulture);
+
+        /// <summary>
+        /// Replaces the truncated player description with the full description of the watch page,
+        /// with every link resolved to its target URL.
+        /// </summary>
+        internal static void applyFullDescription(Video video, JsonElement nextRoot)
+        {
+            if (video.Snippet == null)
+                return;
+
+            string? description = extractFullDescription(nextRoot);
+
+            if (string.IsNullOrEmpty(description))
+                return;
+
+            // The rendered description of the watch page is authoritative, but the fallbacks can be a
+            // preview, so those never replace a longer description.
+            if (description.Length < (video.Snippet.Description?.Length ?? 0) && findProperty(nextRoot, @"attributedDescription") == null)
+                return;
+
+            video.Snippet.Description = description;
+
+            if (video.Snippet.Localized != null)
+                video.Snippet.Localized.Description = description;
+        }
+
+        /// <summary>
+        /// Extracts the full description of a watch page, including the target of each embedded link.
+        /// </summary>
+        internal static string? extractFullDescription(JsonElement root)
+        {
+            foreach (JsonElement secondaryInfo in enumerateRenderers(root, @"videoSecondaryInfoRenderer"))
+            {
+                if (getObject(secondaryInfo, @"attributedDescription") is { } attributed
+                    && getString(attributed, @"content") is { Length: > 0 } content)
+                    return expandDescriptionLinks(content, attributed);
+
+                if (getObject(secondaryInfo, @"description") is { } description
+                    && buildDescriptionFromRuns(description) is { Length: > 0 } descriptionText)
+                    return descriptionText;
+            }
+
+            foreach (JsonElement body in enumerateRenderers(root, @"expandableVideoDescriptionBodyRenderer"))
+            {
+                if (getObject(body, @"descriptionBodyText") is { } bodyText
+                    && buildDescriptionFromRuns(bodyText) is { Length: > 0 } bodyDescription)
+                    return bodyDescription;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Replaces the abbreviated links of an <c>attributedDescription</c> with the URL they point
+        /// at. The label of a link that is not a URL itself (a hashtag, a channel name, ...) is kept
+        /// verbatim.
+        /// </summary>
+        private static string expandDescriptionLinks(string content, JsonElement attributedDescription)
+        {
+            if (!attributedDescription.TryGetProperty(@"commandRuns", out JsonElement commandRuns) || commandRuns.ValueKind != JsonValueKind.Array)
+                return content;
+
+            var links = new List<(int Start, int Length, string Replacement)>();
+
+            foreach (JsonElement run in commandRuns.EnumerateArray())
+            {
+                int start = getInt(run, @"startIndex");
+                int length = getInt(run, @"length");
+
+                if (start < 0 || length <= 0 || start + length > content.Length)
+                    continue;
+
+                string? url = findDescriptionLink(run);
+
+                if (string.IsNullOrEmpty(url))
+                    continue;
+
+                if (!tryResolveTruncatedUrl(content.Substring(start, length), url, out string replacement))
+                    continue;
+
+                links.Add((start, length, replacement));
+            }
+
+            if (links.Count == 0)
+                return content;
+
+            var builder = new StringBuilder(content);
+
+            // Replace from the end so the earlier indices stay valid.
+            for (int i = links.Count - 1; i >= 0; i--)
+            {
+                builder.Remove(links[i].Start, links[i].Length);
+                builder.Insert(links[i].Start, links[i].Replacement);
+            }
+
+            return builder.ToString();
+        }
+
+        private static string? buildDescriptionFromRuns(JsonElement description)
+        {
+            if (getString(description, @"simpleText") is { Length: > 0 } simpleText)
+                return simpleText;
+
+            if (!description.TryGetProperty(@"runs", out JsonElement runs) || runs.ValueKind != JsonValueKind.Array)
                 return null;
 
-            return getString(details, propertyName);
+            var builder = new StringBuilder();
+
+            foreach (JsonElement run in runs.EnumerateArray())
+            {
+                string text = getString(run, @"text") ?? string.Empty;
+                string? url = findDescriptionLink(run);
+
+                if (!string.IsNullOrEmpty(url) && tryResolveTruncatedUrl(text, url, out string replacement))
+                    builder.Append(replacement);
+                else
+                    builder.Append(text);
+            }
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Resolves the placeholder of an abbreviated link (for example
+        /// <c>https://example.com/shopdetail...</c>) into the URL it points at.
+        /// </summary>
+        /// <returns><see langword="true" /> when the text of the link has to be replaced.</returns>
+        private static bool tryResolveTruncatedUrl(string text, string url, out string replacement)
+        {
+            replacement = string.Empty;
+
+            int start = 0;
+
+            while (start < text.Length && char.IsWhiteSpace(text[start]))
+                start++;
+
+            int end = text.Length;
+
+            while (end > start && char.IsWhiteSpace(text[end - 1]))
+                end--;
+
+            if (end - start < 9)
+                return false;
+
+            string label = text[start..end];
+
+            // Hashtags and other inline links keep the label they are rendered with.
+            if (label.StartsWith('#') || label.StartsWith('＃') || !isUrlLabel(label))
+                return false;
+
+            if (string.Equals(label, url, StringComparison.Ordinal))
+                return false;
+
+            // The rendered label is cut off with an ellipsis, or is a prefix of the target URL.
+            string trimmed = label.TrimEnd('.', '…');
+            bool truncated = trimmed.Length != label.Length || (url.Length > trimmed.Length && url.StartsWith(trimmed, StringComparison.Ordinal));
+
+            if (!truncated)
+                return false;
+
+            replacement = string.Concat(text.AsSpan(0, start), url, text.AsSpan(end));
+            return true;
+        }
+
+        private static bool isUrlLabel(string label)
+            => label.StartsWith(@"http://", StringComparison.OrdinalIgnoreCase)
+               || label.StartsWith(@"https://", StringComparison.OrdinalIgnoreCase)
+               || label.StartsWith(@"www.", StringComparison.OrdinalIgnoreCase);
+
+        private static string? findDescriptionLink(JsonElement element)
+        {
+            string? url = null;
+
+            JsonElement? urlEndpoint = findProperty(element, @"urlEndpoint");
+
+            if (urlEndpoint != null)
+                url = getString(urlEndpoint.Value, @"url");
+
+            if (string.IsNullOrEmpty(url))
+            {
+                JsonElement? webCommandMetadata = findProperty(element, @"webCommandMetadata");
+
+                if (webCommandMetadata != null)
+                    url = getString(webCommandMetadata.Value, @"url");
+            }
+
+            return normalizeDescriptionUrl(url);
+        }
+
+        private static string? normalizeDescriptionUrl(string? url)
+        {
+            if (string.IsNullOrEmpty(url))
+                return null;
+
+            // Links of a description are wrapped in a youtube.com/redirect URL, which carries the
+            // real target in its q parameter.
+            if (url.Contains(@"/redirect", StringComparison.OrdinalIgnoreCase))
+            {
+                string? target = getQueryParameter(url, @"q");
+
+                if (!string.IsNullOrEmpty(target))
+                    return Uri.UnescapeDataString(target);
+            }
+
+            return url.StartsWith(@"/", StringComparison.Ordinal) ? youtube_origin + url : url;
+        }
+
+        private static string? getQueryParameter(string url, string name)
+        {
+            int queryStart = url.IndexOf('?');
+
+            if (queryStart < 0)
+                return null;
+
+            foreach (string pair in url[(queryStart + 1)..].Split('&'))
+            {
+                int separator = pair.IndexOf('=');
+
+                if (separator <= 0)
+                    continue;
+
+                if (string.Equals(pair[..separator], name, StringComparison.Ordinal))
+                    return pair[(separator + 1)..];
+            }
+
+            return null;
+        }
+
+        private static int getInt(JsonElement element, string propertyName)
+        {
+            if (element.ValueKind != JsonValueKind.Object || !element.TryGetProperty(propertyName, out JsonElement value))
+                return -1;
+
+            return value.ValueKind switch
+            {
+                JsonValueKind.Number => value.TryGetInt32(out int number) ? number : -1,
+                JsonValueKind.String => int.TryParse(value.GetString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed) ? parsed : -1,
+                _ => -1,
+            };
+        }
+
+        /// <summary>
+        /// Resolves the publish timestamp of a video from the player microformat, falling back to the
+        /// watch-next primary info when the microformat does not carry one.
+        /// </summary>
+        internal static void applyPublishedAt(Video video, JsonElement playerRoot, JsonElement? nextRoot)
+        {
+            if (video.Snippet == null)
+                return;
+
+            JsonElement microformat = getNestedObject(playerRoot, @"microformat", @"playerMicroformatRenderer") ?? default;
+
+            string? raw = getString(microformat, @"publishDate")
+                          ?? getString(microformat, @"uploadDate")
+                          ?? getString(getObject(microformat, @"liveBroadcastDetails") ?? default, @"startTimestamp");
+
+            DateTimeOffset? published = parseDateTimeOffset(raw);
+
+            if (published == null && nextRoot != null)
+            {
+                JsonElement primaryInfo = firstRenderer(nextRoot.Value, @"videoPrimaryInfoRenderer") ?? default;
+
+                published = parseDateText(extractText(getObject(primaryInfo, @"dateText") ?? default))
+                            ?? parseRelativeDate(extractText(getObject(primaryInfo, @"relativeDateText") ?? default));
+
+                if (published != null)
+                    raw = formatTimestamp(published);
+            }
+
+            if (published == null)
+                return;
+
+            video.Snippet.PublishedAtRaw = raw;
+            video.Snippet.PublishedAtDateTimeOffset = published;
+        }
+
+        /// <summary>
+        /// Parses the human readable date rendered by the watch page (for example
+        /// <c>Streamed live on May 1, 2024</c> or <c>May 1, 2024</c>).
+        /// </summary>
+        internal static DateTimeOffset? parseDateText(string? text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return null;
+
+            string candidate = text.Trim();
+
+            foreach (string prefix in date_text_prefixes)
+            {
+                if (!candidate.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                candidate = candidate[prefix.Length..].Trim();
+                break;
+            }
+
+            // Drop a trailing note, e.g. "May 1, 2024 (edited)".
+            int noteStart = candidate.IndexOf('(');
+
+            if (noteStart > 0)
+                candidate = candidate[..noteStart].Trim();
+
+            if (DateTimeOffset.TryParse(candidate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out DateTimeOffset value))
+                return value;
+
+            // Localized dates are not always parseable with the invariant culture (for example
+            // "2024. 5. 1."), so the numeric form is read directly as a last resort.
+            Match numeric = Regex.Match(candidate, @"(\d{4})[.\-/]\s*(\d{1,2})[.\-/]\s*(\d{1,2})");
+
+            if (!numeric.Success
+                || !int.TryParse(numeric.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int year)
+                || !int.TryParse(numeric.Groups[2].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int month)
+                || !int.TryParse(numeric.Groups[3].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int day))
+                return null;
+
+            return month is >= 1 and <= 12 && day is >= 1 and <= 31
+                ? new DateTimeOffset(year, month, day, 0, 0, 0, TimeSpan.Zero)
+                : null;
+        }
+
+        /// <summary>
+        /// Adds the default language and the interface language entries to <see cref="Video.Localizations"/>.
+        /// </summary>
+        /// <remarks>
+        /// The Data API returned every uploader-provided translation at once. Innertube only localizes
+        /// the watch-next response to the requested <c>hl</c>, so the translation of the player's
+        /// language is collected here and the snippet stays in the original language.
+        /// </remarks>
+        internal static void applyLocalizations(Video video, JsonElement? nextRoot, string? interfaceLanguage, string? locale)
+        {
+            var localizations = video.Localizations ?? new Dictionary<string, VideoLocalization>(StringComparer.Ordinal);
+
+            string? defaultLanguage = video.Snippet?.DefaultLanguage;
+
+            if (!string.IsNullOrEmpty(defaultLanguage) && video.Snippet?.Localized != null)
+                addLocalization(localizations, defaultLanguage, video.Snippet.Localized.Title, video.Snippet.Localized.Description);
+
+            if (nextRoot == null || string.IsNullOrEmpty(interfaceLanguage))
+            {
+                video.Localizations = localizations;
+                return;
+            }
+
+            JsonElement primaryInfo = firstRenderer(nextRoot.Value, @"videoPrimaryInfoRenderer") ?? default;
+            string? localizedTitle = extractText(getObject(primaryInfo, @"title") ?? default);
+
+            if (string.IsNullOrEmpty(localizedTitle))
+            {
+                video.Localizations = localizations;
+                return;
+            }
+
+            // The localized entry carries the same expanded description as the snippet, so that a
+            // translated title never brings back the truncated text with abbreviated links.
+            string? localizedDescription = extractFullDescription(nextRoot.Value);
+
+            localizedDescription ??= video.Snippet?.Description;
+
+            addLocalization(localizations, interfaceLanguage, localizedTitle, localizedDescription);
+
+            // GetLocalizedVideoTitle() looks the translation up with the full framework locale.
+            if (!string.IsNullOrEmpty(locale) && !string.Equals(locale, interfaceLanguage, StringComparison.OrdinalIgnoreCase))
+                addLocalization(localizations, locale, localizedTitle, localizedDescription);
+
+            video.Localizations = localizations;
+        }
+
+        private static void addLocalization(IDictionary<string, VideoLocalization> localizations, string language, string? title, string? description)
+        {
+            if (string.IsNullOrEmpty(title))
+                return;
+
+            localizations[language] = new VideoLocalization
+            {
+                Title = title,
+                Description = description,
+            };
         }
 
         private static string? getDefaultAudioLanguage(JsonElement root)
@@ -565,8 +1222,8 @@ namespace AXPlayer.App.Online
                 },
                 Statistics = new ChannelStatistics
                 {
-                    SubscriberCount = findCountWithKeyword(root, @"subscriber"),
-                    VideoCount = findCountWithKeyword(root, @"video"),
+                    SubscriberCount = findCountWithKeyword(root, subscriber_count_keywords),
+                    VideoCount = findCountWithKeyword(root, video_count_keywords),
                 },
                 ContentDetails = new ChannelContentDetails
                 {
@@ -601,17 +1258,43 @@ namespace AXPlayer.App.Online
                 }
             }
 
-            // Newer page headers expose the handle as "@name" in the metadata rows.
-            foreach (JsonElement value in enumeratePropertyValues(root, @"content"))
-            {
-                string? text = value.GetString();
+            // Newer page headers expose the handle as "@name" in the metadata rows. The channels that
+            // are recommended further down the page carry their own handle, so the header is checked
+            // first instead of the first handle that appears anywhere in the document.
+            JsonElement? header = findPageHeader(root);
 
-                if (!string.IsNullOrEmpty(text) && text.StartsWith('@') && !text.Contains(' '))
-                    return text;
+            if (header != null && findHandleInScope(header.Value) is { } headerHandle)
+                return headerHandle;
+
+            return findHandleInScope(root);
+        }
+
+        private static string? findHandleInScope(JsonElement scope)
+        {
+            foreach (string propertyName in new[] { @"content", @"text", @"simpleText" })
+            {
+                foreach (JsonElement value in enumeratePropertyValues(scope, propertyName))
+                {
+                    string? text = getStringValue(value) ?? extractText(value);
+
+                    if (!string.IsNullOrEmpty(text) && text.StartsWith('@') && text.Length > 1 && !text.Contains(' '))
+                        return text;
+                }
             }
 
             return null;
         }
+
+        /// <summary>
+        /// Reads a value that is expected to be a string.
+        /// </summary>
+        /// <remarks>
+        /// The values of a property name are not guaranteed to be strings; the newer renderers use
+        /// the same name for objects as well (for example <c>pageHeaderRenderer.content</c>), so they
+        /// must not be read blindly.
+        /// </remarks>
+        private static string? getStringValue(JsonElement element)
+            => element.ValueKind == JsonValueKind.String ? element.GetString() : null;
 
         private async Task<bool> fetchChannelExistsViaHandleAsync(string handle, CancellationToken cancellationToken)
         {
@@ -900,7 +1583,7 @@ namespace AXPlayer.App.Online
 
             foreach (JsonElement value in enumeratePropertyValues(element, @"browseId"))
             {
-                string? browseId = value.GetString();
+                string? browseId = getStringValue(value);
 
                 if (!string.IsNullOrEmpty(browseId) && browseId.StartsWith(@"UC", StringComparison.Ordinal))
                     return browseId;
@@ -932,7 +1615,7 @@ namespace AXPlayer.App.Online
             {
                 foreach (JsonElement value in enumeratePropertyValues(element, propertyName))
                 {
-                    string? text = value.GetString();
+                    string? text = getStringValue(value) ?? extractText(value);
 
                     if (!string.IsNullOrEmpty(text) && text.StartsWith('@') && text.Length > 1 && !text.Contains(' '))
                         return text;
@@ -996,7 +1679,38 @@ namespace AXPlayer.App.Online
             if (document == null)
                 return results;
 
-            foreach (JsonElement renderer in enumerateSearchRenderers(document.RootElement))
+            collectSearchResults(document.RootElement, results);
+
+            // A search page holds a single shelf of results, so the rest is fetched through the
+            // continuation tokens until the amount the Data API returned before is reached.
+            string? continuation = tryFindContinuationToken(document.RootElement);
+
+            for (int page = 1; continuation != null && results.Count < search_max_results && page < search_max_pages; page++)
+            {
+                using JsonDocument? nextPage = await sendInnertubeAsync(@"search", new Dictionary<string, object?>
+                {
+                    [@"continuation"] = continuation,
+                    [@"context"] = createWebClientContext(null),
+                }, cancellationToken).ConfigureAwait(false);
+
+                if (nextPage == null)
+                    break;
+
+                collectSearchResults(nextPage.RootElement, results);
+                continuation = tryFindContinuationToken(nextPage.RootElement);
+            }
+
+            if (orderEnum == SearchResource.ListRequest.OrderEnum.Title)
+                results.Sort(static (a, b) => string.Compare(a.Snippet?.Title, b.Snippet?.Title, StringComparison.CurrentCultureIgnoreCase));
+
+            return results;
+        }
+
+        private static void collectSearchResults(JsonElement root, List<SearchResult> results)
+        {
+            var seen = new HashSet<string>(results.Select(result => result.Id?.VideoId ?? result.Id?.PlaylistId ?? string.Empty), StringComparer.Ordinal);
+
+            foreach (JsonElement renderer in enumerateSearchRenderers(root))
             {
                 SearchResult? result = null;
 
@@ -1005,14 +1719,17 @@ namespace AXPlayer.App.Online
                 else if (renderer.TryGetProperty(@"playlistRenderer", out JsonElement playlistRenderer))
                     result = parsePlaylistSearchResult(playlistRenderer);
 
-                if (result != null)
-                    results.Add(result);
+                if (result == null)
+                    continue;
+
+                string id = result.Id?.VideoId ?? result.Id?.PlaylistId ?? string.Empty;
+
+                // A continuation can overlap with the page it was requested from.
+                if (id.Length > 0 && !seen.Add(id))
+                    continue;
+
+                results.Add(result);
             }
-
-            if (orderEnum == SearchResource.ListRequest.OrderEnum.Title)
-                results.Sort(static (a, b) => string.Compare(a.Snippet?.Title, b.Snippet?.Title, StringComparison.CurrentCultureIgnoreCase));
-
-            return results;
         }
 
         private static IEnumerable<JsonElement> enumerateSearchRenderers(JsonElement root)
@@ -1133,10 +1850,18 @@ namespace AXPlayer.App.Online
 
             foreach (JsonElement badge in badges.EnumerateArray())
             {
-                if (badge.TryGetProperty(@"metadataBadgeRenderer", out JsonElement metadataBadge)
-                    && metadataBadge.TryGetProperty(@"label", out JsonElement label)
-                    && label.ValueKind == JsonValueKind.String
-                    && string.Equals(label.GetString(), @"LIVE", StringComparison.OrdinalIgnoreCase))
+                if (!badge.TryGetProperty(@"metadataBadgeRenderer", out JsonElement metadataBadge))
+                    continue;
+
+                // The label of the badge is localized, its style is not.
+                if (getString(metadataBadge, @"style") is { } style
+                    && string.Equals(style, @"BADGE_STYLE_TYPE_LIVE_NOW", StringComparison.Ordinal))
+                    return true;
+
+                if (getString(metadataBadge, @"label") is { } label
+                    && (string.Equals(label, @"LIVE", StringComparison.OrdinalIgnoreCase)
+                        || string.Equals(label, @"실시간", StringComparison.Ordinal)
+                        || string.Equals(label, @"ライブ", StringComparison.Ordinal)))
                     return true;
             }
 
@@ -1144,6 +1869,17 @@ namespace AXPlayer.App.Online
         }
 
         #endregion
+
+        /// <summary>
+        /// Builds the web client context for comment requests. The visitor data is included because
+        /// the continuation tokens of the watch page are bound to the visitor that requested it.
+        /// </summary>
+        private async Task<object> createCommentsContextAsync(CancellationToken cancellationToken)
+        {
+            string? visitorData = await tryResolveVisitorDataAsync(cancellationToken).ConfigureAwait(false);
+
+            return createWebClientContext(visitorData);
+        }
 
         #region comments
 
@@ -1168,43 +1904,60 @@ namespace AXPlayer.App.Online
                 }
             }
 
-            List<JsonElement> items = await fetchContinuationItemsAsync(continuation, cancellationToken).ConfigureAwait(false);
+            comment_page page;
 
             if (string.IsNullOrEmpty(pageToken) && orderEnum == CommentThreadsResource.ListRequest.OrderEnum.Time)
             {
-                string? newestFirst = findSortContinuation(items, @"newest");
+                // The sort menu is rendered in the section header, which is not part of the
+                // continuation items, so it has to be resolved from the page response itself.
+                page = await fetchCommentPageAsync(continuation, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                page = await fetchContinuationItemsAsync(continuation, cancellationToken).ConfigureAwait(false);
+            }
 
-                if (!string.IsNullOrEmpty(newestFirst) && newestFirst != continuation)
+            string? newestFirst = page.NewestSortContinuation;
+
+            if (!string.IsNullOrEmpty(newestFirst) && newestFirst != continuation)
+            {
+                comment_page sortedPage = await fetchContinuationItemsAsync(newestFirst, cancellationToken).ConfigureAwait(false);
+
+                if (sortedPage.Items.Count > 0)
                 {
-                    List<JsonElement> sortedItems = await fetchContinuationItemsAsync(newestFirst, cancellationToken).ConfigureAwait(false);
-
-                    if (sortedItems.Count > 0)
-                    {
-                        items = sortedItems;
-                        continuation = newestFirst;
-                    }
+                    page = sortedPage;
+                    continuation = newestFirst;
                 }
             }
 
+            List<JsonElement> items = page.Items;
+            Dictionary<string, JsonElement> entities = page.Entities;
+
             var replyContinuations = new Dictionary<string, string>(StringComparer.Ordinal);
+            int parsedThreads = 0;
 
             foreach (JsonElement item in items)
             {
                 if (item.ValueKind != JsonValueKind.Object)
                     continue;
 
-                if (item.TryGetProperty(@"commentThreadRenderer", out JsonElement threadRenderer))
+                bool isThread = item.TryGetProperty(@"commentThreadRenderer", out JsonElement threadRenderer);
+                bool isFlatComment = item.TryGetProperty(@"commentViewModel", out _);
+
+                if (isThread || isFlatComment)
                 {
-                    CommentThread? thread = parseCommentThread(threadRenderer, videoId);
+                    CommentThread? thread = parseCommentThread(isThread ? threadRenderer : item, videoId, entities);
 
                     if (thread == null)
                         continue;
+
+                    parsedThreads++;
 
                     if (thread.Snippet?.TopLevelComment != null)
                         response.Items.Add(thread);
 
                     // Older responses returned a handful of replies inline instead of a continuation.
-                    List<Comment>? inlineReplies = parseInlineReplies(threadRenderer, videoId, thread.Id);
+                    List<Comment>? inlineReplies = parseInlineReplies(threadRenderer, videoId, thread.Id, entities);
 
                     if (inlineReplies != null)
                     {
@@ -1229,6 +1982,9 @@ namespace AXPlayer.App.Online
                 }
             }
 
+            if (items.Count > 0 && parsedThreads == 0)
+                logUnparsedCommentItems(items, entities.Count);
+
             if (replyContinuations.Count > 0)
             {
                 Dictionary<string, List<Comment>> replies = await fetchRepliesAsync(replyContinuations, videoId, cancellationToken).ConfigureAwait(false);
@@ -1251,21 +2007,129 @@ namespace AXPlayer.App.Online
             return response;
         }
 
-        private async Task<List<JsonElement>> fetchContinuationItemsAsync(string continuation, CancellationToken cancellationToken)
+        private async Task<comment_page> fetchContinuationItemsAsync(string continuation, CancellationToken cancellationToken)
         {
             using JsonDocument? document = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
             {
                 [@"continuation"] = continuation,
-                [@"context"] = createWebClientContext(null),
-            }, cancellationToken).ConfigureAwait(false);
+                [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
+            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
 
             if (document == null)
-                return new List<JsonElement>();
+                return comment_page.Empty;
 
-            return extractContinuationItems(document.RootElement);
+            // Only the first page of the "newest first" order has to be resolved through the sort menu,
+            // so a plain continuation never replaces the order the caller asked for.
+            return readCommentPage(document.RootElement) with
+            {
+                NewestSortContinuation = null,
+            };
         }
 
-        private static List<JsonElement> extractContinuationItems(JsonElement root)
+        private async Task<comment_page> fetchCommentPageAsync(string continuation, CancellationToken cancellationToken)
+        {
+            using JsonDocument? document = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
+            {
+                [@"continuation"] = continuation,
+                [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
+            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
+
+            if (document == null)
+                return comment_page.Empty;
+
+            return readCommentPage(document.RootElement) with
+            {
+                NewestSortContinuation = tryFindNewestSortContinuation(document.RootElement),
+            };
+        }
+
+        /// <summary>
+        /// The items of a comment page together with the entity payloads that carry the text of the
+        /// comments.
+        /// </summary>
+        /// <remarks>
+        /// The items outlive the document they were parsed from, so they have to be detached from its
+        /// pooled buffer before the document is disposed.
+        /// </remarks>
+        internal sealed record comment_page(List<JsonElement> Items, Dictionary<string, JsonElement> Entities, string? NewestSortContinuation)
+        {
+            public static comment_page Empty { get; } = new(new List<JsonElement>(), new Dictionary<string, JsonElement>(StringComparer.Ordinal), null);
+        }
+
+        private static comment_page readCommentPage(JsonElement root)
+            => new(detachItems(extractContinuationItems(root)), extractCommentEntities(root), tryFindNewestSortContinuation(root));
+
+        /// <summary>
+        /// Collects the <c>commentEntityPayload</c> entities of a response, keyed by every identifier
+        /// the payload is referenced with.
+        /// </summary>
+        /// <remarks>
+        /// The current watch page only renders the text, the author and the like count of a comment
+        /// into <c>frameworkUpdates</c>, while the comment item itself keeps the identifiers.
+        /// </remarks>
+        internal static Dictionary<string, JsonElement> extractCommentEntities(JsonElement root)
+        {
+            var entities = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
+
+            JsonElement? batch = findProperty(root, @"entityBatchUpdate");
+
+            if (batch == null || !batch.Value.TryGetProperty(@"mutations", out JsonElement mutations) || mutations.ValueKind != JsonValueKind.Array)
+                return entities;
+
+            foreach (JsonElement mutation in mutations.EnumerateArray())
+            {
+                if (getObject(mutation, @"payload") is not { } payload
+                    || getObject(payload, @"commentEntityPayload") is not { } commentEntity)
+                    continue;
+
+                JsonElement detached = commentEntity.Clone();
+                JsonElement? properties = getObject(detached, @"properties");
+
+                foreach (string? key in new[]
+                         {
+                             getString(mutation, @"entityKey"),
+                             getString(detached, @"key"),
+                             getString(properties ?? default, @"commentKey"),
+                             getString(properties ?? default, @"commentId"),
+                         })
+                {
+                    if (!string.IsNullOrEmpty(key))
+                        entities[key] = detached;
+                }
+            }
+
+            return entities;
+        }
+
+        /// <summary>
+        /// Finds the entity payload that belongs to a comment item or view model.
+        /// </summary>
+        internal static JsonElement? findCommentEntity(JsonElement item, IReadOnlyDictionary<string, JsonElement>? entities)
+        {
+            if (entities == null || entities.Count == 0)
+                return null;
+
+            foreach (string propertyName in new[] { @"commentKey", @"commentId" })
+            {
+                if (getString(item, propertyName) is { Length: > 0 } key && entities.TryGetValue(key, out JsonElement entity))
+                    return entity;
+            }
+
+            JsonElement? nested = getObject(item, @"properties");
+
+            foreach (string propertyName in new[] { @"commentKey", @"commentId" })
+            {
+                if (getString(nested ?? default, propertyName) is { Length: > 0 } key && entities.TryGetValue(key, out JsonElement entity))
+                    return entity;
+            }
+
+            return null;
+        }
+
+        internal static List<JsonElement> detachItems(IEnumerable<JsonElement> items)
+            => items.Select(item => item.Clone()).ToList();
+
+        internal static List<JsonElement> extractContinuationItems(JsonElement root)
         {
             var items = new List<JsonElement>();
 
@@ -1325,18 +2189,63 @@ namespace AXPlayer.App.Online
             using JsonDocument? document = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
             {
                 [@"videoId"] = videoId,
-                [@"context"] = createWebClientContext(null),
-            }, cancellationToken).ConfigureAwait(false);
+                [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
+            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
 
             if (document == null)
                 return null;
 
-            foreach (JsonElement section in enumerateRenderers(document.RootElement, @"itemSectionRenderer"))
-            {
-                if (!section.TryGetProperty(@"sectionIdentifier", out JsonElement identifier))
-                    continue;
+            string? continuation = tryFindCommentsContinuation(document.RootElement);
 
-                if (!string.Equals(identifier.GetString(), @"comment-item-section", StringComparison.Ordinal))
+            if (string.IsNullOrEmpty(continuation))
+                logCommentsContinuationDiagnostics(document.RootElement);
+
+            return continuation;
+        }
+
+        private static void logCommentsContinuationDiagnostics(JsonElement root)
+        {
+            var panels = new List<string>();
+
+            foreach (JsonElement panel in enumerateRenderers(root, @"engagementPanelSectionListRenderer"))
+                panels.Add($@"{getString(panel, @"panelIdentifier") ?? @"?"}/{getString(panel, @"targetId") ?? @"?"}");
+
+            var sections = new List<string>();
+
+            foreach (JsonElement section in enumerateRenderers(root, @"itemSectionRenderer"))
+                sections.Add(getString(section, @"sectionIdentifier") ?? @"?");
+
+            Logger.Log($@"Could not find a comment section. Engagement panels: [{string.Join(@", ", panels)}], item sections: [{string.Join(@", ", sections)}], "
+                       + $@"entry point present: {findProperty(root, @"commentsEntryPointHeaderRenderer") != null}.", LoggingTarget.Network);
+        }
+
+        /// <summary>
+        /// Logs the shape of the comment items that could not be parsed.
+        /// </summary>
+        private static void logUnparsedCommentItems(List<JsonElement> items, int entityCount)
+        {
+            JsonElement first = items[0];
+            var shapes = new List<string>();
+
+            foreach (JsonProperty property in first.EnumerateObject())
+                shapes.Add(property.Name);
+
+            Logger.Log($@"None of the {items.Count} comment items could be parsed. First item: [{string.Join(@", ", shapes)}], "
+                       + $@"entity payloads: {entityCount}.", LoggingTarget.Network);
+        }
+
+        /// <summary>
+        /// Finds the continuation that opens the comment section of a watch page.
+        /// </summary>
+        /// <remarks>
+        /// Older responses rendered the section as an <c>itemSectionRenderer</c>, while current ones
+        /// open it as an engagement panel and only keep a teaser next to the player.
+        /// </remarks>
+        internal static string? tryFindCommentsContinuation(JsonElement root)
+        {
+            foreach (JsonElement section in enumerateRenderers(root, @"itemSectionRenderer"))
+            {
+                if (!string.Equals(getString(section, @"sectionIdentifier"), @"comment-item-section", StringComparison.Ordinal))
                     continue;
 
                 string? continuation = findContinuation(section);
@@ -1345,36 +2254,99 @@ namespace AXPlayer.App.Online
                     return continuation;
             }
 
-            JsonElement? commentsHeader = findProperty(document.RootElement, @"commentsEntryPointHeaderRenderer");
+            foreach (JsonElement panel in enumerateRenderers(root, @"engagementPanelSectionListRenderer"))
+            {
+                if (!isCommentPanel(panel))
+                    continue;
 
-            return commentsHeader != null ? findContinuation(commentsHeader.Value) : null;
+                string? continuation = findContinuation(panel);
+
+                if (!string.IsNullOrEmpty(continuation))
+                    return continuation;
+            }
+
+            foreach (JsonElement header in enumerateRenderers(root, @"commentsHeaderRenderer"))
+            {
+                string? continuation = findContinuation(header);
+
+                if (!string.IsNullOrEmpty(continuation))
+                    return continuation;
+            }
+
+            foreach (string rendererName in new[] { @"commentsEntryPointHeaderRenderer", @"commentsEntryPointTeaserRenderer" })
+            {
+                JsonElement? entryPoint = findProperty(root, rendererName);
+
+                if (entryPoint == null)
+                    continue;
+
+                string? continuation = findContinuation(entryPoint.Value);
+
+                if (!string.IsNullOrEmpty(continuation))
+                    return continuation;
+            }
+
+            return null;
         }
 
-        private static string? findSortContinuation(IEnumerable<JsonElement> items, string keyword)
+        private static bool isCommentPanel(JsonElement panel)
         {
-            foreach (JsonElement item in items)
+            string? identifier = getString(panel, @"panelIdentifier");
+            string? targetId = getString(panel, @"targetId");
+
+            return (identifier != null && identifier.Contains(@"comment", StringComparison.OrdinalIgnoreCase))
+                   || (targetId != null && targetId.Contains(@"comment", StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Finds the continuation that switches the comment section to "newest first".
+        /// </summary>
+        /// <remarks>
+        /// The sort menu is rendered in the section header, not in the continuation items, and its
+        /// label is localized, so the entry other than the selected one is used instead of
+        /// matching a hard-coded label.
+        /// </remarks>
+        internal static string? tryFindNewestSortContinuation(JsonElement root)
+        {
+            foreach (JsonElement menu in enumerateRenderers(root, @"sortFilterSubMenuRenderer"))
             {
-                foreach (JsonElement chip in enumerateRenderers(item, @"chipCloudChipRenderer"))
+                if (!menu.TryGetProperty(@"subMenuItems", out JsonElement subMenuItems) || subMenuItems.ValueKind != JsonValueKind.Array || subMenuItems.GetArrayLength() < 2)
+                    continue;
+
+                foreach (JsonElement subMenuItem in subMenuItems.EnumerateArray())
                 {
-                    if (!chip.TryGetProperty(@"text", out JsonElement textElement))
+                    if (getBool(subMenuItem, @"selected"))
                         continue;
 
-                    string text = extractText(textElement) ?? string.Empty;
-
-                    if (!text.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                        continue;
-
-                    string? continuation = findContinuation(chip);
+                    string? continuation = findContinuation(subMenuItem);
 
                     if (!string.IsNullOrEmpty(continuation))
                         return continuation;
                 }
             }
 
+            foreach (JsonElement chip in enumerateRenderers(root, @"chipCloudChipRenderer"))
+            {
+                if (getBool(chip, @"isSelected"))
+                    continue;
+
+                string text = extractText(chip.TryGetProperty(@"text", out JsonElement textElement) ? textElement : default) ?? string.Empty;
+
+                if (!text.Contains(@"newest", StringComparison.OrdinalIgnoreCase)
+                    && !text.Contains(@"최신", StringComparison.Ordinal)
+                    && !text.Contains(@"最新", StringComparison.Ordinal))
+                    continue;
+
+                string? continuation = findContinuation(chip);
+
+                if (!string.IsNullOrEmpty(continuation))
+                    return continuation;
+            }
+
             return null;
         }
 
-        internal static CommentThread? parseCommentThread(JsonElement threadRenderer, string videoId)
+        internal static CommentThread? parseCommentThread(JsonElement threadRenderer, string videoId, IReadOnlyDictionary<string, JsonElement>? entities = null)
         {
             JsonElement? commentRenderer = null;
 
@@ -1387,7 +2359,9 @@ namespace AXPlayer.App.Online
             if (commentRenderer == null)
                 return null;
 
-            Comment? comment = parseComment(commentRenderer.Value, videoId, null);
+            JsonElement? entity = findCommentEntity(commentRenderer.Value, entities);
+
+            Comment? comment = parseComment(commentRenderer.Value, videoId, null, entity);
 
             if (comment == null)
                 return null;
@@ -1401,6 +2375,10 @@ namespace AXPlayer.App.Online
                 if (buttonRenderer != null && buttonRenderer.Value.TryGetProperty(@"text", out JsonElement buttonText))
                     replyCount = parseRoughCount(extractText(buttonText));
             }
+
+            // The current watch page keeps the amount of replies in the entity payload.
+            if (replyCount == null && entity != null && getObject(entity.Value, @"toolbar") is { } toolbar)
+                replyCount = parseRoughCount(getString(toolbar, @"replyCount"));
 
             return new CommentThread
             {
@@ -1418,12 +2396,30 @@ namespace AXPlayer.App.Online
             };
         }
 
-        internal static Comment? parseComment(JsonElement renderer, string? videoId, string? parentId)
+        internal static Comment? parseComment(JsonElement renderer, string? videoId, string? parentId, JsonElement? entity = null)
         {
+            // The text, the author and the counters of a comment are rendered into an entity
+            // payload that the item only references by its key.
+            JsonElement? properties = entity != null ? getObject(entity.Value, @"properties") : null;
+            JsonElement? author = entity != null ? getObject(entity.Value, @"author") : null;
+            JsonElement? toolbar = entity != null ? getObject(entity.Value, @"toolbar") : null;
+
+            if (entity == null && (renderer.TryGetProperty(@"commentKey", out _) || renderer.TryGetProperty(@"commentId", out _)))
+            {
+                // The item can carry its own entity payload when the caller did not resolve it.
+                entity = getObject(renderer, @"commentEntityPayload");
+                properties = entity != null ? getObject(entity.Value, @"properties") : properties;
+                author = entity != null ? getObject(entity.Value, @"author") : author;
+                toolbar = entity != null ? getObject(entity.Value, @"toolbar") : toolbar;
+            }
+
             string? commentId = getString(renderer, @"commentId");
 
             if (string.IsNullOrEmpty(commentId))
                 commentId = getString(renderer, @"commentKey");
+
+            if (string.IsNullOrEmpty(commentId))
+                commentId = getString(properties ?? default, @"commentId");
 
             if (string.IsNullOrEmpty(commentId))
                 return null;
@@ -1431,9 +2427,18 @@ namespace AXPlayer.App.Online
             string? content = extractText(renderer.TryGetProperty(@"contentText", out JsonElement contentText) ? contentText : default);
 
             if (string.IsNullOrEmpty(content))
+                content = extractText(getObject(properties ?? default, @"content") ?? default);
+
+            if (string.IsNullOrEmpty(content))
+                content = getString(properties ?? default, @"content");
+
+            if (string.IsNullOrEmpty(content))
                 content = findFirstString(renderer, new[] { @"contentText", @"content", @"text" });
 
             string? authorName = extractText(renderer.TryGetProperty(@"authorText", out JsonElement authorText) ? authorText : default);
+
+            if (string.IsNullOrEmpty(authorName))
+                authorName = getString(author ?? default, @"displayName");
 
             if (string.IsNullOrEmpty(authorName))
                 authorName = findFirstString(renderer, new[] { @"authorText", @"authorName", @"authorButtonA11y" });
@@ -1451,12 +2456,21 @@ namespace AXPlayer.App.Online
                 JsonElement? channelIdProperty = findProperty(renderer, @"authorChannelId");
 
                 if (channelIdProperty != null)
-                    authorChannelId = getString(channelIdProperty.Value, @"value") ?? channelIdProperty.Value.GetString();
+                    authorChannelId = getString(channelIdProperty.Value, @"value") ?? getStringValue(channelIdProperty.Value);
             }
+
+            if (string.IsNullOrEmpty(authorChannelId))
+                authorChannelId = getString(author ?? default, @"channelId");
 
             string? authorThumbnail = getLastThumbnailUrl(renderer.TryGetProperty(@"authorThumbnail", out JsonElement authorThumbnailElement) ? authorThumbnailElement : (JsonElement?)null);
 
+            if (string.IsNullOrEmpty(authorThumbnail))
+                authorThumbnail = getString(author ?? default, @"avatarThumbnailUrl");
+
             string? publishedTimeText = extractText(renderer.TryGetProperty(@"publishedTimeText", out JsonElement publishedElement) ? publishedElement : default);
+
+            if (string.IsNullOrEmpty(publishedTimeText))
+                publishedTimeText = getString(properties ?? default, @"publishedTime");
 
             if (string.IsNullOrEmpty(publishedTimeText))
                 publishedTimeText = findFirstString(renderer, new[] { @"publishedTimeText" });
@@ -1472,6 +2486,9 @@ namespace AXPlayer.App.Online
                 if (voteStatus != null)
                     likeCount = parseRoughCount(extractText(voteStatus.Value));
             }
+
+            if (likeCount == null)
+                likeCount = parseRoughCount(getString(toolbar ?? default, @"likeCountNotliked") ?? getString(toolbar ?? default, @"likeCountLiked"));
 
             return new Comment
             {
@@ -1501,16 +2518,16 @@ namespace AXPlayer.App.Online
             };
         }
 
-        private static List<Comment>? parseInlineReplies(JsonElement threadRenderer, string videoId, string? threadId)
+        private static List<Comment>? parseInlineReplies(JsonElement threadRenderer, string videoId, string? threadId, IReadOnlyDictionary<string, JsonElement>? entities = null)
         {
             if (!threadRenderer.TryGetProperty(@"replies", out JsonElement replies))
                 return null;
 
             var result = new List<Comment>();
 
-            foreach (JsonElement commentRenderer in enumerateRenderers(replies, @"commentRenderer"))
+            foreach (JsonElement commentRenderer in enumerateRenderers(replies, @"commentRenderer").Concat(enumerateRenderers(replies, @"commentViewModel")))
             {
-                Comment? comment = parseComment(commentRenderer, videoId, threadId);
+                Comment? comment = parseComment(commentRenderer, videoId, threadId, findCommentEntity(commentRenderer, entities));
 
                 if (comment != null)
                     result.Add(comment);
@@ -1519,7 +2536,7 @@ namespace AXPlayer.App.Online
             return result.Count > 0 ? result : null;
         }
 
-        private static string? findRepliesContinuation(JsonElement threadRenderer)
+        internal static string? findRepliesContinuation(JsonElement threadRenderer)
         {
             if (!threadRenderer.TryGetProperty(@"replies", out JsonElement replies))
                 return null;
@@ -1564,9 +2581,9 @@ namespace AXPlayer.App.Online
 
             try
             {
-                List<JsonElement> items = await fetchContinuationItemsAsync(continuation, cancellationToken).ConfigureAwait(false);
+                comment_page page = await fetchContinuationItemsAsync(continuation, cancellationToken).ConfigureAwait(false);
 
-                foreach (JsonElement item in items)
+                foreach (JsonElement item in page.Items)
                 {
                     if (replies.Count >= maxReplies)
                         break;
@@ -1580,7 +2597,7 @@ namespace AXPlayer.App.Online
                             continue;
                     }
 
-                    Comment? comment = parseComment(commentRenderer, videoId, threadId);
+                    Comment? comment = parseComment(commentRenderer, videoId, threadId, findCommentEntity(commentRenderer, page.Entities));
 
                     if (comment != null)
                         replies.Add(comment);
@@ -1614,8 +2631,8 @@ namespace AXPlayer.App.Online
             using JsonDocument? comments = await sendInnertubeAsync(@"next", new Dictionary<string, object?>
             {
                 [@"continuation"] = continuation,
-                [@"context"] = createWebClientContext(null),
-            }, cancellationToken).ConfigureAwait(false);
+                [@"context"] = await createCommentsContextAsync(cancellationToken).ConfigureAwait(false),
+            }, cancellationToken, innertube_client.Web, false, comments_dump_tag).ConfigureAwait(false);
 
             string? createCommentParams = comments != null ? findFirstString(comments.RootElement, new[] { @"createCommentParams" }) : null;
 
@@ -1633,7 +2650,7 @@ namespace AXPlayer.App.Online
                     [@"message"] = commentText,
                 },
                 [@"context"] = client == innertube_client.Tv ? createTvBrowseContext() : createWebClientContext(null),
-            }, cancellationToken).ConfigureAwait(false);
+            }, cancellationToken, comments_dump_tag).ConfigureAwait(false);
 
             if (response == null)
                 Logger.Log($@"Posting the comment to '{videoId}' failed.", LoggingTarget.Network);
@@ -1650,7 +2667,10 @@ namespace AXPlayer.App.Online
             var playlists = new List<Playlist>();
 
             if (!googleOAuth2.SignedIn.Value)
+            {
+                Logger.Log(@"The playlist library was skipped because no account is signed in.", LoggingTarget.Network);
                 return playlists;
+            }
 
             foreach ((string browseId, innertube_client client) in playlist_library_pages)
             {
@@ -1661,15 +2681,126 @@ namespace AXPlayer.App.Online
 
                 collectPlaylists(document.RootElement, playlists);
 
+                // The TV library opens on its own tab, so the playlists tab has to be entered first.
+                if (playlists.Count == 0)
+                {
+                    string? tabContinuation = findPlaylistTabContinuation(document.RootElement);
+
+                    if (!string.IsNullOrEmpty(tabContinuation))
+                    {
+                        comment_page tabPage = await fetchContinuationItemsAsync(tabContinuation, cancellationToken).ConfigureAwait(false);
+
+                        foreach (JsonElement item in tabPage.Items)
+                            collectPlaylists(item, playlists);
+                    }
+                }
+
+                // The library only renders the first shelf initially; the rest of the playlists
+                // arrive through continuations.
+                string? continuation = tryFindPlaylistContinuation(document.RootElement);
+
+                for (int page = 0; page < playlist_library_max_pages && !string.IsNullOrEmpty(continuation); page++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    List<JsonElement> items = (await fetchContinuationItemsAsync(continuation, cancellationToken).ConfigureAwait(false)).Items;
+
+                    if (items.Count == 0)
+                        break;
+
+                    foreach (JsonElement item in items)
+                        collectPlaylists(item, playlists);
+
+                    string? next = null;
+
+                    for (int i = items.Count - 1; i >= 0 && next == null; i--)
+                        next = findContinuation(items[i]);
+
+                    if (string.IsNullOrEmpty(next) || next == continuation)
+                        break;
+
+                    continuation = next;
+                }
+
                 if (playlists.Count > 0)
+                {
+                    string? ownChannelId = await resolveOwnChannelIdAsync(cancellationToken).ConfigureAwait(false);
+
+                    if (!string.IsNullOrEmpty(ownChannelId))
+                        applyOwnerToPlaylists(playlists, ownChannelId, mineChannelCache?.Snippet?.Title);
+
+                    foreach (Playlist playlist in playlists)
+                        playlistLibraryCache[playlist.Id] = playlist;
+
                     break;
+                }
+
+                Logger.Log($@"The playlist library page '{browseId}' returned no playlists (grids: {enumerateRenderers(document.RootElement, @"gridRenderer").Count()}, "
+                           + $"shelves: {enumerateRenderers(document.RootElement, @"shelfRenderer").Count()}, "
+                           + $"lockups: {enumerateRenderers(document.RootElement, @"lockupViewModel").Count()}, "
+                           + $"playlist renderers: {enumerateRenderers(document.RootElement, @"gridPlaylistRenderer").Count() + enumerateRenderers(document.RootElement, @"playlistRenderer").Count()}).", LoggingTarget.Network);
             }
 
             return playlists;
         }
 
+        /// <summary>
+        /// Finds the continuation of the "playlists" tab of a library page.
+        /// </summary>
+        internal static string? findPlaylistTabContinuation(JsonElement root)
+        {
+            foreach (JsonElement chip in enumerateRenderers(root, @"chipCloudChipRenderer"))
+            {
+                string text = extractText(chip.TryGetProperty(@"text", out JsonElement textElement) ? textElement : default) ?? string.Empty;
+
+                if (!text.Contains(@"playlist", StringComparison.OrdinalIgnoreCase)
+                    && !text.Contains(@"재생목록", StringComparison.Ordinal)
+                    && !text.Contains(@"プレイリスト", StringComparison.Ordinal))
+                    continue;
+
+                string? continuation = findContinuation(chip);
+
+                if (!string.IsNullOrEmpty(continuation))
+                    return continuation;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Finds the continuation of the container that renders the playlists of a library page.
+        /// </summary>
+        internal static string? tryFindPlaylistContinuation(JsonElement root)
+        {
+            foreach (string containerName in new[] { @"gridRenderer", @"shelfRenderer", @"itemSectionRenderer", @"gridContinuationItemRenderer" })
+            {
+                foreach (JsonElement container in enumerateRenderers(root, containerName))
+                {
+                    if (!containsPlaylist(container))
+                        continue;
+
+                    string? continuation = findContinuation(container);
+
+                    if (!string.IsNullOrEmpty(continuation))
+                        return continuation;
+                }
+            }
+
+            return null;
+        }
+
+        private static bool containsPlaylist(JsonElement container)
+        {
+            if (enumerateRenderers(container, @"gridPlaylistRenderer").Any() || enumerateRenderers(container, @"playlistRenderer").Any())
+                return true;
+
+            return enumerateRenderers(container, @"lockupViewModel").Any(isPlaylistLockup);
+        }
+
         private static void collectPlaylists(JsonElement root, List<Playlist> playlists)
         {
+            collectLibraryPlaylistTabs(root, playlists);
+
             foreach (JsonElement renderer in enumerateRenderers(root, @"gridPlaylistRenderer"))
             {
                 Playlist? playlist = parsePlaylistRenderer(renderer);
@@ -1692,6 +2823,94 @@ namespace AXPlayer.App.Online
 
                 if (playlist != null && playlists.All(existing => existing.Id != playlist.Id))
                     playlists.Add(playlist);
+            }
+        }
+
+        /// <summary>
+        /// Points the library playlists at their owner channel so the playlist rows can render the
+        /// channel name. The TV library tabs do not carry the owner themselves.
+        /// </summary>
+        internal static void applyOwnerToPlaylists(IEnumerable<Playlist> playlists, string channelId, string? channelTitle = null)
+        {
+            foreach (Playlist playlist in playlists)
+            {
+                if (playlist.Snippet == null)
+                    continue;
+
+                if (string.IsNullOrEmpty(playlist.Snippet.ChannelId))
+                    playlist.Snippet.ChannelId = channelId;
+
+                if (!string.IsNullOrEmpty(channelTitle) && string.IsNullOrEmpty(playlist.Snippet.ChannelTitle))
+                    playlist.Snippet.ChannelTitle = channelTitle;
+            }
+        }
+
+        /// <summary>
+        /// Reads the playlists of the TV library page, which renders every playlist as a library tab
+        /// (<c>tvSecondaryNavRenderer</c> tab) instead of a playlist renderer.
+        /// </summary>
+        internal static void collectLibraryPlaylistTabs(JsonElement root, List<Playlist> playlists)
+        {
+            foreach (JsonElement tab in enumerateRenderers(root, @"tabRenderer"))
+            {
+                JsonElement? browseEndpoint = getObject(getObject(tab, @"endpoint") ?? default, @"browseEndpoint");
+
+                if (browseEndpoint == null || !string.Equals(getString(browseEndpoint.Value, @"browseId"), @"FEmy_youtube", StringComparison.Ordinal))
+                    continue;
+
+                string? playlistId = tryDecodePlaylistId(getString(browseEndpoint.Value, @"params"));
+
+                if (string.IsNullOrEmpty(playlistId) || playlists.Any(existing => existing.Id == playlistId))
+                    continue;
+
+                string? title = getString(tab, @"title");
+                string? thumbnailUrl = getLastThumbnailUrl(getObject(tab, @"thumbnail") ?? default);
+
+                playlists.Add(new Playlist
+                {
+                    Id = playlistId,
+                    Kind = @"youtube#playlist",
+                    Snippet = new PlaylistSnippet
+                    {
+                        Title = title,
+                        Thumbnails = createThumbnailDetails(thumbnailUrl),
+                    },
+                    Status = new PlaylistStatus(),
+                    ContentDetails = new PlaylistContentDetails(),
+                    Localizations = new Dictionary<string, PlaylistLocalization>(StringComparer.Ordinal),
+                });
+            }
+        }
+
+        /// <summary>
+        /// Extracts the playlist ID from the base64 encoded <c>params</c> of a library tab.
+        /// </summary>
+        /// <remarks>
+        /// The parameters are a serialized protobuf message that embeds the playlist ID as its only
+        /// long ASCII run (for example <c>…²"PLJW_JNo7Tjj1WG8s5m6xl8bVDVa8U6hhB</c>). The
+        /// built-in library tabs encode short IDs instead ("LL" for liked videos), which are not
+        /// real playlists and are filtered out by the length requirement.
+        /// </remarks>
+        internal static string? tryDecodePlaylistId(string? encodedParams)
+        {
+            if (string.IsNullOrEmpty(encodedParams))
+                return null;
+
+            try
+            {
+                string base64 = Uri.UnescapeDataString(encodedParams).Replace('-', '+').Replace('_', '/');
+                base64 = base64.PadRight(base64.Length + (4 - base64.Length % 4) % 4, '=');
+
+                string decoded = Encoding.ASCII.GetString(Convert.FromBase64String(base64));
+
+                MatchCollection matches = Regex.Matches(decoded, @"[A-Za-z0-9_-]{10,}");
+
+                return matches.Count > 0 ? matches[^1].Value : null;
+            }
+            catch (Exception exception) when (exception is FormatException or ArgumentException)
+            {
+                Logger.Log($@"Failed to decode the library tab params '{encodedParams}': {exception.Message}", LoggingTarget.Network);
+                return null;
             }
         }
 
@@ -1728,24 +2947,36 @@ namespace AXPlayer.App.Online
             };
         }
 
-        private static Playlist? parsePlaylistLockup(JsonElement renderer)
+        /// <summary>
+        /// Returns whether the lockup renders a playlist. Lockups also cover videos and channels.
+        /// </summary>
+        internal static bool isPlaylistLockup(JsonElement renderer)
         {
             if (renderer.TryGetProperty(@"contentType", out JsonElement contentType)
                 && contentType.ValueKind == JsonValueKind.String
                 && !string.Equals(contentType.GetString(), @"LOCKUP_CONTENT_TYPE_PLAYLIST", StringComparison.Ordinal))
+                return false;
+
+            string? playlistId = getString(renderer, @"contentId");
+
+            return !string.IsNullOrEmpty(playlistId) && isPlaylistId(playlistId);
+        }
+
+        private static bool isPlaylistId(string id)
+            => id.StartsWith(@"PL", StringComparison.Ordinal)
+               || id.StartsWith(@"VL", StringComparison.Ordinal)
+               || id.StartsWith(@"UU", StringComparison.Ordinal)
+               || id.StartsWith(@"FL", StringComparison.Ordinal)
+               || id.StartsWith(@"OL", StringComparison.Ordinal);
+
+        private static Playlist? parsePlaylistLockup(JsonElement renderer)
+        {
+            if (!isPlaylistLockup(renderer))
                 return null;
 
             string? playlistId = getString(renderer, @"contentId");
 
             if (string.IsNullOrEmpty(playlistId))
-                return null;
-
-            // Lockups also cover videos; only keep content that looks like a playlist.
-            if (!playlistId.StartsWith(@"PL", StringComparison.Ordinal)
-                && !playlistId.StartsWith(@"VL", StringComparison.Ordinal)
-                && !playlistId.StartsWith(@"UU", StringComparison.Ordinal)
-                && !playlistId.StartsWith(@"FL", StringComparison.Ordinal)
-                && !playlistId.StartsWith(@"OL", StringComparison.Ordinal))
                 return null;
 
             string? title = findFirstString(renderer, new[] { @"title" });
@@ -1784,13 +3015,17 @@ namespace AXPlayer.App.Online
                 [@"context"] = createWebClientContext(null),
             }, cancellationToken).ConfigureAwait(false);
 
-            if (document != null && googleOAuth2.SignedIn.Value && !isUsablePlaylistResponse(document.RootElement))
-            {
-                document.Dispose();
-                return await browseAuthenticatedAsync(browseId, cancellationToken).ConfigureAwait(false);
-            }
+            if (document != null && isUsablePlaylistResponse(document.RootElement))
+                return document;
 
-            return document;
+            document?.Dispose();
+
+            // Public playlists load anonymously; private and unlisted playlists of the account only
+            // load with the account credentials, where the anonymous request fails outright.
+            if (!googleOAuth2.SignedIn.Value)
+                return null;
+
+            return await browseAuthenticatedAsync(browseId, cancellationToken).ConfigureAwait(false);
         }
 
         private static bool isUsablePlaylistResponse(JsonElement root)
@@ -1809,13 +3044,16 @@ namespace AXPlayer.App.Online
         {
             using JsonDocument? document = await browsePlaylistAsync(playlistId, cancellationToken).ConfigureAwait(false);
 
+            playlistLibraryCache.TryGetValue(playlistId, out Playlist? libraryPlaylist);
+
             if (document == null)
-                return createEmptyPlaylist(playlistId);
+                return libraryPlaylist ?? createEmptyPlaylist(playlistId);
 
             JsonElement root = document.RootElement;
             string? title = null;
             string? description = null;
             string? ownerChannelId = null;
+            string? ownerChannelTitle = null;
             string? privacy = findPrivacyStatus(root);
             string? thumbnailUrl = null;
 
@@ -1837,6 +3075,8 @@ namespace AXPlayer.App.Online
                 thumbnailUrl = getLastThumbnailUrl(header.Value);
             }
 
+            ownerChannelTitle = findOwnerChannelTitle(root);
+
             Playlist? parsed = null;
 
             foreach (JsonElement renderer in enumerateRenderers(root, @"lockupViewModel"))
@@ -1852,6 +3092,25 @@ namespace AXPlayer.App.Online
             if (title == null && parsed?.Snippet?.Title != null)
                 title = parsed.Snippet.Title;
 
+            // The library tabs already know the title, thumbnail and owner of the playlist, which
+            // keeps the playlist rows readable when the playlist page itself is unavailable.
+            if (libraryPlaylist != null)
+            {
+                if (string.IsNullOrEmpty(title))
+                    title = libraryPlaylist.Snippet?.Title;
+
+                ownerChannelId ??= libraryPlaylist.Snippet?.ChannelId;
+                ownerChannelTitle ??= libraryPlaylist.Snippet?.ChannelTitle;
+                thumbnailUrl ??= libraryPlaylist.Snippet?.Thumbnails?.High?.Url;
+            }
+
+            // The account knows the title of its own channel, which fills the owner of a playlist that
+            // only exposed its channel ID.
+            if (string.IsNullOrEmpty(ownerChannelTitle)
+                && !string.IsNullOrEmpty(ownerChannelId)
+                && string.Equals(mineChannelCache?.Id, ownerChannelId, StringComparison.Ordinal))
+                ownerChannelTitle = mineChannelCache?.Snippet?.Title;
+
             var playlist = createEmptyPlaylist(playlistId);
 
             playlist.Snippet = new PlaylistSnippet
@@ -1859,6 +3118,7 @@ namespace AXPlayer.App.Online
                 Title = title,
                 Description = description,
                 ChannelId = ownerChannelId,
+                ChannelTitle = ownerChannelTitle,
                 Thumbnails = createThumbnailDetails(thumbnailUrl ?? parsed?.Snippet?.Thumbnails?.High?.Url),
             };
 
@@ -1873,6 +3133,87 @@ namespace AXPlayer.App.Online
             };
 
             return playlist;
+        }
+
+        /// <summary>
+        /// Reads the title of the channel that owns a playlist.
+        /// </summary>
+        internal static string? findOwnerChannelTitle(JsonElement root)
+        {
+            foreach (JsonElement header in enumerateRenderers(root, @"playlistHeaderRenderer"))
+            {
+                string? ownerTitle = readBylineChannelTitle(header, @"ownerText")
+                                     ?? readBylineChannelTitle(header, @"shortBylineText")
+                                     ?? getString(header, @"ownerChannelName");
+
+                if (!string.IsNullOrEmpty(ownerTitle))
+                    return ownerTitle;
+            }
+
+            return readOwnerChannelTitleFromPageHeader(root);
+        }
+
+        /// <summary>
+        /// Reads the channel name of a byline (for example <c>ownerText</c>), preferring the run that
+        /// links to the channel.
+        /// </summary>
+        private static string? readBylineChannelTitle(JsonElement element, string propertyName)
+        {
+            if (getObject(element, propertyName) is not { } byline
+                || !byline.TryGetProperty(@"runs", out JsonElement runs)
+                || runs.ValueKind != JsonValueKind.Array)
+                return null;
+
+            string? firstText = null;
+
+            foreach (JsonElement run in runs.EnumerateArray())
+            {
+                if (getString(run, @"text") is not { Length: > 0 } text)
+                    continue;
+
+                firstText ??= text;
+
+                if (findProperty(run, @"browseEndpoint") is { } endpoint
+                    && getString(endpoint, @"browseId") is { Length: > 1 } browseId
+                    && browseId.StartsWith(@"UC", StringComparison.Ordinal))
+                    return text;
+            }
+
+            return firstText;
+        }
+
+        /// <summary>
+        /// Reads the channel name from the metadata rows of a page header, which is where the current
+        /// playlist page renders its owner.
+        /// </summary>
+        private static string? readOwnerChannelTitleFromPageHeader(JsonElement root)
+        {
+            JsonElement? metadata = findProperty(root, @"contentMetadataViewModel");
+
+            if (metadata == null || !metadata.Value.TryGetProperty(@"metadataRows", out JsonElement rows) || rows.ValueKind != JsonValueKind.Array)
+                return null;
+
+            foreach (JsonElement row in rows.EnumerateArray())
+            {
+                if (!row.TryGetProperty(@"metadataParts", out JsonElement parts) || parts.ValueKind != JsonValueKind.Array)
+                    continue;
+
+                foreach (JsonElement part in parts.EnumerateArray())
+                {
+                    if (findProperty(part, @"browseEndpoint") is not { } endpoint)
+                        continue;
+
+                    if (getString(endpoint, @"browseId") is not { Length: > 1 } browseId || !browseId.StartsWith(@"UC", StringComparison.Ordinal))
+                        continue;
+
+                    string? text = extractText(getObject(part, @"text") ?? default);
+
+                    if (!string.IsNullOrEmpty(text))
+                        return text;
+                }
+            }
+
+            return null;
         }
 
         private static Playlist createEmptyPlaylist(string playlistId)
@@ -1912,37 +3253,108 @@ namespace AXPlayer.App.Online
             return null;
         }
 
-        private async Task<IList<PlaylistItem>> fetchPlaylistItemsAsync(string playlistId, CancellationToken cancellationToken)
+        private async Task<IList<PlaylistItem>> fetchPlaylistItemsAsync(string playlistId, CancellationToken cancellationToken, string? stopWhenVideoId = null)
         {
             var items = new List<PlaylistItem>();
+            var seenVideoIds = new HashSet<string>(StringComparer.Ordinal);
+            var seenContinuations = new HashSet<string>(StringComparer.Ordinal);
 
             using JsonDocument? document = await browsePlaylistAsync(playlistId, cancellationToken).ConfigureAwait(false);
 
             if (document == null)
                 return items;
 
-            JsonElement root = document.RootElement;
+            string? continuation = collectPlaylistItems(document.RootElement, playlistId, items, seenVideoIds);
+
+            // The playlist page only renders its first page, so the rest of a long playlist is
+            // fetched through the continuation tokens.
+            for (int page = 1; continuation != null && page < playlist_item_max_pages; page++)
+            {
+                if (stopWhenVideoId != null && seenVideoIds.Contains(stopWhenVideoId))
+                    break;
+
+                if (!seenContinuations.Add(continuation))
+                    break;
+
+                using JsonDocument? nextPage = await fetchPlaylistItemPageAsync(continuation, cancellationToken).ConfigureAwait(false);
+
+                if (nextPage == null)
+                    break;
+
+                continuation = collectPlaylistItems(nextPage.RootElement, playlistId, items, seenVideoIds);
+            }
+
+            return items;
+        }
+
+        private async Task<JsonDocument?> fetchPlaylistItemPageAsync(string continuation, CancellationToken cancellationToken)
+        {
+            var payload = new Dictionary<string, object?>
+            {
+                [@"continuation"] = continuation,
+                [@"context"] = createWebClientContext(null),
+            };
+
+            JsonDocument? document = await sendInnertubeAsync(@"browse", payload, cancellationToken).ConfigureAwait(false);
+
+            if (document == null && googleOAuth2.SignedIn.Value)
+            {
+                // A continuation of a playlist that only the account can read needs the credentials of
+                // the account, which only the TV client accepts as a bearer token.
+                payload[@"context"] = createTvBrowseContext();
+                document = await sendInnertubeAsync(@"browse", payload, cancellationToken, innertube_client.Tv, true).ConfigureAwait(false);
+            }
+
+            return document;
+        }
+
+        /// <summary>
+        /// Appends the items of a single playlist page and returns its continuation token.
+        /// </summary>
+        private static string? collectPlaylistItems(JsonElement root, string playlistId, List<PlaylistItem> items, HashSet<string> seenVideoIds)
+        {
+            int added = 0;
 
             foreach (JsonElement renderer in enumerateRenderers(root, @"playlistVideoRenderer"))
             {
                 PlaylistItem? item = parsePlaylistVideoRenderer(renderer, playlistId, items.Count);
 
-                if (item != null)
-                    items.Add(item);
+                if (item == null || !seenVideoIds.Add(item.ContentDetails.VideoId))
+                    continue;
+
+                items.Add(item);
+                added++;
             }
 
-            if (items.Count > 0)
-                return items;
-
-            foreach (JsonElement renderer in enumerateRenderers(root, @"lockupViewModel"))
+            if (added == 0)
             {
-                PlaylistItem? item = parsePlaylistItemLockup(renderer, playlistId, items.Count);
+                foreach (JsonElement renderer in enumerateRenderers(root, @"lockupViewModel"))
+                {
+                    PlaylistItem? item = parsePlaylistItemLockup(renderer, playlistId, items.Count);
 
-                if (item != null)
+                    if (item == null || !seenVideoIds.Add(item.ContentDetails.VideoId))
+                        continue;
+
                     items.Add(item);
+                }
             }
 
-            return items;
+            return tryFindContinuationToken(root);
+        }
+
+        /// <summary>
+        /// Returns the token of the next page of a list (playlist items, search results, ...).
+        /// </summary>
+        internal static string? tryFindContinuationToken(JsonElement root)
+        {
+            foreach (JsonElement renderer in enumerateRenderers(root, @"continuationItemRenderer"))
+            {
+                if (getNestedObject(renderer, @"continuationEndpoint", @"continuationCommand") is { } command
+                    && getString(command, @"token") is { Length: > 0 } token)
+                    return token;
+            }
+
+            return null;
         }
 
         internal static PlaylistItem? parsePlaylistVideoRenderer(JsonElement renderer, string playlistId, int position)
@@ -2109,19 +3521,29 @@ namespace AXPlayer.App.Online
                 return;
             }
 
+            // Removing an entry of a playlist needs the entry ID (setVideoId) that the playlist page
+            // assigned to it; the entries of the special playlists (for example the watch later list)
+            // do not have one and are removed by their video ID instead.
+            bool hasSetVideoId = !string.Equals(target.Id, videoId, StringComparison.Ordinal);
+
+            object action = hasSetVideoId
+                ? new
+                {
+                    action = @"ACTION_REMOVE_VIDEO",
+                    setVideoId = target.Id,
+                    removedVideoId = videoId,
+                }
+                : new
+                {
+                    action = @"ACTION_REMOVE_VIDEO_BY_VIDEO_ID",
+                    removedVideoId = videoId,
+                };
+
             var payload = new
             {
                 context = createTvBrowseContext(),
                 playlistId,
-                actions = new object[]
-                {
-                    new
-                    {
-                        action = @"ACTION_REMOVE_VIDEO",
-                        setVideoId = target.Id,
-                        removedVideoId = videoId,
-                    },
-                },
+                actions = new[] { action },
             };
 
             using JsonDocument? document = await sendTvEditRequestAsync(payload, cancellationToken).ConfigureAwait(false);
@@ -2135,7 +3557,7 @@ namespace AXPlayer.App.Online
             if (!googleOAuth2.SignedIn.Value)
                 return false;
 
-            IList<PlaylistItem> items = await fetchPlaylistItemsAsync(playlistId, cancellationToken).ConfigureAwait(false);
+            IList<PlaylistItem> items = await fetchPlaylistItemsAsync(playlistId, cancellationToken, videoId).ConfigureAwait(false);
 
             return items.Any(item => string.Equals(item.ContentDetails?.VideoId, videoId, StringComparison.Ordinal)
                                      || string.Equals(item.Snippet?.ResourceId?.VideoId, videoId, StringComparison.Ordinal));
@@ -2165,7 +3587,7 @@ namespace AXPlayer.App.Online
             {
                 foreach (JsonElement value in enumeratePropertyValues(root, propertyName))
                 {
-                    string? text = value.GetString()?.ToLowerInvariant();
+                    string? text = getStringValue(value)?.ToLowerInvariant();
 
                     if (text is @"public" or @"unlisted" or @"private")
                         return text;
@@ -2174,7 +3596,7 @@ namespace AXPlayer.App.Online
 
             foreach (JsonElement value in enumeratePropertyValues(root, @"content"))
             {
-                string? text = value.GetString()?.ToLowerInvariant();
+                string? text = getStringValue(value)?.ToLowerInvariant();
 
                 if (text is @"public" or @"unlisted" or @"private")
                     return text;
@@ -2213,6 +3635,18 @@ namespace AXPlayer.App.Online
 
         internal static bool? tryReadSubscribedState(JsonElement root)
         {
+            // The page header reports the state of the channel itself, while the shelves further down
+            // the page repeat the state of every recommended channel.
+            JsonElement? header = findPageHeader(root);
+
+            if (header != null && readSubscribedState(header.Value) is { } headerState)
+                return headerState;
+
+            return readSubscribedState(root);
+        }
+
+        private static bool? readSubscribedState(JsonElement root)
+        {
             foreach (JsonElement value in enumeratePropertyValues(root, @"subscribed"))
             {
                 if (value.ValueKind == JsonValueKind.True)
@@ -2227,7 +3661,7 @@ namespace AXPlayer.App.Online
             {
                 foreach (JsonElement value in enumeratePropertyValues(root, propertyName))
                 {
-                    string? text = extractText(value) ?? value.GetString();
+                    string? text = extractText(value) ?? getStringValue(value);
 
                     if (string.IsNullOrEmpty(text))
                         continue;
@@ -2314,7 +3748,7 @@ namespace AXPlayer.App.Online
         {
             foreach (JsonElement value in enumeratePropertyValues(root, @"likeStatus"))
             {
-                string? status = value.GetString();
+                string? status = getStringValue(value);
 
                 switch (status)
                 {
@@ -2482,6 +3916,39 @@ namespace AXPlayer.App.Online
                && element.TryGetProperty(propertyName, out JsonElement value)
                && value.ValueKind == JsonValueKind.True;
 
+        internal static JsonElement? getObject(JsonElement element, string propertyName)
+        {
+            if (element.ValueKind != JsonValueKind.Object || !element.TryGetProperty(propertyName, out JsonElement value) || value.ValueKind != JsonValueKind.Object)
+                return null;
+
+            return value;
+        }
+
+        private static JsonElement? getNestedObject(JsonElement element, params string[] propertyPath)
+        {
+            JsonElement current = element;
+
+            foreach (string propertyName in propertyPath)
+            {
+                JsonElement? next = getObject(current, propertyName);
+
+                if (next == null)
+                    return null;
+
+                current = next.Value;
+            }
+
+            return current;
+        }
+
+        private static JsonElement? firstRenderer(JsonElement root, string rendererName)
+        {
+            foreach (JsonElement renderer in enumerateRenderers(root, rendererName))
+                return renderer;
+
+            return null;
+        }
+
         private static double getDouble(JsonElement element, string propertyName)
         {
             string? raw = getString(element, propertyName);
@@ -2559,7 +4026,7 @@ namespace AXPlayer.App.Online
         {
             foreach (JsonElement value in enumeratePropertyValues(root, @"browseId"))
             {
-                string? id = value.GetString();
+                string? id = getStringValue(value);
 
                 if (!string.IsNullOrEmpty(id) && id.StartsWith(@"UC", StringComparison.Ordinal))
                     return id;
@@ -2663,15 +4130,25 @@ namespace AXPlayer.App.Online
             }
         }
 
-        private static ulong? findCountWithKeyword(JsonElement root, string keyword)
+        private static ulong? findCountWithKeyword(JsonElement root, params string[] keywords)
+        {
+            JsonElement? header = findPageHeader(root);
+
+            if (header != null && findCountInScope(header.Value, keywords) is { } headerCount)
+                return headerCount;
+
+            return findCountInScope(root, keywords);
+        }
+
+        private static ulong? findCountInScope(JsonElement scope, string[] keywords)
         {
             foreach (string propertyName in new[] { @"content", @"simpleText", @"text", @"subscriberCountText", @"videoCountText" })
             {
-                foreach (JsonElement value in enumeratePropertyValues(root, propertyName))
+                foreach (JsonElement value in enumeratePropertyValues(scope, propertyName))
                 {
                     string? text = extractText(value);
 
-                    if (string.IsNullOrEmpty(text) || !text.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                    if (string.IsNullOrEmpty(text) || !keywords.Any(keyword => text.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
                         continue;
 
                     ulong? count = parseRoughCount(text);
@@ -2683,6 +4160,14 @@ namespace AXPlayer.App.Online
 
             return null;
         }
+
+        /// <summary>
+        /// Locates the header of a channel page, which is rendered differently per client.
+        /// </summary>
+        private static JsonElement? findPageHeader(JsonElement root)
+            => findProperty(root, @"pageHeaderRenderer")
+               ?? findProperty(root, @"channelHeaderRenderer")
+               ?? findProperty(root, @"c4TabbedHeaderRenderer");
 
         private static ulong? parseUlong(JsonElement element)
         {
@@ -2712,14 +4197,11 @@ namespace AXPlayer.App.Online
             if (string.IsNullOrWhiteSpace(text))
                 return null;
 
-            Match match = Regex.Match(text, @"([0-9][0-9.,]*)\s*([KMB])?", RegexOptions.IgnoreCase);
+            // Counts are localized with the interface language, so the CJK scale suffixes have to
+            // be understood in addition to the latin ones.
+            Match match = Regex.Match(text, @"([0-9][0-9.,']*)\s*(K|M|B|천|만|억|万|億)?", RegexOptions.IgnoreCase);
 
             if (!match.Success)
-                return null;
-
-            string numberPart = match.Groups[1].Value.Replace(@",", string.Empty).TrimEnd('.');
-
-            if (!double.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
                 return null;
 
             double multiplier = match.Groups[2].Value.ToUpperInvariant() switch
@@ -2727,10 +4209,39 @@ namespace AXPlayer.App.Online
                 @"K" => 1_000,
                 @"M" => 1_000_000,
                 @"B" => 1_000_000_000,
+                @"천" => 1_000,
+                @"만" or @"万" => 10_000,
+                @"억" or @"億" => 100_000_000,
                 _ => 1,
             };
 
+            string numberPart = normalizeCountNumber(match.Groups[1].Value, multiplier != 1);
+
+            if (!double.TryParse(numberPart, NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
+                return null;
+
             return (ulong)Math.Round(value * multiplier);
+        }
+
+        /// <summary>
+        /// Normalizes the separators of a localized count (for example <c>1,234</c>, <c>1.234</c>
+        /// or <c>1.2천</c>) into an invariant representation.
+        /// </summary>
+        private static string normalizeCountNumber(string raw, bool hasMultiplier)
+        {
+            string number = raw.Trim().Replace(" ", string.Empty).Replace("\u00a0", string.Empty).Replace("'", string.Empty).TrimEnd('.', ',');
+
+            if (number.Length == 0)
+                return number;
+
+            // A scaled count uses the separator as its decimal point (1.2K, 1,2만).
+            if (hasMultiplier)
+                return number.Replace(@",", @".");
+
+            // Otherwise a separator followed by exactly three digits groups thousands.
+            return Regex.IsMatch(number, @"^[0-9]{1,3}([.,][0-9]{3})+$")
+                ? number.Replace(@",", string.Empty).Replace(@".", string.Empty)
+                : number.Replace(@",", @".");
         }
 
         private static DateTimeOffset? parseDateTimeOffset(string? raw)
@@ -2748,24 +4259,35 @@ namespace AXPlayer.App.Online
             if (string.IsNullOrWhiteSpace(text))
                 return null;
 
-            Match match = Regex.Match(text, @"(\d+)\s*(second|minute|hour|day|week|month|year)s?\s*ago", RegexOptions.IgnoreCase);
+            Match match = Regex.Match(text, @"(\d+)");
 
             if (!match.Success || !int.TryParse(match.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int amount))
-                return null;
+                return parseDateText(text);
 
-            DateTimeOffset now = DateTimeOffset.UtcNow;
+            string lower = text.ToLowerInvariant();
 
-            return match.Groups[2].Value.ToLowerInvariant() switch
+            foreach ((string[] keywords, int unit) in relative_date_units)
             {
-                @"second" => now.AddSeconds(-amount),
-                @"minute" => now.AddMinutes(-amount),
-                @"hour" => now.AddHours(-amount),
-                @"day" => now.AddDays(-amount),
-                @"week" => now.AddDays(-7 * amount),
-                @"month" => now.AddMonths(-amount),
-                @"year" => now.AddYears(-amount),
-                _ => null,
-            };
+                if (!keywords.Any(keyword => lower.Contains(keyword, StringComparison.Ordinal)))
+                    continue;
+
+                DateTimeOffset now = DateTimeOffset.UtcNow;
+
+                return unit switch
+                {
+                    0 => now.AddSeconds(-amount),
+                    1 => now.AddMinutes(-amount),
+                    2 => now.AddHours(-amount),
+                    3 => now.AddDays(-amount),
+                    4 => now.AddDays(-7 * amount),
+                    5 => now.AddMonths(-amount),
+                    _ => now.AddYears(-amount),
+                };
+            }
+
+            // Pages that show the upload date instead of a relative one (for example the watch page)
+            // render it as an absolute date.
+            return parseDateText(text);
         }
 
         private static string? getLastThumbnailUrl(JsonElement? element)
@@ -2848,9 +4370,14 @@ namespace AXPlayer.App.Online
 
         #region sync bridges
 
-        private static T runSync<T>(Func<Task<T>> taskFactory) => taskFactory().GetAwaiter().GetResult();
+        internal static T runSync<T>(Func<Task<T>> taskFactory)
+            // Starting the work on the thread pool keeps the continuation of every inner await off
+            // the caller's synchronization context, so blocking an update-thread caller cannot
+            // deadlock the operation.
+            => Task.Run(taskFactory).GetAwaiter().GetResult();
 
-        private static void runSync(Func<Task> taskFactory) => taskFactory().GetAwaiter().GetResult();
+        internal static void runSync(Func<Task> taskFactory)
+            => Task.Run(taskFactory).GetAwaiter().GetResult();
 
         #endregion
     }
