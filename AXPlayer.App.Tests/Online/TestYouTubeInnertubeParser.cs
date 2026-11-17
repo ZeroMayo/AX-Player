@@ -1913,7 +1913,7 @@ namespace AXPlayer.App.Tests.Online
             }
             """;
 
-            const string localized_nextResponse = """
+            const string korean_next_response = """
             {
               "contents": {
                 "twoColumnWatchNextResults": {
@@ -1938,12 +1938,25 @@ namespace AXPlayer.App.Tests.Online
             }
             """;
 
+            const string japanese_next_response = """
+            {
+              "contents": [
+                { "videoPrimaryInfoRenderer": { "title": { "simpleText": "翻訳されたタイトル" } } }
+              ]
+            }
+            """;
+
             Video video = YouTubeAPI.parseVideo(parse(player_response), "v")!;
-            YouTubeAPI.applyLocalizations(video, parse(localized_nextResponse), "ko", "ko-KR");
+            YouTubeAPI.applyLocalizations(video, new Dictionary<string, JsonElement>
+            {
+                ["ko"] = parse(korean_next_response),
+                ["ja"] = parse(japanese_next_response),
+            }, "ko-KR");
 
             Assert.That(video.Localizations["ko"].Title, Is.EqualTo("번역된 제목"));
             Assert.That(video.Localizations["ko"].Description, Is.EqualTo("번역된 설명"));
             Assert.That(video.Localizations["ko-KR"].Title, Is.EqualTo("번역된 제목"));
+            Assert.That(video.Localizations["ja"].Title, Is.EqualTo("翻訳されたタイトル"));
             Assert.That(video.Localizations["en-US"].Title, Is.EqualTo("Original title"));
             Assert.That(video.Snippet.Title, Is.EqualTo("Original title"));
         }
@@ -1956,9 +1969,45 @@ namespace AXPlayer.App.Tests.Online
             """;
 
             Video video = YouTubeAPI.parseVideo(parse(player_response), "v")!;
-            YouTubeAPI.applyLocalizations(video, parse("""{ "contents": [] }"""), "ko", "ko-KR");
+            YouTubeAPI.applyLocalizations(video, new Dictionary<string, JsonElement>
+            {
+                ["ko"] = parse("""{ "contents": [] }"""),
+            }, "ko-KR");
 
             Assert.That(video.Localizations, Is.Empty);
+        }
+
+        [Test]
+        public void TestChannelLocalizationsIncludeEveryRequestedLanguage()
+        {
+            const string english_page = """
+            {
+              "metadata": {
+                "channelMetadataRenderer": { "externalId": "UCreal", "title": "Real Channel", "description": "Original description" }
+              }
+            }
+            """;
+
+            const string korean_page = """
+            {
+              "metadata": {
+                "channelMetadataRenderer": { "externalId": "UCreal", "title": "진짜 채널", "description": "번역된 설명" }
+              }
+            }
+            """;
+
+            Channel channel = YouTubeAPI.parseChannel(parse(english_page), "UCreal")!;
+            YouTubeAPI.applyLocalizations(channel, new Dictionary<string, JsonElement>
+            {
+                ["en"] = parse(english_page),
+                ["ko"] = parse(korean_page),
+            }, "ko-KR");
+
+            Assert.That(channel.Localizations["en"].Title, Is.EqualTo("Real Channel"));
+            Assert.That(channel.Localizations["ko"].Title, Is.EqualTo("진짜 채널"));
+            Assert.That(channel.Localizations["ko"].Description, Is.EqualTo("번역된 설명"));
+            Assert.That(channel.Localizations["ko-KR"].Title, Is.EqualTo("진짜 채널"));
+            Assert.That(channel.Snippet.Title, Is.EqualTo("Real Channel"));
         }
 
         [Test]

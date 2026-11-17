@@ -61,6 +61,24 @@ namespace AXPlayer.App.Online
         private const string music_topic_category = @"https://en.wikipedia.org/wiki/Music";
 
         /// <summary>
+        /// The interface language that responses are requested in when the framework locale cannot be
+        /// read.
+        /// </summary>
+        private const string default_localization_language = @"en";
+
+        /// <summary>
+        /// The interface languages that the localizations (the translations of the title and the
+        /// description an uploader provided) are requested in.
+        /// </summary>
+        /// <remarks>
+        /// The Data API returned every uploader-provided translation at once, while an Innertube
+        /// response is only localized to the requested <c>hl</c>. The languages that the application
+        /// can display are therefore requested one by one so that the localizations carry more than
+        /// the current interface language.
+        /// </remarks>
+        private static readonly string[] localization_languages = { @"en", @"es", @"it", @"ja", @"ko", @"ru", @"tr", @"vi", @"zh" };
+
+        /// <summary>
         /// The words that precede the subscriber count of a channel, in the languages the page can be
         /// rendered in. The count itself is read from the page header (see
         /// <see cref="findCountWithKeyword" />).
@@ -475,9 +493,11 @@ namespace AXPlayer.App.Online
             string? visitorData = await tryResolveVisitorDataAsync(cancellationToken).ConfigureAwait(false);
 
             // The player response is requested with the original interface language so the snippet
-            // keeps the original title/description, while the watch-next response is requested in
-            // the player's language to expose the translated title/description (localizations).
+            // keeps the original title/description, while the watch-next responses are requested in
+            // every language the application can display to expose the translated title/description
+            // (localizations).
             string? interfaceLanguage = getInterfaceLanguage();
+            string primaryLanguage = interfaceLanguage ?? default_localization_language;
 
             Task<JsonDocument?> playerTask = sendInnertubeAsync(@"player", new Dictionary<string, object?>
             {
@@ -487,36 +507,97 @@ namespace AXPlayer.App.Online
                 [@"context"] = createWebClientContext(visitorData),
             }, cancellationToken);
 
-            Task<JsonDocument?> nextTask = sendInnertubeAsync(@"next", new Dictionary<string, object?>
+            Dictionary<string, JsonDocument> nextDocuments = await fetchLocalizedResponsesAsync(
+                language => sendInnertubeAsync(@"next", new Dictionary<string, object?>
+                {
+                    [@"videoId"] = videoId,
+                    [@"context"] = createWebClientContext(visitorData, language),
+                }, cancellationToken),
+                interfaceLanguage).ConfigureAwait(false);
+
+            try
             {
-                [@"videoId"] = videoId,
-                [@"context"] = createWebClientContext(visitorData, interfaceLanguage),
-            }, cancellationToken);
+                using JsonDocument? player = await playerTask.ConfigureAwait(false);
 
-            await Task.WhenAll(playerTask, nextTask).ConfigureAwait(false);
+                if (player == null)
+                    return null;
 
-            using JsonDocument? player = await playerTask.ConfigureAwait(false);
-            using JsonDocument? next = await nextTask.ConfigureAwait(false);
+                Video? video = parseVideo(player.RootElement, videoId);
 
-            if (player == null)
-                return null;
+                if (video == null)
+                    return null;
 
-            Video? video = parseVideo(player.RootElement, videoId);
+                nextDocuments.TryGetValue(primaryLanguage, out JsonDocument? next);
 
-            if (video == null)
-                return null;
+                if (next != null)
+                {
+                    applyWatchMetadata(video, next.RootElement);
+                    applyFullDescription(video, next.RootElement);
+                }
 
-            if (next != null)
+                applyPublishedAt(video, player.RootElement, next?.RootElement);
+                applyLiveStreamingDetails(video, player.RootElement, next?.RootElement);
+                applyLocalizations(video, getLocalizedRoots(nextDocuments), getFrameworkLocale());
+
+                return video;
+            }
+            finally
             {
-                applyWatchMetadata(video, next.RootElement);
-                applyFullDescription(video, next.RootElement);
+                foreach (JsonDocument document in nextDocuments.Values)
+                    document.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Requests a response in every interface language that the application can display and
+        /// returns the responses that were received, keyed by their language.
+        /// </summary>
+        /// <remarks>
+        /// The caller owns the returned documents and has to dispose them.
+        /// </remarks>
+        private async Task<Dictionary<string, JsonDocument>> fetchLocalizedResponsesAsync(Func<string, Task<JsonDocument?>> requestFactory, string? interfaceLanguage)
+        {
+            var tasks = new Dictionary<string, Task<JsonDocument?>>(StringComparer.Ordinal);
+
+            foreach (string language in getLocalizationLanguages(interfaceLanguage))
+                tasks[language] = requestFactory(language);
+
+            await Task.WhenAll(tasks.Values).ConfigureAwait(false);
+
+            var documents = new Dictionary<string, JsonDocument>(StringComparer.Ordinal);
+
+            foreach ((string language, Task<JsonDocument?> task) in tasks)
+            {
+                JsonDocument? document = await task.ConfigureAwait(false);
+
+                if (document != null)
+                    documents[language] = document;
             }
 
-            applyPublishedAt(video, player.RootElement, next?.RootElement);
-            applyLiveStreamingDetails(video, player.RootElement, next?.RootElement);
-            applyLocalizations(video, next?.RootElement, interfaceLanguage, getFrameworkLocale());
+            return documents;
+        }
 
-            return video;
+        private static Dictionary<string, JsonElement> getLocalizedRoots(Dictionary<string, JsonDocument> documents)
+        {
+            var roots = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
+
+            foreach ((string language, JsonDocument document) in documents)
+                roots[language] = document.RootElement;
+
+            return roots;
+        }
+
+        /// <summary>
+        /// Returns the interface languages that a localization is requested in, which is the set of
+        /// languages the application can display plus the requested interface language.
+        /// </summary>
+        private static IEnumerable<string> getLocalizationLanguages(string? interfaceLanguage)
+        {
+            foreach (string language in localization_languages)
+                yield return language;
+
+            if (!string.IsNullOrEmpty(interfaceLanguage) && !localization_languages.Contains(interfaceLanguage, StringComparer.Ordinal))
+                yield return interfaceLanguage;
         }
 
         /// <summary>
@@ -524,9 +605,13 @@ namespace AXPlayer.App.Online
         /// <c>ko-KR</c>), which is what the Innertube <c>hl</c> parameter expects.
         /// </summary>
         private string? getInterfaceLanguage()
-        {
-            string? locale = getFrameworkLocale();
+            => getPrimaryLanguage(getFrameworkLocale());
 
+        /// <summary>
+        /// Returns the primary language subtag of a locale (for example <c>ko</c> for <c>ko-KR</c>).
+        /// </summary>
+        private static string? getPrimaryLanguage(string? locale)
+        {
             if (string.IsNullOrWhiteSpace(locale))
                 return null;
 
@@ -1269,14 +1354,16 @@ namespace AXPlayer.App.Online
         }
 
         /// <summary>
-        /// Adds the default language and the interface language entries to <see cref="Video.Localizations"/>.
+        /// Adds the default language and every requested interface language entry to
+        /// <see cref="Video.Localizations"/>.
         /// </summary>
         /// <remarks>
         /// The Data API returned every uploader-provided translation at once. Innertube only localizes
-        /// the watch-next response to the requested <c>hl</c>, so the translation of the player's
-        /// language is collected here and the snippet stays in the original language.
+        /// a watch-next response to the requested <c>hl</c>, so one response is requested per language
+        /// the application can display and the title/description of each of them is collected here.
+        /// The snippet stays in the original language.
         /// </remarks>
-        internal static void applyLocalizations(Video video, JsonElement? nextRoot, string? interfaceLanguage, string? locale)
+        internal static void applyLocalizations(Video video, IReadOnlyDictionary<string, JsonElement> localizedRoots, string? locale)
         {
             var localizations = video.Localizations ?? new Dictionary<string, VideoLocalization>(StringComparer.Ordinal);
 
@@ -1285,32 +1372,26 @@ namespace AXPlayer.App.Online
             if (!string.IsNullOrEmpty(defaultLanguage) && video.Snippet?.Localized != null)
                 addLocalization(localizations, defaultLanguage, video.Snippet.Localized.Title, video.Snippet.Localized.Description);
 
-            if (nextRoot == null || string.IsNullOrEmpty(interfaceLanguage))
+            foreach ((string language, JsonElement root) in localizedRoots)
             {
-                video.Localizations = localizations;
-                return;
+                JsonElement primaryInfo = firstRenderer(root, @"videoPrimaryInfoRenderer") ?? default;
+                string? localizedTitle = extractText(getObject(primaryInfo, @"title") ?? default);
+
+                if (string.IsNullOrEmpty(localizedTitle))
+                    continue;
+
+                // The localized entry carries the same expanded description as the snippet, so that a
+                // translated title never brings back the truncated text with abbreviated links.
+                string? localizedDescription = extractFullDescription(root) ?? video.Snippet?.Description;
+
+                addLocalization(localizations, language, localizedTitle, localizedDescription);
             }
-
-            JsonElement primaryInfo = firstRenderer(nextRoot.Value, @"videoPrimaryInfoRenderer") ?? default;
-            string? localizedTitle = extractText(getObject(primaryInfo, @"title") ?? default);
-
-            if (string.IsNullOrEmpty(localizedTitle))
-            {
-                video.Localizations = localizations;
-                return;
-            }
-
-            // The localized entry carries the same expanded description as the snippet, so that a
-            // translated title never brings back the truncated text with abbreviated links.
-            string? localizedDescription = extractFullDescription(nextRoot.Value);
-
-            localizedDescription ??= video.Snippet?.Description;
-
-            addLocalization(localizations, interfaceLanguage, localizedTitle, localizedDescription);
 
             // GetLocalizedVideoTitle() looks the translation up with the full framework locale.
-            if (!string.IsNullOrEmpty(locale) && !string.Equals(locale, interfaceLanguage, StringComparison.OrdinalIgnoreCase))
-                addLocalization(localizations, locale, localizedTitle, localizedDescription);
+            if (!string.IsNullOrEmpty(locale) && !localizations.ContainsKey(locale)
+                && getPrimaryLanguage(locale) is { } primaryLocale
+                && localizations.TryGetValue(primaryLocale, out VideoLocalization? primaryLocalization))
+                localizations[locale] = primaryLocalization;
 
             video.Localizations = localizations;
         }
@@ -1399,22 +1480,43 @@ namespace AXPlayer.App.Online
             if (string.IsNullOrWhiteSpace(channelId))
                 return null;
 
-            using JsonDocument? document = await sendInnertubeAsync(@"browse", new Dictionary<string, object?>
+            string? interfaceLanguage = getInterfaceLanguage();
+
+            Dictionary<string, JsonDocument> documents = await fetchLocalizedResponsesAsync(
+                language => sendInnertubeAsync(@"browse", new Dictionary<string, object?>
+                {
+                    [@"browseId"] = channelId,
+                    [@"context"] = createWebClientContext(null, language),
+                }, cancellationToken),
+                interfaceLanguage).ConfigureAwait(false);
+
+            try
             {
-                [@"browseId"] = channelId,
-                [@"context"] = createWebClientContext(null),
-            }, cancellationToken).ConfigureAwait(false);
+                if (!documents.TryGetValue(interfaceLanguage ?? default_localization_language, out JsonDocument? primary))
+                    primary = documents.Values.FirstOrDefault();
 
-            if (document == null)
-                return null;
+                if (primary == null)
+                    return null;
 
-            return parseChannel(document.RootElement, channelId);
+                Channel? channel = parseChannel(primary.RootElement, channelId);
+
+                if (channel == null)
+                    return null;
+
+                applyLocalizations(channel, getLocalizedRoots(documents), getFrameworkLocale());
+
+                return channel;
+            }
+            finally
+            {
+                foreach (JsonDocument document in documents.Values)
+                    document.Dispose();
+            }
         }
 
         internal static Channel? parseChannel(JsonElement root, string channelId)
         {
-            if (!root.TryGetProperty(@"metadata", out JsonElement metadata)
-                || !metadata.TryGetProperty(@"channelMetadataRenderer", out JsonElement channelMetadata))
+            if (!tryGetChannelMetadata(root, out JsonElement channelMetadata))
                 return null;
 
             string id = getString(channelMetadata, @"externalId") ?? channelId;
@@ -1457,6 +1559,57 @@ namespace AXPlayer.App.Online
                 },
                 Localizations = new Dictionary<string, ChannelLocalization>(StringComparer.Ordinal),
             };
+        }
+
+        /// <summary>
+        /// Reads <c>metadata.channelMetadataRenderer</c> from a channel page.
+        /// </summary>
+        private static bool tryGetChannelMetadata(JsonElement root, out JsonElement channelMetadata)
+        {
+            channelMetadata = default;
+
+            return root.TryGetProperty(@"metadata", out JsonElement metadata)
+                   && metadata.ValueKind == JsonValueKind.Object
+                   && metadata.TryGetProperty(@"channelMetadataRenderer", out channelMetadata)
+                   && channelMetadata.ValueKind == JsonValueKind.Object;
+        }
+
+        /// <summary>
+        /// Adds every requested interface language entry to <see cref="Channel.Localizations"/>.
+        /// </summary>
+        /// <remarks>
+        /// The Data API returned every uploader-provided translation at once. Innertube only localizes
+        /// a channel page to the requested <c>hl</c>, so one page is requested per language the
+        /// application can display and the title/description of each of them is collected here.
+        /// </remarks>
+        internal static void applyLocalizations(Channel channel, IReadOnlyDictionary<string, JsonElement> localizedRoots, string? locale)
+        {
+            var localizations = channel.Localizations ?? new Dictionary<string, ChannelLocalization>(StringComparer.Ordinal);
+
+            foreach ((string language, JsonElement root) in localizedRoots)
+            {
+                if (!tryGetChannelMetadata(root, out JsonElement channelMetadata))
+                    continue;
+
+                string? localizedTitle = getString(channelMetadata, @"title");
+
+                if (string.IsNullOrEmpty(localizedTitle))
+                    continue;
+
+                localizations[language] = new ChannelLocalization
+                {
+                    Title = localizedTitle,
+                    Description = getString(channelMetadata, @"description"),
+                };
+            }
+
+            // GetLocalizedChannelTitle() looks the translation up with the full framework locale.
+            if (!string.IsNullOrEmpty(locale) && !localizations.ContainsKey(locale)
+                && getPrimaryLanguage(locale) is { } primaryLocale
+                && localizations.TryGetValue(primaryLocale, out ChannelLocalization? primaryLocalization))
+                localizations[locale] = primaryLocalization;
+
+            channel.Localizations = localizations;
         }
 
         private static string? extractChannelHandle(JsonElement channelMetadata, JsonElement root)
