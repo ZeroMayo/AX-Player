@@ -108,7 +108,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.CaptionCornerRadius, 0, 0, 16);
             SetDefault(AXPlayerSetting.UseNewSubtitlesFeature, true);
             SetDefault(AXPlayerSetting.ScreenshotQuality, 92, 1, 100);
-            SetDefault(AXPlayerSetting.PlayerControllerFadeStyle, PlayerControllerFadeStyle.Modern);
+            SetDefault(AXPlayerSetting.PlayerControllerFadeStyle, PlayerControllerFadeStyle.Legacy);
             SetDefault(AXPlayerSetting.WavySeekBar, true);
 
             SetDefault(AXPlayerSetting.Version, string.Empty);
