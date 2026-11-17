@@ -374,7 +374,7 @@ namespace AXPlayer.App.Online
 
             request.Headers.Add(
                 "User-Agent",
-                $"NekoPlayer/{(app.IsDeployedBuild ? app.Version : "Development")}"
+                $"AXPlayer/{(app.IsDeployedBuild ? app.Version : "Development")}"
             );
 
             if (googleOAuth2.SignedIn.Value)
