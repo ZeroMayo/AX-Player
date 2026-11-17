@@ -262,6 +262,42 @@
   <data name="export_logs" xml:space="preserve">
     <value>Export logs</value>
   </data>
+  <data name="settings_backup" xml:space="preserve">
+    <value>Settings backup</value>
+  </data>
+  <data name="back_up_settings" xml:space="preserve">
+    <value>Back up settings</value>
+  </data>
+  <data name="restore_settings" xml:space="preserve">
+    <value>Restore settings</value>
+  </data>
+  <data name="settings_backup_empty" xml:space="preserve">
+    <value>No backups available</value>
+  </data>
+  <data name="settings_backup_created" xml:space="preserve">
+    <value>Settings backed up!</value>
+  </data>
+  <data name="settings_backup_failed" xml:space="preserve">
+    <value>Could not back up settings.</value>
+  </data>
+  <data name="settings_backup_restore_confirmation" xml:space="preserve">
+    <value>Restore this backup?</value>
+  </data>
+  <data name="settings_backup_restore_confirmation_info" xml:space="preserve">
+    <value>{0} will be restored. Your current settings are backed up first.</value>
+  </data>
+  <data name="settings_backup_restored" xml:space="preserve">
+    <value>Settings restored! Some changes may require a restart.</value>
+  </data>
+  <data name="settings_backup_restore_failed" xml:space="preserve">
+    <value>Could not restore the selected backup.</value>
+  </data>
+  <data name="settings_backup_app_item" xml:space="preserve">
+    <value>{0} (App settings)</value>
+  </data>
+  <data name="settings_backup_audio_effects_item" xml:space="preserve">
+    <value>{0} (Audio effects)</value>
+  </data>
   <data name="logs_export_finished" xml:space="preserve">
     <value>Exported logs!</value>
   </data>

@@ -66,9 +66,53 @@ namespace AXPlayer.App.Config
             SetDefault(AudioEffectsSetting.Presets, string.Empty);
         }
 
+        private readonly Storage storage;
+
         public AudioEffectsConfigManager(Storage storage, IDictionary<AudioEffectsSetting, object> defaultOverrides = null) : base(storage, defaultOverrides)
         {
+            this.storage = storage;
         }
+
+        /// <summary>
+        /// Saves the current audio effect configuration and stores a timestamped copy of <c>audio_effects.ini</c>
+        /// in the backups directory.
+        /// </summary>
+        /// <returns>The name of the created backup.</returns>
+        public string CreateBackup()
+        {
+            Save();
+            return ConfigBackupStorage.Create(storage, FILENAME);
+        }
+
+        /// <summary>
+        /// Returns every backup of <c>audio_effects.ini</c>, newest first.
+        /// </summary>
+        public IReadOnlyList<string> GetBackups() => ConfigBackupStorage.GetAll(storage, FILENAME);
+
+        /// <summary>
+        /// Restores a previously created backup and reloads every audio effect and stored preset from it.
+        /// The current configuration is saved and backed up first, so a restore can be undone.
+        /// </summary>
+        /// <returns><c>true</c> if the backup existed and was restored.</returns>
+        public bool RestoreBackup(string backupFilename)
+        {
+            byte[] contents = ConfigBackupStorage.Read(storage, FILENAME, backupFilename);
+
+            if (contents == null)
+                return false;
+
+            Save();
+            ConfigBackupStorage.Create(storage, FILENAME);
+            ConfigBackupStorage.Write(storage, FILENAME, contents);
+            Load();
+            return true;
+        }
+
+        /// <summary>
+        /// Deletes a backup of <c>audio_effects.ini</c>.
+        /// </summary>
+        /// <returns><c>true</c> if a matching backup was deleted.</returns>
+        public bool DeleteBackup(string backupFilename) => ConfigBackupStorage.Delete(storage, FILENAME, backupFilename);
 
         /// <summary>
         /// Maximum length of a stored preset name.

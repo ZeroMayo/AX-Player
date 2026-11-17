@@ -262,6 +262,42 @@
   <data name="export_logs" xml:space="preserve">
     <value>导出日志</value>
   </data>
+  <data name="settings_backup" xml:space="preserve">
+    <value>设置备份</value>
+  </data>
+  <data name="back_up_settings" xml:space="preserve">
+    <value>备份设置</value>
+  </data>
+  <data name="restore_settings" xml:space="preserve">
+    <value>恢复设置</value>
+  </data>
+  <data name="settings_backup_empty" xml:space="preserve">
+    <value>没有可用的备份</value>
+  </data>
+  <data name="settings_backup_created" xml:space="preserve">
+    <value>设置已备份！</value>
+  </data>
+  <data name="settings_backup_failed" xml:space="preserve">
+    <value>无法备份设置。</value>
+  </data>
+  <data name="settings_backup_restore_confirmation" xml:space="preserve">
+    <value>恢复此备份？</value>
+  </data>
+  <data name="settings_backup_restore_confirmation_info" xml:space="preserve">
+    <value>将恢复 {0}。当前设置会先自动备份。</value>
+  </data>
+  <data name="settings_backup_restored" xml:space="preserve">
+    <value>设置已恢复！某些更改可能需要重启。</value>
+  </data>
+  <data name="settings_backup_restore_failed" xml:space="preserve">
+    <value>无法恢复所选备份。</value>
+  </data>
+  <data name="settings_backup_app_item" xml:space="preserve">
+    <value>{0}（应用设置）</value>
+  </data>
+  <data name="settings_backup_audio_effects_item" xml:space="preserve">
+    <value>{0}（音频效果）</value>
+  </data>
   <data name="logs_export_finished" xml:space="preserve">
     <value>日志已导出！</value>
   </data>

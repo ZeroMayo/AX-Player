@@ -41,6 +41,66 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString ExportLogs => new TranslatableString(getKey(@"export_logs"), "Export logs");
 
         /// <summary>
+        /// "Settings backup"
+        /// </summary>
+        public static LocalisableString SettingsBackup => new TranslatableString(getKey(@"settings_backup"), "Settings backup");
+
+        /// <summary>
+        /// "Back up settings"
+        /// </summary>
+        public static LocalisableString BackUpSettings => new TranslatableString(getKey(@"back_up_settings"), "Back up settings");
+
+        /// <summary>
+        /// "Restore settings"
+        /// </summary>
+        public static LocalisableString RestoreSettings => new TranslatableString(getKey(@"restore_settings"), "Restore settings");
+
+        /// <summary>
+        /// "No backups available"
+        /// </summary>
+        public static LocalisableString SettingsBackupEmpty => new TranslatableString(getKey(@"settings_backup_empty"), "No backups available");
+
+        /// <summary>
+        /// "Settings backed up!"
+        /// </summary>
+        public static LocalisableString SettingsBackupCreated => new TranslatableString(getKey(@"settings_backup_created"), "Settings backed up!");
+
+        /// <summary>
+        /// "Could not back up settings."
+        /// </summary>
+        public static LocalisableString SettingsBackupFailed => new TranslatableString(getKey(@"settings_backup_failed"), "Could not back up settings.");
+
+        /// <summary>
+        /// "Restore this backup?"
+        /// </summary>
+        public static LocalisableString SettingsBackupRestoreConfirmation => new TranslatableString(getKey(@"settings_backup_restore_confirmation"), "Restore this backup?");
+
+        /// <summary>
+        /// "{0} will be restored. Your current settings are backed up first."
+        /// </summary>
+        public static LocalisableString SettingsBackupRestoreConfirmationInfo(string backupName) => new TranslatableString(getKey(@"settings_backup_restore_confirmation_info"), "{0} will be restored. Your current settings are backed up first.", backupName);
+
+        /// <summary>
+        /// "Settings restored! Some changes may require a restart."
+        /// </summary>
+        public static LocalisableString SettingsBackupRestored => new TranslatableString(getKey(@"settings_backup_restored"), "Settings restored! Some changes may require a restart.");
+
+        /// <summary>
+        /// "Could not restore the selected backup."
+        /// </summary>
+        public static LocalisableString SettingsBackupRestoreFailed => new TranslatableString(getKey(@"settings_backup_restore_failed"), "Could not restore the selected backup.");
+
+        /// <summary>
+        /// "{0} (App settings)"
+        /// </summary>
+        public static LocalisableString SettingsBackupAppItem(string timestamp) => new TranslatableString(getKey(@"settings_backup_app_item"), "{0} (App settings)", timestamp);
+
+        /// <summary>
+        /// "{0} (Audio effects)"
+        /// </summary>
+        public static LocalisableString SettingsBackupAudioEffectsItem(string timestamp) => new TranslatableString(getKey(@"settings_backup_audio_effects_item"), "{0} (Audio effects)", timestamp);
+
+        /// <summary>
         /// "Load from video or playlist's ID or URL"
         /// </summary>
         public static LocalisableString LoadFromVideoId => new TranslatableString(getKey(@"load_from_video_id"), "Load from video or playlist's ID or URL");

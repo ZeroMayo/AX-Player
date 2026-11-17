@@ -262,6 +262,42 @@
   <data name="export_logs" xml:space="preserve">
     <value>ログをエクスポートする</value>
   </data>
+  <data name="settings_backup" xml:space="preserve">
+    <value>設定のバックアップ</value>
+  </data>
+  <data name="back_up_settings" xml:space="preserve">
+    <value>設定をバックアップ</value>
+  </data>
+  <data name="restore_settings" xml:space="preserve">
+    <value>設定を復元</value>
+  </data>
+  <data name="settings_backup_empty" xml:space="preserve">
+    <value>利用可能なバックアップはありません</value>
+  </data>
+  <data name="settings_backup_created" xml:space="preserve">
+    <value>設定をバックアップしました！</value>
+  </data>
+  <data name="settings_backup_failed" xml:space="preserve">
+    <value>設定をバックアップできませんでした。</value>
+  </data>
+  <data name="settings_backup_restore_confirmation" xml:space="preserve">
+    <value>このバックアップを復元しますか？</value>
+  </data>
+  <data name="settings_backup_restore_confirmation_info" xml:space="preserve">
+    <value>{0} が復元されます。現在の設定は先にバックアップされます。</value>
+  </data>
+  <data name="settings_backup_restored" xml:space="preserve">
+    <value>設定を復元しました！一部の変更は再起動が必要な場合があります。</value>
+  </data>
+  <data name="settings_backup_restore_failed" xml:space="preserve">
+    <value>選択したバックアップを復元できませんでした。</value>
+  </data>
+  <data name="settings_backup_app_item" xml:space="preserve">
+    <value>{0}（アプリ設定）</value>
+  </data>
+  <data name="settings_backup_audio_effects_item" xml:space="preserve">
+    <value>{0}（オーディオ効果）</value>
+  </data>
   <data name="logs_export_finished" xml:space="preserve">
     <value>ログをエクスポートしました!</value>
   </data>

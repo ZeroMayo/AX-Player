@@ -262,6 +262,42 @@
   <data name="export_logs" xml:space="preserve">
     <value>Экспортировать журналы</value>
   </data>
+  <data name="settings_backup" xml:space="preserve">
+    <value>Резервная копия настроек</value>
+  </data>
+  <data name="back_up_settings" xml:space="preserve">
+    <value>Создать резервную копию</value>
+  </data>
+  <data name="restore_settings" xml:space="preserve">
+    <value>Восстановить настройки</value>
+  </data>
+  <data name="settings_backup_empty" xml:space="preserve">
+    <value>Нет доступных резервных копий</value>
+  </data>
+  <data name="settings_backup_created" xml:space="preserve">
+    <value>Настройки сохранены в резервную копию!</value>
+  </data>
+  <data name="settings_backup_failed" xml:space="preserve">
+    <value>Не удалось создать резервную копию настроек.</value>
+  </data>
+  <data name="settings_backup_restore_confirmation" xml:space="preserve">
+    <value>Восстановить эту резервную копию?</value>
+  </data>
+  <data name="settings_backup_restore_confirmation_info" xml:space="preserve">
+    <value>Будет восстановлено: {0}. Текущие настройки сначала будут сохранены.</value>
+  </data>
+  <data name="settings_backup_restored" xml:space="preserve">
+    <value>Настройки восстановлены! Некоторые изменения могут потребовать перезапуска.</value>
+  </data>
+  <data name="settings_backup_restore_failed" xml:space="preserve">
+    <value>Не удалось восстановить выбранную резервную копию.</value>
+  </data>
+  <data name="settings_backup_app_item" xml:space="preserve">
+    <value>{0} (Настройки приложения)</value>
+  </data>
+  <data name="settings_backup_audio_effects_item" xml:space="preserve">
+    <value>{0} (Звуковые эффекты)</value>
+  </data>
   <data name="logs_export_finished" xml:space="preserve">
     <value>Журналы экспортированы!</value>
   </data>

@@ -262,6 +262,42 @@
   <data name="export_logs" xml:space="preserve">
     <value>Xuất nhật ký</value>
   </data>
+  <data name="settings_backup" xml:space="preserve">
+    <value>Sao lưu cài đặt</value>
+  </data>
+  <data name="back_up_settings" xml:space="preserve">
+    <value>Sao lưu cài đặt</value>
+  </data>
+  <data name="restore_settings" xml:space="preserve">
+    <value>Khôi phục cài đặt</value>
+  </data>
+  <data name="settings_backup_empty" xml:space="preserve">
+    <value>Không có bản sao lưu nào</value>
+  </data>
+  <data name="settings_backup_created" xml:space="preserve">
+    <value>Đã sao lưu cài đặt!</value>
+  </data>
+  <data name="settings_backup_failed" xml:space="preserve">
+    <value>Không thể sao lưu cài đặt.</value>
+  </data>
+  <data name="settings_backup_restore_confirmation" xml:space="preserve">
+    <value>Khôi phục bản sao lưu này?</value>
+  </data>
+  <data name="settings_backup_restore_confirmation_info" xml:space="preserve">
+    <value>{0} sẽ được khôi phục. Cài đặt hiện tại sẽ được sao lưu trước.</value>
+  </data>
+  <data name="settings_backup_restored" xml:space="preserve">
+    <value>Đã khôi phục cài đặt! Một số thay đổi có thể cần khởi động lại.</value>
+  </data>
+  <data name="settings_backup_restore_failed" xml:space="preserve">
+    <value>Không thể khôi phục bản sao lưu đã chọn.</value>
+  </data>
+  <data name="settings_backup_app_item" xml:space="preserve">
+    <value>{0} (Cài đặt ứng dụng)</value>
+  </data>
+  <data name="settings_backup_audio_effects_item" xml:space="preserve">
+    <value>{0} (Hiệu ứng âm thanh)</value>
+  </data>
   <data name="logs_export_finished" xml:space="preserve">
     <value>Đã xuất nhật ký!</value>
   </data>

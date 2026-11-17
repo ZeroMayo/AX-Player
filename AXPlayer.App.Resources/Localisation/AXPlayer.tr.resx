@@ -262,6 +262,42 @@
   <data name="export_logs" xml:space="preserve">
     <value>Günlükleri dışa aktar</value>
   </data>
+  <data name="settings_backup" xml:space="preserve">
+    <value>Ayar yedeği</value>
+  </data>
+  <data name="back_up_settings" xml:space="preserve">
+    <value>Ayarları yedekle</value>
+  </data>
+  <data name="restore_settings" xml:space="preserve">
+    <value>Ayarları geri yükle</value>
+  </data>
+  <data name="settings_backup_empty" xml:space="preserve">
+    <value>Kullanılabilir yedek yok</value>
+  </data>
+  <data name="settings_backup_created" xml:space="preserve">
+    <value>Ayarlar yedeklendi!</value>
+  </data>
+  <data name="settings_backup_failed" xml:space="preserve">
+    <value>Ayarlar yedeklenemedi.</value>
+  </data>
+  <data name="settings_backup_restore_confirmation" xml:space="preserve">
+    <value>Bu yedek geri yüklensin mi?</value>
+  </data>
+  <data name="settings_backup_restore_confirmation_info" xml:space="preserve">
+    <value>{0} geri yüklenecek. Mevcut ayarlar önce yedeklenecek.</value>
+  </data>
+  <data name="settings_backup_restored" xml:space="preserve">
+    <value>Ayarlar geri yüklendi! Bazı değişiklikler yeniden başlatma gerektirebilir.</value>
+  </data>
+  <data name="settings_backup_restore_failed" xml:space="preserve">
+    <value>Seçilen yedek geri yüklenemedi.</value>
+  </data>
+  <data name="settings_backup_app_item" xml:space="preserve">
+    <value>{0} (Uygulama ayarları)</value>
+  </data>
+  <data name="settings_backup_audio_effects_item" xml:space="preserve">
+    <value>{0} (Ses efektleri)</value>
+  </data>
   <data name="logs_export_finished" xml:space="preserve">
     <value>Günlükler dışa aktarıldı!</value>
   </data>

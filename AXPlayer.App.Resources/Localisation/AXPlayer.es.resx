@@ -262,6 +262,42 @@
   <data name="export_logs" xml:space="preserve">
     <value>Exporta registros</value>
   </data>
+  <data name="settings_backup" xml:space="preserve">
+    <value>Copia de seguridad de la configuración</value>
+  </data>
+  <data name="back_up_settings" xml:space="preserve">
+    <value>Copiar la configuración</value>
+  </data>
+  <data name="restore_settings" xml:space="preserve">
+    <value>Restaurar la configuración</value>
+  </data>
+  <data name="settings_backup_empty" xml:space="preserve">
+    <value>No hay copias de seguridad disponibles</value>
+  </data>
+  <data name="settings_backup_created" xml:space="preserve">
+    <value>¡Configuración copiada!</value>
+  </data>
+  <data name="settings_backup_failed" xml:space="preserve">
+    <value>No se pudo copiar la configuración.</value>
+  </data>
+  <data name="settings_backup_restore_confirmation" xml:space="preserve">
+    <value>¿Restaurar esta copia de seguridad?</value>
+  </data>
+  <data name="settings_backup_restore_confirmation_info" xml:space="preserve">
+    <value>Se restaurará {0}. La configuración actual se copiará primero.</value>
+  </data>
+  <data name="settings_backup_restored" xml:space="preserve">
+    <value>¡Configuración restaurada! Algunos cambios pueden requerir reiniciar la aplicación.</value>
+  </data>
+  <data name="settings_backup_restore_failed" xml:space="preserve">
+    <value>No se pudo restaurar la copia de seguridad seleccionada.</value>
+  </data>
+  <data name="settings_backup_app_item" xml:space="preserve">
+    <value>{0} (Configuración de la app)</value>
+  </data>
+  <data name="settings_backup_audio_effects_item" xml:space="preserve">
+    <value>{0} (Efectos de audio)</value>
+  </data>
   <data name="logs_export_finished" xml:space="preserve">
     <value>¡Exportaba troncos!</value>
   </data>

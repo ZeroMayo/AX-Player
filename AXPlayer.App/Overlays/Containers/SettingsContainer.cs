@@ -575,6 +575,39 @@ namespace AXPlayer.App.Overlays.Containers
                                                         },
                                                         new SettingsSectionHeader
                                                         {
+                                                            Name = "Settings Backup",
+                                                            Font = AXPlayerApp.DefaultFont.With(size: 30),
+                                                            Text = AXPlayerStrings.SettingsBackup,
+                                                            Padding = new MarginPadding { Horizontal = 30, Vertical = 12 },
+                                                            Colour = overlayColourProvider.Content2,
+                                                        },
+                                                        new SettingsItemV2(settingsBackupDropdown = new SettingsBackupDropdown
+                                                        {
+                                                            Caption = AXPlayerStrings.SettingsBackup,
+                                                            Icon = FontAwesome.Solid.Save,
+                                                            CornerType = FormControlCornerType.None,
+                                                        })
+                                                        {
+                                                            ShowRevertToDefaultButton = false,
+                                                        },
+                                                        new SettingsButtonV2
+                                                        {
+                                                            Padding = new MarginPadding { Horizontal = 30 },
+                                                            Text = AXPlayerStrings.BackUpSettings,
+                                                            TooltipText = AXPlayerStrings.SettingsBackup,
+                                                            BackgroundColour = colours.YellowDarker.Darken(0.5f),
+                                                            Action = backUpSettings,
+                                                        },
+                                                        new SettingsButtonV2
+                                                        {
+                                                            Padding = new MarginPadding { Horizontal = 30 },
+                                                            Text = AXPlayerStrings.RestoreSettings,
+                                                            TooltipText = AXPlayerStrings.SettingsBackup,
+                                                            BackgroundColour = colours.RedDarker.Darken(0.5f),
+                                                            Action = confirmRestoreSettingsBackup,
+                                                        },
+                                                        new SettingsSectionHeader
+                                                        {
                                                             Name = "General Settings",
                                                             Font = AXPlayerApp.DefaultFont.With(size: 30),
                                                             Text = AXPlayerStrings.General,
