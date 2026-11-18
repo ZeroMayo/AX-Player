@@ -1851,6 +1851,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString ShowLiveChatsInScreenshots => new TranslatableString(getKey(@"show_live_chats_in_screenshots"), @"Show live chats in screenshots");
 
         /// <summary>
+        /// "Threading mode"
+        /// </summary>
+        public static LocalisableString ThreadingMode => new TranslatableString(getKey(@"threading_mode"), @"Threading mode");
+
+        /// <summary>
         /// Gets the localized description for a global keyboard shortcut.
         /// </summary>
         public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(

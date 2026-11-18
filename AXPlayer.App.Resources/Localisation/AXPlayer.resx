@@ -1361,4 +1361,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>Videos you watch will show up here.</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>Threading mode</value>
+  </data>
 </root>

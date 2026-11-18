@@ -1225,4 +1225,7 @@
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>Просмотренные видео появятся здесь.</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>Режим потоков</value>
+  </data>
 </root>
