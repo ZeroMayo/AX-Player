@@ -1224,4 +1224,7 @@
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>I video che guardi appariranno qui.</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>Modalità threading</value>
+  </data>
 </root>

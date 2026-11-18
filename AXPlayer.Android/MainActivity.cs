@@ -30,9 +30,26 @@ namespace AXPlayer.Android
 
             base.OnCreate(savedInstanceState);
 
+            applyLandscapeOrientation();
+
             // The media session notification is the Android equivalent of the desktop tray icon / MPRIS integration.
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu)
                 RequestPermissions(new[] { global::Android.Manifest.Permission.PostNotifications }, notification_permission_request_code);
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            // Launchers (and some OEM rotation policies) reset the activity's requested orientation
+            // when it is resumed, so the manifest value alone is not always enough.
+            applyLandscapeOrientation();
+        }
+
+        private void applyLandscapeOrientation()
+        {
+            if (RequestedOrientation != ScreenOrientation.SensorLandscape)
+                RequestedOrientation = ScreenOrientation.SensorLandscape;
         }
     }
 }

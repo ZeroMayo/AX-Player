@@ -1225,4 +1225,7 @@
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>您观看的视频将显示在这里。</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>线程模式</value>
+  </data>
 </root>

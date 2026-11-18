@@ -1224,4 +1224,7 @@
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>Los videos que veas aparecerán aquí.</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>Modo de subprocesos</value>
+  </data>
 </root>
