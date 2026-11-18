@@ -768,7 +768,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F7 })),
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
-                                                        new SettingsItemV2(new FormEnumDropdown<ExecutionMode>
+                                                        new SettingsItemV2(new ThreadingModeDropdown
                                                         {
                                                             Caption = AXPlayerStrings.ThreadingMode,
                                                             Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode),

@@ -1228,4 +1228,10 @@
   <data name="threading_mode" xml:space="preserve">
     <value>线程模式</value>
   </data>
+  <data name="single_thread" xml:space="preserve">
+    <value>单线程</value>
+  </data>
+  <data name="multithreaded" xml:space="preserve">
+    <value>多线程</value>
+  </data>
 </root>

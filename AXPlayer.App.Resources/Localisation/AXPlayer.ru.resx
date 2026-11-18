@@ -1228,4 +1228,10 @@
   <data name="threading_mode" xml:space="preserve">
     <value>Режим потоков</value>
   </data>
+  <data name="single_thread" xml:space="preserve">
+    <value>Однопоточный</value>
+  </data>
+  <data name="multithreaded" xml:space="preserve">
+    <value>Многопоточный</value>
+  </data>
 </root>

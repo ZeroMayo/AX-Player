@@ -1856,6 +1856,16 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString ThreadingMode => new TranslatableString(getKey(@"threading_mode"), @"Threading mode");
 
         /// <summary>
+        /// "Single thread"
+        /// </summary>
+        public static LocalisableString SingleThread => new TranslatableString(getKey(@"single_thread"), @"Single thread");
+
+        /// <summary>
+        /// "Multithreaded"
+        /// </summary>
+        public static LocalisableString Multithreaded => new TranslatableString(getKey(@"multithreaded"), @"Multithreaded");
+
+        /// <summary>
         /// Gets the localized description for a global keyboard shortcut.
         /// </summary>
         public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(

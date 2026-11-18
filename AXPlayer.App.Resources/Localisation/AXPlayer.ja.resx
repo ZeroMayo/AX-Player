@@ -1227,4 +1227,10 @@
   <data name="threading_mode" xml:space="preserve">
     <value>スレッドモード</value>
   </data>
+  <data name="single_thread" xml:space="preserve">
+    <value>シングルスレッド</value>
+  </data>
+  <data name="multithreaded" xml:space="preserve">
+    <value>マルチスレッド</value>
+  </data>
 </root>

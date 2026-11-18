@@ -1364,4 +1364,10 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="threading_mode" xml:space="preserve">
     <value>Threading mode</value>
   </data>
+  <data name="single_thread" xml:space="preserve">
+    <value>Single thread</value>
+  </data>
+  <data name="multithreaded" xml:space="preserve">
+    <value>Multithreaded</value>
+  </data>
 </root>
