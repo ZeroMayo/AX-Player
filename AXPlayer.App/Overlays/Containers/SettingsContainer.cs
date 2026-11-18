@@ -771,6 +771,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new ThreadingModeDropdown
                                                         {
                                                             Caption = AXPlayerStrings.ThreadingMode,
+                                                            Icon = FontAwesome.Solid.Bolt,
                                                             Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
@@ -824,6 +825,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         safeAreaConsiderationsBase = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShrinkGameToSafeArea,
+                                                            Icon = FontAwesome.Regular.WindowMaximize,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SafeAreaConsiderations),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
