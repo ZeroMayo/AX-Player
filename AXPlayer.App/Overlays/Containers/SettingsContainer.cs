@@ -771,7 +771,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormEnumDropdown<ExecutionMode>
                                                         {
                                                             Caption = AXPlayerStrings.ThreadingMode,
-                                                            Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode)
+                                                            Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode),
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         windowModeDropdownSettings = new SettingsItemV2(windowModeDropdown = new WindowModeDropdown
                                                         {
