@@ -112,7 +112,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.WavySeekBar, true);
 
             SetDefault(AXPlayerSetting.Version, string.Empty);
-            SetDefault(AXPlayerSetting.SmoothCaptionAnimation, true);
+            SetDefault(AXPlayerSetting.SmoothCaptionAnimation, false);
             SetDefault(AXPlayerSetting.CustomPlaybackSpeedPresets, string.Empty);
             SetDefault(AXPlayerSetting.GlobalShortcutBindings, string.Empty);
 
