@@ -61,18 +61,12 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
                 Items = items;
 
-                if (!Current.Disabled)
+                if (!Current.Disabled && items.Count > 0)
                 {
-                    if (items.Where(lang => lang.Hl.Contains(CultureInfo.CurrentCulture.Name)).First() == null)
-                    {
-                        Current.Value = items.First();
-                        Current.Default = items.First();
-                    }
-                    else
-                    {
-                        Current.Value = items.Where(lang => lang.Hl.Contains(CultureInfo.CurrentCulture.Name)).First();
-                        Current.Default = items.Where(lang => lang.Hl.Contains(CultureInfo.CurrentCulture.Name)).First();
-                    }
+                    YouTubeI18nLangItem localised = items.FirstOrDefault(lang => lang.Hl.Contains(CultureInfo.CurrentCulture.Name)) ?? items[0];
+
+                    Current.Value = localised;
+                    Current.Default = localised;
                 }
             }
             catch (Exception e)

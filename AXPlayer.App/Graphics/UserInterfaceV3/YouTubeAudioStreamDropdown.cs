@@ -60,19 +60,13 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
                 Items = audioStreamInfo;
 
-                if (!Current.Disabled)
+                if (!Current.Disabled && audioStreamInfo.Count > 0)
                 {
-                    try
-                    {
-                        Current.Value = (IAudioStreamInfo)audioStreamInfo.Where(i => i.IsAudioLanguageDefault == true).GetWithHighestBitrate();
-                        Current.Default = (IAudioStreamInfo)audioStreamInfo.Where(i => i.IsAudioLanguageDefault == true).GetWithHighestBitrate();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(e, e.GetDescription());
-                        Current.Value = (IAudioStreamInfo)audioStreamInfo.GetWithHighestBitrate();
-                        Current.Default = (IAudioStreamInfo)audioStreamInfo.GetWithHighestBitrate();
-                    }
+                    IAudioStreamInfo selected = (IAudioStreamInfo)(audioStreamInfo.Where(i => i.IsAudioLanguageDefault == true).TryGetWithHighestBitrate()
+                                                                   ?? audioStreamInfo.TryGetWithHighestBitrate());
+
+                    Current.Value = selected;
+                    Current.Default = selected;
                 }
             }
             catch (Exception e)

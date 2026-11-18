@@ -208,6 +208,9 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public void UpdateVideo(string videoId)
         {
+            if (string.IsNullOrWhiteSpace(videoId))
+                return;
+
             uiLanguage.UnbindEvents();
             Task.Run(async () =>
             {

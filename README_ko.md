@@ -30,6 +30,7 @@
 다음 사전 조건을 반드시 확인해 주세요:
 
 - 데스크톱 플랫폼과 [.NET 10.0 SDK](https://dotnet.microsoft.com/download)가 설치되있어야 합니다.
+- Android를 대상으로 빌드할 때는 `android` .NET 워크로드와 Android SDK가 필요합니다.
 - 리눅스에서 실행할 때는 비디오 디코딩을 지원할 수 있도록 시스템 전체에 FFmpeg가 설치되어 있어야 합니다.
 
 코드베이스를 다룰 때는 최신 버전의 [Visual Studio](https://visualstudio.microsoft.com/vs/), [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)와 [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) 플러그인이 설치된 [Visual Studio Code](https://code.visualstudio.com/) 같은 지능형 코드 완성 및 문법 강조 기능이 있는 IDE 사용을 권장합니다.
@@ -57,6 +58,7 @@ git pull
 
 - `AXPlayer.Desktop.Windows.slnf` (WinRT 확장 기능이 포함된 Windows 플랫폼, 가장 일반적)
 - `AXPlayer.Desktop.slnf` (Linux 및 기타 플랫폼)
+- `AXPlayer.Android.slnf` (Android)
 
 위에 나열된 권장 IDE들의 실행 설정도 포함되어 있습니다. IDE에서 제공하는 Build/Run 기능을 사용해서 작업을 시작해야 합니다. 새 컴포넌트를 테스트하거나 빌드할 때는 `AX Player (Tests)` 프로젝트나 설정을 사용하는 것을 강력히 권장합니다. 이에 대한 자세한 정보는 [아래](#contributing)에 제공되어 있습니다.
 
@@ -67,7 +69,10 @@ git pull
 ```shell
 dotnet run --project AXPlayer.Desktop.Windows (for Windows)
 dotnet run --project AXPlayer.Desktop (for Linux and other platform)
+dotnet build AXPlayer.Android (for Android)
 ```
+
+Android에서는 원본 MP4/AAC 스트림을 내려받아 프레임워크에 내장된 디코더로 재생하므로, 외부 `ffmpeg`나 `yt-dlp`를 설치할 필요가 없습니다. Debug APK는 `AXPlayer.Android/bin/Debug/net10.0-android/`에 생성됩니다.
 
 로컬에서 성능 테스트를 할 때는 빌드 명령어에 `-c Release` 옵션을 꼭 추가하세요. 기본 `Debug` 설정으로 실행하면 오버헤드가 클 수 있기 때문입니다(특히 로컬 프레임워크 수정 테스트 시).
 

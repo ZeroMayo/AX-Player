@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "AXPlayer.sln",
+    "projects": [
+      "AXPlayer.Android\\AXPlayer.Android.csproj",
+      "AXPlayer.App\\AXPlayer.App.csproj"
+    ]
+  }
+}

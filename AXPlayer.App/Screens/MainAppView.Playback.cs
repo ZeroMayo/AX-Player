@@ -42,11 +42,93 @@ namespace AXPlayer.App.Screens
 {
     public partial class MainAppView
     {
+        /// <summary>
+        /// The file name used for the cached audio of a video. Desktop hosts convert the audio to OGG,
+        /// which BASS decodes reliably. Mobile hosts download the original MP4/AAC stream instead,
+        /// since they cannot execute an external ffmpeg.
+        /// </summary>
+        private string getCachedAudioFileName() => app.SupportsExternalMediaTools ? "audio.ogg" : "audio.m4a";
+
+        private string getVideoDirectory(string id) => app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(id);
+
+        private string getCachedAudioFile(string id) => Path.Combine(getVideoDirectory(id), getCachedAudioFileName());
+
+        /// <summary>
+        /// Picks an audio stream that is guaranteed to be decodable on the current platform.
+        /// Mobile hosts rely on BASS's built-in MP4/AAC support, so opus/webm audio is replaced.
+        /// </summary>
+        private IAudioStreamInfo ensureAndroidCompatibleAudio(IEnumerable<IAudioStreamInfo> streams, IAudioStreamInfo selected)
+        {
+            if (app.SupportsExternalMediaTools || selected == null || selected.AudioCodec.Contains("mp4a"))
+                return selected;
+
+            List<IAudioStreamInfo> candidates = streams.Where(s => s.AudioCodec.Contains("mp4a")).ToList();
+
+            if (candidates.Count == 0)
+                return selected;
+
+            return candidates.FirstOrDefault(s => s.IsAudioLanguageDefault == true) as IAudioStreamInfo
+                   ?? (IAudioStreamInfo)candidates.TryGetWithHighestBitrate();
+        }
+
+        /// <summary>
+        /// Picks a video stream that is guaranteed to be decodable on the current platform.
+        /// Mobile hosts prefer H.264 in MP4, which is widely hardware accelerated.
+        /// </summary>
+        private IVideoStreamInfo ensureAndroidCompatibleVideo(IEnumerable<IVideoStreamInfo> streams, IVideoStreamInfo selected, string preferredQuality)
+        {
+            if (app.SupportsExternalMediaTools || selected == null || selected.VideoCodec.Contains("avc1"))
+                return selected;
+
+            List<IVideoStreamInfo> candidates = streams.Where(s => s.VideoCodec.Contains("avc1")).ToList();
+
+            if (candidates.Count == 0)
+                return selected;
+
+            IVideoStreamInfo preferred = !string.IsNullOrEmpty(preferredQuality)
+                ? candidates.FirstOrDefault(s => s.VideoQuality.Label.Contains(preferredQuality))
+                : null;
+
+            return preferred ?? (IVideoStreamInfo)candidates.TryGetWithHighestVideoQuality();
+        }
+
+        private async Task downloadAudioStreamAsync(IAudioStreamInfo stream, string id, IProgress<double> progress)
+        {
+            string directory = getVideoDirectory(id);
+            Directory.CreateDirectory(directory);
+            string file = getCachedAudioFile(id);
+
+            if (app.SupportsExternalMediaTools)
+                await app.YouTubeClient.Videos.DownloadAsync([stream], new ConversionRequestBuilder(file).SetFFmpegPath(app.GetFFmpegPath()).Build(), progress);
+            else
+                await app.YouTubeClient.Videos.Streams.DownloadAsync(stream, file, progress);
+        }
+
+        private async Task<string> downloadVideoStreamAsync(IVideoStreamInfo stream, string id, IProgress<double> progress)
+        {
+            string directory = getVideoDirectory(id);
+            Directory.CreateDirectory(directory);
+            string file = Path.Combine(directory, stream.VideoCodec.Contains("avc1") ? "video.mp4" : "video.webm");
+
+            if (app.SupportsExternalMediaTools)
+                await app.YouTubeClient.Videos.DownloadAsync([stream], new ConversionRequestBuilder(file).SetFFmpegPath(app.GetFFmpegPath()).Build(), progress);
+            else
+                await app.YouTubeClient.Videos.Streams.DownloadAsync(stream, file, progress);
+
+            return file;
+        }
+
+        private Task downloadAudioAsync(StreamManifest manifest, IAudioStreamInfo selected, string id, IProgress<double> progress)
+            => downloadAudioStreamAsync(ensureAndroidCompatibleAudio(manifest.GetAudioOnlyStreams(), selected), id, progress);
+
+        private Task<string> downloadVideoAsync(StreamManifest manifest, IVideoStreamInfo selected, string id, IProgress<double> progress)
+            => downloadVideoStreamAsync(ensureAndroidCompatibleVideo(manifest.GetVideoOnlyStreams(), selected, settingsContainer.VideoQualitySettings.Current.Value), id, progress);
+
         private void addVideoToScreen()
         {
             //Task.Run(async () => await api.SendPlayerResponseAsync(videoId));
 
-            string audioFile = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{videoId}") + @"/audio.ogg";
+            string audioFile = getCachedAudioFile(videoId);
 
             AudioNormalization audioNormalization = new AudioNormalization(audioFile);
 
@@ -236,8 +318,8 @@ namespace AXPlayer.App.Screens
                 return;
             }
 
-            string videoDirectory = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(nextVideoId);
-            string audioFile = Path.Combine(videoDirectory, "audio.ogg");
+            string videoDirectory = getVideoDirectory(nextVideoId);
+            string audioFile = getCachedAudioFile(nextVideoId);
             string mp4File = Path.Combine(videoDirectory, "video.mp4");
             string webmFile = Path.Combine(videoDirectory, "video.webm");
             string cachedVideoFile = File.Exists(mp4File) ? mp4File : File.Exists(webmFile) ? webmFile : null;
@@ -250,7 +332,7 @@ namespace AXPlayer.App.Screens
                 return;
             }
 
-            string currentAudioFile = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(videoId) + "/audio.ogg";
+            string currentAudioFile = getCachedAudioFile(videoId);
             string ffmpegPath = app.GetFFmpegPath();
             double outgoingDuration = outgoing.VideoProgress.MaxValue;
             double previousNormalizeVolume = app.CurrentTrackNormalizeVolume.Value;
@@ -401,13 +483,12 @@ namespace AXPlayer.App.Screens
             AudioQuality preferredAudioQuality = audioQuality.Value;
             bool useOriginalAudio = alwaysUseOriginalAudio.Value;
             string preferredAudioLanguage = appGlobalConfig.Get<Language>(AXPlayerSetting.AudioLanguage).ToString();
-            string ffmpegPath = app.GetFFmpegPath();
 
             Task.Run(async () =>
             {
                 try
                 {
-                    await cachePlaylistVideoAsync(targetVideoId, preferredVideoQuality, preferredAudioQuality, useOriginalAudio, preferredAudioLanguage, ffmpegPath);
+                    await cachePlaylistVideoAsync(targetVideoId, preferredVideoQuality, preferredAudioQuality, useOriginalAudio, preferredAudioLanguage);
                 }
                 catch (Exception e)
                 {
@@ -420,11 +501,11 @@ namespace AXPlayer.App.Screens
             });
         }
 
-        private async Task cachePlaylistVideoAsync(string targetVideoId, string preferredVideoQuality, AudioQuality preferredAudioQuality, bool useOriginalAudio, string preferredAudioLanguage, string ffmpegPath)
+        private async Task cachePlaylistVideoAsync(string targetVideoId, string preferredVideoQuality, AudioQuality preferredAudioQuality, bool useOriginalAudio, string preferredAudioLanguage)
         {
             string videoUrl = $"https://youtube.com/watch?v={targetVideoId}";
-            string videoDirectory = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath(targetVideoId);
-            string audioFile = Path.Combine(videoDirectory, "audio.ogg");
+            string videoDirectory = getVideoDirectory(targetVideoId);
+            string audioFile = getCachedAudioFile(targetVideoId);
             string mp4File = Path.Combine(videoDirectory, "video.mp4");
             string webmFile = Path.Combine(videoDirectory, "video.webm");
 
@@ -438,11 +519,23 @@ namespace AXPlayer.App.Screens
                 return;
 
             IAudioStreamInfo selectedAudioStream = selectPlaylistCacheAudioStream(audioStreams, preferredAudioQuality, useOriginalAudio, preferredAudioLanguage);
+            selectedAudioStream = ensureAndroidCompatibleAudio(audioStreams, selectedAudioStream);
+
             IEnumerable<IVideoStreamInfo> videoStreams = manifest.GetVideoOnlyStreams();
             List<IVideoStreamInfo> webmStreams = videoStreams
                 .Where(stream => stream.Container == YoutubeExplode.Videos.Streams.Container.WebM)
                 .ToList();
-            List<IVideoStreamInfo> availableVideoStreams = webmStreams.Count > 0 ? webmStreams : videoStreams.ToList();
+
+            List<IVideoStreamInfo> availableVideoStreams;
+
+            if (app.SupportsExternalMediaTools)
+                availableVideoStreams = webmStreams.Count > 0 ? webmStreams : videoStreams.ToList();
+            else
+                availableVideoStreams = videoStreams.Where(stream => stream.VideoCodec.Contains("avc1")).ToList();
+
+            if (availableVideoStreams.Count == 0)
+                availableVideoStreams = videoStreams.ToList();
+
             if (availableVideoStreams.Count == 0)
                 return;
 
@@ -450,20 +543,11 @@ namespace AXPlayer.App.Screens
                 .FirstOrDefault(stream => !string.IsNullOrEmpty(preferredVideoQuality) && stream.VideoQuality.Label.Contains(preferredVideoQuality))
                 ?? availableVideoStreams.TryGetWithHighestVideoQuality();
 
-            string targetVideoFile = selectedVideoStream.VideoCodec.Contains("avc1") ? mp4File : webmFile;
             if (!File.Exists(audioFile))
-            {
-                await app.YouTubeClient.Videos.DownloadAsync(
-                    [selectedAudioStream],
-                    new ConversionRequestBuilder(audioFile).SetFFmpegPath(ffmpegPath).Build());
-            }
+                await downloadAudioStreamAsync(selectedAudioStream, targetVideoId, null);
 
             if (!File.Exists(mp4File) && !File.Exists(webmFile))
-            {
-                await app.YouTubeClient.Videos.DownloadAsync(
-                    [selectedVideoStream],
-                    new ConversionRequestBuilder(targetVideoFile).SetFFmpegPath(ffmpegPath).Build());
-            }
+                await downloadVideoStreamAsync(selectedVideoStream, targetVideoId, null);
         }
 
         private IAudioStreamInfo selectPlaylistCacheAudioStream(IEnumerable<IAudioStreamInfo> availableStreams, AudioQuality preferredAudioQuality, bool useOriginalAudio, string preferredAudioLanguage)
@@ -661,6 +745,11 @@ namespace AXPlayer.App.Screens
             if (string.IsNullOrEmpty(videoUrl))
                 return;
 
+            // Android and other mobile hosts have no yt-dlp. Captions are still fetched through
+            // the YouTube API while loading the video, so only the srv3 dump is skipped here.
+            if (!app.SupportsExternalMediaTools)
+                return;
+
             if (RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
             {
                 string args = $"--sub-langs all --write-subs --write-auto-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o \"%(id)s.%(ext)s\" -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}";
@@ -823,20 +912,29 @@ namespace AXPlayer.App.Screens
                         {
                             case LoadType.Full:
                             {
-                                foreach (var cacheItem in Directory.GetFiles(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}")))
+                                if (Directory.Exists(getVideoDirectory(this.videoId)))
                                 {
-                                    File.Delete(cacheItem);
+                                    foreach (var cacheItem in Directory.GetFiles(getVideoDirectory(this.videoId)))
+                                    {
+                                        File.Delete(cacheItem);
+                                    }
                                 }
                                 break;
                             }
                             case LoadType.VideoOnly:
                             {
-                                File.Delete(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm");
+                                foreach (string fileName in new[] { "video.mp4", "video.webm" })
+                                {
+                                    string path = Path.Combine(getVideoDirectory(this.videoId), fileName);
+
+                                    if (File.Exists(path))
+                                        File.Delete(path);
+                                }
                                 break;
                             }
                             case LoadType.AudioOnly:
                             {
-                                File.Delete(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg");
+                                File.Delete(getCachedAudioFile(this.videoId));
                                 break;
                             }
                         }
@@ -1272,23 +1370,23 @@ namespace AXPlayer.App.Screens
                             {
                                 case LoadType.Full:
                                 {
-                                    await app.YouTubeClient.Videos.DownloadAsync([audioStreamInfo], new ConversionRequestBuilder(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg").SetFFmpegPath(app.GetFFmpegPath()).Build(), audioDownloadProgress);
-                                    await app.YouTubeClient.Videos.DownloadAsync([videoStreamInfo], new ConversionRequestBuilder(videoFile).SetFFmpegPath(app.GetFFmpegPath()).Build(), videoDownloadProgress);
+                                    await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
+                                    videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
                                     break;
                                 }
                                 case LoadType.AudioOnly:
                                 {
-                                    await app.YouTubeClient.Videos.DownloadAsync([audioStreamInfo], new ConversionRequestBuilder(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg").SetFFmpegPath(app.GetFFmpegPath()).Build(), audioDownloadProgress);
+                                    await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
                                     break;
                                 }
                                 case LoadType.VideoOnly:
                                 {
-                                    await app.YouTubeClient.Videos.DownloadAsync([videoStreamInfo], new ConversionRequestBuilder(videoFile).SetFFmpegPath(app.GetFFmpegPath()).Build(), videoDownloadProgress);
+                                    videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
                                     break;
                                 }
                             }
 
-                            currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(this.videoId))
+                            currentVideoSource = new YouTubeVideoPlayer(videoFile, getCachedAudioFile(this.videoId), captionTrack, srv3Contents, videoData, pausedTime, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(this.videoId))
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,
@@ -1652,7 +1750,7 @@ namespace AXPlayer.App.Screens
                                 videoFile = app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm";
                             }
 
-                            currentVideoSource = new YouTubeVideoPlayer(videoFile, app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg", captionTrack, srv3Contents, videoData, pausedTime, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(this.videoId))
+                            currentVideoSource = new YouTubeVideoPlayer(videoFile, getCachedAudioFile(this.videoId), captionTrack, srv3Contents, videoData, pausedTime, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(this.videoId))
                             {
                                 RelativeSizeAxes = Axes.Both,
                                 Anchor = Anchor.Centre,

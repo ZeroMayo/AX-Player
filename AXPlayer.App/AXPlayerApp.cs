@@ -476,7 +476,10 @@ namespace AXPlayer.App
 
             drawableSample.Play();
 
-            this.FadeOut(500, Easing.InQuart).OnComplete(_ => Exit());
+            this.FadeOut(500, Easing.InQuart).OnComplete(_ =>
+            {
+                ExitApp();
+            });
             this.TransformBindableTo(fadeVolume, 0, 500, Easing.InQuart);
             Audio.Tracks.AddAdjustment(AdjustableProperty.Volume, fadeVolume);
 

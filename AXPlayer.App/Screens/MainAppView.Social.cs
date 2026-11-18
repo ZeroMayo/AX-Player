@@ -749,6 +749,9 @@ namespace AXPlayer.App.Screens
 
         private void updateVideoMetadata(string videoId)
         {
+            if (string.IsNullOrWhiteSpace(videoId))
+                return;
+
             videoMetadataDisplay.UpdateVideo(videoId);
             videoMetadataDisplayDetails.UpdateVideo(videoId);
             Task.Run(async () =>

@@ -30,6 +30,7 @@ If your platform is unsupported or not listed above, there is still a chance you
 Please make sure you have the following prerequisites:
 
 - A desktop platform with the [.NET 10.0 SDK](https://dotnet.microsoft.com/download) installed.
+- When targeting Android, the `android` .NET workload and an Android SDK.
 - When running on linux, please have a system-wide ffmpeg installation available to support video decoding.
 
 When working with the codebase, we recommend using an IDE with intelligent code completion and syntax highlighting, such as the latest version of [Visual Studio](https://visualstudio.microsoft.com/vs/), [Visual Studio Code](https://code.visualstudio.com/) with the [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) and [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) plugin installed.
@@ -57,6 +58,7 @@ You should load the solution via one of the platform-specific `.slnf` files, rat
 
 - `AXPlayer.Desktop.Windows.slnf` (Windows platform with WinRT extensions, most common)
 - `AXPlayer.Desktop.slnf` (Linux and other platform)
+- `AXPlayer.Android.slnf` (Android)
 
 Run configurations for the recommended IDEs (listed above) are included. You should use the provided Build/Run functionality of your IDE to get things going. When testing or building new components, it's highly encouraged you use the `AX Player (Tests)` project/configuration. More information on this is provided [below](#contributing).
 
@@ -67,7 +69,10 @@ You can also build and run *AX Player* from the command-line with a single comma
 ```shell
 dotnet run --project AXPlayer.Desktop.Windows (for Windows)
 dotnet run --project AXPlayer.Desktop (for Linux and other platform)
+dotnet build AXPlayer.Android (for Android)
 ```
+
+On Android the app downloads the original MP4/AAC streams and plays them with the framework's built-in decoders, so no external `ffmpeg` or `yt-dlp` installation is required. Debug APKs are written to `AXPlayer.Android/bin/Debug/net10.0-android/`.
 
 When running locally to do any kind of performance testing, make sure to add `-c Release` to the build command, as the overhead of running with the default `Debug` configuration can be large (especially when testing with local framework modifications as below).
 

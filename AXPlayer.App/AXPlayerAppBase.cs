@@ -109,8 +109,16 @@ namespace AXPlayer.App
 
         private int allowableExceptions;
 
+        /// <summary>
+        /// Whether this platform provides the external media tools (ffmpeg, yt-dlp) used by the desktop hosts.
+        /// </summary>
+        public bool SupportsExternalMediaTools => RuntimeInfo.IsDesktop;
+
         public string GetFFmpegPath()
         {
+            if (!SupportsExternalMediaTools)
+                return string.Empty;
+
             switch (RuntimeInfo.OS)
             {
                 case RuntimeInfo.Platform.Windows:
@@ -130,6 +138,9 @@ namespace AXPlayer.App
 
         public string GetYtDlpPath()
         {
+            if (!SupportsExternalMediaTools)
+                return string.Empty;
+
             switch (RuntimeInfo.OS)
             {
                 case RuntimeInfo.Platform.Windows:
@@ -897,6 +908,8 @@ namespace AXPlayer.App
         {
             AppMessageHandler = appMessageHandler;
         }
+
+        protected virtual void ExitApp() => Exit();
 
         public IAXPlayerAppMessageHandler AppMessageHandler;
 

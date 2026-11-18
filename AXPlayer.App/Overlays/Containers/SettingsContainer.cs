@@ -422,7 +422,7 @@ namespace AXPlayer.App.Overlays.Containers
             settingsTabBar.SetItems(drawables);
         }
 
-        private SettingsItemV2 advancedSubtitlesBase;
+        private SettingsItemV2 advancedSubtitlesBase, discordRichPresenceDropdownBase;
 
         private BindableBool wasapi;
 
@@ -621,7 +621,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Regular.WindowClose,
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
-                                                        new SettingsItemV2(discordRichPresenceDropdown = new FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode>
+                                                        discordRichPresenceDropdownBase = new SettingsItemV2(discordRichPresenceDropdown = new FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode>
                                                         {
                                                             Caption = AXPlayerStrings.DiscordRichPresence,
                                                             Current = discordRichPresence,
@@ -1554,6 +1554,9 @@ namespace AXPlayer.App.Overlays.Containers
 
                 updateScreenshotOptionsVisibility();
             }, true);
+
+            if (!RuntimeInfo.IsDesktop)
+                discordRichPresenceDropdownBase.Hide();
 
             updateInfomationText.BindValueChanged(text =>
             {

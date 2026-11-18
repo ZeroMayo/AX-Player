@@ -5,15 +5,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Extensions;
 using osu.Framework.Logging;
+using AXPlayer.App.Platform;
 
 namespace AXPlayer.App.Online
 {
@@ -228,45 +227,6 @@ namespace AXPlayer.App.Online
             }
 
             public void Dispose() => stopListener();
-        }
-
-        /// <summary>
-        /// Opens a browser and navigates to a URL.
-        /// </summary>
-        /// <returns><c>true</c> when a browser could be launched.</returns>
-        private static bool openBrowser(string url)
-        {
-            try
-            {
-                // See https://github.com/dotnet/corefx/issues/10361
-                // This is best-effort only, but should work most of the time.
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    // See https://stackoverflow.com/a/6040946/44360 for why this is required
-                    url = System.Text.RegularExpressions.Regex.Replace(url, @"(\\*)" + "\"", @"$1$1\" + "\"");
-                    url = System.Text.RegularExpressions.Regex.Replace(url, @"(\\+)$", @"$1$1");
-                    Process.Start(new ProcessStartInfo(@"cmd", $@"/c start """" ""{url}""") { CreateNoWindow = true });
-                    return true;
-                }
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    Process.Start(@"xdg-open", url);
-                    return true;
-                }
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    Process.Start(@"open", url);
-                    return true;
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, $@"Failed to launch a browser for '{url}': {exception.GetDescription()}");
-            }
-
-            return false;
         }
     }
 }

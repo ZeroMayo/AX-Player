@@ -114,6 +114,9 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
         public void UpdateLoginState()
         {
+            if (discordRPC == null)
+                return;
+
             if (discordRPC.GetCurrentUser() != null)
             {
                 profileImage.FadeIn(250);
@@ -124,7 +127,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
             }
         }
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private Online.DiscordRPCClient discordRPC { get; set; }
 
         [Resolved]

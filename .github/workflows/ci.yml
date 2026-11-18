@@ -43,3 +43,24 @@ jobs:
 
       - name: Compile
         run: dotnet build -c Debug AXPlayer.Desktop.slnf
+
+  build-only-android:
+    name: Build only (Android)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+            submodules: "true"
+
+      - name: Install .NET 10.0.x
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install Android workload
+        run: dotnet workload install android
+
+      - name: Compile
+        run: dotnet build -c Debug AXPlayer.Android.slnf

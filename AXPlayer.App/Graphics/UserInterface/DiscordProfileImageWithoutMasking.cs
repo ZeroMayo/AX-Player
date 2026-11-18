@@ -25,7 +25,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private TextureStore textureStore { get; set; }
 
-        [Resolved]
+        [Resolved(canBeNull: true)]
         private Online.DiscordRPCClient api { get; set; }
 
         public DiscordProfileImageWithoutMasking(float size = 30)
@@ -71,6 +71,9 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public async Task GetProfileImage(CancellationToken cancellationToken = default)
         {
+            if (api == null)
+                return;
+
             Texture north = await textureStore.GetAsync(api.GetCurrentUser().GetAvatarURL(DiscordRPC.User.AvatarFormat.PNG, DiscordRPC.User.AvatarSize.x2048), cancellationToken);
             //GetPalette();
             Schedule(() => { profileImage.Texture = north; });

@@ -48,19 +48,28 @@ namespace AXPlayer.App.Audio
                 return;
             }
 
-            using (FileStream fs = File.OpenRead(audioFilePath))
+            try
             {
-                using TrackLoudness loudness = new TrackLoudness(fs);
-
-                float? integratedLoudness = loudness.GetIntegratedLoudness();
-
-                if (integratedLoudness == null)
+                using (FileStream fs = File.OpenRead(audioFilePath))
                 {
-                    Logger.Log("Failed to get loudness level for " + audiofile, LoggingTarget.Runtime, LogLevel.Error);
-                    return;
-                }
+                    using TrackLoudness loudness = new TrackLoudness(fs);
 
-                IntegratedLoudness = integratedLoudness;
+                    float? integratedLoudness = loudness.GetIntegratedLoudness();
+
+                    if (integratedLoudness == null)
+                    {
+                        Logger.Log("Failed to get loudness level for " + audiofile, LoggingTarget.Runtime, LogLevel.Error);
+                        return;
+                    }
+
+                    IntegratedLoudness = integratedLoudness;
+                }
+            }
+            catch (Exception e)
+            {
+                // Loudness analysis is best-effort. Some platforms (or codecs) do not provide the
+                // BASS loudness add-on, in which case the caller falls back to a default volume.
+                Logger.Error(e, "Failed to analyse audio loudness for " + audiofile);
             }
         }
 

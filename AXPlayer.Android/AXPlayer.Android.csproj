@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Project">
+    <TargetFramework>net10.0-android</TargetFramework>
+    <SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
+    <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>AXPlayer</AssemblyName>
+    <RootNamespace>AXPlayer.Android</RootNamespace>
+    <Product>AX Player</Product>
+    <AssemblyTitle>AX Player</AssemblyTitle>
+    <Copyright>Copyright (c) 2026 ZeroMayo</Copyright>
+    <Version>0.0.0</Version>
+    <FileVersion>0.0.0</FileVersion>
+    <ApplicationId>io.zeromayo.axplayer</ApplicationId>
+    <ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Keep Debug APKs self-contained; fast deployment assemblies from an IDE would otherwise shadow the APK's assemblies. -->
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+  </PropertyGroup>
+  <ItemGroup Label="Project References">
+    <ProjectReference Include="..\AXPlayer.App\AXPlayer.App.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ZeroMayo.Framework.Android" Version="2026.1118.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Directory.Build.props embeds everything under Resources/. On Android these files are Android resources instead. -->
+    <EmbeddedResource Remove="Resources\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0" />
+  </ItemGroup>
+</Project>

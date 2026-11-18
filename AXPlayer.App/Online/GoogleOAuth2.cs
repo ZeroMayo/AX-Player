@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Crypto.AES;
 using AXPlayer.App.Config;
+using AXPlayer.App.Platform;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions;
 using osu.Framework.Logging;
@@ -273,7 +274,7 @@ namespace AXPlayer.App.Online
 
             Logger.Log($@"Opening the browser for Google authorization: {authorizationUrl}");
 
-            if (!openBrowser(authorizationUrl))
+            if (!PlatformBridge.OpenUrl(authorizationUrl))
                 throw new NotSupportedException(@"Failed to launch a browser for the Google authorization.");
 
             Dictionary<string, string> callback = await receiver.WaitForCallbackAsync(cancellationToken).ConfigureAwait(false);
