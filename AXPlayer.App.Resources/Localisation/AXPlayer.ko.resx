@@ -1224,4 +1224,7 @@
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>시청한 동영상이 여기에 표시됩니다.</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>스레딩 모드</value>
+  </data>
 </root>

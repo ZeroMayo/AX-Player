@@ -1225,4 +1225,7 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>Các video bạn xem sẽ xuất hiện ở đây.</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>Chế độ luồng</value>
+  </data>
 </root>

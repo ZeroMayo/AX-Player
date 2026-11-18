@@ -422,7 +422,7 @@ namespace AXPlayer.App.Overlays.Containers
             settingsTabBar.SetItems(drawables);
         }
 
-        private SettingsItemV2 advancedSubtitlesBase, discordRichPresenceDropdownBase;
+        private SettingsItemV2 advancedSubtitlesBase, discordRichPresenceDropdownBase, safeAreaConsiderationsBase;
 
         private BindableBool wasapi;
 
@@ -768,6 +768,11 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F7 })),
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
+                                                        new SettingsItemV2(new FormEnumDropdown<ExecutionMode>
+                                                        {
+                                                            Caption = AXPlayerStrings.ThreadingMode,
+                                                            Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode)
+                                                        }),
                                                         windowModeDropdownSettings = new SettingsItemV2(windowModeDropdown = new WindowModeDropdown
                                                         {
                                                             Caption = AXPlayerStrings.ScreenMode,
@@ -815,6 +820,12 @@ namespace AXPlayer.App.Overlays.Containers
                                                             ShowRevertToDefaultButton = false,
                                                             CanBeShown = { BindTarget = resolutionWindowedCanBeShown }
                                                         },
+                                                        safeAreaConsiderationsBase = new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.ShrinkGameToSafeArea,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.SafeAreaConsiderations),
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
                                                         minimiseOnFocusLossCheckboxCore = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.MinimiseOnFocusLoss,
@@ -1557,6 +1568,9 @@ namespace AXPlayer.App.Overlays.Containers
 
             if (!RuntimeInfo.IsDesktop)
                 discordRichPresenceDropdownBase.Hide();
+
+            if (host.Window?.SafeAreaPadding.Value.Total == Vector2.Zero)
+                safeAreaConsiderationsBase.Hide();
 
             updateInfomationText.BindValueChanged(text =>
             {

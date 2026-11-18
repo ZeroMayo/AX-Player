@@ -1224,4 +1224,7 @@
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>İzlediğiniz videolar burada görünecek.</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>İş parçacığı modu</value>
+  </data>
 </root>

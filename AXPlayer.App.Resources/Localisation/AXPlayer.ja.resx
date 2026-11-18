@@ -1224,4 +1224,7 @@
   <data name="watch_history_empty_description" xml:space="preserve">
     <value>視聴した動画がここに表示されます。</value>
   </data>
+  <data name="threading_mode" xml:space="preserve">
+    <value>スレッドモード</value>
+  </data>
 </root>
