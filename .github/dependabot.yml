@@ -24,6 +24,6 @@ updates:
   open-pull-requests-limit: 5
   groups:
       # Group .NET updates together for solutions.
-      SkiaSharp:
+      dotnet:
         patterns:
-          - "SkiaSharp.*" # Prefer a single PR per solution update.
+          - "*" # Prefer a single PR per solution update.
