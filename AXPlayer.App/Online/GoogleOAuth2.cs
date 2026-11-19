@@ -29,7 +29,8 @@ namespace AXPlayer.App.Online
     /// Innertube only needs a Google Bearer access token, so this class implements the pieces
     /// the player actually uses instead of going through the Google API client libraries:
     /// <list type="bullet">
-    /// <item>authorization code flow with PKCE and a loopback redirect,</item>
+    /// <item>authorization code flow with PKCE and a platform-specific redirect
+    /// (a loopback listener on desktop, a custom URI scheme on Android),</item>
     /// <item>direct token exchange/refresh against the OAuth token endpoint,</item>
     /// <item>persisting the refresh token so the session survives restarts,</item>
     /// <item>revocation on sign-out.</item>
@@ -262,13 +263,13 @@ namespace AXPlayer.App.Online
 
         private async Task<OAuthToken?> authorizeInteractiveAsync(CancellationToken cancellationToken)
         {
-            ClientCredentials credentials = getAuthConfig();
+            ClientCredentials credentials = GetClientCredentials();
 
             string codeVerifier = createRandomToken(32);
             string codeChallenge = createCodeChallenge(codeVerifier);
             string state = createRandomToken(16);
 
-            using LoopbackReceiver receiver = LoopbackReceiver.Start();
+            using IOAuthCodeReceiver receiver = CreateCodeReceiver();
 
             string authorizationUrl = buildAuthorizationUrl(credentials.ClientId, receiver.RedirectUri, codeChallenge, state);
 
@@ -291,6 +292,15 @@ namespace AXPlayer.App.Online
             return await exchangeCodeAsync(credentials, code, codeVerifier, receiver.RedirectUri, cancellationToken).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Creates the receiver for the authorization redirect of the current platform.
+        /// </summary>
+        /// <remarks>
+        /// Desktop hosts use a loopback listener. Platform hosts that can only receive a custom
+        /// URI scheme (Android) override this to return their own receiver.
+        /// </remarks>
+        protected virtual IOAuthCodeReceiver CreateCodeReceiver() => LoopbackCodeReceiver.Start();
+
         private string buildAuthorizationUrl(string clientId, string redirectUri, string codeChallenge, string state)
         {
             string scope = Uri.EscapeDataString(youtube_scope);
@@ -311,15 +321,17 @@ namespace AXPlayer.App.Online
 
         private async Task<OAuthToken?> exchangeCodeAsync(ClientCredentials credentials, string code, string codeVerifier, string redirectUri, CancellationToken cancellationToken)
         {
-            TokenRequestResult result = await requestTokenAsync(new Dictionary<string, string>
+            var form = new Dictionary<string, string>
             {
                 [@"grant_type"] = @"authorization_code",
                 [@"code"] = code,
-                [@"client_id"] = credentials.ClientId,
-                [@"client_secret"] = credentials.ClientSecret,
                 [@"redirect_uri"] = redirectUri,
                 [@"code_verifier"] = codeVerifier,
-            }, cancellationToken).ConfigureAwait(false);
+            };
+
+            addClientCredentials(form, credentials);
+
+            TokenRequestResult result = await requestTokenAsync(form, cancellationToken).ConfigureAwait(false);
 
             if (result.Token == null)
                 throw new InvalidOperationException($@"Failed to exchange the Google authorization code: {result.Error ?? @"unknown error"}");
@@ -349,15 +361,17 @@ namespace AXPlayer.App.Online
                 if (!isExpiring(current))
                     return current;
 
-                ClientCredentials credentials = getAuthConfig();
+                ClientCredentials credentials = GetClientCredentials();
 
-                TokenRequestResult result = await requestTokenAsync(new Dictionary<string, string>
+                var form = new Dictionary<string, string>
                 {
                     [@"grant_type"] = @"refresh_token",
                     [@"refresh_token"] = current.RefreshToken,
-                    [@"client_id"] = credentials.ClientId,
-                    [@"client_secret"] = credentials.ClientSecret,
-                }, cancellationToken).ConfigureAwait(false);
+                };
+
+                addClientCredentials(form, credentials);
+
+                TokenRequestResult result = await requestTokenAsync(form, cancellationToken).ConfigureAwait(false);
 
                 if (result.Token == null)
                 {
@@ -565,11 +579,18 @@ namespace AXPlayer.App.Online
 
         private ClientCredentials? cachedCredentials;
 
-        private ClientCredentials getAuthConfig()
-        {
-            if (cachedCredentials != null)
-                return cachedCredentials;
+        /// <summary>
+        /// Resolves the OAuth client credentials of the current platform.
+        /// </summary>
+        /// <remarks>
+        /// Installed application clients (Android) have no client secret, so
+        /// <see cref="ClientCredentials.ClientSecret" /> may be empty and is then omitted from
+        /// the token requests.
+        /// </remarks>
+        protected virtual ClientCredentials GetClientCredentials() => cachedCredentials ??= createDesktopClientCredentials();
 
+        private ClientCredentials createDesktopClientCredentials()
+        {
             string encryptedClientId = !isTestClient
                 ? @"ZZLYQ+6EpclmaSSEKGqfVglCIf3Qhk9C744YKjGg8nZ6GkIq/S5v6NMRLEiTO0L/bp/dIZCP/oZGgsfZO1EF8ngylv7MYPJswUrQand0plM="
                 : @"GkAYdCHFjxBARXzB9XFVpm2jNC9hMnyTECc1mo36Xb841Qomeo7RVLqz/bbBs9TadbhgkqbrEuYNMJHLklgae11ToWTmc3VtYOiyyELMy6Q=";
@@ -584,13 +605,19 @@ namespace AXPlayer.App.Online
 
                 using (AES aes = new AES(decryptedKey))
                 {
-                    cachedCredentials = new ClientCredentials(
+                    return new ClientCredentials(
                         aes.Decrypt(encryptedClientId),
                         aes.Decrypt(encryptedClientSecret));
                 }
             }
+        }
 
-            return cachedCredentials;
+        private static void addClientCredentials(Dictionary<string, string> form, ClientCredentials credentials)
+        {
+            form[@"client_id"] = credentials.ClientId;
+
+            if (!string.IsNullOrEmpty(credentials.ClientSecret))
+                form[@"client_secret"] = credentials.ClientSecret;
         }
 
         #endregion
@@ -642,7 +669,11 @@ namespace AXPlayer.App.Online
             @"AXPlayer-development",
         };
 
-        private sealed record ClientCredentials(string ClientId, string ClientSecret);
+        /// <summary>
+        /// OAuth client credentials. <see cref="ClientSecret" /> is empty for installed
+        /// application clients (Android), which authenticate with PKCE only.
+        /// </summary>
+        protected sealed record ClientCredentials(string ClientId, string ClientSecret);
 
         private sealed record OAuthToken(string AccessToken, string RefreshToken, DateTimeOffset ExpiresAtUtc);
 

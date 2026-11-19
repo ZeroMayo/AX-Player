@@ -4,6 +4,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AXPlayer.App.Config;
 using AXPlayer.App.Online;
@@ -109,6 +110,36 @@ namespace AXPlayer.App.Tests.Online
             Assert.That(GoogleOAuth2.parseExpiry(expiry.ToString(@"o")), Is.EqualTo(expiry));
             Assert.That(GoogleOAuth2.parseExpiry(string.Empty), Is.EqualTo(default(DateTimeOffset)));
             Assert.That(GoogleOAuth2.parseExpiry(null), Is.EqualTo(default(DateTimeOffset)));
+        }
+
+        [Test]
+        public void TestCallbackQueryWithoutQuestionMarkIsParsed()
+        {
+            Dictionary<string, string> query = OAuthCallbackQuery.Parse(@"code=4/abc&state=xyz&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fyoutube.force-ssl");
+
+            Assert.That(query[@"code"], Is.EqualTo(@"4/abc"));
+            Assert.That(query[@"state"], Is.EqualTo(@"xyz"));
+            Assert.That(query[@"scope"], Is.EqualTo(@"https://www.googleapis.com/auth/youtube.force-ssl"));
+        }
+
+        [Test]
+        public void TestCallbackQueryFromARedirectUriIsParsed()
+        {
+            // The Android redirect arrives as a URI, whose Query keeps the leading question mark.
+            var redirect = new Uri(@"com.googleusercontent.apps.1234567890-abcdefgh:/oauth2redirect?error=access_denied&state=xyz");
+
+            Dictionary<string, string> query = OAuthCallbackQuery.Parse(redirect.Query);
+
+            Assert.That(query[@"error"], Is.EqualTo(@"access_denied"));
+            Assert.That(query[@"state"], Is.EqualTo(@"xyz"));
+        }
+
+        [Test]
+        public void TestEmptyCallbackQueryIsEmpty()
+        {
+            Assert.That(OAuthCallbackQuery.Parse(null), Is.Empty);
+            Assert.That(OAuthCallbackQuery.Parse(string.Empty), Is.Empty);
+            Assert.That(OAuthCallbackQuery.Parse(@"?"), Is.Empty);
         }
     }
 }

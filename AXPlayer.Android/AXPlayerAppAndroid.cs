@@ -4,7 +4,9 @@
 using Android.Content;
 using Android.Content.PM;
 using AXPlayer.App;
+using AXPlayer.App.Online;
 using AXPlayer.App.Platform;
+using AXPlayer.Android.Online;
 using osu.Framework.Screens;
 
 namespace AXPlayer.Android
@@ -30,6 +32,10 @@ namespace AXPlayer.Android
         }
 
         public override MediaSession CreateMediaSession() => new AndroidMediaSessionHandler();
+
+        // Google sign-in receives its redirect through a custom URI scheme intent on Android
+        // instead of the loopback listener the desktop hosts use.
+        protected override GoogleOAuth2 CreateGoogleOAuth2() => new GoogleOAuth2Android(LocalConfig, !IsDeployedBuild);
 
         protected override void ExitApp()
         {

@@ -68,6 +68,15 @@ namespace AXPlayer.App
 
         protected GoogleOAuth2 GoogleOAuth2 { get; set; }
 
+        /// <summary>
+        /// Creates the Google OAuth client for the current platform.
+        /// </summary>
+        /// <remarks>
+        /// The Android host replaces this with a client that receives the authorization redirect
+        /// through a custom URI scheme instead of a loopback listener.
+        /// </remarks>
+        protected virtual GoogleOAuth2 CreateGoogleOAuth2() => new GoogleOAuth2(LocalConfig, !IsDeployedBuild);
+
         protected GoogleTranslate TranslateAPI { get; set; }
 
         /// <summary>
@@ -353,7 +362,9 @@ namespace AXPlayer.App
 
                 dependencies.Cache(LocalConfig);
 
-                dependencies.Cache(GoogleOAuth2 = new GoogleOAuth2(LocalConfig, !IsDeployedBuild));
+                // Platform hosts may create a subclass, and Cache() registers the runtime type, so the
+                // client has to be registered as the base type the screens resolve.
+                dependencies.CacheAs<GoogleOAuth2>(GoogleOAuth2 = CreateGoogleOAuth2());
 
                 dependencies.Cache(AudioNormalizationManager = new AudioNormalizationManager(this, LocalConfig));
 
