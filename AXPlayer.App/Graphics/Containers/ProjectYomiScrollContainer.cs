@@ -42,7 +42,7 @@ namespace AXPlayer.App.Graphics.Containers
         private const int EDGE_BLUR_RADIUS = 30;
 
         private IShader edgeBlurShader = null!;
-        private readonly BufferedDrawNodeSharedData sharedData = new(effectBufferCount: 2, textureFormat: TexturePixelFormat.R8G8B8A8Float, null, false, true);
+        private readonly BufferedDrawNodeSharedData sharedData = new(effectBufferCount: 2, textureFormat: TexturePixelFormat.R8G8B8A8Float, null, true, true);
 
         private bool progressiveBlurEnabled = true;
         private float progressiveBlurTopHeight = 76;

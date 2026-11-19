@@ -33,6 +33,11 @@ namespace AXPlayer.App.Graphics.Containers
         /// </summary>
         protected virtual bool BlockNonPositionalInput => false;
 
+        public OverlayContainer()
+            : base(pixelSnapping: true)
+        {
+        }
+
         public override bool BuildNonPositionalInputQueue(List<Drawable> queue, bool allowBlocking = true)
         {
             if (PropagateNonPositionalInputSubTree && HandleNonPositionalInput && BlockNonPositionalInput)

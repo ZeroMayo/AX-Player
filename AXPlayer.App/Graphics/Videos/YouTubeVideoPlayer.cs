@@ -262,7 +262,7 @@ namespace AXPlayer.App.Graphics.Videos
                                                 RelativeSizeAxes = Axes.Both,
                                                 Children = new Drawable[]
                                                 {
-                                                    blurContainer = new BufferedContainer
+                                                    blurContainer = new BufferedContainer(pixelSnapping: true)
                                                     {
                                                         RelativeSizeAxes = Axes.Both,
                                                         Children = new Drawable[]
