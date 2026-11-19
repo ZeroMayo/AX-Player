@@ -22,3 +22,8 @@ updates:
   labels:
       - dependencies
   open-pull-requests-limit: 5
+  groups:
+      # Group .NET updates together for solutions.
+      SkiaSharp:
+        patterns:
+          - "SkiaSharp.*" # Prefer a single PR per solution update.
