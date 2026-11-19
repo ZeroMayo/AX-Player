@@ -15,7 +15,6 @@ namespace AXPlayer.App.Graphics.Sprites.Odometer
         private ProjectYomiSpriteText currentText;
 
         public OdometerDigitTicker(char digit)
-            : base(pixelSnapping: true)
         {
             Width = digitWidth;
             Height = tickerHeight;
