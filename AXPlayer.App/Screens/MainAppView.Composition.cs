@@ -224,7 +224,7 @@ namespace AXPlayer.App.Screens
             InternalChildren = new Drawable[]
             {
                 idleTracker = new AppIdleTracker(3000),
-                videoScalingContainer = new BufferedContainer(pixelSnapping: true)
+                videoScalingContainer = new BufferedContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Child = new ScalingContainerNew(ScalingMode.Video)
@@ -254,7 +254,7 @@ namespace AXPlayer.App.Screens
                         },
                     },
                 },
-                videoContainer = new BufferedContainer(pixelSnapping: true)
+                videoContainer = new BufferedContainer
                 {
                     RelativeSizeAxes = Axes.Both,
                     Anchor = Anchor.Centre,
@@ -382,7 +382,7 @@ namespace AXPlayer.App.Screens
                                 },
                             }
                         },
-                        uiContainer = new BufferedContainer(pixelSnapping: true)
+                        uiContainer = new BufferedContainer
                         {
                             RelativeSizeAxes = Axes.Both,
                             Padding = new MarginPadding(8),
