@@ -166,6 +166,11 @@ namespace AXPlayer.App.Graphics.UserInterface
                     icon = FontAwesome.Brands.Twitch;
                     Schedule(() => RefreshTextFlow());
                 }
+                else if (AXPlayerDescriptionParser.IsInstagram(url))
+                {
+                    icon = FontAwesome.Brands.Instagram;
+                    Schedule(() => RefreshTextFlow());
+                }
                 else if (AXPlayerDescriptionParser.IsTwitter(url))
                 {
                     icon = FontAwesome.Brands.Twitter;

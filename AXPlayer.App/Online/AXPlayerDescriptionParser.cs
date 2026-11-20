@@ -60,6 +60,14 @@ namespace AXPlayer.App.Online
             return false;
         }
 
+        public static bool IsInstagram(string url)
+        {
+            if (url.Contains("instagram.com"))
+                return true;
+
+            return false;
+        }
+
         public static bool IsYouTubeChannel(string url)
         {
             if (url.Contains("youtube.com/channel/"))
