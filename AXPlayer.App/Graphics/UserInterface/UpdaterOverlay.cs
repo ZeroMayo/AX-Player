@@ -12,6 +12,7 @@ using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Overlays;
 using AXPlayer.App.Updater;
+using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
@@ -51,6 +52,8 @@ namespace AXPlayer.App.Graphics.UserInterface
         private RoundedIconButton updateButton;
 
         private Bindable<bool> updateButtonEnabled;
+
+        private FillFlowContainer updateOptions;
 
         public UpdaterOverlay()
         {
@@ -200,7 +203,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                         Padding = new MarginPadding { Horizontal = 16 },
                                         Children = new Drawable[]
                                         {
-                                            new FillFlowContainer
+                                            updateOptions = new FillFlowContainer
                                             {
                                                 RelativeSizeAxes = Axes.X,
                                                 AutoSizeAxes = Axes.Y,
@@ -345,6 +348,9 @@ namespace AXPlayer.App.Graphics.UserInterface
             };
 
             updateInfoContainer.Hide();
+
+            if (!RuntimeInfo.IsDesktop)
+                updateOptions.Hide();
 
             if (game.IsDeployedBuild)
             {

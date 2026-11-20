@@ -24,6 +24,9 @@ namespace AXPlayer.App.Overlays.Containers
         [Resolved]
         private AudioEffectsConfigManager audioEffectsConfig { get; set; } = null!;
 
+        [Resolved]
+        private NewToastOverlay newToastOverlay { get; set; } = null!;
+
         private SettingsBackupDropdown settingsBackupDropdown = null!;
 
         protected override void LoadComplete()
@@ -62,24 +65,13 @@ namespace AXPlayer.App.Overlays.Containers
             }
             catch
             {
-                popupDialogOverlay.ShowDialog(
-                    AXPlayerStrings.SettingsBackup,
-                    AXPlayerStrings.SettingsBackupFailed,
-                    AXPlayerStrings.Close,
-                    AXPlayerStrings.Close,
-                    showActionButtons: false);
-
+                newToastOverlay.ShowToast(AXPlayerStrings.SettingsBackupFailed);
                 return;
             }
 
             refreshSettingsBackups(appBackup == null ? null : new SettingsBackupEntry(SettingsBackupTarget.AppSettings, appBackup));
 
-            popupDialogOverlay.ShowDialog(
-                AXPlayerStrings.SettingsBackup,
-                AXPlayerStrings.SettingsBackupCreated,
-                AXPlayerStrings.Close,
-                AXPlayerStrings.Close,
-                showActionButtons: false);
+            newToastOverlay.ShowToast(AXPlayerStrings.SettingsBackupCreated);
         }
 
         private void confirmRestoreSettingsBackup()
@@ -88,13 +80,7 @@ namespace AXPlayer.App.Overlays.Containers
 
             if (entry == null)
             {
-                popupDialogOverlay.ShowDialog(
-                    AXPlayerStrings.SettingsBackup,
-                    AXPlayerStrings.SettingsBackupEmpty,
-                    AXPlayerStrings.Close,
-                    AXPlayerStrings.Close,
-                    showActionButtons: false);
-
+                newToastOverlay.ShowToast(AXPlayerStrings.SettingsBackupEmpty);
                 return;
             }
 
@@ -123,12 +109,7 @@ namespace AXPlayer.App.Overlays.Containers
 
             refreshSettingsBackups(entry);
 
-            popupDialogOverlay.ShowDialog(
-                AXPlayerStrings.SettingsBackup,
-                restored ? AXPlayerStrings.SettingsBackupRestored : AXPlayerStrings.SettingsBackupRestoreFailed,
-                AXPlayerStrings.Close,
-                AXPlayerStrings.Close,
-                showActionButtons: false);
+            newToastOverlay.ShowToast(restored ? AXPlayerStrings.SettingsBackupRestored : AXPlayerStrings.SettingsBackupRestoreFailed);
         }
     }
 
