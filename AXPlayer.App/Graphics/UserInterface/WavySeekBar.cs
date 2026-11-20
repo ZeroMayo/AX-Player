@@ -44,27 +44,27 @@ namespace AXPlayer.App.Graphics.UserInterface
         /// <summary>
         /// Thickness of the unplayed portion of the track.
         /// </summary>
-        private const float track_height = 6f;
+        private const float track_height = 7f;
 
         /// <summary>
         /// Thickness (radius) of the wave drawn over the played portion of the track.
         /// </summary>
-        private const float wave_radius = 3f;
+        private const float wave_radius = 3.5f;
 
         /// <summary>
         /// Radius of the soft glow which is rendered underneath the wave.
         /// </summary>
-        private const float wave_glow_radius = 7f;
+        private const float wave_glow_radius = 10f;
 
         /// <summary>
         /// Radius of the bright core which runs along the centre of the wave.
         /// </summary>
         private const float wave_highlight_radius = 1f;
 
-        private const float wave_glow_alpha = 0.16f;
+        private const float wave_glow_alpha = 0.2f;
         private const float nub_overlap = 0f;
-        private const float wave_frequency = 0.1f;
-        private const float wave_point_spacing = 2f;
+        private const float wave_frequency = 0.085f;
+        private const float wave_point_spacing = 2.5f;
 
         private static readonly HttpClient httpClient = new HttpClient();
 
@@ -195,7 +195,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Anchor = Anchor.CentreLeft,
                         Origin = Anchor.Centre,
                         RelativePositionAxes = Axes.X,
-                        //OnDoubleClicked = () => ResetToDefault.Invoke(),
+                        OnDoubleClicked = () => ResetToDefault.Invoke(),
                     },
                 },
             };
@@ -350,7 +350,9 @@ namespace AXPlayer.App.Graphics.UserInterface
             for (int i = 0; i < pointCount; i++)
             {
                 float x = Math.Min(i * wave_point_spacing, width);
-                float y = isFlat ? 0 : MathF.Sin((x - phase) * wave_frequency) * amplitude;
+                float angle = (x - phase) * wave_frequency;
+                // A restrained second harmonic gives the playback line a less mechanical, more fluid shape.
+                float y = isFlat ? 0 : (MathF.Sin(angle) + MathF.Sin(angle * 1.8f + 0.7f) * 0.18f) * amplitude;
                 vertices[i] = new Vector2(x, y);
             }
 
