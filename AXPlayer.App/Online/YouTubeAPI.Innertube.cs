@@ -345,7 +345,7 @@ namespace AXPlayer.App.Online
         /// environment variable. Only an explicit <c>0</c> disables them.
         /// </summary>
         internal static bool shouldDumpInnertube(string? environmentValue)
-            => !string.Equals(environmentValue?.Trim(), @"0", StringComparison.Ordinal);
+            => string.Equals(environmentValue?.Trim(), @"0", StringComparison.Ordinal);
 
         /// <summary>
         /// The tag that marks the dumps of the comment requests in their file name.
