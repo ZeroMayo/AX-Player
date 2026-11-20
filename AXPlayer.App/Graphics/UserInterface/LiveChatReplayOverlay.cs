@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.UserInterface.LiveChat;
@@ -45,6 +48,13 @@ namespace AXPlayer.App.Graphics.UserInterface
         private const int initial_displayed_messages_compact = 25;
         private const int max_displayed_messages_compact = 80;
 
+        /// <summary>
+        /// How many messages are added to the draw hierarchy per update frame while a replay is being
+        /// rendered. Splitting the work keeps the frame the overlay was opened on short, instead of
+        /// building the whole window (and its avatars) in one go.
+        /// </summary>
+        private const int messages_per_frame = 24;
+
         private int initialDisplayedMessages => compact ? initial_displayed_messages_compact : initial_displayed_messages;
         private int maxDisplayedMessages => compact ? max_displayed_messages_compact : MAX_DISPLAYED_MESSAGES;
 
@@ -79,6 +89,18 @@ namespace AXPlayer.App.Graphics.UserInterface
         private bool isLoading;
         private bool unavailable;
         private bool scrollToEndScheduled;
+
+        /// <summary>
+        /// Identifies the newest render pass. A pass which finds a newer version after one of its frame
+        /// boundaries stops without touching the hierarchy again, so state changes never interleave.
+        /// </summary>
+        private int renderVersion;
+
+        /// <summary>
+        /// Whether a render pass is currently adding messages across frames. While it is running it owns
+        /// the hierarchy, so <see cref="Update"/> does not reveal or rebuild anything on top of it.
+        /// </summary>
+        private bool isRebuilding;
 
         public LiveChatReplayOverlay(bool compact = false)
         {
@@ -188,14 +210,16 @@ namespace AXPlayer.App.Graphics.UserInterface
             updateState();
 
             if (messages.Count > 0)
-                rebuild(PlaybackPosition.Value);
+                rebuildAsync(PlaybackPosition.Value).FireAndForget();
         }
 
         /// <summary>
         /// Replaces the currently loaded replay with the given messages.
         /// Messages are sorted by their video offset, so the source order does not matter.
+        /// The window of messages around the current playback position is rendered across the following
+        /// frames, so the returned task completes once the overlay has settled on the new replay.
         /// </summary>
-        public void SetMessages(IEnumerable<LiveChatReplayMessage> replayMessages)
+        public async Task SetMessages(IEnumerable<LiveChatReplayMessage> replayMessages)
         {
             messages.Clear();
             messages.AddRange(replayMessages);
@@ -205,17 +229,17 @@ namespace AXPlayer.App.Graphics.UserInterface
             unavailable = false;
 
             resetRender();
+            updateState();
 
             if (messages.Count > 0)
-                rebuild(PlaybackPosition.Value);
-
-            updateState();
+                await rebuildAsync(PlaybackPosition.Value);
         }
 
         /// <summary>
         /// Clears the replay and puts the overlay back into its initial state.
+        /// The returned task completes once the overlay has settled on the cleared state.
         /// </summary>
-        public void ClearMessages()
+        public async Task ClearMessages()
         {
             messages.Clear();
 
@@ -224,12 +248,15 @@ namespace AXPlayer.App.Graphics.UserInterface
 
             resetRender();
             updateState();
+
+            await awaitNextFrame();
         }
 
         /// <summary>
         /// Shows a "loading" placeholder until <see cref="SetMessages"/> is called.
+        /// The returned task completes once the overlay has settled on the loading state.
         /// </summary>
-        public void SetLoading()
+        public async Task SetLoading()
         {
             messages.Clear();
             unavailable = false;
@@ -237,12 +264,15 @@ namespace AXPlayer.App.Graphics.UserInterface
 
             resetRender();
             updateState();
+
+            await awaitNextFrame();
         }
 
         /// <summary>
         /// Shows a message which tells the user that this video has no chat replay.
+        /// The returned task completes once the overlay has settled on the unavailable state.
         /// </summary>
-        public void ShowUnavailable()
+        public async Task ShowUnavailable()
         {
             messages.Clear();
             isLoading = false;
@@ -250,6 +280,8 @@ namespace AXPlayer.App.Graphics.UserInterface
 
             resetRender();
             updateState();
+
+            await awaitNextFrame();
         }
 
         public override void Show()
@@ -264,53 +296,97 @@ namespace AXPlayer.App.Graphics.UserInterface
             lastRenderedTime = null;
 
             if (messages.Count > 0)
-            {
-                rebuild(PlaybackPosition.Value);
-                Schedule(scrollToEnd);
-            }
+                rebuildAsync(PlaybackPosition.Value).FireAndForget();
         }
 
         protected override void Update()
         {
             base.Update();
 
-            if (messages.Count == 0)
+            // A pass which is still adding messages owns the hierarchy, and records the position it
+            // rendered once it finishes, so revealing resumes right after it.
+            if (messages.Count == 0 || isRebuilding)
                 return;
 
             double time = Math.Max(0, PlaybackPosition.Value);
 
             // Seeking backwards, or jumping far forwards, invalidates the whole rendered window.
             if (lastRenderedTime == null || time < lastRenderedTime.Value - 0.5 || time - lastRenderedTime.Value > 10)
-                rebuild(time);
-            else if (time > lastRenderedTime.Value)
-                advanceTo(time);
+            {
+                rebuildAsync(time).FireAndForget();
+                return;
+            }
 
-            lastRenderedTime = time;
+            if (time > lastRenderedTime.Value)
+            {
+                advanceTo(time);
+                lastRenderedTime = time;
+            }
         }
 
         private void resetRender()
         {
+            // Invalidate a pass which is still running; it stops at its next frame boundary.
+            renderVersion++;
+            isRebuilding = false;
+
             nextMessageIndex = 0;
             lastRenderedTime = null;
 
             messageFlow?.Clear();
         }
 
-        private void rebuild(double time)
+        /// <summary>
+        /// Renders the window of messages around the given position. The messages are added across the
+        /// following frames, so a long replay never stalls a single frame, and a state change which
+        /// happens in the meantime supersedes this pass.
+        /// </summary>
+        private async Task rebuildAsync(double time)
         {
+            double clampedTime = Math.Max(0, time);
+
             if (messageFlow == null)
+            {
+                // Nothing to render before the hierarchy exists; the state is picked up once it is loaded.
+                nextMessageIndex = findFirstIndexAfter(clampedTime * 1000);
+                lastRenderedTime = clampedTime;
                 return;
+            }
 
-            messageFlow.Clear();
+            int version = ++renderVersion;
+            isRebuilding = true;
 
-            nextMessageIndex = findFirstIndexAfter(time * 1000);
+            try
+            {
+                messageFlow.Clear();
 
-            int firstIndex = Math.Max(0, nextMessageIndex - Math.Min(initialDisplayedMessages, maxDisplayedMessages));
+                int endIndex = findFirstIndexAfter(clampedTime * 1000);
+                int startIndex = Math.Max(0, endIndex - Math.Min(initialDisplayedMessages, maxDisplayedMessages));
 
-            for (int i = firstIndex; i < nextMessageIndex; i++)
-                messageFlow.Add(new LiveChatMessageDisplay(messages[i], compact));
+                for (int i = startIndex; i < endIndex; i++)
+                {
+                    messageFlow.Add(new LiveChatMessageDisplay(messages[i], compact));
 
-            scrollToEnd();
+                    if ((i - startIndex + 1) % messages_per_frame != 0)
+                        continue;
+
+                    // Give the remaining messages of the window to the next frames.
+                    await awaitNextFrame();
+
+                    if (version != renderVersion)
+                        return;
+                }
+
+                nextMessageIndex = endIndex;
+                lastRenderedTime = clampedTime;
+
+                scrollToEnd();
+            }
+            finally
+            {
+                if (version == renderVersion)
+                    isRebuilding = false;
+            }
         }
 
         private void advanceTo(double time)
@@ -375,11 +451,44 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 scrollToEndScheduled = false;
 
-                if (messageFlow.Children.Count == 0)
+                if (messageFlow == null || messageFlow.Children.Count == 0)
                     return;
 
                 scrollContainer.ScrollToEnd(false);
             }, 1);
+        }
+
+        /// <summary>
+        /// Awaits the next update frame. The continuation always resumes on the update thread, so the
+        /// draw hierarchy may be changed right after it, no matter which thread started the operation.
+        /// </summary>
+        private NextFrameAwaiter awaitNextFrame() => new NextFrameAwaiter(this);
+
+        private readonly struct NextFrameAwaiter : ICriticalNotifyCompletion
+        {
+            private readonly LiveChatReplayOverlay overlay;
+
+            public NextFrameAwaiter(LiveChatReplayOverlay overlay)
+            {
+                this.overlay = overlay;
+            }
+
+            public NextFrameAwaiter GetAwaiter() => this;
+
+            public bool IsCompleted => false;
+
+            public void GetResult()
+            {
+            }
+
+            public void OnCompleted(Action continuation)
+            {
+                // A one millisecond delay keeps the continuation out of the current frame's scheduler
+                // pass, which is what defers it to the next frame's update.
+                overlay.Scheduler.AddDelayed(continuation, 1);
+            }
+
+            public void UnsafeOnCompleted(Action continuation) => OnCompleted(continuation);
         }
 
         /// <summary>

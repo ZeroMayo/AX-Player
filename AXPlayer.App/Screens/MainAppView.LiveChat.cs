@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using AXPlayer.App.Extensions;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
 using osu.Framework.Extensions;
@@ -83,7 +84,7 @@ namespace AXPlayer.App.Screens
             liveChatReplayCancellation?.Dispose();
             liveChatReplayCancellation = null;
 
-            liveChatReplayOverlay?.ClearMessages();
+            liveChatReplayOverlay?.ClearMessages().FireAndForget();
 
             if (quickLiveChatOpenButton != null)
                 quickLiveChatOpenButton.TooltipText = AXPlayerStrings.LiveChatReplay("0");
@@ -110,7 +111,7 @@ namespace AXPlayer.App.Screens
 
             CancellationToken cancellationToken = liveChatReplayCancellation.Token;
 
-            liveChatReplayOverlay.SetLoading();
+            liveChatReplayOverlay.SetLoading().FireAndForget();
 
             Task<IReadOnlyList<LiveChatReplayMessage>> preloadTask = getOrStartLiveChatReplayPreload(currentVideoId);
 
@@ -128,11 +129,11 @@ namespace AXPlayer.App.Screens
 
                         if (messages.Count == 0)
                         {
-                            liveChatReplayOverlay.ShowUnavailable();
+                            liveChatReplayOverlay.ShowUnavailable().FireAndForget();
                             return;
                         }
 
-                        liveChatReplayOverlay.SetMessages(messages);
+                        liveChatReplayOverlay.SetMessages(messages).FireAndForget();
                         quickLiveChatOpenButton.TooltipText = AXPlayerStrings.LiveChatReplay(messages.Count.ToString(CultureInfo.InvariantCulture));
                         liveChatOpenButton.Text = AXPlayerStrings.LiveChatReplay(messages.Count.ToString(CultureInfo.InvariantCulture));
                     });
@@ -150,7 +151,7 @@ namespace AXPlayer.App.Screens
                         if (liveChatReplayVideoId != currentVideoId)
                             return;
 
-                        liveChatReplayOverlay.ShowUnavailable();
+                        liveChatReplayOverlay.ShowUnavailable().FireAndForget();
                     });
                 }
             }, cancellationToken);

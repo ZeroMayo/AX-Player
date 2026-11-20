@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Linq;
+using System.Threading.Tasks;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterface.LiveChat;
@@ -18,6 +19,7 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
     public partial class TestSceneLiveChatReplayOverlay : AXPlayerTestScene
     {
         private LiveChatReplayOverlay overlay;
+        private Task settleTask;
 
         private const string sample_replay_json = """
         [
@@ -227,31 +229,17 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
                 };
 
                 overlay.Show();
-                overlay.SetMessages(Enumerable.Range(0, 120).Select(i => new LiveChatReplayMessage
-                {
-                    Id = $"bulk-window-{i}",
-                    Kind = LiveChatReplayMessageKind.Text,
-                    OffsetTimeMsec = i * 500,
-                    AuthorName = $"Author {i}",
-                    Text = $"Message {i}",
-                }).ToArray());
+                overlay.SetMessages(createMessages(120, "bulk-window"));
             });
 
             AddStep("seek to the end", () => overlay.PlaybackPosition.Value = 60);
-            AddAssert("only the recent compact window is rendered", () => displayedMessageCount == 25);
+            AddUntilStep("only the recent compact window is rendered", () => displayedMessageCount == 25);
         }
 
         [Test]
         public void KeepsScrolledToTheBottomWhileMessagesArrive()
         {
-            AddStep("load many messages", () => overlay.SetMessages(Enumerable.Range(0, 120).Select(i => new LiveChatReplayMessage
-            {
-                Id = $"bulk-{i}",
-                Kind = LiveChatReplayMessageKind.Text,
-                OffsetTimeMsec = i * 500,
-                AuthorName = $"Author {i}",
-                Text = $"Message {i}",
-            }).ToArray()));
+            AddStep("load many messages", () => overlay.SetMessages(createMessages(120)));
 
             AddStep("seek near the end", () => overlay.PlaybackPosition.Value = 59.5);
             AddAssert("only a recent window is rendered", () => displayedMessageCount < 120);
@@ -264,14 +252,7 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
         [Test]
         public void DoesNotForceScrollWhenTheUserScrolledUp()
         {
-            AddStep("load many messages", () => overlay.SetMessages(Enumerable.Range(0, 120).Select(i => new LiveChatReplayMessage
-            {
-                Id = $"bulk-{i}",
-                Kind = LiveChatReplayMessageKind.Text,
-                OffsetTimeMsec = i * 500,
-                AuthorName = $"Author {i}",
-                Text = $"Message {i}",
-            }).ToArray()));
+            AddStep("load many messages", () => overlay.SetMessages(createMessages(120)));
 
             AddStep("seek to the end", () => overlay.PlaybackPosition.Value = 60);
             AddUntilStep("scrolled down to the newest message", () => scrollContainer.Current > 0);
@@ -280,6 +261,63 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
             AddStep("reveal another message", () => overlay.PlaybackPosition.Value = 60.5);
             AddAssert("stays at the top", () => scrollContainer.Current == 0);
         }
+
+        [Test]
+        public void RenderingALongReplayContinuesAcrossFrames()
+        {
+            Task load = null;
+            int renderedImmediately = 0;
+
+            AddStep("seek near the end", () => overlay.PlaybackPosition.Value = 60);
+            AddStep("load a long replay", () =>
+            {
+                load = overlay.SetMessages(createMessages(120));
+                renderedImmediately = displayedMessageCount;
+            });
+
+            AddAssert("only the first batch is rendered in the calling frame", () => renderedImmediately is > 0 and < 60);
+            AddUntilStep("the whole window is rendered", () => displayedMessageCount == 60);
+            AddAssert("the returned task completes once the window is rendered", () => load.IsCompletedSuccessfully);
+        }
+
+        [Test]
+        public void LoadingMessagesSettlesAsynchronously()
+        {
+            AddStep("load sample replay", () => { settleTask = overlay.SetMessages(LiveChatReplayParser.Parse(sample_replay_json)); });
+            AddAssert("messages are rendered without waiting for the task", () => displayedMessageCount == 1);
+            AddUntilStep("the returned task completes", () => settleTask.IsCompletedSuccessfully);
+            AddAssert("the rendered messages are kept", () => displayedMessageCount == 1);
+        }
+
+        [Test]
+        public void ClearingMessagesSettlesOnTheNextFrame()
+        {
+            AddStep("clear messages", () => settleTask = overlay.ClearMessages());
+            AddAssert("no messages are displayed", () => displayedMessageCount == 0);
+            AddUntilStep("the returned task completes", () => settleTask.IsCompletedSuccessfully);
+        }
+
+        [Test]
+        public void LoadingAndUnavailableStatesSettle()
+        {
+            AddStep("show loading", () => settleTask = overlay.SetLoading());
+            AddUntilStep("the loading task completes", () => settleTask.IsCompletedSuccessfully);
+
+            AddStep("show unavailable", () => settleTask = overlay.ShowUnavailable());
+            AddUntilStep("the unavailable task completes", () => settleTask.IsCompletedSuccessfully);
+
+            AddAssert("no messages are displayed", () => displayedMessageCount == 0);
+        }
+
+        private static LiveChatReplayMessage[] createMessages(int count, string idPrefix = "bulk") => Enumerable.Range(0, count)
+                                                                                                             .Select(i => new LiveChatReplayMessage
+                                                                                                             {
+                                                                                                                 Id = $"{idPrefix}-{i}",
+                                                                                                                 Kind = LiveChatReplayMessageKind.Text,
+                                                                                                                 OffsetTimeMsec = i * 500,
+                                                                                                                 AuthorName = $"Author {i}",
+                                                                                                                 Text = $"Message {i}",
+                                                                                                             }).ToArray();
 
         private ProjectYomiScrollContainer scrollContainer => overlay.ChildrenOfType<ProjectYomiScrollContainer>().Single();
 

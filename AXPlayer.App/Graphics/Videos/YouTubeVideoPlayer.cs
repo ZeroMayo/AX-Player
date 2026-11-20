@@ -484,7 +484,7 @@ namespace AXPlayer.App.Graphics.Videos
 
             if (string.IsNullOrEmpty(videoId))
             {
-                liveChatOverlay.ShowUnavailable();
+                liveChatOverlay.ShowUnavailable().FireAndForget();
                 return;
             }
 
@@ -499,7 +499,7 @@ namespace AXPlayer.App.Graphics.Videos
 
             CancellationToken cancellationToken = liveChatLoadCancellation.Token;
 
-            liveChatOverlay.SetLoading();
+            liveChatOverlay.SetLoading().FireAndForget();
 
             // The player usually receives a fetch that was already started by SetVideoSource.
             // Fall back to fetching here if the player was created without a preload.
@@ -522,11 +522,11 @@ namespace AXPlayer.App.Graphics.Videos
 
                     if (messages.Count == 0)
                     {
-                        liveChatOverlay.ShowUnavailable();
+                        liveChatOverlay.ShowUnavailable().FireAndForget();
                         return;
                     }
 
-                    liveChatOverlay.SetMessages(messages);
+                    liveChatOverlay.SetMessages(messages).FireAndForget();
                     liveChatToggleButton.TooltipText = AXPlayerStrings.LiveChatReplay(messages.Count.ToString(CultureInfo.InvariantCulture));
                 });
             }
@@ -541,7 +541,7 @@ namespace AXPlayer.App.Graphics.Videos
                 Schedule(() =>
                 {
                     if (!cancellationToken.IsCancellationRequested)
-                        liveChatOverlay.ShowUnavailable();
+                        liveChatOverlay.ShowUnavailable().FireAndForget();
                 });
             }
         }
