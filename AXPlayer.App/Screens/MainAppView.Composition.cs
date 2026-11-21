@@ -3622,7 +3622,7 @@ namespace AXPlayer.App.Screens
                         myChannelDialog = new BottomOverlayContainer
                         {
                             Width = 450,
-                            Height = 185,
+                            Height = 132,
                             CornerRadius = new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS, 0, AXPlayerApp.UI_CORNER_RADIUS, 0),
                             Masking = true,
                             Origin = Anchor.BottomCentre,
@@ -3656,17 +3656,9 @@ namespace AXPlayer.App.Screens
                                     RelativeSizeAxes = Axes.X,
                                     AutoSizeAxes = Axes.Y,
                                     Direction = FillDirection.Vertical,
+                                    Padding = new MarginPadding(8),
                                     Children = new Drawable[]
                                     {
-                                        new ProjectYomiSpriteText
-                                        {
-                                            Origin = Anchor.TopCentre,
-                                            Anchor = Anchor.TopCentre,
-                                            Text = AXPlayerStrings.GoogleAccount,
-                                            Margin = new MarginPadding(16),
-                                            Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
-                                            //Colour = overlayColourProvider.Content2,
-                                        },
                                         youtubeChannelMetadataDisplay2 = new YouTubeChannelMetadataDisplay
                                         {
                                             Origin = Anchor.TopCentre,
