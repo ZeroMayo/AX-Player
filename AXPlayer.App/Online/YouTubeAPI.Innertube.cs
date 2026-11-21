@@ -2346,9 +2346,9 @@ namespace AXPlayer.App.Online
 
                 if (thread.Snippet?.TopLevelComment != null)
                 {
-                    // A thread whose text could not be resolved would render an empty row, so it is
-                    // left out and counted below instead.
-                    if (string.IsNullOrEmpty(thread.Snippet.TopLevelComment.Snippet?.TextDisplay))
+                    // A thread whose text and image could not be resolved would render an empty row,
+                    // so it is left out and counted below instead.
+                    if (!hasRenderableContent(thread.Snippet.TopLevelComment))
                     {
                         threadsWithoutText++;
                         continue;
@@ -2551,7 +2551,9 @@ namespace AXPlayer.App.Online
         /// </summary>
         /// <remarks>
         /// The current watch page only renders the text, the author and the like count of a comment
-        /// into <c>frameworkUpdates</c>, while the comment item itself keeps the identifiers.
+        /// into <c>frameworkUpdates</c>, while the comment item itself keeps the identifiers. The
+        /// image attachment of a comment is kept in a <c>commentSurfaceEntityPayload</c> instead, so
+        /// those payloads are collected into the same lookup under their own keys.
         /// </remarks>
         internal static Dictionary<string, JsonElement> extractCommentEntities(JsonElement root)
         {
@@ -2564,20 +2566,40 @@ namespace AXPlayer.App.Online
 
             foreach (JsonElement mutation in mutations.EnumerateArray())
             {
-                if (getObject(mutation, @"payload") is not { } payload
-                    || getObject(payload, @"commentEntityPayload") is not { } commentEntity)
+                if (getObject(mutation, @"payload") is not { } payload)
                     continue;
 
-                JsonElement detached = commentEntity.Clone();
-                JsonElement? properties = getObject(detached, @"properties");
+                if (getObject(payload, @"commentEntityPayload") is { } commentEntity)
+                {
+                    JsonElement detached = commentEntity.Clone();
+                    JsonElement? properties = getObject(detached, @"properties");
 
-                foreach (string? key in new[]
-                         {
-                             getString(mutation, @"entityKey"),
-                             getString(detached, @"key"),
-                             getString(properties ?? default, @"commentKey"),
-                             getString(properties ?? default, @"commentId"),
-                         })
+                    addEntity(detached, new[]
+                    {
+                        getString(mutation, @"entityKey"),
+                        getString(detached, @"key"),
+                        getString(properties ?? default, @"commentKey"),
+                        getString(properties ?? default, @"commentId"),
+                    });
+                }
+
+                if (getObject(payload, @"commentSurfaceEntityPayload") is { } surfaceEntity)
+                {
+                    JsonElement detached = surfaceEntity.Clone();
+
+                    addEntity(detached, new[]
+                    {
+                        getString(mutation, @"entityKey"),
+                        getString(detached, @"key"),
+                    });
+                }
+            }
+
+            return entities;
+
+            void addEntity(JsonElement detached, IEnumerable<string?> keys)
+            {
+                foreach (string? key in keys)
                 {
                     if (string.IsNullOrEmpty(key))
                         continue;
@@ -2588,8 +2610,6 @@ namespace AXPlayer.App.Online
                     entities[normalizeEntityKey(key)] = detached;
                 }
             }
-
-            return entities;
         }
 
         /// <summary>
@@ -2627,6 +2647,42 @@ namespace AXPlayer.App.Online
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Finds the surface payload of a comment, which holds its image attachment.
+        /// </summary>
+        internal static JsonElement? findCommentSurfaceEntity(JsonElement item, IReadOnlyDictionary<string, JsonElement>? entities)
+        {
+            if (entities == null || entities.Count == 0)
+                return null;
+
+            foreach (string propertyName in new[] { @"commentSurfaceKey", @"toolbarSurfaceKey" })
+            {
+                if (findSurfaceEntity(item, propertyName) is { } entity)
+                    return entity;
+            }
+
+            return null;
+
+            JsonElement? findSurfaceEntity(JsonElement element, string propertyName)
+            {
+                string? key = getString(element, propertyName);
+
+                if (string.IsNullOrEmpty(key))
+                {
+                    JsonElement? nested = getObject(element, @"properties");
+                    key = nested != null ? getString(nested.Value, propertyName) : null;
+                }
+
+                if (string.IsNullOrEmpty(key))
+                    return null;
+
+                if (entities.TryGetValue(key, out JsonElement entity))
+                    return entity;
+
+                return entities.TryGetValue(normalizeEntityKey(key), out JsonElement normalized) ? normalized : null;
+            }
         }
 
         /// <summary>
@@ -3010,7 +3066,7 @@ namespace AXPlayer.App.Online
 
             JsonElement? entity = findCommentEntity(commentElement.Value, entities);
 
-            Comment? comment = parseComment(commentElement.Value, videoId, null, entity);
+            Comment? comment = parseComment(commentElement.Value, videoId, null, entity, entities);
 
             if (comment == null)
                 return null;
@@ -3090,7 +3146,7 @@ namespace AXPlayer.App.Online
                    || element.TryGetProperty(@"commentKey", out _)
                    || element.TryGetProperty(@"contentText", out _));
 
-        internal static Comment? parseComment(JsonElement renderer, string? videoId, string? parentId, JsonElement? entity = null)
+        internal static Comment? parseComment(JsonElement renderer, string? videoId, string? parentId, JsonElement? entity = null, IReadOnlyDictionary<string, JsonElement>? entities = null)
         {
             // The text, the author and the counters of a comment are rendered into an entity
             // payload that the item only references by its key.
@@ -3128,6 +3184,9 @@ namespace AXPlayer.App.Online
 
             if (string.IsNullOrEmpty(content))
                 content = findFirstString(renderer, new[] { @"contentText", @"content", @"text" });
+
+            JsonElement? surfaceEntity = findCommentSurfaceEntity(renderer, entities);
+            CommentImageAttachment? imageAttachment = parseCommentImageAttachment(surfaceEntity ?? renderer);
 
             string? authorName = extractText(renderer.TryGetProperty(@"authorText", out JsonElement authorText) ? authorText : default);
 
@@ -3184,7 +3243,7 @@ namespace AXPlayer.App.Online
             if (likeCount == null)
                 likeCount = parseRoughCount(getString(toolbar ?? default, @"likeCountNotliked") ?? getString(toolbar ?? default, @"likeCountLiked"));
 
-            return new Comment
+            return new AXPlayerComment
             {
                 Id = commentId,
                 Kind = @"youtube#comment",
@@ -3201,16 +3260,84 @@ namespace AXPlayer.App.Online
                         {
                             Value = authorChannelId,
                         },
-                    TextDisplay = content,
-                    TextOriginal = content,
+                    TextDisplay = content ?? string.Empty,
+                    TextOriginal = content ?? string.Empty,
                     LikeCount = toLong(likeCount),
                     PublishedAtRaw = published?.ToString(@"o", CultureInfo.InvariantCulture),
                     PublishedAtDateTimeOffset = published,
                     CanRate = true,
                     ViewerRating = @"none",
                 },
+                ImageAttachment = imageAttachment,
             };
         }
+
+        /// <summary>
+        /// Reads the image or GIF that a comment attached to its surface payload.
+        /// </summary>
+        private static CommentImageAttachment? parseCommentImageAttachment(JsonElement element)
+        {
+            JsonElement? imageAttachment = getObject(element, @"imageAttachmentViewModel");
+
+            JsonElement? viewModel = imageAttachment != null
+                ? getObject(imageAttachment.Value, @"commentImageAttachmentViewModel")
+                : getObject(element, @"commentImageAttachmentViewModel");
+
+            if (viewModel == null && imageAttachment != null && getObject(imageAttachment.Value, @"image") != null)
+                viewModel = imageAttachment;
+
+            if (viewModel == null && getObject(element, @"image") != null)
+                viewModel = element;
+
+            if (viewModel == null && findProperty(element, @"commentImageAttachmentViewModel") is { } nested)
+                viewModel = nested;
+
+            if (viewModel == null)
+                return null;
+
+            JsonElement? image = getObject(viewModel.Value, @"image");
+
+            if (image == null)
+                return null;
+
+            JsonElement[] sources = getArray(image.Value, @"sources");
+            string? url = sources.Select(source => getString(source, @"url")).FirstOrDefault(candidate => !string.IsNullOrEmpty(candidate));
+
+            if (string.IsNullOrEmpty(url))
+                return null;
+
+            JsonElement source = sources.FirstOrDefault(candidate => getString(candidate, @"url") == url);
+
+            float width = (float)getDouble(viewModel.Value, @"width");
+            float height = (float)getDouble(viewModel.Value, @"height");
+
+            if (width <= 0)
+                width = (float)getDouble(source, @"width");
+
+            if (height <= 0)
+                height = (float)getDouble(source, @"height");
+
+            float aspectRatio = (float)getDouble(viewModel.Value, @"aspectRatio");
+
+            if (aspectRatio <= 0 && width > 0 && height > 0)
+                aspectRatio = width / height;
+
+            return new CommentImageAttachment
+            {
+                Url = url,
+                Width = width,
+                Height = height,
+                AspectRatio = aspectRatio,
+                IsAnimated = getString(image.Value, @"imageFormatHint")?.Contains(@"ANIMATED", StringComparison.OrdinalIgnoreCase) == true,
+            };
+        }
+
+        /// <summary>
+        /// Whether a comment has something to show, either text or an image attachment.
+        /// </summary>
+        private static bool hasRenderableContent(Comment comment)
+            => !string.IsNullOrEmpty(comment.Snippet?.TextDisplay)
+               || comment is AXPlayerComment { ImageAttachment: not null };
 
         /// <summary>
         /// Reads the replies that an older thread rendered inline instead of returning a continuation.
@@ -3237,7 +3364,7 @@ namespace AXPlayer.App.Online
                     if (element == null)
                         continue;
 
-                    Comment? comment = parseComment(element.Value, videoId, threadId, findCommentEntity(element.Value, entities));
+                    Comment? comment = parseComment(element.Value, videoId, threadId, findCommentEntity(element.Value, entities), entities);
 
                     if (comment != null)
                         result.Add(comment);
@@ -3317,10 +3444,10 @@ namespace AXPlayer.App.Online
                     if (element == null)
                         continue;
 
-                    Comment? comment = parseComment(element.Value, videoId, threadId, findCommentEntity(element.Value, page.Entities));
+                    Comment? comment = parseComment(element.Value, videoId, threadId, findCommentEntity(element.Value, page.Entities), page.Entities);
 
-                    // A reply whose text could not be resolved would render an empty row.
-                    if (comment != null && !string.IsNullOrEmpty(comment.Snippet?.TextDisplay))
+                    // A reply whose text and image could not be resolved would render an empty row.
+                    if (comment != null && hasRenderableContent(comment))
                         replies.Add(comment);
                 }
             }

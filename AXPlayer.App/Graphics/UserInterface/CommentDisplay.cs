@@ -131,13 +131,20 @@ namespace AXPlayer.App.Graphics.UserInterface
                                                     AutoSizeAxes = Axes.Y,
                                                     Colour = overlayColourProvider.Content2,
                                                 },
+                                                commentImageContainer = new Container
+                                                {
+                                                    RelativeSizeAxes = Axes.X,
+                                                    AutoSizeAxes = Axes.Y,
+                                                    Padding = new MarginPadding { Top = 4 },
+                                                    Alpha = 0, // if commentImageContainer is empty, don't visible this.
+                                                },
                                                 translateButton = new RoundedButtonContainer
                                                 {
                                                     AutoSizeAxes = Axes.X,
                                                     Height = 27,
                                                     CornerRadius = 12,
                                                     Masking = true,
-                                                    AlwaysPresent = true,
+                                                    //AlwaysPresent = true,
                                                     Position = new Vector2(0, 35),
                                                     ClickAction = f => translateComment(),
                                                     Children = new Drawable[]
@@ -318,6 +325,19 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private Container replyCountBox;
 
+        private Container commentImageContainer = null!;
+
+        private void setCommentImage(Comment? comment)
+        {
+            commentImageContainer.Clear();
+
+            if (comment is AXPlayerComment { ImageAttachment: { } attachment })
+            {
+                commentImageContainer.Show();
+                commentImageContainer.Child = new CommentImageAttachmentDisplay(attachment);
+            }
+        }
+
         private void setText(string? text)
         {
             commentText.Text = "";
@@ -347,6 +367,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                         break;
                 }
             }
+
+            if (string.IsNullOrEmpty(text))
+                translateButton.Hide();
         }
 
         /// <summary>
@@ -397,6 +420,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                             channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
 #pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
                             setText(commentData2 != null ? commentData2.Snippet.TextOriginal : commentData.Snippet.TopLevelComment.Snippet.TextOriginal);
+                            setCommentImage(commentData2 ?? commentData.Snippet.TopLevelComment);
                             likeCount.Text = Convert.ToInt32(commentData2 != null ? commentData2.Snippet.LikeCount : commentData.Snippet.TopLevelComment.Snippet.LikeCount).ToStandardFormattedString(0);
                             translateToText.Text = AXPlayerStrings.TranslateTo(app.CurrentLanguage.Value.GetLocalisableDescription());
                             updateProfileImage(commentData2?.Snippet.AuthorChannelId?.Value ?? commentData.Snippet.TopLevelComment.Snippet.AuthorChannelId?.Value);
@@ -450,6 +474,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                             channelName.AddText(formatCommentDate(dateTime, now), f => f.Font = AXPlayerApp.DefaultFont.With(size: 13, weight: "Regular"));
 #pragma warning restore CS8629 // Nullable 값 형식이 null일 수 있습니다.
                             setText(commentData.Snippet.TopLevelComment.Snippet.TextOriginal);
+                            setCommentImage(commentData.Snippet.TopLevelComment);
                             likeCount.Text = Convert.ToInt32(commentData.Snippet.TopLevelComment.Snippet.LikeCount).ToStandardFormattedString(0);
                             translateToText.Text = AXPlayerStrings.TranslateTo(app.CurrentLanguage.Value.GetLocalisableDescription());
                             updateProfileImage(commentData.Snippet.TopLevelComment.Snippet.AuthorChannelId?.Value);

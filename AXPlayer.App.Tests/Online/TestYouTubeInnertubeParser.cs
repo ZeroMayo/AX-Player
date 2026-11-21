@@ -1104,6 +1104,94 @@ namespace AXPlayer.App.Tests.Online
         }
 
         [Test]
+        public void TestCommentImageAttachmentIsReadFromTheSurfaceEntity()
+        {
+            // A comment can carry an image or GIF instead of text. The attachment lives in a
+            // commentSurfaceEntityPayload which the item references with its commentSurfaceKey.
+            const string response = """
+            {
+              "onResponseReceivedEndpoints": [
+                {
+                  "reloadContinuationItemsCommand": {
+                    "continuationItems": [
+                      {
+                        "commentThreadRenderer": {
+                          "commentViewModel": {
+                            "commentViewModel": {
+                              "commentId": "UgxGifComment",
+                              "commentKey": "Eg0Sgifcomment",
+                              "commentSurfaceKey": "Eg1Sgifsurface",
+                              "toolbarStateKey": "Eg0Stoolbar"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "frameworkUpdates": {
+                "entityBatchUpdate": {
+                  "mutations": [
+                    {
+                      "entityKey": "Eg0Sgifcomment",
+                      "payload": {
+                        "commentEntityPayload": {
+                          "key": "Eg0Sgifcomment",
+                          "properties": {
+                            "commentId": "UgxGifComment",
+                            "content": { "content": "" },
+                            "publishedTime": "2 days ago"
+                          },
+                          "author": { "channelId": "UCauthor", "displayName": "@gifposter" },
+                          "toolbar": { "likeCountNotliked": "42" }
+                        }
+                      }
+                    },
+                    {
+                      "entityKey": "Eg1Sgifsurface",
+                      "payload": {
+                        "commentSurfaceEntityPayload": {
+                          "key": "Eg1Sgifsurface",
+                          "imageAttachmentViewModel": {
+                            "commentImageAttachmentViewModel": {
+                              "width": 498,
+                              "height": 374,
+                              "aspectRatio": 1.3315508,
+                              "image": {
+                                "sources": [
+                                  { "url": "https://i.ytimg.com/c_exp/example_webp_animated_original_aspect_ratio.webp", "width": 498, "height": 374 }
+                                ],
+                                "imageFormatHint": "IMAGE_FORMAT_ANIMATED_WEBP"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+            """;
+
+            JsonElement document = parse(response);
+            Dictionary<string, JsonElement> entities = YouTubeAPI.extractCommentEntities(document);
+            List<JsonElement> items = YouTubeAPI.detachItems(YouTubeAPI.extractContinuationItems(document));
+
+            CommentThread thread = YouTubeAPI.parseCommentThread(items[0], "video", entities)!;
+            Comment comment = thread.Snippet.TopLevelComment;
+
+            Assert.That(comment, Is.TypeOf<AXPlayerComment>());
+            Assert.That(comment.Snippet.TextDisplay, Is.Empty);
+            Assert.That(((AXPlayerComment)comment).ImageAttachment, Is.Not.Null);
+            Assert.That(((AXPlayerComment)comment).ImageAttachment!.Url, Is.EqualTo("https://i.ytimg.com/c_exp/example_webp_animated_original_aspect_ratio.webp"));
+            Assert.That(((AXPlayerComment)comment).ImageAttachment!.Width, Is.EqualTo(498));
+            Assert.That(((AXPlayerComment)comment).ImageAttachment!.Height, Is.EqualTo(374));
+            Assert.That(((AXPlayerComment)comment).ImageAttachment!.IsAnimated, Is.True);
+        }
+
+        [Test]
         public void TestCommentThreadIsReadFromTheNestedViewModel()
         {
             // Current responses nest the view model into "comment" and keep the replies of the

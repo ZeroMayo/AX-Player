@@ -2,6 +2,12 @@
   "profiles": {
     "AX Player Desktop (with WinRT extensions)": {
       "commandName": "Project"
+    },
+    "AX Player Desktop (with WinRT extensions & Innertube dumps)": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "AXPLAYER_INNERTUBE_DUMP": "1"
+      }
     }
   }
 }

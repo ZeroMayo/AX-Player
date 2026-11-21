@@ -4,6 +4,7 @@
 #nullable enable
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Online;
@@ -11,6 +12,7 @@ using Google.Apis.YouTube.v3.Data;
 using NUnit.Framework;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Testing;
 
 namespace AXPlayer.App.Tests.Visual.UserInterface
 {
@@ -169,6 +171,78 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
         }
         """;
 
+        /// <summary>
+        /// A comment that carries an image or GIF instead of text. The attachment is kept in a
+        /// commentSurfaceEntityPayload, which the comment view model references with its surface key.
+        /// </summary>
+        private const string image_thread_response = """
+        {
+          "onResponseReceivedEndpoints": [
+            {
+              "reloadContinuationItemsCommand": {
+                "targetId": "comments-section",
+                "continuationItems": [
+                  {
+                    "commentThreadRenderer": {
+                      "commentViewModel": {
+                        "commentViewModel": {
+                          "commentId": "UgxGifComment",
+                          "commentKey": "Eg0Sgifcomment%3D",
+                          "commentSurfaceKey": "Eg1Sgifsurface%3D",
+                          "toolbarStateKey": "Eg0Stoolbar%3D"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "frameworkUpdates": {
+            "entityBatchUpdate": {
+              "mutations": [
+                {
+                  "entityKey": "Eg0Sgifcomment=",
+                  "payload": {
+                    "commentEntityPayload": {
+                      "key": "Eg0Sgifcomment=",
+                      "properties": {
+                        "commentId": "UgxGifComment",
+                        "content": { "content": "" },
+                        "publishedTime": "2 days ago"
+                      },
+                      "author": { "channelId": "UCgifposter", "displayName": "@gifposter" },
+                      "toolbar": { "likeCountNotliked": "42" }
+                    }
+                  }
+                },
+                {
+                  "entityKey": "Eg1Sgifsurface=",
+                  "payload": {
+                    "commentSurfaceEntityPayload": {
+                      "key": "Eg1Sgifsurface=",
+                      "imageAttachmentViewModel": {
+                        "commentImageAttachmentViewModel": {
+                          "width": 498,
+                          "height": 374,
+                          "aspectRatio": 1.3315508,
+                          "image": {
+                            "sources": [
+                              { "url": "https://example.com/comment-image.webp", "width": 498, "height": 374 }
+                            ],
+                            "imageFormatHint": "IMAGE_FORMAT_ANIMATED_WEBP"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+        """;
+
         private FillFlowContainer commentRows = null!;
 
         private CommentThread thread = null!;
@@ -254,6 +328,29 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
             AddAssert("the text of the comment is read from the entity payload",
                 () => current.Snippet.TopLevelComment.Snippet.TextDisplay, () => Is.EqualTo("I have no idea how this song is this underrated."));
             AddAssert("the thread keeps the amount of replies", () => current.Snippet.TotalReplyCount, () => Is.EqualTo(3));
+        }
+
+        [Test]
+        public void TestCommentWithAnImageAttachment()
+        {
+            CommentThread imageThread = null!;
+
+            AddStep("show the comment which has only an image attachment", () =>
+            {
+                commentRows.Clear();
+
+                imageThread = parseThread(image_thread_response, null);
+                commentRows.Add(new CommentDisplay(imageThread));
+            });
+
+            AddAssert("the image attachment is parsed",
+                () => imageThread.Snippet.TopLevelComment is AXPlayerComment { ImageAttachment: not null });
+            AddUntilStep("the image attachment is rendered",
+                () => commentRows.ChildrenOfType<CommentImageAttachmentDisplay>().Any(), () => Is.True);
+            AddAssert("the image is rendered at half the attachment size",
+                () => commentRows.ChildrenOfType<CommentImageAttachmentDisplay>().Single().Size.X, () => Is.EqualTo(180).Within(1));
+            AddAssert("the image keeps its aspect ratio",
+                () => commentRows.ChildrenOfType<CommentImageAttachmentDisplay>().Single().Size.Y, () => Is.EqualTo(135).Within(1));
         }
 
         private static CommentThread parseThread(string json, string? expectedRepliesToken)
