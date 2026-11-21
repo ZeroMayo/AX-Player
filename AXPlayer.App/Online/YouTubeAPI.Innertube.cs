@@ -18,6 +18,7 @@ using AXPlayer.App.Extensions;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Configuration;
+using osu.Framework.Development;
 using osu.Framework.Extensions;
 using osu.Framework.Logging;
 
@@ -342,10 +343,10 @@ namespace AXPlayer.App.Online
 
         /// <summary>
         /// Reads whether the dumps are enabled from the value of the <c>AXPLAYER_INNERTUBE_DUMP</c>
-        /// environment variable. Only an explicit <c>0</c> disables them.
+        /// environment variable. Only an debug builds enable them.
         /// </summary>
         internal static bool shouldDumpInnertube(string? environmentValue)
-            => string.Equals(environmentValue?.Trim(), @"0", StringComparison.Ordinal);
+            => (DebugUtils.IsDebugBuild ? true : string.Equals(environmentValue?.Trim(), @"0", StringComparison.Ordinal));
 
         /// <summary>
         /// The tag that marks the dumps of the comment requests in their file name.
