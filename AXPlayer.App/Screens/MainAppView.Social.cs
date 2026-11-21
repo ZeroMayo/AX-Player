@@ -540,33 +540,34 @@ namespace AXPlayer.App.Screens
         {
             Task.Run(async () =>
             {
-                var cachePath = app.Host.CacheStorage.GetStorageForDirectory("profile_cache_GetProfileImagePalette").GetFullPath($"{channel.Id}.png");
-
-                using (var httpClient = new System.Net.Http.HttpClient())
+                try
                 {
-                    var imageBytes = await httpClient.GetByteArrayAsync(channel.Snippet.Thumbnails.High.Url);
-                    await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
-                }
+                    byte[] imageBytes = await ChannelThumbnailCache.GetThumbnailAsync(app.Host.CacheStorage, channel.Id, channel.Snippet.Thumbnails.High.Url).ConfigureAwait(false);
 
-                using Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(app.Host.CacheStorage.GetStorageForDirectory("profile_cache").GetFullPath($"{channel.Id}.png"));
+                    using Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
 
-                IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
-                PaletteBuilder paletteBuilder = new PaletteBuilder();
-                Palette palette = paletteBuilder.Generate(bitmapHelper);
-                int? rgbColor = palette.MutedSwatch.Rgb;
-                int? rgbTextColor = palette.MutedSwatch.TitleTextColor;
+                    IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
+                    PaletteBuilder paletteBuilder = new PaletteBuilder();
+                    Palette palette = paletteBuilder.Generate(bitmapHelper);
+                    int? rgbColor = palette.MutedSwatch?.Rgb;
+                    int? rgbTextColor = palette.MutedSwatch?.TitleTextColor;
 
-                if (rgbColor != null && rgbTextColor != null)
-                {
-                    Color4 bgColor = System.Drawing.Color.FromArgb((int)rgbColor);
-                    Color4 textColor = System.Drawing.Color.FromArgb((int)rgbTextColor);
-                    Schedule(() =>
+                    if (rgbColor != null && rgbTextColor != null)
                     {
-                        viewChannelButton.BackgroundColour = bgColor;
-                        viewChannelButton.ForegroundColour = textColor;
-                    });
+                        Color4 bgColor = System.Drawing.Color.FromArgb((int)rgbColor);
+                        Color4 textColor = System.Drawing.Color.FromArgb((int)rgbTextColor);
+                        Schedule(() =>
+                        {
+                            viewChannelButton.BackgroundColour = bgColor;
+                            viewChannelButton.ForegroundColour = textColor;
+                        });
+                    }
                 }
-            });
+                catch (Exception exception)
+                {
+                    Logger.Error(exception, $"Failed to generate a palette for channel '{channel.Id}'.");
+                }
+            }).FireAndForget();
         }
 
         public void UpdateChannelSubscribeState(string channelId)

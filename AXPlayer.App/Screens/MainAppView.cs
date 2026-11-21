@@ -222,6 +222,8 @@ namespace AXPlayer.App.Screens
         private PlaybackSpeedContainer playbackSpeedContainer;
         private VideoVolumeControlContainer videoVolumeControlContainer;
 
+        private FastCircle myChannelDialog_bgGradient;
+
         private LinkFlowContainer playlistAuthor;
 
         private Bindable<bool> signedIn;

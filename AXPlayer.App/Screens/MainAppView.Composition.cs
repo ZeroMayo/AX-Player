@@ -3633,6 +3633,24 @@ namespace AXPlayer.App.Screens
                                 {
                                     RelativeSizeAxes = Axes.Both,
                                 },
+                                new BufferedContainer
+                                {
+                                    BlurSigma = new Vector2(75),
+                                    RelativeSizeAxes = Axes.Both,
+                                    Alpha = 0.4f,
+                                    Child = new Container
+                                    {
+                                        RelativeSizeAxes = Axes.Both,
+                                        Children = new Drawable[]
+                                        {
+                                            myChannelDialog_bgGradient = new FastCircle
+                                            {
+                                                Size = new Vector2(450),
+                                                Origin = Anchor.Centre,
+                                            }
+                                        }
+                                    }
+                                },
                                 new FillFlowContainer
                                 {
                                     RelativeSizeAxes = Axes.X,
@@ -3647,7 +3665,7 @@ namespace AXPlayer.App.Screens
                                             Text = AXPlayerStrings.GoogleAccount,
                                             Margin = new MarginPadding(16),
                                             Font = AXPlayerApp.DefaultFont.With(size: 30, weight: "ExtraBold"),
-                                            Colour = overlayColourProvider.Content2,
+                                            //Colour = overlayColourProvider.Content2,
                                         },
                                         youtubeChannelMetadataDisplay2 = new YouTubeChannelMetadataDisplay
                                         {
@@ -3658,6 +3676,10 @@ namespace AXPlayer.App.Screens
                                             Size = new Vector2(0.95f, 1f),
                                             Height = 60,
                                             AlwaysPresent = true,
+                                            OnBGColourChanged = colour =>
+                                            {
+                                                myChannelDialog_bgGradient.Colour = colour;
+                                            }
                                         },
                                         new FillFlowContainer
                                         {
@@ -3668,6 +3690,15 @@ namespace AXPlayer.App.Screens
                                             Direction = FillDirection.Horizontal,
                                             Children = new Drawable[]
                                             {
+                                                viewChannelButton = new RoundedButton
+                                                {
+                                                    Origin = Anchor.TopCentre,
+                                                    Anchor = Anchor.TopCentre,
+                                                    Enabled = { Value = true },
+                                                    Text = AXPlayerStrings.ViewChannel,
+                                                    Size = new Vector2(200, 40),
+                                                    Margin = new MarginPadding(4),
+                                                },
                                                 logoutButton = new RoundedAltButton
                                                 {
                                                     Origin = Anchor.TopCentre,
@@ -3684,15 +3715,6 @@ namespace AXPlayer.App.Screens
                                                             Task.Run(() => googleOAuth2.SignOut());
                                                         }
                                                     },
-                                                },
-                                                viewChannelButton = new RoundedButton
-                                                {
-                                                    Origin = Anchor.TopCentre,
-                                                    Anchor = Anchor.TopCentre,
-                                                    Enabled = { Value = true },
-                                                    Text = AXPlayerStrings.ViewChannel,
-                                                    Size = new Vector2(200, 40),
-                                                    Margin = new MarginPadding(4),
                                                 },
                                             }
                                         },

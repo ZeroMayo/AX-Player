@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Google.Apis.YouTube.v3.Data;
 using Humanizer;
 using AXPlayer.App.Config;
+using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
@@ -21,6 +22,7 @@ using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using PaletteNet;
@@ -170,42 +172,51 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public void GetPalette()
         {
+            Channel channel = channelData;
+
             Task.Run(async () =>
             {
-                var cachePath = app.Host.CacheStorage.GetStorageForDirectory("profile_cache").GetFullPath($"{channelData.Id}.png");
-
-                using (var httpClient = new System.Net.Http.HttpClient())
+                try
                 {
-                    var imageBytes = await httpClient.GetByteArrayAsync(channelData.Snippet.Thumbnails.High.Url);
-                    await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
-                }
+                    byte[] imageBytes = await ChannelThumbnailCache.GetThumbnailAsync(app.Host.CacheStorage, channel.Id, channel.Snippet.Thumbnails.High.Url).ConfigureAwait(false);
 
-                using Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(app.Host.CacheStorage.GetStorageForDirectory("profile_cache").GetFullPath($"{channelData.Id}.png"));
+                    using Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
 
-                IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
-                PaletteBuilder paletteBuilder = new PaletteBuilder();
-                Palette palette = paletteBuilder.Generate(bitmapHelper);
-                int? rgbColor = palette.MutedSwatch.Rgb;
-                int? rgbTextColor = palette.MutedSwatch.TitleTextColor;
+                    IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
+                    PaletteBuilder paletteBuilder = new PaletteBuilder();
+                    Palette palette = paletteBuilder.Generate(bitmapHelper);
+                    int? rgbColor = palette.MutedSwatch?.Rgb;
+                    int? rgbTextColor = palette.MutedSwatch?.TitleTextColor;
 
-                if (rgbColor != null && rgbTextColor != null)
-                {
-                    Color4 bgColor = System.Drawing.Color.FromArgb((int)rgbColor);
-                    Color4 textColor = System.Drawing.Color.FromArgb((int)rgbTextColor);
-                    Schedule(() =>
+                    if (rgbColor != null && rgbTextColor != null)
                     {
-                        bgLayer.Colour = ColourInfo.GradientHorizontal(bgColor, overlayColourProvider.Background4);
-                        videoName.Colour = (textColor);
-                        desc.Colour = (textColor);
-                    });
+                        Color4 bgColor = System.Drawing.Color.FromArgb((int)rgbColor);
+                        Color4 textColor = System.Drawing.Color.FromArgb((int)rgbTextColor);
+                        Schedule(() => applyPalette(bgColor, textColor));
+                        return;
+                    }
                 }
-                else
+                catch (Exception exception)
                 {
-                    bgLayer.Colour = overlayColourProvider.Background4;
-                    videoName.Colour = overlayColourProvider.Content2;
-                    desc.Colour = overlayColourProvider.Foreground2;
+                    Logger.Error(exception, $"Failed to generate a palette for channel '{channel.Id}'.");
                 }
-            });
+
+                Schedule(applyFallbackPalette);
+            }).FireAndForget();
+        }
+
+        private void applyPalette(Color4 bgColor, Color4 textColor)
+        {
+            bgLayer.Colour = ColourInfo.GradientHorizontal(bgColor, overlayColourProvider.Background4);
+            videoName.Colour = textColor;
+            desc.Colour = textColor;
+        }
+
+        private void applyFallbackPalette()
+        {
+            bgLayer.Colour = overlayColourProvider.Background4;
+            videoName.Colour = overlayColourProvider.Content2;
+            desc.Colour = overlayColourProvider.Foreground2;
         }
 
         [Resolved]
