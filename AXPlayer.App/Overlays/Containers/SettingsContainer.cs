@@ -1806,10 +1806,10 @@ namespace AXPlayer.App.Overlays.Containers
             {
                 try
                 {
-                    if (screenshotFormat.Value != ScreenshotFormat.Jpg)
+                    if (screenshotFormat.Value == ScreenshotFormat.Png)
                         screenshotOptions.ResizeHeightTo(0, 400, Easing.OutQuint);
 
-                    screenshotOptions.AutoSizeAxes = screenshotFormat.Value == ScreenshotFormat.Jpg ? Axes.Y : Axes.None;
+                    screenshotOptions.AutoSizeAxes = screenshotFormat.Value != ScreenshotFormat.Png ? Axes.Y : Axes.None;
 
                     if (screenshotUIVisible.Value != true)
                         screenshotUIOptions.ResizeHeightTo(0, 400, Easing.OutQuint);

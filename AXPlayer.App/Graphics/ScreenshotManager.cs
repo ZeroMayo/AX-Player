@@ -223,7 +223,9 @@ namespace AXPlayer.App.Graphics
                                 break;
 
                             case ScreenshotFormat.Webp:
-                                await image.SaveAsWebpAsync(stream).ConfigureAwait(false);
+                                int webp_quality = config.Get<int>(AXPlayerSetting.ScreenshotQuality); //92
+
+                                await image.SaveAsWebpAsync(stream, new WebpEncoder { Quality = webp_quality }).ConfigureAwait(false);
                                 break;
 
                             default:
