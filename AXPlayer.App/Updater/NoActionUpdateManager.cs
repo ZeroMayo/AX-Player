@@ -6,8 +6,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using osu.Framework.Allocation;
 using AXPlayer.App.Online;
+using osu.Framework;
+using osu.Framework.Allocation;
 
 namespace AXPlayer.App.Updater
 {
@@ -24,6 +25,9 @@ namespace AXPlayer.App.Updater
         {
             version = game.Version;
         }
+
+        [Resolved]
+        private AXPlayerAppBase game { get; set; } = null!;
 
         protected override async Task<bool> PerformUpdateCheck(CancellationToken cancellationToken)
         {
@@ -42,6 +46,12 @@ namespace AXPlayer.App.Updater
 
                 if (latestTagName != version)
                 {
+                    game.UpdateInfo.Value = new AXPlayerUpdateInfo()
+                    {
+                        Version = latest.TagName,
+                        UpdateFileSize = 0,
+                        IsBetaVersion = latest.Prerelease,
+                    };
                     return true;
                 }
             }

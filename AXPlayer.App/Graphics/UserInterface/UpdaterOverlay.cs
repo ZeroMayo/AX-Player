@@ -385,6 +385,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                 {
                     if (info.NewValue != null)
                     {
+                        foreach (var item in updatingList.Children)
+                            item.Expire();
+
                         updatingList.Add(new VersionInfoContainer(info.NewValue)
                         {
                             RelativeSizeAxes = Axes.X,
