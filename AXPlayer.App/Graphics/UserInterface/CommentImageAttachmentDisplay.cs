@@ -4,7 +4,6 @@
 #nullable enable
 
 using System;
-using System.Globalization;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +18,8 @@ using osu.Framework.Logging;
 using osuTK;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace AXPlayer.App.Graphics.UserInterface
@@ -200,28 +201,11 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private static double getFrameDuration(ImageFrame<Rgba32> frame)
         {
-            // ImageSharp exposes a TimeSpan duration on current metadata, while older formats keep
-            // their delay as a number on the format-specific metadata.
-            object? duration = frame.GetType().GetProperty(@"Duration")?.GetValue(frame)
-                               ?? frame.Metadata.GetType().GetProperty(@"Duration")?.GetValue(frame.Metadata);
+            if (frame.Metadata.TryGetWebpFrameMetadata(out WebpFrameMetadata? webp) && webp.FrameDelay > 0)
+                return webp.FrameDelay;
 
-            if (duration is TimeSpan timeSpan && timeSpan > TimeSpan.Zero)
-                return timeSpan.TotalMilliseconds;
-
-            object? frameDelay = frame.Metadata.GetType().GetProperty(@"FrameDelay")?.GetValue(frame.Metadata);
-
-            if (frameDelay != null)
-            {
-                double value = Convert.ToDouble(frameDelay, CultureInfo.InvariantCulture);
-
-                if (value > 0)
-                {
-                    // GIF delays are stored in hundredths of a second, WebP delays in milliseconds.
-                    return frame.Metadata.GetType().Name.Contains(@"Webp", StringComparison.OrdinalIgnoreCase)
-                        ? value
-                        : value * 10;
-                }
-            }
+            if (frame.Metadata.TryGetGifMetadata(out GifFrameMetadata? gif) && gif.FrameDelay > 0)
+                return gif.FrameDelay * 10;
 
             return fallback_frame_duration;
         }
