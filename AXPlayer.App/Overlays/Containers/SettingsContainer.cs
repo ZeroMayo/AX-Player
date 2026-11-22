@@ -773,6 +773,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.ThreadingMode,
                                                             Icon = FontAwesome.Solid.Bolt,
                                                             Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode),
+                                                            Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.Alt, InputKey.F7 })),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         windowModeDropdownSettings = new SettingsItemV2(windowModeDropdown = new WindowModeDropdown
