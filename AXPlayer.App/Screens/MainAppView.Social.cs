@@ -1057,7 +1057,7 @@ namespace AXPlayer.App.Screens
                 string channelTitle = string.Empty;
                 string videoTitle = string.Empty;
 
-                channelTitle = TruncateWithEllipsis(api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId)), 40);
+                channelTitle = TruncateWithEllipsis(api.GetLocalizedChannelTitle(channelData), 40);
                 videoTitle = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 50);
 
                 if ((showVideoMetadataOnWindowTitle.Value) && (videoData != null))
