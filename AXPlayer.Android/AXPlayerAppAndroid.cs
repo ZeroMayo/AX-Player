@@ -3,10 +3,11 @@
 
 using Android.Content;
 using Android.Content.PM;
+using AXPlayer.Android.Online;
 using AXPlayer.App;
 using AXPlayer.App.Online;
 using AXPlayer.App.Platform;
-using AXPlayer.Android.Online;
+using AXPlayer.App.Updater;
 using osu.Framework.Screens;
 
 namespace AXPlayer.Android
@@ -36,6 +37,8 @@ namespace AXPlayer.Android
         // Google sign-in receives its redirect through a custom URI scheme intent on Android
         // instead of the loopback listener the desktop hosts use.
         protected override GoogleOAuth2 CreateGoogleOAuth2() => new GoogleOAuth2Android(LocalConfig, !IsDeployedBuild);
+
+        protected override UpdateManager CreateUpdateManager() => new NoActionUpdateManager();
 
         protected override void ExitApp()
         {

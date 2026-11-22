@@ -362,6 +362,11 @@ namespace AXPlayer.App.Graphics.UserInterface
                 gameVersion.AddText(AXPlayerStrings.VersionText(game.Version));
             }
 
+            if (app.UpdateManager is NoActionUpdateManager)
+            {
+                updateButton.Text = AXPlayerStrings.ViewLatestVersions;
+            }
+
             releaseStreamDropdown.Current.BindValueChanged(releaseStreamChanged);
 
             updateStatus.BindValueChanged(status =>
@@ -385,6 +390,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                 });
             });
         }
+
+        [Resolved]
+        private AXPlayerApp app { get; set; }
 
         private void clearUpdateList()
         {
