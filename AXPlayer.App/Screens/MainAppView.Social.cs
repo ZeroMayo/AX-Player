@@ -752,9 +752,6 @@ namespace AXPlayer.App.Screens
         {
             if (string.IsNullOrWhiteSpace(videoId))
                 return;
-
-            videoMetadataDisplay.UpdateVideo(videoId);
-            videoMetadataDisplayDetails.UpdateVideo(videoId);
             Task.Run(async () =>
             {
                 // metadata area
@@ -763,6 +760,9 @@ namespace AXPlayer.App.Screens
                 profileImage.UpdateProfileImage(videoData.Snippet.ChannelId);
                 updateRatingButtons(videoId, videoData.Statistics.LikeCount != null);
                 UpdateChannelSubscribeState(videoData.Snippet.ChannelId);
+
+                videoMetadataDisplay.UpdateVideo(videoData);
+                videoMetadataDisplayDetails.UpdateVideo(videoData);
 
                 Schedule(() => GetPalette(videoData));
                 Schedule(() => commentOpenButton.Enabled.Value = videoData.Statistics.CommentCount != null);

@@ -319,15 +319,15 @@ namespace AXPlayer.App.Graphics.UserInterface
             });
         }
 
-        public void UpdateVideo(string videoId)
+        public void UpdateVideo(Video video)
         {
-            if (string.IsNullOrWhiteSpace(videoId))
+            if (video == null)
                 return;
 
             uiLanguage.UnbindEvents();
             Task.Run(async () =>
             {
-                videoData = api.GetVideo(videoId);
+                videoData = video;
                 DateTimeOffset? dateTime = videoData.Snippet.PublishedAtDateTimeOffset;
                 DateTimeOffset now = DateTimeOffset.Now;
                 Channel channelData = api.GetChannel(videoData.Snippet.ChannelId);
