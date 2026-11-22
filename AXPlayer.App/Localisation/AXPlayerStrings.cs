@@ -1866,6 +1866,16 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString Multithreaded => new TranslatableString(getKey(@"multithreaded"), @"Multithreaded");
 
         /// <summary>
+        /// "Generate Innertube dumps"
+        /// </summary>
+        public static LocalisableString InnertubeDumpToggle => new TranslatableString(getKey(@"innertube_dump_toggle"), @"Generate Innertube dumps");
+
+        /// <summary>
+        /// "When this feature is enabled, a dump is created in the temporary folder, which may reduce available storage space."
+        /// </summary>
+        public static LocalisableString InnertubeDumpToggleDesc => new TranslatableString(getKey(@"innertube_dump_toggle_desc"), @"When this feature is enabled, a dump is created in the temporary folder, which may reduce available storage space.");
+
+        /// <summary>
         /// Gets the localized description for a global keyboard shortcut.
         /// </summary>
         public static LocalisableString ShortcutDescription(GlobalAction action) => new TranslatableString(

@@ -1323,6 +1323,13 @@ namespace AXPlayer.App.Overlays.Containers
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
+                                                            Caption = AXPlayerStrings.InnertubeDumpToggle,
+                                                            Icon = FontAwesome.Solid.Bug,
+                                                            Current = appConfig.GetBindable<bool>(AXPlayerSetting.InnertubeDumpEnabled),
+                                                            CornerType = FormControlCornerType.Top,
+                                                        }),
+                                                        new SettingsItemV2(new FormCheckBox
+                                                        {
                                                             Caption = AXPlayerStrings.BypassFTBRenderPass,
                                                             Icon = FontAwesome.Solid.Bug,
                                                             Current = debugConfig.GetBindable<bool>(DebugSetting.BypassFrontToBackPass),

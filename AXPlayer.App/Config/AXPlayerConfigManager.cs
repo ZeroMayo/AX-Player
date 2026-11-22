@@ -119,6 +119,9 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.ClosedCaptionsBackdropBlur, true);
             SetDefault(AXPlayerSetting.CheckUpdatesOnAppOpen, true);
             SetDefault(AXPlayerSetting.SmoothPlaybackSpeed, false);
+
+            //debug options
+            SetDefault(AXPlayerSetting.InnertubeDumpEnabled, false);
         }
 
         private readonly Storage storage;
@@ -298,5 +301,6 @@ namespace AXPlayer.App.Config
         CheckUpdatesOnAppOpen,
         SmoothPlaybackSpeed,
         ScreenshotCaptureLiveChat,
+        InnertubeDumpEnabled,
     }
 }

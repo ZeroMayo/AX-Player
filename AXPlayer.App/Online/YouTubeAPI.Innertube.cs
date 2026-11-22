@@ -197,7 +197,7 @@ namespace AXPlayer.App.Online
 
                 await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 
-                if (innertube_dump_enabled)
+                if (innertubeDumpEnabled)
                     return await dumpAndParseResponseAsync(endpoint, dumpTag, stream, cancellationToken).ConfigureAwait(false);
 
                 return await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -336,16 +336,25 @@ namespace AXPlayer.App.Online
 
         /// <summary>
         /// Whether raw Innertube responses are written to <c>%TEMP%/axplayer-innertube</c>.
-        /// The dumps are always written; <c>AXPLAYER_INNERTUBE_DUMP=0</c> turns them off.
+        /// The dumps are written when <see cref="Config.AXPlayerSetting.InnertubeDumpEnabled"/> is enabled,
+        /// or when <c>AXPLAYER_INNERTUBE_DUMP</c> is set to anything other than <c>0</c>.
         /// </summary>
-        private static readonly bool innertube_dump_enabled = shouldDumpInnertube(Environment.GetEnvironmentVariable(@"AXPLAYER_INNERTUBE_DUMP"));
+        private bool innertubeDumpEnabled
+            => appConfig.Get<bool>(Config.AXPlayerSetting.InnertubeDumpEnabled)
+               || isDumpEnabledByEnvironmentVariable();
+
+        private static bool isDumpEnabledByEnvironmentVariable()
+        {
+            string? environmentValue = Environment.GetEnvironmentVariable(@"AXPLAYER_INNERTUBE_DUMP");
+            return environmentValue != null && shouldDumpInnertube(environmentValue);
+        }
 
         /// <summary>
         /// Reads whether the dumps are enabled from the value of the <c>AXPLAYER_INNERTUBE_DUMP</c>
         /// environment variable. Only an explicit <c>0</c> disables them.
         /// </summary>
         internal static bool shouldDumpInnertube(string? environmentValue)
-            => string.Equals(environmentValue?.Trim(), @"0", StringComparison.Ordinal);
+            => !string.Equals(environmentValue?.Trim(), @"0", StringComparison.Ordinal);
 
         /// <summary>
         /// The tag that marks the dumps of the comment requests in their file name.
