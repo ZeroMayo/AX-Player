@@ -385,7 +385,10 @@ namespace AXPlayer.App.Graphics.UserInterface
                 {
                     if (info.NewValue != null)
                     {
-                        updatingList.Add(new VersionInfoContainer(info.NewValue));
+                        updatingList.Add(new VersionInfoContainer(info.NewValue)
+                        {
+                            RelativeSizeAxes = Axes.X,
+                        });
                     }
                 });
             });

@@ -1,6 +1,7 @@
 // Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using AXPlayer.Android.Online;
@@ -8,7 +9,8 @@ using AXPlayer.App;
 using AXPlayer.App.Online;
 using AXPlayer.App.Platform;
 using AXPlayer.App.Updater;
-using osu.Framework.Screens;
+using osu.Framework.Development;
+using osu.Framework.Extensions.ObjectExtensions;
 
 namespace AXPlayer.Android
 {
@@ -16,10 +18,13 @@ namespace AXPlayer.Android
     {
         private MainActivity mainActivity;
 
+        private readonly PackageInfo packageInfo;
+
         public AXPlayerAppAndroid(MainActivity mainActivity)
             : base()
         {
             this.mainActivity = mainActivity;
+            packageInfo = Application.Context.ApplicationContext!.PackageManager!.GetPackageInfo(Application.Context.ApplicationContext.PackageName!, 0).AsNonNull();
 
             // Google sign-in and other links must be opened through the Android activity
             // instead of the desktop shell launcher.
@@ -30,6 +35,17 @@ namespace AXPlayer.Android
                 mainActivity.StartActivity(intent);
                 return true;
             };
+        }
+
+        public override string Version
+        {
+            get
+            {
+                if (!IsDeployedBuild)
+                    return @"local " + (DebugUtils.IsDebugBuild ? @"debug" : @"release");
+
+                return packageInfo.VersionName.AsNonNull();
+            }
         }
 
         public override MediaSession CreateMediaSession() => new AndroidMediaSessionHandler();
