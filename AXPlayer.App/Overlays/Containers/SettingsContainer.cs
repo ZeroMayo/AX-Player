@@ -1326,7 +1326,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Caption = AXPlayerStrings.InnertubeDumpToggle,
                                                             Icon = FontAwesome.Solid.Bug,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.InnertubeDumpEnabled),
-                                                            CornerType = FormControlCornerType.Top,
+                                                            CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
