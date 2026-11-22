@@ -18,8 +18,8 @@
 
 ### 최신 릴리스:
 
-| [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) |
-|--------------------------------------------------------------------------------------|
+| [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) | [Android 10+ (실험적)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/io.zeromayo.axplayer.apk) |
+|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
 
 사용하시는 플랫폼이 지원되지 않거나 위에 나열되어 있지 않더라도 아래 지침에 따라 릴리스 버전을 실행하거나 수동으로 빌드할 수 있는 가능성이 있습니다.
 
