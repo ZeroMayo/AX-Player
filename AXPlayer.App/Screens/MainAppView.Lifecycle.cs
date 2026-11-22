@@ -1029,6 +1029,8 @@ namespace AXPlayer.App.Screens
         private bool blurState;
         private bool notificationOverlayOpened => notificationOverlay.IsOpened.Value;
 
+        private readonly Bindable<bool> allowSuspension = new Bindable<bool>(true);
+
         protected override void Update()
         {
             base.Update();
@@ -1069,6 +1071,7 @@ namespace AXPlayer.App.Screens
 
                 if (videoPlaying.Value != currentVideoSource.IsPlaying())
                 {
+                    allowSuspension.Value = !currentVideoSource.IsPlaying();
                     seekbar.IsPlaying.Value = currentVideoSource.IsPlaying();
                     playPause.SetEnabledValue2(!currentVideoSource.IsPlaying());
                     playPause.IconObject.FadeColour(currentVideoSource.IsPlaying() ? bgColor : accentColor, 250, Easing.OutQuint);

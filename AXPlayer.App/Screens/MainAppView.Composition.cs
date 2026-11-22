@@ -4335,6 +4335,8 @@ namespace AXPlayer.App.Screens
                 });
             }, true);
 
+            host.AllowScreenSuspension.AddSource(allowSuspension);
+
             void updateAudioEffectsVisibility()
             {
                 try
