@@ -1141,6 +1141,7 @@
   <data name="shortcut_openloadvideo" xml:space="preserve"><value>Abrir un video o una lista de reproducción</value></data>
   <data name="shortcut_opensearch" xml:space="preserve"><value>Abrir la búsqueda</value></data>
   <data name="shortcut_openmyplaylists" xml:space="preserve"><value>Abrir tus listas de reproducción</value></data>
+  <data name="shortcut_openwatchhistory" xml:space="preserve"><value>Abrir tu historial de reproducción</value></data>
   <data name="shortcut_addplaylistkey" xml:space="preserve"><value>Crear una lista de reproducción</value></data>
   <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>Guardar el video en una lista de reproducción</value></data>
   <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>Activar o desactivar la repetición del video</value></data>
@@ -1232,5 +1233,11 @@
   </data>
   <data name="multithreaded" xml:space="preserve">
     <value>Multihilo</value>
+  </data>
+  <data name="innertube_dump_toggle" xml:space="preserve">
+    <value>Generar volcados de Innertube</value>
+  </data>
+  <data name="innertube_dump_toggle_desc" xml:space="preserve">
+    <value>Cuando esta función está activada, se crea un volcado en la carpeta temporal, lo que puede reducir el espacio de almacenamiento disponible.</value>
   </data>
 </root>

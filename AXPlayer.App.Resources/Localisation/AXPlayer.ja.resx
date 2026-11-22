@@ -1141,6 +1141,7 @@
   <data name="shortcut_openloadvideo" xml:space="preserve"><value>動画またはプレイリストを開く</value></data>
   <data name="shortcut_opensearch" xml:space="preserve"><value>検索を開く</value></data>
   <data name="shortcut_openmyplaylists" xml:space="preserve"><value>自分のプレイリストを開く</value></data>
+  <data name="shortcut_openwatchhistory" xml:space="preserve"><value>視聴履歴を開く</value></data>
   <data name="shortcut_addplaylistkey" xml:space="preserve"><value>プレイリストを作成</value></data>
   <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>動画をプレイリストに保存</value></data>
   <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>動画のリピート再生を切り替え</value></data>
@@ -1232,5 +1233,11 @@
   </data>
   <data name="multithreaded" xml:space="preserve">
     <value>マルチスレッド</value>
+  </data>
+  <data name="innertube_dump_toggle" xml:space="preserve">
+    <value>Innertube ダンプを生成する</value>
+  </data>
+  <data name="innertube_dump_toggle_desc" xml:space="preserve">
+    <value>この機能を有効にすると、一時フォルダーにダンプが作成されるため、使用可能なストレージ容量が減る可能性があります。</value>
   </data>
 </root>

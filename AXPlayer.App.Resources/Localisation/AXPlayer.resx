@@ -808,6 +808,9 @@
   <data name="shortcut_openmyplaylists" xml:space="preserve">
     <value>Open your playlists</value>
   </data>
+  <data name="shortcut_openwatchhistory" xml:space="preserve">
+    <value>Open your watch history</value>
+  </data>
   <data name="shortcut_addplaylistkey" xml:space="preserve">
     <value>Create a playlist</value>
   </data>
@@ -1369,5 +1372,11 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   </data>
   <data name="multithreaded" xml:space="preserve">
     <value>Multithreaded</value>
+  </data>
+  <data name="innertube_dump_toggle" xml:space="preserve">
+    <value>Generate Innertube dumps</value>
+  </data>
+  <data name="innertube_dump_toggle_desc" xml:space="preserve">
+    <value>When this feature is enabled, a dump is created in the temporary folder, which may reduce available storage space.</value>
   </data>
 </root>

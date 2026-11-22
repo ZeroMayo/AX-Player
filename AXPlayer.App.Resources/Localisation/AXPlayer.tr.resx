@@ -1141,6 +1141,7 @@
   <data name="shortcut_openloadvideo" xml:space="preserve"><value>Video veya oynatma listesi aç</value></data>
   <data name="shortcut_opensearch" xml:space="preserve"><value>Aramayı aç</value></data>
   <data name="shortcut_openmyplaylists" xml:space="preserve"><value>Oynatma listelerimi aç</value></data>
+  <data name="shortcut_openwatchhistory" xml:space="preserve"><value>İzleme geçmişini aç</value></data>
   <data name="shortcut_addplaylistkey" xml:space="preserve"><value>Oynatma listesi oluştur</value></data>
   <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>Videoyu oynatma listesine kaydet</value></data>
   <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>Video tekrarını aç/kapat</value></data>
@@ -1232,5 +1233,11 @@
   </data>
   <data name="multithreaded" xml:space="preserve">
     <value>Çok iş parçacıklı</value>
+  </data>
+  <data name="innertube_dump_toggle" xml:space="preserve">
+    <value>Innertube dökümleri oluştur</value>
+  </data>
+  <data name="innertube_dump_toggle_desc" xml:space="preserve">
+    <value>Bu özellik etkinleştirildiğinde geçici klasörde bir döküm oluşturulur; bu, kullanılabilir depolama alanını azaltabilir.</value>
   </data>
 </root>

@@ -1163,6 +1163,7 @@
   <data name="shortcut_openloadvideo" xml:space="preserve"><value>동영상 또는 재생목록 열기</value></data>
   <data name="shortcut_opensearch" xml:space="preserve"><value>검색 열기</value></data>
   <data name="shortcut_openmyplaylists" xml:space="preserve"><value>내 재생목록 열기</value></data>
+  <data name="shortcut_openwatchhistory" xml:space="preserve"><value>시청 기록 열기</value></data>
   <data name="shortcut_addplaylistkey" xml:space="preserve"><value>재생목록 만들기</value></data>
   <data name="shortcut_savevideotoplaylist" xml:space="preserve"><value>동영상을 재생목록에 저장</value></data>
   <data name="shortcut_togglerepeatvideo" xml:space="preserve"><value>동영상 반복 재생 켜기/끄기</value></data>
@@ -1232,5 +1233,11 @@
   </data>
   <data name="multithreaded" xml:space="preserve">
     <value>멀티스레드</value>
+  </data>
+  <data name="innertube_dump_toggle" xml:space="preserve">
+    <value>Innertube 덤프 생성</value>
+  </data>
+  <data name="innertube_dump_toggle_desc" xml:space="preserve">
+    <value>이 기능을 사용하면 임시 폴더에 덤프가 생성되어 사용 가능한 저장 공간이 줄어들 수 있습니다.</value>
   </data>
 </root>
