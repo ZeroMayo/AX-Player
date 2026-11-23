@@ -103,4 +103,7 @@
   <data name="GriunSobokhee" xml:space="preserve">
     <value>그리운 소복희</value>
   </data>
+  <data name="GriunNulnul" xml:space="preserve">
+    <value>그리운 눌눌체</value>
+  </data>
 </root>

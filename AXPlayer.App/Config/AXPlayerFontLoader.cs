@@ -315,6 +315,7 @@ namespace AXPlayer.App.Config
             game.AddOutlineFont(Resources, @"Fonts/UIFonts/OwnglyphYuntaeng");
             game.AddOutlineFont(Resources, @"Fonts/UIFonts/Hippie");
             game.AddOutlineFont(Resources, @"Fonts/UIFonts/Griun_Sobokhee");
+            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Griun_Nulnul");
         }
     }
 }

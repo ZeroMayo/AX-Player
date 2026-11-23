@@ -114,23 +114,31 @@ namespace AXPlayer.Android
         {
             IsLoaded = false;
 
-            runOnMainThread(() =>
-            {
-                try
-                {
-                    notificationManager?.Cancel(notification_id);
-                    if (session != null)
-                        session.Active = false;
-                    session?.Release();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, @"Failed to tear down Android media session.");
-                }
+            // Cancel the notification straight away: NotificationManager is safe to call from any thread,
+            // and the notification must disappear even if the main looper is already shutting down.
+            notificationManager?.Cancel(notification_id);
 
-                session = null;
-                notificationManager = null;
-            });
+            if (Looper.MyLooper() == Looper.MainLooper)
+                tearDownSession();
+            else
+                runOnMainThread(tearDownSession);
+        }
+
+        private void tearDownSession()
+        {
+            try
+            {
+                if (session != null)
+                    session.Active = false;
+                session?.Release();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, @"Failed to tear down Android media session.");
+            }
+
+            session = null;
+            notificationManager = null;
         }
 
         public override void RegisterControlEvents(MediaSessionControls controls) => this.controls = controls;

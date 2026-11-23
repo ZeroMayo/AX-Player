@@ -91,6 +91,11 @@ namespace AXPlayer.App.Localisation
         /// </summary>
         public static LocalisableString GriunSobokhee => new TranslatableString(getKey(@"GriunSobokhee"), "Griun Sobokhee");
 
+        /// <summary>
+        /// "Griun Nulnul"
+        /// </summary>
+        public static LocalisableString GriunNulnul => new TranslatableString(getKey(@"GriunNulnul"), "Griun Nulnul");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

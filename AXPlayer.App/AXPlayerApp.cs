@@ -67,6 +67,7 @@ namespace AXPlayer.App
             public static FontUsage GoogleSansFlexRounded = FontUsage.Default.With("GoogleSansFlexRounded", 16, "Regular");
             public static FontUsage Hippie = FontUsage.Default.With("Hippie", 16);
             public static FontUsage GriunSobokhee = FontUsage.Default.With("Griun_Sobokhee", 16);
+            public static FontUsage Griun_Nulnul = FontUsage.Default.With("Griun_Nulnul", 16);
         }
 
         private BindableNumber<double> sampleVolume = null!;

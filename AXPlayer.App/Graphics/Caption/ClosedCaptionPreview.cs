@@ -221,6 +221,11 @@ namespace AXPlayer.App.Graphics.Caption
                         textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.GriunSobokhee.With(size: 24);
                         break;
                     }
+                    case CaptionFonts.GriunNulnul:
+                    {
+                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Griun_Nulnul.With(size: 24);
+                        break;
+                    }
                 }
                 RefreshFont();
             }, true);

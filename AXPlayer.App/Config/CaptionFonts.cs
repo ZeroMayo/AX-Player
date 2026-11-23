@@ -41,5 +41,7 @@ namespace AXPlayer.App.Config
         Hippie,
         [LocalisableDescription(typeof(CaptionFontStrings), nameof(CaptionFontStrings.GriunSobokhee))]
         GriunSobokhee,
+        [LocalisableDescription(typeof(CaptionFontStrings), nameof(CaptionFontStrings.GriunNulnul))]
+        GriunNulnul
     }
 }

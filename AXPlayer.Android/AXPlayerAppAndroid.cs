@@ -1,6 +1,8 @@
 // Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
+using System.Linq;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
@@ -48,6 +50,8 @@ namespace AXPlayer.Android
             }
         }
 
+        public override Version AssemblyVersion => new Version(packageInfo.VersionName.AsNonNull().Split('-').First());
+
         public override MediaSession CreateMediaSession() => new AndroidMediaSessionHandler();
 
         // Google sign-in receives its redirect through a custom URI scheme intent on Android
@@ -58,6 +62,10 @@ namespace AXPlayer.Android
 
         protected override void ExitApp()
         {
+            // Tear down the media session before the activity closes, otherwise the media notification
+            // and lock screen / Bluetooth controls would outlive the app.
+            MediaSession?.DeleteMediaSession();
+
             base.ExitApp();
             mainActivity.FinishAffinity();
         }

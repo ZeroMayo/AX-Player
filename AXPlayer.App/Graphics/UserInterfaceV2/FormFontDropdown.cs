@@ -388,6 +388,11 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                             label.Font = AXPlayerApp.Fonts.GriunSobokhee;
                             break;
                         }
+                        case CaptionFonts.GriunNulnul:
+                        {
+                            label.Font = AXPlayerApp.Fonts.Griun_Nulnul;
+                            break;
+                        }
                     }
                 }, true);
 
