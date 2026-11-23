@@ -105,7 +105,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.SmartCrossfadeDuration, 4f, 1f, 12f, 1f);
             SetDefault(AXPlayerSetting.SmartCrossfadeSilenceTrim, true);
             SetDefault(AXPlayerSetting.CaptionBGColor, Colour4.Black);
-            SetDefault(AXPlayerSetting.CaptionCornerRadius, 0, 0, 16);
+            SetDefault(AXPlayerSetting.CaptionCornerRadius, 16, 0, 16);
             SetDefault(AXPlayerSetting.UseNewSubtitlesFeature, true);
             SetDefault(AXPlayerSetting.ScreenshotQuality, 92, 1, 100);
             SetDefault(AXPlayerSetting.PlayerControllerFadeStyle, PlayerControllerFadeStyle.Legacy);

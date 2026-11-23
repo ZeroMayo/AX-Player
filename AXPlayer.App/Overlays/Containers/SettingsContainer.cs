@@ -1620,10 +1620,9 @@ namespace AXPlayer.App.Overlays.Containers
                 reflexSettingBase.Hide();
             }
 
-            /*
-            if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
+            
+            if (!RuntimeInfo.IsDesktop)
                 advancedSubtitlesBase.Hide();
-            */
 
             // Disable frame limiter if reflex is enabled and add notice when reflex boost is enabled
             reflexMode.BindValueChanged(r =>
