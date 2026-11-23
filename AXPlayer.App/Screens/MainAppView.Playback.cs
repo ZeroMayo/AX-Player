@@ -765,7 +765,7 @@ namespace AXPlayer.App.Screens
                 }
             } else if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
             {
-                string args = $"-c \"yt-dlp --sub-langs all --write-subs --write-auto-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o \"%(id)s.%(ext)s\" -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}\"";
+                string args = $"-c \"yt-dlp --sub-langs all --write-subs --write-auto-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o '%(id)s.%(ext)s' -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}\"";
 
                 ProcessStartInfo processStartInfo = new ProcessStartInfo("bash", args)
                 {
