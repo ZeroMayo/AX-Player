@@ -426,7 +426,7 @@ namespace AXPlayer.App.Overlays.Containers
             settingsTabBar.SetItems(drawables);
         }
 
-        private SettingsItemV2 advancedSubtitlesBase, discordRichPresenceDropdownBase, safeAreaConsiderationsBase;
+        private SettingsItemV2 advancedSubtitlesBase, discordRichPresenceDropdownBase, safeAreaConsiderationsBase, customCaptionFontsToggleBase;
 
         private BindableBool wasapi;
 
@@ -1209,7 +1209,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Font,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
-                                                        new SettingsItemV2(new FormCheckBox
+                                                        customCaptionFontsToggleBase = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.CustomCaptionFontEnabled,
                                                             Icon = FontAwesome.Solid.Font,
@@ -1651,7 +1651,10 @@ namespace AXPlayer.App.Overlays.Containers
             }, true);
 
             if (!RuntimeInfo.IsDesktop)
+            {
                 discordRichPresenceDropdownBase.Hide();
+                customCaptionFontsToggleBase.Hide();
+            }
 
             if (host.Window?.SafeAreaPadding.Value.Total == Vector2.Zero)
                 safeAreaConsiderationsBase.Hide();
