@@ -252,12 +252,12 @@ namespace AXPlayer.App.Tests.Visual.Caption
         [Test]
         public void TestBoldSpanIsIgnoredForFontsWithoutBoldInstance()
         {
-            AddStep("use Hungeul", () => config.GetBindable<CaptionFonts>(AXPlayerSetting.CaptionFont).Value = CaptionFonts.Hungeul);
+            AddStep("use a caption font without a bold instance", () => config.GetBindable<CaptionFonts>(AXPlayerSetting.CaptionFont).Value = CaptionFonts.Hippie);
             AddStep("seek into bold caption", () => videoPlayer.VideoProgress.Value = 31.5);
 
             AddUntilStep("bold cue is rendered", () => renderedTexts().SequenceEqual(new[] { "Bold line" }));
 
-            AddAssert("Hungeul keeps its regular weight", () => renderedSpriteTexts().Single().Font.Weight != "Bold");
+            AddAssert("the font keeps its regular weight", () => renderedSpriteTexts().Single().Font.Weight != "Bold");
         }
 
         private static bool approximately(Color4 actual, Color4 expected)

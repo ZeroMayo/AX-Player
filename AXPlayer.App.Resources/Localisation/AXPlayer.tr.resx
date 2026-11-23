@@ -319,6 +319,30 @@
   <data name="caption_font" xml:space="preserve">
     <value>Altyazı yazı tipi</value>
   </data>
+  <data name="custom_caption_font_enabled" xml:space="preserve">
+    <value>Özel altyazı yazı tipi kullan</value>
+  </data>
+  <data name="custom_caption_font" xml:space="preserve">
+    <value>Özel altyazı yazı tipi</value>
+  </data>
+  <data name="custom_caption_font_folder" xml:space="preserve">
+    <value>Özel altyazı yazı tipi klasörü</value>
+  </data>
+  <data name="refresh_custom_caption_fonts" xml:space="preserve">
+    <value>Özel altyazı yazı tiplerini yenile</value>
+  </data>
+  <data name="refresh_custom_caption_fonts_description" xml:space="preserve">
+    <value>caption-fonts klasörünü yeniden okur, böylece oynatıcı çalışırken eklenen yazı tipleri seçilebilir.</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>Yenile</value>
+  </data>
+  <data name="custom_caption_fonts_empty" xml:space="preserve">
+    <value>caption-fonts klasöründe henüz .ttf veya .otf yazı tipi bulunamadı.</value>
+  </data>
+  <data name="custom_caption_font_missing" xml:space="preserve">
+    <value>Seçilen özel altyazı yazı tipi artık caption-fonts klasöründe değil.</value>
+  </data>
   <data name="dislike_count_tooltip" xml:space="preserve">
     <value>Tahmini: {0} | Gerçek: {1}</value>
   </data>

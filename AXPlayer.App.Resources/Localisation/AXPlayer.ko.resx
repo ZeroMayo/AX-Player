@@ -319,6 +319,30 @@
   <data name="caption_font" xml:space="preserve">
     <value>자막 글꼴</value>
   </data>
+  <data name="custom_caption_font_enabled" xml:space="preserve">
+    <value>커스텀 자막 글꼴 사용</value>
+  </data>
+  <data name="custom_caption_font" xml:space="preserve">
+    <value>커스텀 자막 글꼴</value>
+  </data>
+  <data name="custom_caption_font_folder" xml:space="preserve">
+    <value>커스텀 자막 글꼴 폴더</value>
+  </data>
+  <data name="refresh_custom_caption_fonts" xml:space="preserve">
+    <value>커스텀 자막 글꼴 새로고침</value>
+  </data>
+  <data name="refresh_custom_caption_fonts_description" xml:space="preserve">
+    <value>caption-fonts 폴더를 다시 읽어, 실행 중에 추가한 글꼴을 선택할 수 있게 합니다.</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>새로고침</value>
+  </data>
+  <data name="custom_caption_fonts_empty" xml:space="preserve">
+    <value>caption-fonts 폴더에서 .ttf 또는 .otf 글꼴을 아직 찾지 못했습니다.</value>
+  </data>
+  <data name="custom_caption_font_missing" xml:space="preserve">
+    <value>선택한 커스텀 자막 글꼴이 caption-fonts 폴더에 없습니다.</value>
+  </data>
   <data name="dislike_count_tooltip" xml:space="preserve">
     <value>싫어요 수 추정치: {0} | 실제 싫어요 수: {1}</value>
   </data>

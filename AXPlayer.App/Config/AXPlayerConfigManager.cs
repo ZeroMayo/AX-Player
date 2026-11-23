@@ -88,6 +88,8 @@ namespace AXPlayer.App.Config
 
             SetDefault(AXPlayerSetting.ShowVideoMetadataOnWindowTitle, true);
             SetDefault(AXPlayerSetting.CaptionFont, CaptionFonts.GoogleSansFlex);
+            SetDefault(AXPlayerSetting.CustomCaptionFontEnabled, false);
+            SetDefault(AXPlayerSetting.CustomCaptionFont, string.Empty);
 
             SetDefault(AXPlayerSetting.VideoMetadataDisplayAlignment, VideoMetadataDisplayAlignment.Left);
 
@@ -272,6 +274,8 @@ namespace AXPlayer.App.Config
 
         ShowVideoMetadataOnWindowTitle,
         CaptionFont,
+        CustomCaptionFontEnabled,
+        CustomCaptionFont,
         VideoMetadataDisplayAlignment,
         SearchSortCriteria,
 

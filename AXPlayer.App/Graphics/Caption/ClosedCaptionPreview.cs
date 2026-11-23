@@ -30,10 +30,18 @@ namespace AXPlayer.App.Graphics.Caption
         private Bindable<bool> smoothCaptionAnimation;
 
         private Bindable<bool> closedCaptionsBackdropBlur;
+        private CustomCaptionFonts? customCaptionFonts;
 
-        [BackgroundDependencyLoader]
-        private void load(AXPlayerConfigManager config, SessionStatics sessionStatics, TextureStore textureStore)
+        /// <summary>
+        /// The family of the font the user added for the captions, or <c>null</c> when one of the fonts
+        /// shipped with the player is used.
+        /// </summary>
+        private string? customFontFamily;
+
+        [BackgroundDependencyLoader(true)]
+        private void load(AXPlayerConfigManager config, SessionStatics sessionStatics, TextureStore textureStore, CustomCaptionFonts? customCaptionFonts)
         {
+            this.customCaptionFonts = customCaptionFonts;
             captionFont = config.GetBindable<CaptionFonts>(AXPlayerSetting.CaptionFont);
             captionBGOpacity = config.GetBindable<float>(AXPlayerSetting.CaptionBGOpacity);
             captionBGColor = config.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor);
@@ -132,103 +140,52 @@ namespace AXPlayer.App.Graphics.Caption
                 }
             }, true);
 
-            captionFont.BindValueChanged(v =>
+            captionFont.BindValueChanged(_ => updateCaptionFont(), true);
+
+            if (customCaptionFonts != null)
             {
-                switch (v.NewValue)
-                {
-                    case CaptionFonts.GoogleSansFlex:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.GoogleSansFlex.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Rubik:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Rubik.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Pretendard:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Pretendard.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Hungeul:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Hungeul.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Ownglyph_PDH:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Ownglyph_PDH.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Dovemayo_Gothic:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Dovemayo_Gothic.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Griun_Mongtori:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Griun_Mongtori.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.ONE_Mobile_POP:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.ONE_Mobile_POP.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Cafe24Syongsyong:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Cafe24Syongsyong.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Roboto:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Roboto.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.DreamHeumulKR:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.DreamHeumulKR.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Hakgyoansim_ManitoR:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Hakgyoansim_ManitoR.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.OwnglyphDaisy:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.OwnglyphDaisy.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.OwnglyphYuntaeng:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.OwnglyphYuntaeng.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.GoogleSansFlexRounded:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.GoogleSansFlexRounded.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.Hippie:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Hippie.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.GriunSobokhee:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.GriunSobokhee.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.GriunNulnul:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Griun_Nulnul.With(size: 24);
-                        break;
-                    }
-                }
-                RefreshFont();
-            }, true);
+                customCaptionFonts.Enabled.BindValueChanged(_ => updateCaptionFont());
+                customCaptionFonts.SelectedFont.BindValueChanged(_ => updateCaptionFont());
+                customCaptionFonts.AvailableFontsChanged += updateCaptionFont;
+            }
+        }
+
+        /// <summary>
+        /// Resolves the font the preview is drawn with, and redraws it with the new font.
+        /// </summary>
+        private void updateCaptionFont()
+        {
+            customFontFamily = customCaptionFonts?.GetSelectedFamily();
+
+            textCreationParameters = t => t.Font = getSelectedFont(24);
+
+            RefreshFont();
+        }
+
+        private FontUsage getSelectedFont(float size)
+        {
+            if (customFontFamily != null)
+                return FontUsage.Default.With(customFontFamily, size);
+
+            return captionFont.Value switch
+            {
+                CaptionFonts.Rubik => AXPlayerApp.Fonts.Rubik.With(size: size),
+                CaptionFonts.Pretendard => AXPlayerApp.Fonts.Pretendard.With(size: size),
+                CaptionFonts.Ownglyph_PDH => AXPlayerApp.Fonts.Ownglyph_PDH.With(size: size),
+                CaptionFonts.Dovemayo_Gothic => AXPlayerApp.Fonts.Dovemayo_Gothic.With(size: size),
+                CaptionFonts.Griun_Mongtori => AXPlayerApp.Fonts.Griun_Mongtori.With(size: size),
+                CaptionFonts.Cafe24Syongsyong => AXPlayerApp.Fonts.Cafe24Syongsyong.With(size: size),
+                CaptionFonts.Roboto => AXPlayerApp.Fonts.Roboto.With(size: size),
+                CaptionFonts.DreamHeumulKR => AXPlayerApp.Fonts.DreamHeumulKR.With(size: size),
+                CaptionFonts.Hakgyoansim_ManitoR => AXPlayerApp.Fonts.Hakgyoansim_ManitoR.With(size: size),
+                CaptionFonts.OwnglyphDaisy => AXPlayerApp.Fonts.OwnglyphDaisy.With(size: size),
+                CaptionFonts.OwnglyphYuntaeng => AXPlayerApp.Fonts.OwnglyphYuntaeng.With(size: size),
+                CaptionFonts.GoogleSansFlexRounded => AXPlayerApp.Fonts.GoogleSansFlexRounded.With(size: size),
+                CaptionFonts.Hippie => AXPlayerApp.Fonts.Hippie.With(size: size),
+                CaptionFonts.GriunSobokhee => AXPlayerApp.Fonts.GriunSobokhee.With(size: size),
+                CaptionFonts.GriunNulnul => AXPlayerApp.Fonts.Griun_Nulnul.With(size: size),
+                _ => AXPlayerApp.Fonts.GoogleSansFlex.With(size: size),
+            };
         }
 
         private void RefreshFont()

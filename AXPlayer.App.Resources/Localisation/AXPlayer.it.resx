@@ -319,6 +319,30 @@
   <data name="caption_font" xml:space="preserve">
     <value>Carattere dei sottotitoli</value>
   </data>
+  <data name="custom_caption_font_enabled" xml:space="preserve">
+    <value>Usa un font personalizzato per i sottotitoli</value>
+  </data>
+  <data name="custom_caption_font" xml:space="preserve">
+    <value>Font personalizzato per i sottotitoli</value>
+  </data>
+  <data name="custom_caption_font_folder" xml:space="preserve">
+    <value>Cartella dei font personalizzati per i sottotitoli</value>
+  </data>
+  <data name="refresh_custom_caption_fonts" xml:space="preserve">
+    <value>Aggiorna i font personalizzati per i sottotitoli</value>
+  </data>
+  <data name="refresh_custom_caption_fonts_description" xml:space="preserve">
+    <value>Rilegge la cartella caption-fonts, così i font aggiunti mentre il player era in esecuzione possono essere scelti.</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>Aggiorna</value>
+  </data>
+  <data name="custom_caption_fonts_empty" xml:space="preserve">
+    <value>Nella cartella caption-fonts non è ancora stato trovato alcun font .ttf o .otf.</value>
+  </data>
+  <data name="custom_caption_font_missing" xml:space="preserve">
+    <value>Il font personalizzato per i sottotitoli selezionato non è più nella cartella caption-fonts.</value>
+  </data>
   <data name="dislike_count_tooltip" xml:space="preserve">
     <value>Stimato: {0} | Effettivo: {1}</value>
   </data>

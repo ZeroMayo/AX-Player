@@ -131,10 +131,19 @@ namespace AXPlayer.App.Graphics.Caption
         private Bindable<int> captionBGRadius;
         private Box bg;
         private Bindable<bool> closedCaptionsBackdropBlur;
+        private CustomCaptionFonts customCaptionFonts;
 
-        [BackgroundDependencyLoader]
-        private void load(AXPlayerConfigManager config, SessionStatics sessionStatics)
+        /// <summary>
+        /// The family of the font the user added for the captions, or <c>null</c> when one of the fonts
+        /// shipped with the player is used.
+        /// </summary>
+        private string customFontFamily;
+
+        [BackgroundDependencyLoader(true)]
+        private void load(AXPlayerConfigManager config, SessionStatics sessionStatics, CustomCaptionFonts customCaptionFonts)
         {
+            this.customCaptionFonts = customCaptionFonts;
+
             controlsVisibleState = sessionStatics.GetBindable<bool>(Static.IsControlVisible);
             captionEnabled = config.GetBindable<bool>(AXPlayerSetting.CaptionEnabled);
             captionFont = config.GetBindable<CaptionFonts>(AXPlayerSetting.CaptionFont);
@@ -229,71 +238,16 @@ namespace AXPlayer.App.Graphics.Caption
                 applySrv3StyleToAll();
             }, true);
 
-            captionFont.BindValueChanged(v =>
-            {
-                switch (v.NewValue)
-                {
-                    case CaptionFonts.GoogleSansFlex:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.GoogleSansFlex.With(size: 24);
-                        break;
-                    case CaptionFonts.Rubik:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Rubik.With(size: 24);
-                        break;
-                    case CaptionFonts.Pretendard:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Pretendard.With(size: 24);
-                        break;
-                    case CaptionFonts.Hungeul:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Hungeul.With(size: 24);
-                        break;
-                    case CaptionFonts.Ownglyph_PDH:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Ownglyph_PDH.With(size: 24);
-                        break;
-                    case CaptionFonts.Dovemayo_Gothic:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Dovemayo_Gothic.With(size: 24);
-                        break;
-                    case CaptionFonts.Griun_Mongtori:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Griun_Mongtori.With(size: 24);
-                        break;
-                    case CaptionFonts.ONE_Mobile_POP:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.ONE_Mobile_POP.With(size: 24);
-                        break;
-                    case CaptionFonts.Cafe24Syongsyong:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Cafe24Syongsyong.With(size: 24);
-                        break;
-                    case CaptionFonts.Roboto:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Roboto.With(size: 24);
-                        break;
-                    case CaptionFonts.DreamHeumulKR:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.DreamHeumulKR.With(size: 24);
-                        break;
-                    case CaptionFonts.Hakgyoansim_ManitoR:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Hakgyoansim_ManitoR.With(size: 24);
-                        break;
-                    case CaptionFonts.OwnglyphDaisy:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.OwnglyphDaisy.With(size: 24);
-                        break;
-                    case CaptionFonts.OwnglyphYuntaeng:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.OwnglyphYuntaeng.With(size: 24);
-                        break;
-                    case CaptionFonts.GoogleSansFlexRounded:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.GoogleSansFlexRounded.With(size: 24);
-                        break;
-                    case CaptionFonts.Hippie:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Hippie.With(size: 24);
-                        break;
-                    case CaptionFonts.GriunSobokhee:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.GriunSobokhee.With(size: 24);
-                        break;
-                    case CaptionFonts.GriunNulnul:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Griun_Nulnul.With(size: 24);
-                        break;
-                    default:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.GoogleSansFlex.With(size: 24);
-                        break;
-                }
+            captionFont.BindValueChanged(_ => updateCaptionFont(), true);
 
-                resetSrv3Captions();
-            }, true);
+            if (customCaptionFonts != null)
+            {
+                // A font can only be used once it is in the caption-fonts folder, so a font that is added
+                // later, or a selection that changes, has to rebuild the captions that are on screen.
+                customCaptionFonts.Enabled.BindValueChanged(_ => updateCaptionFont());
+                customCaptionFonts.SelectedFont.BindValueChanged(_ => updateCaptionFont());
+                customCaptionFonts.AvailableFontsChanged += updateCaptionFont;
+            }
 
             controlsVisibleState.BindValueChanged(v =>
             {
@@ -597,6 +551,11 @@ namespace AXPlayer.App.Graphics.Caption
             => penBackground is { } background ? (background.A > 0 ? 1f : 0f) : configuredOpacity;
 
         /// <summary>
+        /// The font the captions are drawn with, including the font the user added for them.
+        /// </summary>
+        internal FontUsage CaptionTextFont => getSelectedFont(24);
+
+        /// <summary>
         /// The alpha of the background box of every rendered SRV3 caption, in rendering order.
         /// </summary>
         internal float[] Srv3BackgroundAlphas => srv3Displays.Values.Select(display => display.Background.Alpha).ToArray();
@@ -655,13 +614,38 @@ namespace AXPlayer.App.Graphics.Caption
         /// Whether the selected caption font provides a Bold instance that can be
         /// addressed through <see cref="FontUsage.Weight"/>.
         /// </summary>
-        private bool supportsSrv3Bold => captionFont.Value is CaptionFonts.Rubik
-            or CaptionFonts.Pretendard
-            or CaptionFonts.GoogleSansFlexRounded
-            or CaptionFonts.GoogleSansFlex
-            or CaptionFonts.Roboto;
+        private bool supportsSrv3Bold => customFontFamily == null
+                                         && captionFont.Value is CaptionFonts.Rubik
+                                             or CaptionFonts.Pretendard
+                                             or CaptionFonts.GoogleSansFlexRounded
+                                             or CaptionFonts.GoogleSansFlex
+                                             or CaptionFonts.Roboto;
+
+        /// <summary>
+        /// Resolves the font that was chosen for the captions, so the text of a caption can be created with it.
+        /// </summary>
+        /// <remarks>
+        /// A font the user added is addressed by the name of its file, which is why the family is resolved only
+        /// when the selection changes rather than for every caption that is drawn.
+        /// </remarks>
+        private void updateCaptionFont()
+        {
+            customFontFamily = customCaptionFonts?.GetSelectedFamily();
+
+            textCreationParameters = t => t.Font = getSelectedFont(24);
+
+            resetSrv3Captions();
+        }
 
         private FontUsage getSelectedFont(float size, bool bold = false)
+        {
+            if (customFontFamily != null)
+                return FontUsage.Default.With(customFontFamily, size);
+
+            return getBuiltInFont(size, bold);
+        }
+
+        private FontUsage getBuiltInFont(float size, bool bold)
         {
             bool useBold = bold && supportsSrv3Bold;
 
@@ -674,16 +658,12 @@ namespace AXPlayer.App.Graphics.Caption
                     return withSizeAndWeight(AXPlayerApp.Fonts.Rubik);
                 case CaptionFonts.Pretendard:
                     return withSizeAndWeight(AXPlayerApp.Fonts.Pretendard);
-                case CaptionFonts.Hungeul:
-                    return AXPlayerApp.Fonts.Hungeul.With(size: size);
                 case CaptionFonts.Ownglyph_PDH:
                     return AXPlayerApp.Fonts.Ownglyph_PDH.With(size: size);
                 case CaptionFonts.Dovemayo_Gothic:
                     return AXPlayerApp.Fonts.Dovemayo_Gothic.With(size: size);
                 case CaptionFonts.Griun_Mongtori:
                     return AXPlayerApp.Fonts.Griun_Mongtori.With(size: size);
-                case CaptionFonts.ONE_Mobile_POP:
-                    return AXPlayerApp.Fonts.ONE_Mobile_POP.With(size: size);
                 case CaptionFonts.Cafe24Syongsyong:
                     return AXPlayerApp.Fonts.Cafe24Syongsyong.With(size: size);
                 case CaptionFonts.Roboto:

@@ -181,6 +181,9 @@ namespace AXPlayer.App.Overlays.Containers
         private FormEnumDropdown<LatencyMode>? reflexSetting;
 
         [Resolved]
+        private CustomCaptionFonts customCaptionFonts { get; set; }
+
+        [Resolved]
         private PopupDialogOverlay popupDialogOverlay { get; set; }
 
         private void releaseStreamChanged(ValueChangedEvent<ReleaseStream> stream)
@@ -268,7 +271,6 @@ namespace AXPlayer.App.Overlays.Containers
         public SettingsItemV2 CaptionLangOptions;
 
         public Bindable<bool> CaptionLangOptionsEnabled = new Bindable<bool>(false);
-
         private FormCheckBox wasapiExperimental;
         private Bindable<UsernameDisplayMode> usernameDisplayMode;
 
@@ -276,6 +278,9 @@ namespace AXPlayer.App.Overlays.Containers
 
         private Bindable<UIFont> ui_font;
         private Bindable<CaptionFonts> caption_font;
+
+        private FormDropdown<string> customCaptionFontDropdown;
+        private SettingsItemV2 customCaptionFontItem;
 
         private Bindable<SFXType> overlaySFXType;
         private Bindable<bool> playOverlaySFX, updateButtonEnabled;
@@ -328,7 +333,6 @@ namespace AXPlayer.App.Overlays.Containers
 
         private Bindable<WindowMode> windowMode = null!;
         private Bindable<LocalisableString> updateInfomationText;
-
         private SettingsButtonV2 exportLogButton;
 
         private Bindable<float> scalingPositionX = null!;
@@ -422,7 +426,7 @@ namespace AXPlayer.App.Overlays.Containers
             settingsTabBar.SetItems(drawables);
         }
 
-        private SettingsItemV2 advancedSubtitlesBase, discordRichPresenceDropdownBase, safeAreaConsiderationsBase;
+        private SettingsItemV2 advancedSubtitlesBase, discordRichPresenceDropdownBase, safeAreaConsiderationsBase, customCaptionFontsToggleBase;
 
         private BindableBool wasapi;
 
@@ -968,7 +972,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             RelativeSizeAxes = Axes.X,
                                                             AutoSizeAxes = Axes.Y,
                                                             Masking = true,
-                                                            Spacing = new Vector2(0, 4),
+                                                            Spacing = new Vector2(0, 2),
                                                             Children = new Drawable[]
                                                             {
                                                                 new SettingsItemV2(new FormSliderBar<int>
@@ -995,7 +999,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             RelativeSizeAxes = Axes.X,
                                                             AutoSizeAxes = Axes.Y,
                                                             Masking = true,
-                                                            Spacing = new Vector2(0, 4),
+                                                            Spacing = new Vector2(0, 2),
                                                             Children = new Drawable[]
                                                             {
                                                                 new SettingsItemV2(new FormCheckBox
@@ -1205,6 +1209,59 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Icon = FontAwesome.Solid.Font,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
+                                                        customCaptionFontsToggleBase = new SettingsItemV2(new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.CustomCaptionFontEnabled,
+                                                            Icon = FontAwesome.Solid.Font,
+                                                            Current = customCaptionFonts.Enabled,
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        customCaptionFontsOptions = new FillFlowContainer
+                                                        {
+                                                            Direction = FillDirection.Vertical,
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            Masking = true,
+                                                            Spacing = new Vector2(0, 2),
+                                                            Children = new Drawable[]
+                                                            {
+                                                                customCaptionFontItem = new SettingsItemV2(customCaptionFontDropdown = new FormDropdown<string>
+                                                                {
+                                                                    Caption = AXPlayerStrings.CustomCaptionFont,
+                                                                    Icon = FontAwesome.Solid.Font,
+                                                                    Current = customCaptionFonts.SelectedFont,
+                                                                    Items = customCaptionFonts.AvailableFonts,
+                                                                    CornerType = FormControlCornerType.Center,
+                                                                })
+                                                                {
+                                                                    ShowRevertToDefaultButton = false,
+                                                                },
+                                                                new SettingsItemV2(new FormButton
+                                                                {
+                                                                    Caption = AXPlayerStrings.CustomCaptionFontFolder,
+                                                                    Icon = FontAwesome.Solid.Folder,
+                                                                    Text = customCaptionFonts.FolderPath,
+                                                                    ButtonText = AXPlayerStrings.OpenInFileExplorer,
+                                                                    CornerType = FormControlCornerType.Center,
+                                                                    Action = () => customCaptionFonts.OpenFolder(),
+                                                                })
+                                                                {
+                                                                    ShowRevertToDefaultButton = false,
+                                                                },
+                                                                new SettingsItemV2(new FormButton
+                                                                {
+                                                                    Caption = AXPlayerStrings.RefreshCustomCaptionFonts,
+                                                                    Icon = FontAwesome.Solid.SyncAlt,
+                                                                    Text = AXPlayerStrings.RefreshCustomCaptionFontsDescription,
+                                                                    ButtonText = AXPlayerStrings.Refresh,
+                                                                    CornerType = FormControlCornerType.Center,
+                                                                    Action = refreshCustomCaptionFonts,
+                                                                })
+                                                                {
+                                                                    ShowRevertToDefaultButton = false,
+                                                                },
+                                                            }
+                                                        },
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.CaptionBGOpacity,
@@ -1527,6 +1584,18 @@ namespace AXPlayer.App.Overlays.Containers
                 updateScreenshotOptionsVisibility();
             }, true);
 
+            customCaptionFonts.Enabled.BindValueChanged(enabled =>
+            {
+                customCaptionFontsOptions.ClearTransforms();
+                customCaptionFontsOptions.AutoSizeDuration = 400;
+                customCaptionFontsOptions.AutoSizeEasing = Easing.OutQuint;
+
+                updateCustomCaptionFontsOptionsVisibility();
+
+                if (enabled.NewValue == true)
+                    refreshCustomCaptionFonts();
+            }, true);
+
             if (RuntimeInfo.OS != RuntimeInfo.Platform.Windows)
             {
                 wasapiExperimentalItem.Hide();
@@ -1539,6 +1608,9 @@ namespace AXPlayer.App.Overlays.Containers
             VideoQualitySettingsCore.Hide();
             AudioQualitySettingsCore.Hide();
             CaptionLangOptions.Hide();
+
+            customCaptionFonts.Enabled.BindValueChanged(_ => updateCustomCaptionFontState(), true);
+            customCaptionFonts.AvailableFontsChanged += updateCustomCaptionFontState;
 
             dislikeCounterCredits.AddText(AXPlayerStrings.DislikeCounterCredits_1);
             dislikeCounterCredits.AddLink("Return YouTube Dislike API", "https://returnyoutubedislike.com/");
@@ -1579,7 +1651,12 @@ namespace AXPlayer.App.Overlays.Containers
             }, true);
 
             if (!RuntimeInfo.IsDesktop)
+            {
                 discordRichPresenceDropdownBase.Hide();
+                customCaptionFontsToggleBase.Hide();
+                advancedSubtitlesBase.Hide();
+                discordRichPresenceDropdownBase.Hide();
+            }
 
             if (host.Window?.SafeAreaPadding.Value.Total == Vector2.Zero)
                 safeAreaConsiderationsBase.Hide();
@@ -1619,10 +1696,6 @@ namespace AXPlayer.App.Overlays.Containers
                 reflexMode.Value = LatencyMode.Off;
                 reflexSettingBase.Hide();
             }
-
-            
-            if (!RuntimeInfo.IsDesktop)
-                advancedSubtitlesBase.Hide();
 
             // Disable frame limiter if reflex is enabled and add notice when reflex boost is enabled
             reflexMode.BindValueChanged(r =>
@@ -1830,6 +1903,22 @@ namespace AXPlayer.App.Overlays.Containers
                 }
             }
 
+            void updateCustomCaptionFontsOptionsVisibility()
+            {
+                try
+                {
+                    if (customCaptionFonts.Enabled.Value == false)
+                        customCaptionFontsOptions.ResizeHeightTo(0, 400, Easing.OutQuint);
+
+                    Scheduler.AddDelayed(() => customCaptionFontsOptions.AutoSizeDuration = 0, 400);
+
+                    customCaptionFontsOptions.AutoSizeAxes = customCaptionFonts.Enabled.Value == true ? Axes.Y : Axes.None;
+                }
+                catch
+                {
+                }
+            }
+
             void updateScalingModeVisibility()
             {
                 try
@@ -1860,6 +1949,38 @@ namespace AXPlayer.App.Overlays.Containers
         }
 
         private void setReflexBoostNotice() => reflexNotice.Value = new SettingsNote.Data(AXPlayerStrings.ReflexNotice, SettingsNote.Type.Informational);
+
+        /// <summary>
+        /// Rescans the caption-fonts folder, so a font that was added while the player was running can be picked.
+        /// </summary>
+        private void refreshCustomCaptionFonts()
+        {
+            customCaptionFonts.Refresh();
+            updateCustomCaptionFontState();
+        }
+
+        /// <summary>
+        /// Reflects the fonts that are available for the captions in the settings of the custom caption font.
+        /// </summary>
+        private void updateCustomCaptionFontState()
+        {
+            if (customCaptionFontDropdown == null || customCaptionFontItem == null)
+                return;
+
+            if (customCaptionFonts.AvailableFonts.Count > 0 && customCaptionFonts.Enabled.Value)
+                customCaptionFontDropdown.Items = customCaptionFonts.AvailableFonts;
+
+            customCaptionFontDropdown.Current.Disabled = !customCaptionFonts.Enabled.Value;
+
+            bool selectedFontIsMissing = !string.IsNullOrWhiteSpace(customCaptionFonts.SelectedFont.Value) && !customCaptionFonts.IsSelectedFontAvailable();
+
+            if (customCaptionFonts.AvailableFonts.Count == 0)
+                customCaptionFontItem.Note.Value = new SettingsNote.Data(AXPlayerStrings.CustomCaptionFontsEmpty, SettingsNote.Type.Informational);
+            else if (selectedFontIsMissing)
+                customCaptionFontItem.Note.Value = new SettingsNote.Data(AXPlayerStrings.CustomCaptionFontMissing, SettingsNote.Type.Warning);
+            else
+                customCaptionFontItem.Note.Value = null;
+        }
 
         private Bindable<double> windowedPositionX = null!;
         private Bindable<double> windowedPositionY = null!;
@@ -1950,7 +2071,7 @@ namespace AXPlayer.App.Overlays.Containers
         private Bindable<SettingsNote.Data> discordNotInstalledNote = new Bindable<SettingsNote.Data>();
         private LinkFlowContainer dislikeCounterCredits, madeByText, gameVersion;
         private FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode> discordRichPresenceDropdown;
-        private FillFlowContainer volumeOptions, screenshotOptions, screenshotUIOptions;
+        private FillFlowContainer volumeOptions, screenshotOptions, screenshotUIOptions, customCaptionFontsOptions;
 
         private FormEnumDropdown<GCLatencyMode> latencyModeDropdown;
 

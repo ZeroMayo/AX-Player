@@ -171,6 +171,46 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString CaptionFont => new TranslatableString(getKey(@"caption_font"), "Closed caption font");
 
         /// <summary>
+        /// "Custom closed caption font"
+        /// </summary>
+        public static LocalisableString CustomCaptionFontEnabled => new TranslatableString(getKey(@"custom_caption_font_enabled"), "Use a custom closed caption font");
+
+        /// <summary>
+        /// "Custom closed caption font"
+        /// </summary>
+        public static LocalisableString CustomCaptionFont => new TranslatableString(getKey(@"custom_caption_font"), "Custom closed caption font");
+
+        /// <summary>
+        /// "Custom closed caption font folder"
+        /// </summary>
+        public static LocalisableString CustomCaptionFontFolder => new TranslatableString(getKey(@"custom_caption_font_folder"), "Custom closed caption font folder");
+
+        /// <summary>
+        /// "Refresh custom closed caption fonts"
+        /// </summary>
+        public static LocalisableString RefreshCustomCaptionFonts => new TranslatableString(getKey(@"refresh_custom_caption_fonts"), "Refresh custom closed caption fonts");
+
+        /// <summary>
+        /// "Reads the caption-fonts folder again, so fonts that were added while the player was running can be picked."
+        /// </summary>
+        public static LocalisableString RefreshCustomCaptionFontsDescription => new TranslatableString(getKey(@"refresh_custom_caption_fonts_description"), "Reads the caption-fonts folder again, so fonts that were added while the player was running can be picked.");
+
+        /// <summary>
+        /// "Refresh"
+        /// </summary>
+        public static LocalisableString Refresh => new TranslatableString(getKey(@"refresh"), "Refresh");
+
+        /// <summary>
+        /// "No .ttf or .otf font was found in the caption-fonts folder yet."
+        /// </summary>
+        public static LocalisableString CustomCaptionFontsEmpty => new TranslatableString(getKey(@"custom_caption_fonts_empty"), "No .ttf or .otf font was found in the caption-fonts folder yet.");
+
+        /// <summary>
+        /// "The selected custom closed caption font is no longer in the caption-fonts folder."
+        /// </summary>
+        public static LocalisableString CustomCaptionFontMissing => new TranslatableString(getKey(@"custom_caption_font_missing"), "The selected custom closed caption font is no longer in the caption-fonts folder.");
+
+        /// <summary>
         /// "Press F11 to exit the full screen."
         /// </summary>
         public static LocalisableString FullscreenEntered => new TranslatableString(getKey(@"fullscreen_entered"), "Press F11 to exit the full screen.");

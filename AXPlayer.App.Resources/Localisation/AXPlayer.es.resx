@@ -319,6 +319,30 @@
   <data name="caption_font" xml:space="preserve">
     <value>Fuente de título cerrado</value>
   </data>
+  <data name="custom_caption_font_enabled" xml:space="preserve">
+    <value>Usar una fuente de subtítulos personalizada</value>
+  </data>
+  <data name="custom_caption_font" xml:space="preserve">
+    <value>Fuente de subtítulos personalizada</value>
+  </data>
+  <data name="custom_caption_font_folder" xml:space="preserve">
+    <value>Carpeta de fuentes de subtítulos personalizadas</value>
+  </data>
+  <data name="refresh_custom_caption_fonts" xml:space="preserve">
+    <value>Actualizar las fuentes de subtítulos personalizadas</value>
+  </data>
+  <data name="refresh_custom_caption_fonts_description" xml:space="preserve">
+    <value>Vuelve a leer la carpeta caption-fonts para poder elegir las fuentes añadidas mientras el reproductor estaba en ejecución.</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
+  <data name="custom_caption_fonts_empty" xml:space="preserve">
+    <value>Todavía no se ha encontrado ninguna fuente .ttf o .otf en la carpeta caption-fonts.</value>
+  </data>
+  <data name="custom_caption_font_missing" xml:space="preserve">
+    <value>La fuente de subtítulos personalizada seleccionada ya no está en la carpeta caption-fonts.</value>
+  </data>
   <data name="dislike_count_tooltip" xml:space="preserve">
     <value>Estimación: {0} | Actual: {1}</value>
   </data>
