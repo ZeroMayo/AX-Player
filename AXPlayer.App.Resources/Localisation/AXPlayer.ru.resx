@@ -319,6 +319,30 @@
   <data name="caption_font" xml:space="preserve">
     <value>Шрифт субтитров</value>
   </data>
+  <data name="custom_caption_font_enabled" xml:space="preserve">
+    <value>Использовать собственный шрифт субтитров</value>
+  </data>
+  <data name="custom_caption_font" xml:space="preserve">
+    <value>Собственный шрифт субтитров</value>
+  </data>
+  <data name="custom_caption_font_folder" xml:space="preserve">
+    <value>Папка собственных шрифтов субтитров</value>
+  </data>
+  <data name="refresh_custom_caption_fonts" xml:space="preserve">
+    <value>Обновить собственные шрифты субтитров</value>
+  </data>
+  <data name="refresh_custom_caption_fonts_description" xml:space="preserve">
+    <value>Повторно читает папку caption-fonts, чтобы можно было выбрать шрифты, добавленные во время работы плеера.</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>Обновить</value>
+  </data>
+  <data name="custom_caption_fonts_empty" xml:space="preserve">
+    <value>В папке caption-fonts пока не найдено ни одного шрифта .ttf или .otf.</value>
+  </data>
+  <data name="custom_caption_font_missing" xml:space="preserve">
+    <value>Выбранный собственный шрифт субтитров больше не находится в папке caption-fonts.</value>
+  </data>
   <data name="dislike_count_tooltip" xml:space="preserve">
     <value>Оценка: {0} | Фактически: {1}</value>
   </data>

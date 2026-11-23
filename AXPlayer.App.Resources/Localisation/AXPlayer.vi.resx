@@ -319,6 +319,30 @@
   <data name="caption_font" xml:space="preserve">
     <value>Phông chữ phụ đề chi tiết</value>
   </data>
+  <data name="custom_caption_font_enabled" xml:space="preserve">
+    <value>Dùng phông chữ phụ đề tùy chỉnh</value>
+  </data>
+  <data name="custom_caption_font" xml:space="preserve">
+    <value>Phông chữ phụ đề tùy chỉnh</value>
+  </data>
+  <data name="custom_caption_font_folder" xml:space="preserve">
+    <value>Thư mục phông chữ phụ đề tùy chỉnh</value>
+  </data>
+  <data name="refresh_custom_caption_fonts" xml:space="preserve">
+    <value>Làm mới phông chữ phụ đề tùy chỉnh</value>
+  </data>
+  <data name="refresh_custom_caption_fonts_description" xml:space="preserve">
+    <value>Đọc lại thư mục caption-fonts để có thể chọn những phông chữ được thêm vào khi trình phát đang chạy.</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>Làm mới</value>
+  </data>
+  <data name="custom_caption_fonts_empty" xml:space="preserve">
+    <value>Chưa tìm thấy phông chữ .ttf hoặc .otf nào trong thư mục caption-fonts.</value>
+  </data>
+  <data name="custom_caption_font_missing" xml:space="preserve">
+    <value>Phông chữ phụ đề tùy chỉnh đã chọn không còn trong thư mục caption-fonts.</value>
+  </data>
   <data name="dislike_count_tooltip" xml:space="preserve">
     <value>Ước tính: {0} | Thực tế: {1}</value>
   </data>

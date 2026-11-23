@@ -319,6 +319,30 @@
   <data name="caption_font" xml:space="preserve">
     <value>字幕字体</value>
   </data>
+  <data name="custom_caption_font_enabled" xml:space="preserve">
+    <value>使用自定义字幕字体</value>
+  </data>
+  <data name="custom_caption_font" xml:space="preserve">
+    <value>自定义字幕字体</value>
+  </data>
+  <data name="custom_caption_font_folder" xml:space="preserve">
+    <value>自定义字幕字体文件夹</value>
+  </data>
+  <data name="refresh_custom_caption_fonts" xml:space="preserve">
+    <value>刷新自定义字幕字体</value>
+  </data>
+  <data name="refresh_custom_caption_fonts_description" xml:space="preserve">
+    <value>重新读取 caption-fonts 文件夹，以便选择播放期间添加的字体。</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="custom_caption_fonts_empty" xml:space="preserve">
+    <value>在 caption-fonts 文件夹中还没有找到 .ttf 或 .otf 字体。</value>
+  </data>
+  <data name="custom_caption_font_missing" xml:space="preserve">
+    <value>所选的自定义字幕字体已不在 caption-fonts 文件夹中。</value>
+  </data>
   <data name="dislike_count_tooltip" xml:space="preserve">
     <value>估算：{0} | 实际：{1}</value>
   </data>

@@ -324,6 +324,11 @@ namespace AXPlayer.App
         private OverlayColourScheme colourScheme;
         private SentryClient sentry { get; set; }
 
+        /// <summary>
+        /// The fonts that the user added for the closed captions.
+        /// </summary>
+        public CustomCaptionFonts CustomCaptionFonts { get; private set; }
+
         public Bindable<AXPlayerUpdateInfo> UpdateInfo = new Bindable<AXPlayerUpdateInfo>();
 
         public Bindable<UpdaterStatus> UpdateStatus = new Bindable<UpdaterStatus>();
@@ -367,6 +372,10 @@ namespace AXPlayer.App
                 dependencies.CacheAs<GoogleOAuth2>(GoogleOAuth2 = CreateGoogleOAuth2());
 
                 dependencies.Cache(AudioNormalizationManager = new AudioNormalizationManager(this, LocalConfig));
+
+                // The fonts the user drops into the caption-fonts folder are registered with the game here,
+                // so every caption that is drawn afterwards can use them.
+                dependencies.Cache(CustomCaptionFonts = new CustomCaptionFonts(this, Storage, LocalConfig));
 
                 dependencies.Cache(TranslateAPI = new GoogleTranslate(this, frameworkConfig));
                 dependencies.Cache(YouTubeService = new YouTubeAPI(this, frameworkConfig, TranslateAPI, LocalConfig, GoogleOAuth2, !IsDeployedBuild, new HttpClient()));
