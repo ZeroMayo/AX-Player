@@ -318,11 +318,6 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                             label.Font = AXPlayerApp.Fonts.Pretendard;
                             break;
                         }
-                        case CaptionFonts.Hungeul:
-                        {
-                            label.Font = AXPlayerApp.Fonts.Hungeul;
-                            break;
-                        }
                         case CaptionFonts.Ownglyph_PDH:
                         {
                             label.Font = AXPlayerApp.Fonts.Ownglyph_PDH;
@@ -336,11 +331,6 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                         case CaptionFonts.Griun_Mongtori:
                         {
                             label.Font = AXPlayerApp.Fonts.Griun_Mongtori;
-                            break;
-                        }
-                        case CaptionFonts.ONE_Mobile_POP:
-                        {
-                            label.Font = AXPlayerApp.Fonts.ONE_Mobile_POP;
                             break;
                         }
                         case CaptionFonts.Cafe24Syongsyong:

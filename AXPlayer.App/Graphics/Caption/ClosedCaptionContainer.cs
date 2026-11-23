@@ -242,9 +242,6 @@ namespace AXPlayer.App.Graphics.Caption
                     case CaptionFonts.Pretendard:
                         textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Pretendard.With(size: 24);
                         break;
-                    case CaptionFonts.Hungeul:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Hungeul.With(size: 24);
-                        break;
                     case CaptionFonts.Ownglyph_PDH:
                         textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Ownglyph_PDH.With(size: 24);
                         break;
@@ -253,9 +250,6 @@ namespace AXPlayer.App.Graphics.Caption
                         break;
                     case CaptionFonts.Griun_Mongtori:
                         textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Griun_Mongtori.With(size: 24);
-                        break;
-                    case CaptionFonts.ONE_Mobile_POP:
-                        textCreationParameters = t => t.Font = AXPlayerApp.Fonts.ONE_Mobile_POP.With(size: 24);
                         break;
                     case CaptionFonts.Cafe24Syongsyong:
                         textCreationParameters = t => t.Font = AXPlayerApp.Fonts.Cafe24Syongsyong.With(size: 24);
@@ -674,16 +668,12 @@ namespace AXPlayer.App.Graphics.Caption
                     return withSizeAndWeight(AXPlayerApp.Fonts.Rubik);
                 case CaptionFonts.Pretendard:
                     return withSizeAndWeight(AXPlayerApp.Fonts.Pretendard);
-                case CaptionFonts.Hungeul:
-                    return AXPlayerApp.Fonts.Hungeul.With(size: size);
                 case CaptionFonts.Ownglyph_PDH:
                     return AXPlayerApp.Fonts.Ownglyph_PDH.With(size: size);
                 case CaptionFonts.Dovemayo_Gothic:
                     return AXPlayerApp.Fonts.Dovemayo_Gothic.With(size: size);
                 case CaptionFonts.Griun_Mongtori:
                     return AXPlayerApp.Fonts.Griun_Mongtori.With(size: size);
-                case CaptionFonts.ONE_Mobile_POP:
-                    return AXPlayerApp.Fonts.ONE_Mobile_POP.With(size: size);
                 case CaptionFonts.Cafe24Syongsyong:
                     return AXPlayerApp.Fonts.Cafe24Syongsyong.With(size: size);
                 case CaptionFonts.Roboto:

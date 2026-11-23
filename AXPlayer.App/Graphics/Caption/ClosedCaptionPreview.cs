@@ -151,11 +151,6 @@ namespace AXPlayer.App.Graphics.Caption
                         textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Pretendard.With(size: 24);
                         break;
                     }
-                    case CaptionFonts.Hungeul:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Hungeul.With(size: 24);
-                        break;
-                    }
                     case CaptionFonts.Ownglyph_PDH:
                     {
                         textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Ownglyph_PDH.With(size: 24);
@@ -169,11 +164,6 @@ namespace AXPlayer.App.Graphics.Caption
                     case CaptionFonts.Griun_Mongtori:
                     {
                         textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.Griun_Mongtori.With(size: 24);
-                        break;
-                    }
-                    case CaptionFonts.ONE_Mobile_POP:
-                    {
-                        textCreationParameters = spriteText => spriteText.Font = AXPlayerApp.Fonts.ONE_Mobile_POP.With(size: 24);
                         break;
                     }
                     case CaptionFonts.Cafe24Syongsyong:

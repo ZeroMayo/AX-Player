@@ -182,7 +182,7 @@ namespace AXPlayer.App.Config
             AddFont(Resources, @"Fonts/UIFonts/Noto/Noto-Thai");
             */
 
-            var Pretendard = game.AddVariableFont(Resources, @"Fonts/UIFonts/PretendardVariable");
+            var Pretendard = game.AddVariableFont(Resources, @"Fonts/PretendardVariable/PretendardVariable");
             Pretendard.AddInstance(@"PretendardVariable-Regular");
             Pretendard.AddInstance(@"PretendardVariable-ExtraBold");
             Pretendard.AddInstance(@"PretendardVariable-Black");
@@ -191,7 +191,7 @@ namespace AXPlayer.App.Config
             Pretendard.AddInstance(@"PretendardVariable-Light");
 
             #region Noto Fonts
-            var notoSans = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSans");
+            var notoSans = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSans");
             notoSans.AddInstance(@"NotoSans-Regular");
             notoSans.AddInstance(@"NotoSans-Black");
             notoSans.AddInstance(@"NotoSans-ExtraBold");
@@ -199,7 +199,7 @@ namespace AXPlayer.App.Config
             notoSans.AddInstance(@"NotoSans-SemiBold");
             notoSans.AddInstance(@"NotoSans-Light");
 
-            var notoSansOriya = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansOriya");
+            var notoSansOriya = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansOriya");
             notoSansOriya.AddInstance(@"NotoSansOriya-Regular");
             notoSansOriya.AddInstance(@"NotoSansOriya-Black");
             notoSansOriya.AddInstance(@"NotoSansOriya-ExtraBold");
@@ -207,7 +207,7 @@ namespace AXPlayer.App.Config
             notoSansOriya.AddInstance(@"NotoSansOriya-SemiBold");
             notoSansOriya.AddInstance(@"NotoSansOriya-Light");
 
-            var notoSansLao = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansLao");
+            var notoSansLao = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansLao");
             notoSansLao.AddInstance(@"NotoSansLao-Regular");
             notoSansLao.AddInstance(@"NotoSansLao-Black");
             notoSansLao.AddInstance(@"NotoSansLao-ExtraBold");
@@ -215,7 +215,7 @@ namespace AXPlayer.App.Config
             notoSansLao.AddInstance(@"NotoSansLao-SemiBold");
             notoSansLao.AddInstance(@"NotoSansLao-Light");
 
-            var notoSansKR = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansKR");
+            var notoSansKR = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansKR");
             notoSansKR.AddInstance(@"NotoSansKR-Regular");
             notoSansKR.AddInstance(@"NotoSansKR-Black");
             notoSansKR.AddInstance(@"NotoSansKR-ExtraBold");
@@ -223,7 +223,7 @@ namespace AXPlayer.App.Config
             notoSansKR.AddInstance(@"NotoSansKR-SemiBold");
             notoSansKR.AddInstance(@"NotoSansKR-Light");
 
-            var notoSansKhmer = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansKhmer");
+            var notoSansKhmer = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansKhmer");
             notoSansKhmer.AddInstance(@"NotoSansKhmer-Regular");
             notoSansKhmer.AddInstance(@"NotoSansKhmer-Black");
             notoSansKhmer.AddInstance(@"NotoSansKhmer-ExtraBold");
@@ -231,7 +231,7 @@ namespace AXPlayer.App.Config
             notoSansKhmer.AddInstance(@"NotoSansKhmer-SemiBold");
             notoSansKhmer.AddInstance(@"NotoSansKhmer-Light");
 
-            var notoSansTC = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansTC");
+            var notoSansTC = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansTC");
             notoSansTC.AddInstance(@"NotoSansTC-Regular");
             notoSansTC.AddInstance(@"NotoSansTC-Black");
             notoSansTC.AddInstance(@"NotoSansTC-ExtraBold");
@@ -239,7 +239,7 @@ namespace AXPlayer.App.Config
             notoSansTC.AddInstance(@"NotoSansTC-SemiBold");
             notoSansTC.AddInstance(@"NotoSansTC-Light");
 
-            var notoSansSC = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansSC");
+            var notoSansSC = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansSC");
             notoSansSC.AddInstance(@"NotoSansSC-Regular");
             notoSansSC.AddInstance(@"NotoSansSC-Black");
             notoSansSC.AddInstance(@"NotoSansSC-ExtraBold");
@@ -247,7 +247,7 @@ namespace AXPlayer.App.Config
             notoSansSC.AddInstance(@"NotoSansSC-SemiBold");
             notoSansSC.AddInstance(@"NotoSansSC-Light");
 
-            var NotoSansTelugu = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansTelugu");
+            var NotoSansTelugu = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansTelugu");
             NotoSansTelugu.AddInstance(@"NotoSansTelugu-Regular");
             NotoSansTelugu.AddInstance(@"NotoSansTelugu-Black");
             NotoSansTelugu.AddInstance(@"NotoSansTelugu-ExtraBold");
@@ -255,7 +255,7 @@ namespace AXPlayer.App.Config
             NotoSansTelugu.AddInstance(@"NotoSansTelugu-SemiBold");
             NotoSansTelugu.AddInstance(@"NotoSansTelugu-Light");
 
-            var NotoSansArabic = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansArabic");
+            var NotoSansArabic = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansArabic");
             NotoSansArabic.AddInstance(@"NotoSansArabic-Regular");
             NotoSansArabic.AddInstance(@"NotoSansArabic-Black");
             NotoSansArabic.AddInstance(@"NotoSansArabic-ExtraBold");
@@ -263,7 +263,7 @@ namespace AXPlayer.App.Config
             NotoSansArabic.AddInstance(@"NotoSansArabic-SemiBold");
             NotoSansArabic.AddInstance(@"NotoSansArabic-Light");
 
-            var NotoSansThai = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansThai");
+            var NotoSansThai = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansThai");
             NotoSansThai.AddInstance(@"NotoSansThai-Regular");
             NotoSansThai.AddInstance(@"NotoSansThai-Black");
             NotoSansThai.AddInstance(@"NotoSansThai-ExtraBold");
@@ -271,7 +271,7 @@ namespace AXPlayer.App.Config
             NotoSansThai.AddInstance(@"NotoSansThai-SemiBold");
             NotoSansThai.AddInstance(@"NotoSansThai-Light");
 
-            var NotoSansBengali = game.AddVariableFont(Resources, @"Fonts/UIFonts/NotoSansBengali");
+            var NotoSansBengali = game.AddVariableFont(Resources, @"Fonts/CoreFonts/NotoSansBengali");
             NotoSansBengali.AddInstance(@"NotoSansBengali-Regular");
             NotoSansBengali.AddInstance(@"NotoSansBengali-Black");
             NotoSansBengali.AddInstance(@"NotoSansBengali-ExtraBold");
@@ -279,11 +279,11 @@ namespace AXPlayer.App.Config
             NotoSansBengali.AddInstance(@"NotoSansBengali-SemiBold");
             NotoSansBengali.AddInstance(@"NotoSansBengali-Light");
 
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/NotoSansYi");
+            game.AddOutlineFont(Resources, @"Fonts/CoreFonts/NotoSansYi");
             #endregion
 
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/DejaVuSans-Regular");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/DejaVuSans-Bold");
+            game.AddOutlineFont(Resources, @"Fonts/CoreFonts/DejaVuSans-Regular");
+            game.AddOutlineFont(Resources, @"Fonts/CoreFonts/DejaVuSans-Bold");
 
             var clockFont = game.AddVariableFont(Resources, @"Fonts/UIFonts/InflateVF");
             clockFont.AddInstance(
@@ -302,20 +302,18 @@ namespace AXPlayer.App.Config
             Logger.Log($"❤️👏 Colored emoji loaded");
 
             //caption fonts
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Cafe24Syongsyong");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Hungeul");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Ownglyph_PDH");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Dovemayo_Gothic");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Griun_Mongtori");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/ONE_Mobile_POP");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/HayuFont");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/DreamHeumulKR");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Hakgyoansim_ManitoR");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/OwnglyphDaisy");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/OwnglyphYuntaeng");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Hippie");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Griun_Sobokhee");
-            game.AddOutlineFont(Resources, @"Fonts/UIFonts/Griun_Nulnul");
+            game.AddOutlineFont(Resources, @"Fonts/Cafe24Syongsyong/Cafe24Syongsyong");
+            game.AddOutlineFont(Resources, @"Fonts/Ownglyph_PDH/Ownglyph_PDH");
+            game.AddOutlineFont(Resources, @"Fonts/Dovemayo_Gothic/Dovemayo_Gothic");
+            game.AddOutlineFont(Resources, @"Fonts/Griun_Mongtori/Griun_Mongtori");
+            game.AddOutlineFont(Resources, @"Fonts/HayuFont/HayuFont");
+            game.AddOutlineFont(Resources, @"Fonts/DreamHeumulKR/DreamHeumulKR");
+            game.AddOutlineFont(Resources, @"Fonts/Hakgyoansim_ManitoR/Hakgyoansim_ManitoR");
+            game.AddOutlineFont(Resources, @"Fonts/OwnglyphDaisy/OwnglyphDaisy");
+            game.AddOutlineFont(Resources, @"Fonts/OwnglyphYuntaeng/OwnglyphYuntaeng");
+            game.AddOutlineFont(Resources, @"Fonts/Hippie/Hippie");
+            game.AddOutlineFont(Resources, @"Fonts/Griun_Sobokhee/Griun_Sobokhee");
+            game.AddOutlineFont(Resources, @"Fonts/Griun_Nulnul/Griun_Nulnul");
         }
     }
 }
