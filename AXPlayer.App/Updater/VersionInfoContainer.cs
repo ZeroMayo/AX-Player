@@ -92,7 +92,7 @@ namespace AXPlayer.App.Updater
                                     {
                                         Right = 120,
                                     },
-                                    Text = "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd",
+                                    Text = AXPlayerStrings.DownloadingUpdate("0"),
                                 }
                             }
                         },
