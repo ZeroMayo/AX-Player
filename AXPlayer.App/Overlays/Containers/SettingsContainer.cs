@@ -1654,6 +1654,8 @@ namespace AXPlayer.App.Overlays.Containers
             {
                 discordRichPresenceDropdownBase.Hide();
                 customCaptionFontsToggleBase.Hide();
+                advancedSubtitlesBase.Hide();
+                discordRichPresenceDropdownBase.Hide();
             }
 
             if (host.Window?.SafeAreaPadding.Value.Total == Vector2.Zero)
@@ -1694,10 +1696,6 @@ namespace AXPlayer.App.Overlays.Containers
                 reflexMode.Value = LatencyMode.Off;
                 reflexSettingBase.Hide();
             }
-
-            
-            if (!RuntimeInfo.IsDesktop)
-                advancedSubtitlesBase.Hide();
 
             // Disable frame limiter if reflex is enabled and add notice when reflex boost is enabled
             reflexMode.BindValueChanged(r =>
