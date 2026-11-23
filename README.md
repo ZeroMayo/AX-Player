@@ -18,8 +18,8 @@
 
 ### Latest release:
 
-| [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) | [Android 10+ (Experimental)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/io.zeromayo.axplayer.apk) |
-|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
+| [Windows 11+ (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-win-Setup.exe) | [Android 10+ (Experimental)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/io.zeromayo.axplayer.apk) | [Linux (x64)](https://github.com/ZeroMayo/AX-Player/releases/latest/download/AXPlayer-linux-x64.AppImage) |
+|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
 
 If your platform is unsupported or not listed above, there is still a chance you can run the release or manually build it by following the instructions below.
 
