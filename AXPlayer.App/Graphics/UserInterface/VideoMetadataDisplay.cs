@@ -195,13 +195,12 @@ namespace AXPlayer.App.Graphics.UserInterface
             */
         }
 
-        private void updateDescText()
+        private void updateDescText(Channel channelData)
         {
             Schedule(() =>
             {
                 DateTimeOffset? dateTime = videoData.Snippet.PublishedAtDateTimeOffset;
                 DateTimeOffset now = DateTime.Now;
-                Channel channelData = api.GetChannel(videoData.Snippet.ChannelId);
                 desc.Text = AXPlayerStrings.VideoMetadataDescWithLikeCount(api.GetLocalizedChannelTitle(channelData), videoData.Statistics.LikeCount.toFormattedCount(), videoData.Statistics.ViewCount.toFormattedCount(), dateTime.toRelativeDate(now.DateTime));
             });
         }
@@ -222,7 +221,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 Schedule(() =>
                 {
                     videoName.Text = api.GetLocalizedVideoTitle(videoData);
-                    updateDescText();
+                    updateDescText(channelData);
                 });
 
                 GetPalette();
@@ -234,7 +233,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Schedule(() =>
                         {
                             videoName.Text = api.GetLocalizedVideoTitle(videoData);
-                            updateDescText();
+                            updateDescText(channelData);
                         });
                     });
                 });
@@ -245,7 +244,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     {
                         Schedule(() =>
                         {
-                            updateDescText();
+                            updateDescText(channelData);
                         });
                     });
                 }, true);
@@ -257,7 +256,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Schedule(() =>
                         {
                             videoName.Text = api.GetLocalizedVideoTitle(videoData);
-                            updateDescText();
+                            updateDescText(channelData);
                         });
                     });
                 }, true);
