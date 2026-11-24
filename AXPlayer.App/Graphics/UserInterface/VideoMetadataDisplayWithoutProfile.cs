@@ -308,13 +308,12 @@ namespace AXPlayer.App.Graphics.UserInterface
             });
         }
 
-        private void updateDescText()
+        private void updateDescText(Channel channelData)
         {
             Schedule(() =>
             {
                 DateTimeOffset? dateTime = videoData.Snippet.PublishedAtDateTimeOffset;
                 DateTimeOffset now = DateTime.Now;
-                Channel channelData = api.GetChannel(videoData.Snippet.ChannelId);
                 desc.Text = AXPlayerStrings.VideoMetadataDescWithLikeCount(TruncateWithEllipsis(api.GetLocalizedChannelTitle(channelData), 50), videoData.Statistics.LikeCount != null ? Convert.ToDouble(videoData.Statistics.LikeCount).ToStandardFormattedString(0) : Convert.ToDouble(ReturnYouTubeDislike.GetDislikes(videoData.Id).RawLikes).ToStandardFormattedString(0), videoData.Statistics.ViewCount.toFormattedCount(), dateTime.toRelativeDate(now.DateTime));
             });
         }
@@ -334,7 +333,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 Schedule(() =>
                 {
                     videoName.Text = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 50);
-                    updateDescText();
+                    updateDescText(channelData);
                 });
 
                 //GetPalette();
@@ -346,7 +345,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Schedule(() =>
                         {
                             videoName.Text = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 50);
-                            updateDescText();
+                            updateDescText(channelData);
                         });
                     });
                 });
@@ -357,7 +356,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     {
                         Schedule(() =>
                         {
-                            updateDescText();
+                            updateDescText(channelData);
                         });
                     });
                 }, true);
@@ -369,7 +368,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Schedule(() =>
                         {
                             videoName.Text = TruncateWithEllipsis(api.GetLocalizedVideoTitle(videoData), 50);
-                            updateDescText();
+                            updateDescText(channelData);
                         });
                     });
                 }, true);
