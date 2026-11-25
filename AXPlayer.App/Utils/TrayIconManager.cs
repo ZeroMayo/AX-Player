@@ -72,7 +72,7 @@ namespace AXPlayer.App.Utils
 
                 var icon = new TrayIcon
                 {
-                    Label = "NekoPlayer",
+                    Label = "AX Player",
                     Icon = appIcon,
                     Menu = new TrayMenuEntry[]
                     {
