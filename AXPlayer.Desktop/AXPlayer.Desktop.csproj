@@ -12,8 +12,20 @@
     <Version>0.0.0</Version>
     <FileVersion>0.0.0</FileVersion>
     <Platforms>AnyCPU;x64</Platforms>
+    <CETCompat>false</CETCompat>
   </PropertyGroup>
+
+  <!-- Required for deployment. -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <StartupHookSupport>false</StartupHookSupport>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <StartupObject>AXPlayer.Desktop.Program</StartupObject>
+  </PropertyGroup>
+  
   <ItemGroup>
+    <PackageReference Include="System.IO.Packaging" Version="10.0.12"/>
     <PackageReference Include="Tmds.DBus" Version="0.95.2" />
     <PackageReference Include="Tmds.DBus.Protocol" Version="0.95.2" />
     <PackageReference Include="Velopack" Version="1.2.161" />
