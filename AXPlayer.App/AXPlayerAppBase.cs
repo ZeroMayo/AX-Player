@@ -10,11 +10,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ManagedBass;
-using ManagedBass.Fx;
 using AXPlayer.App.Audio;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
@@ -27,8 +27,11 @@ using AXPlayer.App.Input.Binding;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
 using AXPlayer.App.Resources;
+using AXPlayer.App.Updater;
 using AXPlayer.App.Utils;
 using AXPlayer.App.Utils.VoiceSearch;
+using ManagedBass;
+using ManagedBass.Fx;
 using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -45,7 +48,6 @@ using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osuTK.Graphics;
 using YoutubeExplode;
-using AXPlayer.App.Updater;
 
 namespace AXPlayer.App
 {
