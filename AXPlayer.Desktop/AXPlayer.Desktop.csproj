@@ -22,7 +22,6 @@
 
   <PropertyGroup>
     <StartupObject>AXPlayer.Desktop.Program</StartupObject>
-    <PublishAot>True</PublishAot>
   </PropertyGroup>
   
   <ItemGroup>
