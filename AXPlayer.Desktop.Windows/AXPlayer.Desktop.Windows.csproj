@@ -22,6 +22,7 @@
 
   <PropertyGroup>
     <StartupObject>AXPlayer.Desktop.Windows.Program</StartupObject>
+    <PublishAot>True</PublishAot>
   </PropertyGroup>
   
   <ItemGroup>
