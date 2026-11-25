@@ -1,14 +1,14 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable enable
 
 using System;
-using System.Net.Http;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using AXPlayer.App.Config;
+using AXPlayer.App.Online;
 using AXPlayer.App.Utils;
 using Google.Apis.YouTube.v3.Data;
 using osu.Framework.Allocation;
@@ -65,8 +65,6 @@ namespace AXPlayer.App.Graphics.UserInterface
         private const float nub_overlap = 0f;
         private const float wave_frequency = 0.085f;
         private const float wave_point_spacing = 2.5f;
-
-        private static readonly HttpClient httpClient = new HttpClient();
 
         private bool isWavy;
         private bool isDragging;
@@ -255,6 +253,9 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private OverlayColourProvider overlayColourProvider { get; set; } = null!;
 
+        [Resolved]
+        private AXPlayerAppBase app { get; set; } = null!;
+
         public void GetPalette(Video video)
         {
             ArgumentNullException.ThrowIfNull(video);
@@ -272,7 +273,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                 if (string.IsNullOrWhiteSpace(thumbnailUrl))
                     throw new InvalidOperationException("The video does not have a high-resolution thumbnail.");
 
-                byte[] imageBytes = await httpClient.GetByteArrayAsync(thumbnailUrl).ConfigureAwait(false);
+                string cachePath = app.Host.CacheStorage.GetStorageForDirectory(MediaCache.VIDEO_THUMBNAIL_DIRECTORY).GetFullPath($"{video.Id}-wavy.png");
+
+                byte[] imageBytes = await MediaThumbnailCache.GetThumbnailAsync(MediaCacheKind.VideoThumbnail, $"{video.Id}-wavy", cachePath, thumbnailUrl).ConfigureAwait(false);
                 using Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
 
                 Palette palette = new PaletteBuilder().Generate(new BitmapHelper(bitmap));

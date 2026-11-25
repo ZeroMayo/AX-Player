@@ -87,20 +87,28 @@ namespace AXPlayer.App.Online
         /// </remarks>
         public static void TryDelete(string path)
         {
+            if (string.IsNullOrEmpty(path))
+                return;
+
             try
             {
-                if (!File.Exists(path))
-                    return;
-
-                clearReadOnlyAttribute(path);
-                File.Delete(path);
+                if (File.Exists(path))
+                {
+                    clearReadOnlyAttribute(path);
+                    File.Delete(path);
+                }
             }
             catch (Exception e)
             {
                 // The file may also have been removed by another process in the meantime.
                 if (File.Exists(path))
+                {
                     Logger.Error(e, $"Failed to delete the cached media file '{path}'.");
+                    return;
+                }
             }
+
+            MediaCache.RemoveByPath(path);
         }
 
         private static void deleteTemporaryFiles(string targetPath)

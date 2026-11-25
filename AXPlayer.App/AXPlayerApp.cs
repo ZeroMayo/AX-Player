@@ -133,6 +133,9 @@ namespace AXPlayer.App
         private void load()
         {
             replaceDefaultFont();
+
+            MediaCache.Initialise(Host.CacheStorage);
+
             var languages = Enum.GetValues<Language>();
 
             var mappings = languages.Select(language =>

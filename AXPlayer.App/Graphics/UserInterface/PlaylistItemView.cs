@@ -275,16 +275,12 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 try
                 {
-                    string cachePath = app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache").GetFullPath($"{Data.Id}-PlaylistItemView.png");
-                    byte[] imageBytes;
+                    const string key_suffix = "-PlaylistItemView";
 
-                    using (var httpClient = new System.Net.Http.HttpClient())
-                    {
-                        imageBytes = await httpClient.GetByteArrayAsync(Data.Snippet.Thumbnails.High.Url);
-                    }
+                    string cachePath = app.Host.CacheStorage.GetStorageForDirectory(MediaCache.VIDEO_THUMBNAIL_DIRECTORY).GetFullPath($"{Data.Id}{key_suffix}.png");
 
-                    // A thumbnail left behind as read-only by an interrupted run must be replaced, not trusted.
-                    await CachedMediaFileWriter.WriteAsync(cachePath, path => System.IO.File.WriteAllBytesAsync(path, imageBytes));
+                    // The thumbnail is read from the cache whenever possible; only a missing file is downloaded.
+                    byte[] imageBytes = await MediaThumbnailCache.GetThumbnailAsync(MediaCacheKind.VideoThumbnail, $"{Data.Id}{key_suffix}", cachePath, Data.Snippet.Thumbnails.High.Url);
 
                     SixLabors.ImageSharp.Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
 

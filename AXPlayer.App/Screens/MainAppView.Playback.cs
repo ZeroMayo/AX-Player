@@ -75,8 +75,8 @@ namespace AXPlayer.App.Screens
         /// </summary>
         private bool hasCachedMedia(string id, LoadType loadType)
         {
-            bool hasAudio = File.Exists(getCachedAudioFile(id));
-            bool hasVideo = getCachedVideoFile(id) != null;
+            bool hasAudio = MediaCache.TryGetFile(MediaCacheKind.AudioStream, id, getCachedAudioFile(id), out _);
+            bool hasVideo = MediaCache.TryGetFile(MediaCacheKind.VideoStream, id, getCachedVideoFile(id), out _);
 
             return loadType switch
             {
@@ -126,13 +126,15 @@ namespace AXPlayer.App.Screens
             return preferred ?? (IVideoStreamInfo)candidates.TryGetWithHighestVideoQuality();
         }
 
-        private Task downloadAudioStreamAsync(IAudioStreamInfo stream, string id, IProgress<double> progress)
+        private async Task downloadAudioStreamAsync(IAudioStreamInfo stream, string id, IProgress<double> progress)
         {
             string file = getCachedAudioFile(id);
 
             // The cache writer serialises downloads of the same video and clears the temporary files an
             // interrupted download leaves behind (see CachedMediaFileWriter).
-            return CachedMediaFileWriter.WriteAsync(file, target => downloadStreamAsync(stream, target, progress));
+            await CachedMediaFileWriter.WriteAsync(file, target => downloadStreamAsync(stream, target, progress));
+
+            MediaCache.Record(MediaCacheKind.AudioStream, id, file);
         }
 
         private async Task<string> downloadVideoStreamAsync(IVideoStreamInfo stream, string id, IProgress<double> progress)
@@ -140,6 +142,8 @@ namespace AXPlayer.App.Screens
             string file = Path.Combine(getVideoDirectory(id), stream.VideoCodec.Contains("avc1") ? "video.mp4" : "video.webm");
 
             await CachedMediaFileWriter.WriteAsync(file, target => downloadStreamAsync(stream, target, progress));
+
+            MediaCache.Record(MediaCacheKind.VideoStream, id, file);
 
             return file;
         }
@@ -774,7 +778,7 @@ namespace AXPlayer.App.Screens
         private string srv3Contents;
 
         //we need to download subtitles to preload subtitles
-        private async void downloadSubtitles()
+        private async void downloadSubtitles(bool forceRefresh = false)
         {
             if (string.IsNullOrEmpty(videoUrl))
                 return;
@@ -784,9 +788,21 @@ namespace AXPlayer.App.Screens
             if (!app.SupportsExternalMediaTools)
                 return;
 
+            string subtitleDirectory = app.Host.CacheStorage.GetStorageForDirectory(MediaCache.SUBTITLE_DIRECTORY).GetFullPath($"{this.videoId}");
+
+            // A previous run already downloaded every language. Re-running yt-dlp for the same video is
+            // slow and needs the network, so the existing files are used as they are.
+            if (!forceRefresh && MediaCache.HasCachedSubtitles(this.videoId))
+            {
+                MediaCache.RecordSubtitles(this.videoId, subtitleDirectory);
+                return;
+            }
+
+            string forceOverwrites = forceRefresh ? " --force-overwrites" : string.Empty;
+
             if (RuntimeInfo.OS == RuntimeInfo.Platform.Windows)
             {
-                string args = $"--sub-langs all --write-subs --write-auto-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o \"%(id)s.%(ext)s\" -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}";
+                string args = $"--sub-langs all --write-subs --write-auto-subs --skip-download{forceOverwrites} --sub-format srv3 {videoUrl} -o \"%(id)s.%(ext)s\" -P {subtitleDirectory}";
 
                 ProcessStartInfo processStartInfo = new ProcessStartInfo(app.GetYtDlpPath(), args)
                 {
@@ -799,7 +815,7 @@ namespace AXPlayer.App.Screens
                 }
             } else if (RuntimeInfo.OS == RuntimeInfo.Platform.Linux)
             {
-                string args = $"-c \"yt-dlp --sub-langs all --write-subs --write-auto-subs --skip-download --force-overwrites --sub-format srv3 {videoUrl} -o '%(id)s.%(ext)s' -P {app.Host.CacheStorage.GetStorageForDirectory("subtitleCache").GetFullPath($"{this.videoId}")}\"";
+                string args = $"-c \"yt-dlp --sub-langs all --write-subs --write-auto-subs --skip-download{forceOverwrites} --sub-format srv3 {videoUrl} -o '%(id)s.%(ext)s' -P {subtitleDirectory}\"";
 
                 ProcessStartInfo processStartInfo = new ProcessStartInfo("bash", args)
                 {
@@ -811,6 +827,8 @@ namespace AXPlayer.App.Screens
                     await process.WaitForExitAsync();
                 }
             }
+
+            MediaCache.RecordSubtitles(this.videoId, subtitleDirectory);
         }
 
         public void SetVideoSource(string videoId, bool clearCache = false, LoadType loadType = LoadType.Full)
@@ -1000,7 +1018,7 @@ namespace AXPlayer.App.Screens
 
                         copyVideoUrlButton.Enabled.Value = true;
 
-                        downloadSubtitles();
+                        downloadSubtitles(clearCache);
 
                         if (loadType == LoadType.Full)
                         {
@@ -1035,7 +1053,7 @@ namespace AXPlayer.App.Screens
                         //bool videoCached = !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/audio.ogg") || !File.Exists(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}") + @"/video.webm");
 
                         isVideoLoading = true;
-                        if (true) // always download cache
+                        if (true) // reuse cached streams and download only the files that are missing
                         {
                             if (loadType == LoadType.Full)
                                 Directory.CreateDirectory(app.Host.CacheStorage.GetStorageForDirectory("videos").GetFullPath($"{this.videoId}"));
@@ -1399,24 +1417,57 @@ namespace AXPlayer.App.Screens
                                 Logger.Error(e, e.GetDescription());
                             }
 
+                            // A normal load reuses the files from the previous run. Only an explicit cache
+                            // clearing (a quality change) forces the streams to be downloaded again.
+                            string cachedAudioPath = string.Empty;
+                            string cachedVideoPath = string.Empty;
+
+                            if (!clearCache)
+                            {
+                                MediaCache.TryGetFile(MediaCacheKind.AudioStream, this.videoId, getCachedAudioFile(this.videoId), out cachedAudioPath);
+                                MediaCache.TryGetFile(MediaCacheKind.VideoStream, this.videoId, getCachedVideoFile(this.videoId), out cachedVideoPath);
+                            }
+
                             try
                             {
                                 switch (loadType)
                                 {
                                     case LoadType.Full:
                                     {
-                                        await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
-                                        videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
+                                        if (string.IsNullOrEmpty(cachedAudioPath))
+                                            await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
+                                        else
+                                            Logger.Log($"Reusing cached audio for {this.videoId}.");
+
+                                        if (string.IsNullOrEmpty(cachedVideoPath))
+                                            videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
+                                        else
+                                        {
+                                            videoFile = cachedVideoPath;
+                                            Logger.Log($"Reusing cached video for {this.videoId}.");
+                                        }
+
                                         break;
                                     }
                                     case LoadType.AudioOnly:
                                     {
-                                        await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
+                                        if (string.IsNullOrEmpty(cachedAudioPath))
+                                            await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
+                                        else
+                                            Logger.Log($"Reusing cached audio for {this.videoId}.");
+
                                         break;
                                     }
                                     case LoadType.VideoOnly:
                                     {
-                                        videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
+                                        if (string.IsNullOrEmpty(cachedVideoPath))
+                                            videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
+                                        else
+                                        {
+                                            videoFile = cachedVideoPath;
+                                            Logger.Log($"Reusing cached video for {this.videoId}.");
+                                        }
+
                                         break;
                                     }
                                 }

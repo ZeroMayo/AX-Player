@@ -596,17 +596,11 @@ namespace AXPlayer.App.Screens
             {
                 try
                 {
-                    string cachePath = app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache_").GetFullPath($"{video.Id}.png");
-                    byte[] imageBytes;
+                    const string key_suffix = "-social";
 
-                    using (var httpClient = new System.Net.Http.HttpClient())
-                    {
-                        imageBytes = await httpClient.GetByteArrayAsync(video.Snippet.Thumbnails.High.Url);
-                    }
+                    string cachePath = app.Host.CacheStorage.GetStorageForDirectory(MediaCache.SOCIAL_VIDEO_THUMBNAIL_DIRECTORY).GetFullPath($"{video.Id}.png");
 
-                    // The thumbnail needs the same guard as the cached media files: the same video is written
-                    // again after a quality change, and a leftover temporary file must not break the palette.
-                    await CachedMediaFileWriter.WriteAsync(cachePath, path => System.IO.File.WriteAllBytesAsync(path, imageBytes));
+                    byte[] imageBytes = await MediaThumbnailCache.GetThumbnailAsync(MediaCacheKind.VideoThumbnail, $"{video.Id}{key_suffix}", cachePath, video.Snippet.Thumbnails.High.Url);
 
                     using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(imageBytes);
 
