@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable enable
@@ -19,6 +19,7 @@ using AXPlayer.App.Graphics.Shaders.New.Chromatic;
 using AXPlayer.App.Graphics.Shaders.New.CRT;
 using AXPlayer.App.Graphics.Shaders.New.Grayscale;
 using AXPlayer.App.Graphics.Shaders.New.HueShift;
+using AXPlayer.App.Graphics.Shaders.New.Interpolation;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
@@ -150,11 +151,11 @@ namespace AXPlayer.App.Graphics.Videos
         private KeyBindingAnimations keyBindingAnimations = null!;
         private ClosedCaptionContainer closedCaption = null!;
         private Bindable<AspectRatioMethod> aspectRatioMethod = null!;
-        private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift = null!;
+        private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift, videoInterpolationStrength = null!;
 
         private Bindable<bool> videoCrtEffectEnabled = null!, smoothPlaybackSpeed = null!;
 
-        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, crt = null!;
+        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, interpolation, crt = null!;
 
         private Bindable<bool> useNewSubtitlesFeature = null!;
 
@@ -204,6 +205,7 @@ namespace AXPlayer.App.Graphics.Videos
             videoHueShift = config.GetBindable<float>(AXPlayerSetting.VideoHueShift);
             videoCrtEffectEnabled = config.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled);
             chromaticAberrationStrength = config.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength);
+            videoInterpolationStrength = config.GetBindable<float>(AXPlayerSetting.VideoInterpolationStrength);
             useNewSubtitlesFeature = config.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
             PlaybackSpeed = new Bindable<double>(1);
@@ -262,23 +264,30 @@ namespace AXPlayer.App.Graphics.Videos
                                                 RelativeSizeAxes = Axes.Both,
                                                 Children = new Drawable[]
                                                 {
-                                                    blurContainer = new BufferedContainer
+                                                    interpolation = new InterpolationContainer
                                                     {
                                                         RelativeSizeAxes = Axes.Both,
                                                         Children = new Drawable[]
                                                         {
-                                                            new Box
+                                                            blurContainer = new BufferedContainer
                                                             {
                                                                 RelativeSizeAxes = Axes.Both,
-                                                                Colour = Color4.Black,
-                                                            },
-                                                            video = new Video(fileName_Video, false)
-                                                            {
-                                                                RelativeSizeAxes = Axes.Both,
-                                                                FillMode = FillMode.Fit,
-                                                                Anchor = Anchor.Centre,
-                                                                Origin = Anchor.Centre,
-                                                                Clock = framedClock,
+                                                                Children = new Drawable[]
+                                                                {
+                                                                    new Box
+                                                                    {
+                                                                        RelativeSizeAxes = Axes.Both,
+                                                                        Colour = Color4.Black,
+                                                                    },
+                                                                    video = new Video(fileName_Video, false)
+                                                                    {
+                                                                        RelativeSizeAxes = Axes.Both,
+                                                                        FillMode = FillMode.Fit,
+                                                                        Anchor = Anchor.Centre,
+                                                                        Origin = Anchor.Centre,
+                                                                        Clock = framedClock,
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -428,6 +437,11 @@ namespace AXPlayer.App.Graphics.Videos
             videoHueShift.BindValueChanged(value =>
             {
                 hueShift.Strength = value.NewValue / 360;
+            }, true);
+
+            videoInterpolationStrength.BindValueChanged(value =>
+            {
+                interpolation.Strength = value.NewValue;
             }, true);
 
             videoCrtEffectEnabled.BindValueChanged(value =>

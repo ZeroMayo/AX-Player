@@ -161,9 +161,17 @@ namespace AXPlayer.App.Graphics.UserInterface
             ((HoverClickSounds)samples).Enabled.Value = Enabled.Value;
         }
 
+        /// <summary>
+        /// Shows the avatar of the given channel, replacing whatever is being loaded for the previous one.
+        /// </summary>
+        /// <remarks>
+        /// A channel without an id is ignored: comments and playlist items can reference an author that
+        /// has none, and that must not take the display (or the whole player) down.
+        /// </remarks>
         public void UpdateProfileImage(string channelId)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(channelId);
+            if (string.IsNullOrWhiteSpace(channelId))
+                return;
 
             var cancellation = new CancellationTokenSource();
             var previousCancellation = Interlocked.Exchange(ref imageLoadCancellation, cancellation);
@@ -185,7 +193,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 if (string.IsNullOrEmpty(imageUrl))
                     return;
 
-                Schedule(() =>
+                scheduleIfAlive(() =>
                 {
                     if (version == Volatile.Read(ref imageLoadVersion))
                         channel = loadedChannel;
@@ -211,7 +219,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private async Task loadProfileImageAsync(string url, int version, CancellationToken cancellationToken)
         {
-            Schedule(() =>
+            scheduleIfAlive(() =>
             {
                 if (version == Volatile.Read(ref imageLoadVersion))
                     loading.Show();
@@ -222,7 +230,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 Texture texture = await textureStore.GetAsync(url, cancellationToken).ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                Schedule(() =>
+                scheduleIfAlive(() =>
                 {
                     if (version == Volatile.Read(ref imageLoadVersion))
                         profileImage.Texture = texture;
@@ -230,12 +238,24 @@ namespace AXPlayer.App.Graphics.UserInterface
             }
             finally
             {
-                Schedule(() =>
+                scheduleIfAlive(() =>
                 {
                     if (version == Volatile.Read(ref imageLoadVersion))
                         loading.Hide();
                 });
             }
+        }
+
+        /// <summary>
+        /// Queues work on the update thread unless this drawable has already been disposed, which would
+        /// throw from the scheduler and surface as an unhandled exception.
+        /// </summary>
+        private void scheduleIfAlive(Action action)
+        {
+            if (IsDisposed)
+                return;
+
+            Schedule(action);
         }
 
         protected override void Dispose(bool isDisposing)

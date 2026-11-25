@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable disable
@@ -1125,6 +1125,14 @@ namespace AXPlayer.App.Overlays.Containers
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
+                                                            Caption = AXPlayerStrings.VideoInterpolation,
+                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoInterpolationStrength),
+                                                            DisplayAsPercentage = true,
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        new SettingsItemV2(new FormSliderBar<float>
+                                                        {
                                                             Caption = AXPlayerStrings.VideoBloomLevel,
                                                             Icon = FontAwesome.Solid.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoBloomLevel),
@@ -1633,7 +1641,11 @@ namespace AXPlayer.App.Overlays.Containers
             {
                 try
                 {
-                    discordRichPresenceDropdown.HintText = $"{discordRPC.GetCurrentUser().DisplayName} ({discordRPC.GetCurrentUser().Username})";
+                    // Discord does not have to be running, in which case there is no user to show.
+                    var discordUser = discordRPC.GetCurrentUser();
+
+                    if (discordUser != null)
+                        discordRichPresenceDropdown.HintText = $"{discordUser.DisplayName} ({discordUser.Username})";
                 }
                 catch (Exception e)
                 {

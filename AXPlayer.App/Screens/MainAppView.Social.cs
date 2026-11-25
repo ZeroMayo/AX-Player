@@ -596,15 +596,19 @@ namespace AXPlayer.App.Screens
             {
                 try
                 {
-                    var cachePath = app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache_").GetFullPath($"{video.Id}.png");
+                    string cachePath = app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache_").GetFullPath($"{video.Id}.png");
+                    byte[] imageBytes;
 
                     using (var httpClient = new System.Net.Http.HttpClient())
                     {
-                        var imageBytes = await httpClient.GetByteArrayAsync(video.Snippet.Thumbnails.High.Url);
-                        await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
+                        imageBytes = await httpClient.GetByteArrayAsync(video.Snippet.Thumbnails.High.Url);
                     }
 
-                    using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache_").GetFullPath($"{video.Id}.png"));
+                    // The thumbnail needs the same guard as the cached media files: the same video is written
+                    // again after a quality change, and a leftover temporary file must not break the palette.
+                    await CachedMediaFileWriter.WriteAsync(cachePath, path => System.IO.File.WriteAllBytesAsync(path, imageBytes));
+
+                    using SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(imageBytes);
 
                     IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
                     PaletteBuilder paletteBuilder = new PaletteBuilder();
@@ -632,8 +636,10 @@ namespace AXPlayer.App.Screens
                         Logger.Error(e, e.GetDescription());
                     }
                 }
-                catch
+                catch (Exception exception)
                 {
+                    Logger.Error(exception, $"Failed to generate a palette for video '{video.Id}'.");
+
                     accentColor = overlayColourProvider1.Content2;
                     bgColor = overlayColourProvider1.Background3;
                     bgColor2 = overlayColourProvider1.Content2.Darken(1);

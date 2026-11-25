@@ -54,6 +54,40 @@ namespace AXPlayer.App.Screens
         private string getCachedAudioFile(string id) => Path.Combine(getVideoDirectory(id), getCachedAudioFileName());
 
         /// <summary>
+        /// The cached video file of a video, or <c>null</c> when neither container was cached.
+        /// </summary>
+        private string getCachedVideoFile(string id)
+        {
+            string directory = getVideoDirectory(id);
+            string mp4File = Path.Combine(directory, "video.mp4");
+
+            if (File.Exists(mp4File))
+                return mp4File;
+
+            string webmFile = Path.Combine(directory, "video.webm");
+
+            return File.Exists(webmFile) ? webmFile : null;
+        }
+
+        /// <summary>
+        /// Whether everything a load of the given type needs is already on disk, so a failed refresh does
+        /// not have to take the video down.
+        /// </summary>
+        private bool hasCachedMedia(string id, LoadType loadType)
+        {
+            bool hasAudio = File.Exists(getCachedAudioFile(id));
+            bool hasVideo = getCachedVideoFile(id) != null;
+
+            return loadType switch
+            {
+                LoadType.Full => hasAudio && hasVideo,
+                LoadType.AudioOnly => hasAudio,
+                LoadType.VideoOnly => hasVideo,
+                _ => false,
+            };
+        }
+
+        /// <summary>
         /// Picks an audio stream that is guaranteed to be decodable on the current platform.
         /// Mobile hosts rely on BASS's built-in MP4/AAC support, so opus/webm audio is replaced.
         /// </summary>
@@ -92,30 +126,30 @@ namespace AXPlayer.App.Screens
             return preferred ?? (IVideoStreamInfo)candidates.TryGetWithHighestVideoQuality();
         }
 
-        private async Task downloadAudioStreamAsync(IAudioStreamInfo stream, string id, IProgress<double> progress)
+        private Task downloadAudioStreamAsync(IAudioStreamInfo stream, string id, IProgress<double> progress)
         {
-            string directory = getVideoDirectory(id);
-            Directory.CreateDirectory(directory);
             string file = getCachedAudioFile(id);
 
-            if (app.SupportsExternalMediaTools)
-                await app.YouTubeClient.Videos.DownloadAsync([stream], new ConversionRequestBuilder(file).SetFFmpegPath(app.GetFFmpegPath()).Build(), progress);
-            else
-                await app.YouTubeClient.Videos.Streams.DownloadAsync(stream, file, progress);
+            // The cache writer serialises downloads of the same video and clears the temporary files an
+            // interrupted download leaves behind (see CachedMediaFileWriter).
+            return CachedMediaFileWriter.WriteAsync(file, target => downloadStreamAsync(stream, target, progress));
         }
 
         private async Task<string> downloadVideoStreamAsync(IVideoStreamInfo stream, string id, IProgress<double> progress)
         {
-            string directory = getVideoDirectory(id);
-            Directory.CreateDirectory(directory);
-            string file = Path.Combine(directory, stream.VideoCodec.Contains("avc1") ? "video.mp4" : "video.webm");
+            string file = Path.Combine(getVideoDirectory(id), stream.VideoCodec.Contains("avc1") ? "video.mp4" : "video.webm");
 
+            await CachedMediaFileWriter.WriteAsync(file, target => downloadStreamAsync(stream, target, progress));
+
+            return file;
+        }
+
+        private async Task downloadStreamAsync(IStreamInfo stream, string file, IProgress<double> progress)
+        {
             if (app.SupportsExternalMediaTools)
                 await app.YouTubeClient.Videos.DownloadAsync([stream], new ConversionRequestBuilder(file).SetFFmpegPath(app.GetFFmpegPath()).Build(), progress);
             else
                 await app.YouTubeClient.Videos.Streams.DownloadAsync(stream, file, progress);
-
-            return file;
         }
 
         private Task downloadAudioAsync(StreamManifest manifest, IAudioStreamInfo selected, string id, IProgress<double> progress)
@@ -916,7 +950,9 @@ namespace AXPlayer.App.Screens
                                 {
                                     foreach (var cacheItem in Directory.GetFiles(getVideoDirectory(this.videoId)))
                                     {
-                                        File.Delete(cacheItem);
+                                        // The player (or a scanner) may still be reading the file that is being
+                                        // replaced; the download below overwrites it anyway.
+                                        CachedMediaFileWriter.TryDelete(cacheItem);
                                     }
                                 }
                                 break;
@@ -925,16 +961,13 @@ namespace AXPlayer.App.Screens
                             {
                                 foreach (string fileName in new[] { "video.mp4", "video.webm" })
                                 {
-                                    string path = Path.Combine(getVideoDirectory(this.videoId), fileName);
-
-                                    if (File.Exists(path))
-                                        File.Delete(path);
+                                    CachedMediaFileWriter.TryDelete(Path.Combine(getVideoDirectory(this.videoId), fileName));
                                 }
                                 break;
                             }
                             case LoadType.AudioOnly:
                             {
-                                File.Delete(getCachedAudioFile(this.videoId));
+                                CachedMediaFileWriter.TryDelete(getCachedAudioFile(this.videoId));
                                 break;
                             }
                         }
@@ -1366,24 +1399,57 @@ namespace AXPlayer.App.Screens
                                 Logger.Error(e, e.GetDescription());
                             }
 
-                            switch (loadType)
+                            try
                             {
-                                case LoadType.Full:
+                                switch (loadType)
                                 {
-                                    await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
-                                    videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
-                                    break;
+                                    case LoadType.Full:
+                                    {
+                                        await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
+                                        videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
+                                        break;
+                                    }
+                                    case LoadType.AudioOnly:
+                                    {
+                                        await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
+                                        break;
+                                    }
+                                    case LoadType.VideoOnly:
+                                    {
+                                        videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
+                                        break;
+                                    }
                                 }
-                                case LoadType.AudioOnly:
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error(e, e.GetDescription());
+
+                                string message = e.Message;
+
+                                if (!hasCachedMedia(this.videoId, loadType))
                                 {
-                                    await downloadAudioAsync(streamManifest, audioStreamInfo, this.videoId, audioDownloadProgress);
-                                    break;
+                                    Schedule(() =>
+                                    {
+                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, message, AXPlayerStrings.General));
+                                        thumbnailContainer.Hide();
+                                        videoLoadingProgressBase.Hide();
+                                        loadBtnOverlayShow.Enabled.Value = true;
+                                    });
+
+                                    isVideoLoading = false;
+                                    return;
                                 }
-                                case LoadType.VideoOnly:
+
+                                // Everything this load needs is already cached, so a failed refresh (a locked
+                                // or read-only file, for example) must not take the video down.
+                                if (loadType != LoadType.AudioOnly)
+                                    videoFile = getCachedVideoFile(this.videoId) ?? videoFile;
+
+                                Schedule(() =>
                                 {
-                                    videoFile = await downloadVideoAsync(streamManifest, videoStreamInfo, this.videoId, videoDownloadProgress);
-                                    break;
-                                }
+                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.ExclamationTriangle, Color4.Orange, message, AXPlayerStrings.General));
+                                });
                             }
 
                             currentVideoSource = new YouTubeVideoPlayer(videoFile, getCachedAudioFile(this.videoId), captionTrack, srv3Contents, videoData, pausedTime, preloadedLiveChatReplay: getOrStartLiveChatReplayPreload(this.videoId))

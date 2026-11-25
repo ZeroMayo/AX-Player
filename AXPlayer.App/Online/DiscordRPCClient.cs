@@ -153,6 +153,9 @@ namespace AXPlayer.App.Online
             }
         }
 
+        /// <summary>
+        /// The Discord user the presence is shown for, or <c>null</c> while Discord is not connected.
+        /// </summary>
         public User GetCurrentUser() => client?.CurrentUser;
 
         protected override void Dispose(bool isDisposing)

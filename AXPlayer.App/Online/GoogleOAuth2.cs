@@ -86,10 +86,8 @@ namespace AXPlayer.App.Online
         public BindableBool SignedIn { get; } = new BindableBool();
 
         /// <summary>
-        /// Whether a refresh token is persisted, i.e. a silent session restore is possible.
-        /// </summary>
-        /// <summary>
-        /// Whether a refresh token is persisted in the player configuration.
+        /// Whether a refresh token is persisted in the player configuration, i.e. a silent session
+        /// restore is possible.
         /// </summary>
         /// <remarks>
         /// A legacy credential store from an older build is imported by <see cref="RestoreSessionAsync" />,
@@ -523,16 +521,33 @@ namespace AXPlayer.App.Online
 
         private void persist(OAuthToken value)
         {
-            appConfig.SetValue(AXPlayerSetting.AccessToken, value.AccessToken);
-            appConfig.SetValue(AXPlayerSetting.RefreshToken, value.RefreshToken);
-            appConfig.SetValue(AXPlayerSetting.AccessTokenExpiresAt, value.ExpiresAtUtc.ToString(@"o", CultureInfo.InvariantCulture));
+            setPersistedValue(AXPlayerSetting.AccessToken, value.AccessToken);
+            setPersistedValue(AXPlayerSetting.RefreshToken, value.RefreshToken);
+            setPersistedValue(AXPlayerSetting.AccessTokenExpiresAt, value.ExpiresAtUtc.ToString(@"o", CultureInfo.InvariantCulture));
         }
 
         private void clearPersisted()
         {
-            appConfig.SetValue(AXPlayerSetting.AccessToken, string.Empty);
-            appConfig.SetValue(AXPlayerSetting.RefreshToken, string.Empty);
-            appConfig.SetValue(AXPlayerSetting.AccessTokenExpiresAt, string.Empty);
+            setPersistedValue(AXPlayerSetting.AccessToken, string.Empty);
+            setPersistedValue(AXPlayerSetting.RefreshToken, string.Empty);
+            setPersistedValue(AXPlayerSetting.AccessTokenExpiresAt, string.Empty);
+        }
+
+        /// <summary>
+        /// Writes a persisted credential, tolerating a configuration file that cannot be written (read-only,
+        /// locked by another process, or on a full disk). The session still works for this run, it just cannot
+        /// be restored on the next launch.
+        /// </summary>
+        private void setPersistedValue(AXPlayerSetting setting, string value)
+        {
+            try
+            {
+                appConfig.SetValue(setting, value);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, $"Failed to store the Google OAuth credential '{setting}'.");
+            }
         }
 
         internal static DateTimeOffset parseExpiry(string? raw)

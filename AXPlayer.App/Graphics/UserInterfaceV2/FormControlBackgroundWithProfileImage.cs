@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
@@ -11,6 +11,7 @@ using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
+using osu.Framework.Logging;
 using osuTK.Graphics;
 using Vortice.Direct3D11;
 
@@ -117,14 +118,25 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
         {
             Schedule(() =>
             {
-                if (googleOAuth2.SignedIn.Value)
-                {
-                    profileImage.FadeIn(250);
-                    profileImage.UpdateProfileImage(yt_api.GetMineChannel().Id);
-                }
-                else
+                if (!googleOAuth2.SignedIn.Value)
                 {
                     profileImage.FadeOut(250);
+                    return;
+                }
+
+                profileImage.FadeIn(250);
+
+                try
+                {
+                    // The channel request can fail (offline, revoked session), and the avatar is only decoration.
+                    string channelId = yt_api.GetMineChannel()?.Id;
+
+                    if (!string.IsNullOrEmpty(channelId))
+                        profileImage.UpdateProfileImage(channelId);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, "Failed to load the profile image of the signed in user.");
                 }
             });
         }

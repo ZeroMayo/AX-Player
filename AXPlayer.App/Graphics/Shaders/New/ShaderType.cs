@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 namespace AXPlayer.App.Graphics.Shaders.New
@@ -34,6 +34,9 @@ namespace AXPlayer.App.Graphics.Shaders.New
         [ShaderStrength(2, ParamName = "Scale", Tooltip = "Scale factor of each consecutive reflection.")]
         Reflections,
 
-        CRT
+        CRT,
+
+        [ShaderStrength(1, ParamName = "Interpolation", Tooltip = "How strongly the previous frame is blended into the current frame.")]
+        Interpolation,
     }
 }

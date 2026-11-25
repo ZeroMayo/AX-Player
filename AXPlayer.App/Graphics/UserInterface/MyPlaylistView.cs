@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable enable
@@ -283,18 +283,21 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 try
                 {
-                    var cachePath = app.Host.CacheStorage.GetStorageForDirectory("playlistThumbnailCache").GetFullPath($"{Data.Id}-MyPlaylistView.png");
+                    string cachePath = app.Host.CacheStorage.GetStorageForDirectory("playlistThumbnailCache").GetFullPath($"{Data.Id}-MyPlaylistView.png");
+                    byte[] imageBytes;
 
                     using (var httpClient = new System.Net.Http.HttpClient())
                     using (System.Net.Http.HttpResponseMessage response = await httpClient.GetAsync(Data.bestThumbnailUrl()))
                     {
                         response.EnsureSuccessStatusCode();
 
-                        var imageBytes = await response.Content.ReadAsByteArrayAsync();
-                        await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
+                        imageBytes = await response.Content.ReadAsByteArrayAsync();
                     }
 
-                    SixLabors.ImageSharp.Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(cachePath);
+                    // A thumbnail left behind as read-only by an interrupted run must be replaced, not trusted.
+                    await CachedMediaFileWriter.WriteAsync(cachePath, path => System.IO.File.WriteAllBytesAsync(path, imageBytes));
+
+                    SixLabors.ImageSharp.Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
 
                     IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
                     PaletteBuilder paletteBuilder = new PaletteBuilder();

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
@@ -636,6 +636,9 @@
   </data>
   <data name="hue_shift" xml:space="preserve">
     <value>ビデオ色相シフト</value>
+  </data>
+  <data name="video_interpolation" xml:space="preserve">
+    <value>ビデオ補間強度</value>
   </data>
   <data name="discord_rich_presence" xml:space="preserve">
     <value>Discord リッチプレゼンス</value>

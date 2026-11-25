@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Localisation;
@@ -964,6 +964,11 @@ namespace AXPlayer.App.Localisation
         /// "CRT video effect"
         /// </summary>
         public static LocalisableString CRTVideoEffect => new TranslatableString(getKey(@"crt_video_effect"), "CRT video effect");
+
+        /// <summary>
+        /// "Video interpolation strength"
+        /// </summary>
+        public static LocalisableString VideoInterpolation => new TranslatableString(getKey(@"video_interpolation"), "Video interpolation strength");
 
         /// <summary>
         /// "Discord Rich Presence"

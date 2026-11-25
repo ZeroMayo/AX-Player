@@ -1,10 +1,12 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable disable
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AXPlayer.App.Extensions;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
@@ -13,6 +15,7 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Logging;
 using osuTK.Graphics;
 
 namespace AXPlayer.App.Graphics.UserInterface
@@ -21,6 +24,9 @@ namespace AXPlayer.App.Graphics.UserInterface
     {
         private Sprite profileImage;
         private BufferedContainer blur;
+
+        private CancellationTokenSource imageLoadCancellation;
+        private int imageLoadVersion;
 
         [Resolved]
         private TextureStore textureStore { get; set; }
@@ -56,27 +62,70 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         protected override void Dispose(bool isDisposing)
         {
+            if (isDisposing)
+            {
+                Interlocked.Increment(ref imageLoadVersion);
+                imageLoadCancellation?.Cancel();
+                imageLoadCancellation?.Dispose();
+            }
+
             base.Dispose(isDisposing);
-            profileImage.Dispose();
         }
 
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            _ = Task.Run(async () =>
-            {
-                await GetProfileImage();
-            });
+            GetProfileImage().FireAndForget();
         }
 
+        /// <summary>
+        /// Shows the avatar of the signed in Discord user.
+        /// </summary>
+        /// <remarks>
+        /// Discord does not have to be running: without a connection there is simply no avatar to show,
+        /// and a failed download must not take the player down.
+        /// </remarks>
         public async Task GetProfileImage(CancellationToken cancellationToken = default)
         {
             if (api == null)
                 return;
 
-            Texture north = await textureStore.GetAsync(api.GetCurrentUser().GetAvatarURL(DiscordRPC.User.AvatarFormat.PNG, DiscordRPC.User.AvatarSize.x2048), cancellationToken);
-            //GetPalette();
-            Schedule(() => { profileImage.Texture = north; });
+            var cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            CancellationToken linkedToken = cancellation.Token;
+
+            var previousCancellation = Interlocked.Exchange(ref imageLoadCancellation, cancellation);
+            previousCancellation?.Cancel();
+            previousCancellation?.Dispose();
+
+            int version = Interlocked.Increment(ref imageLoadVersion);
+
+            try
+            {
+                var user = api.GetCurrentUser();
+
+                if (user == null)
+                    return;
+
+                Texture texture = await textureStore.GetAsync(user.GetAvatarURL(DiscordRPC.User.AvatarFormat.PNG, DiscordRPC.User.AvatarSize.x2048), linkedToken).ConfigureAwait(false);
+                linkedToken.ThrowIfCancellationRequested();
+
+                if (IsDisposed)
+                    return;
+
+                Schedule(() =>
+                {
+                    if (version == Volatile.Read(ref imageLoadVersion))
+                        profileImage.Texture = texture;
+                });
+            }
+            catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+            {
+                // A newer request replaced this one, or the drawable was disposed.
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, "[Discord] Failed to load the profile image.");
+            }
         }
     }
 }

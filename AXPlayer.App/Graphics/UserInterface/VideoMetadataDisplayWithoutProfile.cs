@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable disable
@@ -17,12 +17,14 @@ using Humanizer;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
+using osu.Framework.Extensions;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osuTK;
 using osuTK.Graphics;
 using PaletteNet;
@@ -271,39 +273,49 @@ namespace AXPlayer.App.Graphics.UserInterface
         {
             Task.Run(async () =>
             {
-                var cachePath = app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache").GetFullPath($"{videoData.Id}-2.png");
-
-                using (var httpClient = new System.Net.Http.HttpClient())
+                try
                 {
-                    var imageBytes = await httpClient.GetByteArrayAsync(videoData.Snippet.Thumbnails.High.Url);
-                    await System.IO.File.WriteAllBytesAsync(cachePath, imageBytes);
-                }
+                    string cachePath = app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache").GetFullPath($"{videoData.Id}-2.png");
+                    byte[] imageBytes;
 
-                SixLabors.ImageSharp.Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(app.Host.CacheStorage.GetStorageForDirectory("videoThumbnailCache").GetFullPath($"{videoData.Id}-2.png"));
-
-                IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
-                PaletteBuilder paletteBuilder = new PaletteBuilder();
-                Palette palette = paletteBuilder.Generate(bitmapHelper);
-                int? rgbColor = palette.VibrantSwatch.Rgb;
-                int? rgbTextColor = palette.VibrantSwatch.TitleTextColor;
-
-                if (rgbColor != null)
-                {
-                    Color4 bgColor = Color.FromArgb((int)rgbColor);
-                    Schedule(() =>
+                    using (var httpClient = new System.Net.Http.HttpClient())
                     {
-                        bgLayer.Colour = ColourInfo.GradientHorizontal(bgColor.Opacity(0.75f), bgColor.Opacity(0f));
-                    });
-                }
+                        imageBytes = await httpClient.GetByteArrayAsync(videoData.Snippet.Thumbnails.High.Url);
+                    }
 
-                if (rgbTextColor != null)
-                {
-                    Color4 textColor = Color.FromArgb((int)rgbTextColor);
-                    Schedule(() =>
+                    // A thumbnail left behind as read-only by an interrupted run must be replaced, not trusted.
+                    await CachedMediaFileWriter.WriteAsync(cachePath, path => System.IO.File.WriteAllBytesAsync(path, imageBytes));
+
+                    using SixLabors.ImageSharp.Image<Rgba32> bitmap = SixLabors.ImageSharp.Image.Load<Rgba32>(imageBytes);
+
+                    IBitmapHelper bitmapHelper = new BitmapHelper(bitmap);
+                    PaletteBuilder paletteBuilder = new PaletteBuilder();
+                    Palette palette = paletteBuilder.Generate(bitmapHelper);
+                    int? rgbColor = palette.VibrantSwatch.Rgb;
+                    int? rgbTextColor = palette.VibrantSwatch.TitleTextColor;
+
+                    if (rgbColor != null)
                     {
-                        videoName.Colour = (textColor);
-                        desc.Colour = (textColor);
-                    });
+                        Color4 bgColor = Color.FromArgb((int)rgbColor);
+                        Schedule(() =>
+                        {
+                            bgLayer.Colour = ColourInfo.GradientHorizontal(bgColor.Opacity(0.75f), bgColor.Opacity(0f));
+                        });
+                    }
+
+                    if (rgbTextColor != null)
+                    {
+                        Color4 textColor = Color.FromArgb((int)rgbTextColor);
+                        Schedule(() =>
+                        {
+                            videoName.Colour = (textColor);
+                            desc.Colour = (textColor);
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e, e.GetDescription());
                 }
             });
         }

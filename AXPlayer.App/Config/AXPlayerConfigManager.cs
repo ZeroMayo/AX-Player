@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable disable
@@ -70,6 +70,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.VideoGrayscaleLevel, 0f, 0f, 1f, 0.01f);
             SetDefault(AXPlayerSetting.VideoHueShift, 0, 0, 360, 1);
             SetDefault(AXPlayerSetting.VideoCRTEffectEnabled, false);
+            SetDefault(AXPlayerSetting.VideoInterpolationStrength, 0f, 0f, 1f, 0.01f);
 
             SetDefault(AXPlayerSetting.DiscordRichPresence, DiscordRichPresenceMode.Full);
             SetDefault(AXPlayerSetting.AudioNormalization, true);
@@ -294,6 +295,7 @@ namespace AXPlayer.App.Config
         SmoothCaptionAnimation,
         DarkMode,
         VideoCRTEffectEnabled,
+        VideoInterpolationStrength,
         CustomPlaybackSpeedPresets,
         PlaylistCrossfadeEnabled,
         PlaylistCrossfadeDuration,

@@ -112,10 +112,10 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         public void RefreshChannelProfile(Channel channel)
         {
-            Task.Run(async () =>
-            {
-                profileImage.UpdateProfileImage(channel.Id);
-            });
+            if (channel == null)
+                return;
+
+            profileImage.UpdateProfileImage(channel.Id);
         }
 
         [BackgroundDependencyLoader(true)]

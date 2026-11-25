@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable disable
@@ -87,6 +87,7 @@ namespace AXPlayer.App.Screens
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"ChromaticAberration"));
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"Greyscale"));
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"HueShift"));
+                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"Interpolation"));
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, "Path"));
                 loadTargets.Add(manager.Load("PathPrepass", "PathPrepass"));
             }
