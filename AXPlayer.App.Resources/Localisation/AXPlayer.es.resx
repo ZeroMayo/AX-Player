@@ -1267,4 +1267,7 @@
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>Cuando esta función está activada, se crea un volcado en la carpeta temporal, lo que puede reducir el espacio de almacenamiento disponible.</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>Ecualizador</value>
+  </data>
 </root>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable disable
@@ -9,11 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using osu.Framework;
+using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Configuration.Tracking;
 using osu.Framework.Extensions;
 using osu.Framework.Extensions.LocalisationExtensions;
 using osu.Framework.Platform;
+using AXPlayer.App.Audio.Effects;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Input.Binding;
 
@@ -63,6 +65,11 @@ namespace AXPlayer.App.Config
             SetDefault(AudioEffectsSetting.EightBitEffectBitDepth, 8, 4, 8, 1);
             SetDefault(AudioEffectsSetting.EightBitEffectDownsampleRatio, 0.25f, 0.1f, 1f, 0.01f);
 
+            SetDefault(AudioEffectsSetting.EqualizerEnabled, false);
+
+            for (int band = 0; band < TenBandEqualizer.BAND_COUNT; band++)
+                SetDefault(GetEqualizerGainSetting(band), 0f, TenBandEqualizer.MIN_GAIN_DB, TenBandEqualizer.MAX_GAIN_DB, TenBandEqualizer.GAIN_STEP_DB);
+
             SetDefault(AudioEffectsSetting.Presets, string.Empty);
         }
 
@@ -72,6 +79,22 @@ namespace AXPlayer.App.Config
         {
             this.storage = storage;
         }
+
+        /// <summary>
+        /// Returns the setting holding the gain of the given equalizer band.
+        /// </summary>
+        public static AudioEffectsSetting GetEqualizerGainSetting(int band)
+        {
+            if (band < 0 || band >= TenBandEqualizer.BAND_COUNT)
+                throw new ArgumentOutOfRangeException(nameof(band));
+
+            return (AudioEffectsSetting)((int)AudioEffectsSetting.EqualizerGain0 + band);
+        }
+
+        /// <summary>
+        /// Returns the bindable holding the gain of the given equalizer band, in decibels.
+        /// </summary>
+        public Bindable<float> GetEqualizerGain(int band) => GetBindable<float>(GetEqualizerGainSetting(band));
 
         /// <summary>
         /// Saves the current audio effect configuration and stores a timestamped copy of <c>audio_effects.ini</c>
@@ -224,6 +247,17 @@ namespace AXPlayer.App.Config
             GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled).Value = preset.EightBitEffectEnabled;
             GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value = preset.EightBitEffectBitDepth;
             GetBindable<float>(AudioEffectsSetting.EightBitEffectDownsampleRatio).Value = preset.EightBitEffectDownsampleRatio;
+
+            GetBindable<bool>(AudioEffectsSetting.EqualizerEnabled).Value = preset.EqualizerEnabled;
+
+            for (int band = 0; band < TenBandEqualizer.BAND_COUNT; band++)
+            {
+                float gain = preset.EqualizerGains != null && band < preset.EqualizerGains.Length
+                    ? preset.EqualizerGains[band]
+                    : 0f;
+
+                GetEqualizerGain(band).Value = gain;
+            }
         }
 
         /// <summary>
@@ -281,6 +315,9 @@ namespace AXPlayer.App.Config
             EightBitEffectEnabled = GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled).Value,
             EightBitEffectBitDepth = GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value,
             EightBitEffectDownsampleRatio = GetBindable<float>(AudioEffectsSetting.EightBitEffectDownsampleRatio).Value,
+
+            EqualizerEnabled = GetBindable<bool>(AudioEffectsSetting.EqualizerEnabled).Value,
+            EqualizerGains = Enumerable.Range(0, TenBandEqualizer.BAND_COUNT).Select(GetEqualizerGain).Select(gain => gain.Value).ToArray(),
         };
 
         private List<AudioEffectsPreset> loadPresets()
@@ -419,6 +456,19 @@ namespace AXPlayer.App.Config
         EightBitEffectBitDepth,
         EightBitEffectDownsampleRatio,
 
+        //equalizer (one gain per band, in decibels)
+        EqualizerEnabled,
+        EqualizerGain0,
+        EqualizerGain1,
+        EqualizerGain2,
+        EqualizerGain3,
+        EqualizerGain4,
+        EqualizerGain5,
+        EqualizerGain6,
+        EqualizerGain7,
+        EqualizerGain8,
+        EqualizerGain9,
+
         //saved presets
         Presets,
     }
@@ -470,5 +520,9 @@ namespace AXPlayer.App.Config
         public bool EightBitEffectEnabled { get; set; }
         public float EightBitEffectBitDepth { get; set; }
         public float EightBitEffectDownsampleRatio { get; set; }
+
+        //equalizer
+        public bool EqualizerEnabled { get; set; }
+        public float[] EqualizerGains { get; set; } = new float[TenBandEqualizer.BAND_COUNT];
     }
 }

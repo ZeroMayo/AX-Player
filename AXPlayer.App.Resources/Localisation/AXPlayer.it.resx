@@ -1267,4 +1267,7 @@
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>Quando questa funzione è attiva, viene creato un dump nella cartella temporanea, il che può ridurre lo spazio di archiviazione disponibile.</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>Equalizzatore</value>
+  </data>
 </root>

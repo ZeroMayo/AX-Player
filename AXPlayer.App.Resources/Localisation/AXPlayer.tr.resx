@@ -1267,4 +1267,7 @@
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>Bu özellik etkinleştirildiğinde geçici klasörde bir döküm oluşturulur; bu, kullanılabilir depolama alanını azaltabilir.</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>Ekolayzer</value>
+  </data>
 </root>

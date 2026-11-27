@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable disable
@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AXPlayer.App.Audio;
+using AXPlayer.App.Audio.Effects;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics;
@@ -530,6 +531,10 @@ namespace AXPlayer.App
         private Bindable<float> eightBitEffectBitDepth = null!;
         private Bindable<float> eightBitEffectDownsampleRatio = null!;
 
+        private Bindable<bool> equalizerEnabled = null!;
+        private Bindable<float>[] equalizerGains = null!;
+        private TenBandEqualizerEffect equalizerEffect;
+
         private ReverbParameters reverbParameters = new ReverbParameters();
         private RotateParameters rotateParameters = new RotateParameters();
         private EchoParameters echoParameters = new EchoParameters();
@@ -564,6 +569,9 @@ namespace AXPlayer.App
                 if (eightBitEffectEnabled != null && eightBitEffectEnabled.Value)
                     Audio.TrackMixer.RemoveDSP(_eightBitDsp);
 
+                equalizerEffect?.Dispose();
+                equalizerEffect = null;
+
                 enableReverb = null;
                 rotateEnabled = null;
                 echoEnabled = null;
@@ -590,6 +598,8 @@ namespace AXPlayer.App
                 eightBitEffectEnabled = null;
                 eightBitEffectBitDepth = null;
                 eightBitEffectDownsampleRatio = null;
+                equalizerEnabled = null;
+                equalizerGains = null;
                 reverbParameters = new ReverbParameters();
                 rotateParameters = new RotateParameters();
                 echoParameters = new EchoParameters();
@@ -838,6 +848,23 @@ namespace AXPlayer.App
                     else
                         Audio.TrackMixer.RemoveDSP(_eightBitDsp);
                 }, true);
+                #endregion
+
+                #region Equalizer
+                equalizerEffect = new TenBandEqualizerEffect(Audio.TrackMixer);
+
+                equalizerGains = new Bindable<float>[TenBandEqualizer.BAND_COUNT];
+
+                for (int band = 0; band < TenBandEqualizer.BAND_COUNT; band++)
+                {
+                    int bandIndex = band;
+
+                    equalizerGains[band] = AudioEffectsConfig.GetEqualizerGain(band);
+                    equalizerGains[band].BindValueChanged(gain => equalizerEffect.SetGain(bandIndex, gain.NewValue), true);
+                }
+
+                equalizerEnabled = AudioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EqualizerEnabled);
+                equalizerEnabled.BindValueChanged(enabled => equalizerEffect.SetAttached(enabled.NewValue), true);
                 #endregion
             });
         }

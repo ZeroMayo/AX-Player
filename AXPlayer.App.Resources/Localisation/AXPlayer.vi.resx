@@ -1268,4 +1268,7 @@ Khuyến nghị bật tính năng này; chỉ tắt nếu gặp sự cố.</valu
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>Khi bật tính năng này, một bản kết xuất sẽ được tạo trong thư mục tạm, điều này có thể làm giảm dung lượng lưu trữ khả dụng.</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>Bộ cân bằng âm thanh</value>
+  </data>
 </root>

@@ -1406,4 +1406,7 @@ Recommended to have On, turn Off only if experiencing issues.</value>
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>When this feature is enabled, a dump is created in the temporary folder, which may reduce available storage space.</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>Equalizer</value>
+  </data>
 </root>

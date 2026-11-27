@@ -1267,4 +1267,7 @@
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>이 기능을 사용하면 임시 폴더에 덤프가 생성되어 사용 가능한 저장 공간이 줄어들 수 있습니다.</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>이퀄라이저</value>
+  </data>
 </root>

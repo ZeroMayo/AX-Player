@@ -1267,4 +1267,7 @@
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>この機能を有効にすると、一時フォルダーにダンプが作成されるため、使用可能なストレージ容量が減る可能性があります。</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>イコライザー</value>
+  </data>
 </root>

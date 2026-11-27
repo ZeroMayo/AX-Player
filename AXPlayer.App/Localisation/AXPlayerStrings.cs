@@ -866,6 +866,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString AudioEffects => new TranslatableString(getKey(@"audio_effects"), "Audio effects");
 
         /// <summary>
+        /// "Equalizer"
+        /// </summary>
+        public static LocalisableString Equalizer => new TranslatableString(getKey(@"equalizer"), "Equalizer");
+
+        /// <summary>
         /// "Reverb"
         /// </summary>
         public static LocalisableString ReverbEffect => new TranslatableString(getKey(@"reverb"), "Reverb");

@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Linq;
+using AXPlayer.App.Audio.Effects;
 using AXPlayer.App.Config;
 using NUnit.Framework;
 using osu.Framework.Allocation;
@@ -38,6 +39,9 @@ namespace AXPlayer.App.Tests.Visual.Config
                 audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay).Value = 3.5f;
                 audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled).Value = true;
                 audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value = 5;
+                audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EqualizerEnabled).Value = true;
+                audioEffectsConfig.GetEqualizerGain(0).Value = 5;
+                audioEffectsConfig.GetEqualizerGain(9).Value = -4;
             });
 
             AddAssert("preset is saved", () => audioEffectsConfig.SavePreset(name));
@@ -50,6 +54,9 @@ namespace AXPlayer.App.Tests.Visual.Config
                 audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay).Value = 0;
                 audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled).Value = false;
                 audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value = 8;
+                audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EqualizerEnabled).Value = false;
+                audioEffectsConfig.GetEqualizerGain(0).Value = 0;
+                audioEffectsConfig.GetEqualizerGain(9).Value = 0;
             });
 
             AddAssert("preset is applied", () => audioEffectsConfig.ApplyPreset(name));
@@ -57,12 +64,15 @@ namespace AXPlayer.App.Tests.Visual.Config
             AddAssert("enabled states are restored", () =>
                 audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ReverbEnabled).Value
                 && audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EchoEnabled).Value
-                && audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled).Value);
+                && audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled).Value
+                && audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EqualizerEnabled).Value);
 
             AddAssert("parameter values are restored", () =>
                 audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbWetMix).Value == 2.5f
                 && audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay).Value == 3.5f
-                && audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value == 5);
+                && audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value == 5
+                && audioEffectsConfig.GetEqualizerGain(0).Value == 5
+                && audioEffectsConfig.GetEqualizerGain(9).Value == -4);
         }
 
         [Test]
@@ -123,13 +133,18 @@ namespace AXPlayer.App.Tests.Visual.Config
                 EchoDelay = -50,
                 ChorusRate = 99999,
                 EightBitEffectBitDepth = 100,
+                EqualizerGains = new[] { 100f, -100f, 3f },
             }));
 
             AddAssert("values are clamped to their valid range", () =>
                 audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ReverbWetMix).Value == 3
                 && audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EchoDelay).Value == 0
                 && audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.ChorusRate).Value == 1000
-                && audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value == 8);
+                && audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.EightBitEffectBitDepth).Value == 8
+                && audioEffectsConfig.GetEqualizerGain(0).Value == TenBandEqualizer.MAX_GAIN_DB
+                && audioEffectsConfig.GetEqualizerGain(1).Value == TenBandEqualizer.MIN_GAIN_DB
+                && audioEffectsConfig.GetEqualizerGain(2).Value == 3
+                && audioEffectsConfig.GetEqualizerGain(3).Value == 0);
         }
     }
 }

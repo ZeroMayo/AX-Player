@@ -180,7 +180,7 @@ namespace AXPlayer.App.Screens
 
         private ProjectYomiTextFlowContainer debugInfo;
 
-        private FormCheckBox reverbToggle, rotateToggle, echoToggle, distortionToggle, karaokeToggle, chorusToggle, eightBitToggle;
+        private FormCheckBox reverbToggle, rotateToggle, echoToggle, distortionToggle, karaokeToggle, chorusToggle, eightBitToggle, equalizerToggle;
 
         private BufferedContainer videoScalingContainer;
 
@@ -243,8 +243,8 @@ namespace AXPlayer.App.Screens
 #nullable disable
 
         //effects
-        private Bindable<bool> reverbEnabled, rotateEnabled, echoEnabled, distortionEnabled, karaokeEnabled, chorusEnabled, eightBitEnabled;
-        private FillFlowContainer reverbSettings, rotateSettings, echoSettings, distortionSettings, karaokeSettings, chorusSettings, eightBitSettings;
+        private Bindable<bool> reverbEnabled, rotateEnabled, echoEnabled, distortionEnabled, karaokeEnabled, chorusEnabled, eightBitEnabled, equalizerEnabled;
+        private FillFlowContainer reverbSettings, rotateSettings, echoSettings, distortionSettings, karaokeSettings, chorusSettings, eightBitSettings, equalizerSettings;
 
         //audio effect presets
         private FormTextBox audioEffectPresetNameBox;

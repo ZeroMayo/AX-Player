@@ -99,6 +99,7 @@ namespace AXPlayer.App.Screens
             karaokeEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.KaraokeEnabled);
             chorusEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.ChorusEnabled);
             eightBitEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EightBitEffectEnabled);
+            equalizerEnabled = audioEffectsConfig.GetBindable<bool>(AudioEffectsSetting.EqualizerEnabled);
 
             DistortionVolume = audioEffectsConfig.GetBindable<float>(AudioEffectsSetting.DistortionVolume);
 
@@ -2473,6 +2474,24 @@ namespace AXPlayer.App.Screens
                                                                 },
                                                             },
                                                         },
+                                                        new SettingsItemV2(equalizerToggle = new FormCheckBox
+                                                        {
+                                                            Caption = AXPlayerStrings.Equalizer,
+                                                            Current = equalizerEnabled,
+                                                            DynamicCornerType = true,
+                                                        }),
+                                                        equalizerSettings = new FillFlowContainer
+                                                        {
+                                                            Direction = FillDirection.Vertical,
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            Masking = true,
+                                                            Spacing = new Vector2(0, 4),
+                                                            Children = new Drawable[]
+                                                            {
+                                                                new SettingsItemV2(new TenBandEqualizerDisplay()),
+                                                            }
+                                                        },
                                                         new SettingsItemV2(reverbToggle = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ReverbEffect,
@@ -4296,6 +4315,16 @@ namespace AXPlayer.App.Screens
 
                 updateAudioEffectsVisibility();
             });
+
+            equalizerEnabled.BindValueChanged(_ =>
+            {
+                equalizerSettings.ClearTransforms();
+                equalizerSettings.AutoSizeDuration = 400;
+                equalizerSettings.AutoSizeEasing = Easing.OutQuint;
+
+                updateAudioEffectsVisibility();
+            });
+
             updateAudioEffectsVisibility();
 
             videoProgress.BindValueChanged(seek =>
@@ -4389,6 +4418,13 @@ namespace AXPlayer.App.Screens
 
                     eightBitSettings.AutoSizeAxes = eightBitEnabled.Value != false ? Axes.Y : Axes.None;
                     eightBitToggle.CornerType = eightBitEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
+
+                    //equalizer
+                    if (equalizerEnabled.Value == false)
+                        equalizerSettings.ResizeHeightTo(0, 400, Easing.OutQuint);
+
+                    equalizerSettings.AutoSizeAxes = equalizerEnabled.Value != false ? Axes.Y : Axes.None;
+                    equalizerToggle.CornerType = equalizerEnabled.Value != false ? FormControlCornerType.Top : FormControlCornerType.None;
                 }
                 catch
                 {

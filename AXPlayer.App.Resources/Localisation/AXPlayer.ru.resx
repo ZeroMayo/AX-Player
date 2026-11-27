@@ -1268,4 +1268,7 @@
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>При включении этой функции во временной папке создаётся дамп, что может уменьшить доступное место для хранения.</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>Эквалайзер</value>
+  </data>
 </root>

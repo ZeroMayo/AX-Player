@@ -1268,4 +1268,7 @@
   <data name="innertube_dump_toggle_desc" xml:space="preserve">
     <value>启用此功能后，将在临时文件夹中创建转储文件，这可能会减少可用的存储空间。</value>
   </data>
+  <data name="equalizer" xml:space="preserve">
+    <value>均衡器</value>
+  </data>
 </root>
