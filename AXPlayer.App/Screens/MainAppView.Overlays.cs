@@ -16,6 +16,7 @@ using AXPlayer.App.Localisation;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
+using osu.Framework.Configuration;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -177,7 +178,7 @@ namespace AXPlayer.App.Screens
                         sessionStatics.GetBindable<bool>(Static.IsControlVisible).Value = false;
                     }
 
-                    if (videoVolume.Value == 0)
+                    if (videoVolume.Value == 0 || frameworkConfigManager.Get<double>(FrameworkSetting.VolumeUniversal) == 0)
                         Scheduler.AddDelayed(() => muteStateOverlay.Show(), 150);
                 }
             }
@@ -187,6 +188,9 @@ namespace AXPlayer.App.Screens
 #nullable enable
         private IWindow? window;
 #nullable disable
+
+        [Resolved]
+        private FrameworkConfigManager frameworkConfigManager { get; set; }
 
         private partial class RoundedSeekBar : WavySeekBar<double>
         {
