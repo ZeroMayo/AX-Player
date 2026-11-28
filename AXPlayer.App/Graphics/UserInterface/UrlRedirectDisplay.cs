@@ -107,14 +107,14 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Google.Apis.YouTube.v3.Data.Video video = api.GetVideo(videoId);
 
                     displayName = api.GetLocalizedVideoTitle(video);
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
 
                     uiLanguage.BindValueChanged(locale =>
                     {
                         Schedule(() =>
                         {
                             displayName = api.GetLocalizedVideoTitle(video);
-                            RefreshTextFlow();
+                            refreshTextFlow();
                         });
                     });
                 }
@@ -126,7 +126,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Google.Apis.YouTube.v3.Data.Playlist video = api.GetPlaylistInfo(playlistId);
 
                     displayName = video.Snippet.Title;
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsYouTubeChannel(url))
                 {
@@ -136,14 +136,14 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Google.Apis.YouTube.v3.Data.Channel channel = api.GetChannel(channelId);
 
                     displayName = api.GetLocalizedChannelTitle(channel);
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
 
                     uiLanguage.BindValueChanged(locale =>
                     {
                         Schedule(() =>
                         {
                             displayName = api.GetLocalizedChannelTitle(channel);
-                            RefreshTextFlow();
+                            refreshTextFlow();
                         });
                     });
 
@@ -152,34 +152,34 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Schedule(() =>
                         {
                             displayName = api.GetLocalizedChannelTitle(channel);
-                            RefreshTextFlow();
+                            refreshTextFlow();
                         });
                     });
                 }
                 else if (AXPlayerDescriptionParser.IsDiscord(url))
                 {
                     icon = FontAwesomeBrands.Discord;
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsTwitch(url))
                 {
                     icon = FontAwesomeBrands.Twitch;
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsInstagram(url))
                 {
                     icon = FontAwesomeBrands.Instagram;
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsTwitter(url))
                 {
                     icon = FontAwesomeBrands.Twitter;
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
                 }
                 else
                 {
                     icon = MaterialSymbols.Filled.Globe;
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
                 }
             });
 #pragma warning restore CS4014 // 이 호출을 대기하지 않으므로 호출이 완료되기 전에 현재 메서드가 계속 실행됩니다.
@@ -215,10 +215,18 @@ namespace AXPlayer.App.Graphics.UserInterface
             Hover.FadeOut(800, Easing.OutQuint);
         }
 
-        private void RefreshTextFlow()
+        private void refreshTextFlow()
         {
             base.LoadComplete();
-            textFlow.AddIcon(icon, o => o.Margin = new MarginPadding() { Right = 4 });
+            textFlow.AddArbitraryDrawable(new Icon()
+            {
+                Icon = icon,
+                Margin = new MarginPadding()
+                {
+                    Right = 4
+                },
+                Size = new osuTK.Vector2(14f, 14f),
+            });
             textFlow.AddText("/  " + displayName);
         }
 
@@ -241,6 +249,11 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         [Resolved]
         private NewToastOverlay toastOverlay { get; set; }
+
+        private partial class Icon : SpriteIcon, IHasLineBaseHeight
+        {
+            public float LineBaseHeight => 12.5f;
+        }
 
         MenuItem[] IHasContextMenu.ContextMenuItems
         {
