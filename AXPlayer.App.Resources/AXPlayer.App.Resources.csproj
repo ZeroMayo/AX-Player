@@ -12,8 +12,4 @@
   <ItemGroup>
     <PackageReference Update="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Fonts\MaterialSymbolsRounded\" />
-    <Folder Include="Fonts\FontAwesome7Brands\" />
-  </ItemGroup>
 </Project>
