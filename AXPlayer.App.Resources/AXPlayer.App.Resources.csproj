@@ -14,5 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Fonts\MaterialSymbolsRounded\" />
+    <Folder Include="Fonts\FontAwesome7Brands\" />
   </ItemGroup>
 </Project>
