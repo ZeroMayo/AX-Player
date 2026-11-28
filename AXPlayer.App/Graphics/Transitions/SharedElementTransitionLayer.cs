@@ -70,18 +70,20 @@ namespace AXPlayer.App.Graphics.Transitions
         /// <param name="easing">The easing applied to the bounds animation.</param>
         /// <param name="fadeOutDuration">The duration used to fade the proxy out after the bounds animation, in milliseconds.</param>
         /// <param name="completed">An optional callback invoked once the transition has finished.</param>
-        public void Play(Drawable source, Drawable destination, Texture texture, float sourceCornerRadius = DEFAULT_SOURCE_CORNER_RADIUS,
+        /// <param name="restoreSource">Whether the source becomes visible again once the transition has finished.</param>
+        /// <returns><c>true</c> if the transition was started; <c>false</c> if it was skipped.</returns>
+        public bool Play(Drawable source, Drawable destination, Texture texture, float sourceCornerRadius = DEFAULT_SOURCE_CORNER_RADIUS,
                          float destinationCornerRadius = 0, double duration = DEFAULT_DURATION, Easing easing = Easing.OutQuint,
-                         double fadeOutDuration = DEFAULT_FADE_OUT_DURATION, Action? completed = null)
+                         double fadeOutDuration = DEFAULT_FADE_OUT_DURATION, Action? completed = null, bool restoreSource = true)
         {
             ArgumentNullException.ThrowIfNull(texture);
 
-            Play(source, destination, () => new Sprite
+            return Play(source, destination, () => new Sprite
             {
                 RelativeSizeAxes = Axes.Both,
                 FillMode = FillMode.Stretch,
                 Texture = texture,
-            }, sourceCornerRadius, destinationCornerRadius, duration, easing, fadeOutDuration, completed);
+            }, sourceCornerRadius, destinationCornerRadius, duration, easing, fadeOutDuration, completed, restoreSource);
         }
 
         /// <summary>
@@ -96,33 +98,35 @@ namespace AXPlayer.App.Graphics.Transitions
         /// <param name="easing">The easing applied to the bounds animation.</param>
         /// <param name="fadeOutDuration">The duration used to fade the proxy out after the bounds animation, in milliseconds.</param>
         /// <param name="completed">An optional callback invoked once the transition has finished.</param>
-        public void Play(Drawable source, Drawable destination, Func<Drawable> contentFactory, float sourceCornerRadius = DEFAULT_SOURCE_CORNER_RADIUS,
+        /// <param name="restoreSource">Whether the source becomes visible again once the transition has finished.</param>
+        /// <returns><c>true</c> if the transition was started; <c>false</c> if it was skipped.</returns>
+        public bool Play(Drawable source, Drawable destination, Func<Drawable> contentFactory, float sourceCornerRadius = DEFAULT_SOURCE_CORNER_RADIUS,
                          float destinationCornerRadius = 0, double duration = DEFAULT_DURATION, Easing easing = Easing.OutQuint,
-                         double fadeOutDuration = DEFAULT_FADE_OUT_DURATION, Action? completed = null)
+                         double fadeOutDuration = DEFAULT_FADE_OUT_DURATION, Action? completed = null, bool restoreSource = true)
         {
             ArgumentNullException.ThrowIfNull(source);
             ArgumentNullException.ThrowIfNull(destination);
             ArgumentNullException.ThrowIfNull(contentFactory);
 
             if (!IsAlive || !source.IsAlive || !destination.IsAlive)
-                return;
+                return false;
 
             // An invisible source has nothing to animate from. This also prevents starting a second transition
             // from the same source, whose completion would restore the alpha captured by the first transition.
             if (source.Alpha <= 0)
-                return;
+                return false;
 
             RectangleF startBounds = boundsOf(source);
             RectangleF endBounds = boundsOf(destination);
 
             // A drawable that has not been laid out yet has no meaningful bounds to animate between.
             if (startBounds.Width <= 0 || startBounds.Height <= 0 || endBounds.Width <= 0 || endBounds.Height <= 0)
-                return;
+                return false;
 
             Drawable content = contentFactory();
 
             if (content == null)
-                return;
+                return false;
 
             float sourceAlpha = source.Alpha;
             source.Alpha = 0;
@@ -146,13 +150,15 @@ namespace AXPlayer.App.Graphics.Transitions
 
             proxy.Delay(duration).FadeOut(fadeOutDuration, Easing.OutQuad).OnComplete(_ =>
             {
-                if (source.IsAlive)
+                if (restoreSource && source.IsAlive)
                     source.Alpha = sourceAlpha;
 
                 ActiveTransitionCount--;
                 completed?.Invoke();
                 proxy.Expire();
             });
+
+            return true;
         }
 
         /// <summary>

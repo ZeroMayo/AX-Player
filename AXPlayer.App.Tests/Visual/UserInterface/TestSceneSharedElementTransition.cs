@@ -73,6 +73,39 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
         }
 
         [Test]
+        public void TestNotRestoringLeavesSourceHidden()
+        {
+            AddStep("play without restoring the source", () =>
+            {
+                completed = false;
+
+                layer.Play(source, destination, createContent, duration: 100, fadeOutDuration: 50, completed: () => completed = true,
+                    restoreSource: false);
+            });
+
+            AddUntilStep("the transition finishes", () => completed);
+            AddUntilStep("the proxy is removed", () => !layer.IsTransitioning);
+            AddAssert("the source stays hidden", () => source.Alpha, () => Is.Zero);
+        }
+
+        [Test]
+        public void TestInvisibleSourceSkipsTransition()
+        {
+            bool started = true;
+
+            AddStep("play from an invisible source", () =>
+            {
+                source.Alpha = 0;
+                started = layer.Play(source, destination, createContent);
+            });
+
+            AddAssert("the transition is skipped", () => started, () => Is.False);
+            AddAssert("no transition is active", () => layer.ActiveTransitionCount, () => Is.Zero);
+
+            AddStep("restore the source", () => source.Alpha = 1);
+        }
+
+        [Test]
         public void TestCollapsingBackIntoSource()
         {
             AddStep("play the reverse transition", () =>
