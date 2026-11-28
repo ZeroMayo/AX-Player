@@ -976,6 +976,11 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString VideoInterpolation => new TranslatableString(getKey(@"video_interpolation"), "Video interpolation strength");
 
         /// <summary>
+        /// "Video motion blur strength"
+        /// </summary>
+        public static LocalisableString VideoMotionBlur => new TranslatableString(getKey(@"video_motion_blur"), "Video motion blur strength");
+
+        /// <summary>
         /// "Discord Rich Presence"
         /// </summary>
         public static LocalisableString DiscordRichPresence => new TranslatableString(getKey(@"discord_rich_presence"), @"Discord Rich Presence");

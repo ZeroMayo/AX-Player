@@ -20,6 +20,7 @@ using AXPlayer.App.Graphics.Shaders.New.CRT;
 using AXPlayer.App.Graphics.Shaders.New.Grayscale;
 using AXPlayer.App.Graphics.Shaders.New.HueShift;
 using AXPlayer.App.Graphics.Shaders.New.Interpolation;
+using AXPlayer.App.Graphics.Shaders.New.MotionBlur;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
@@ -151,11 +152,11 @@ namespace AXPlayer.App.Graphics.Videos
         private KeyBindingAnimations keyBindingAnimations = null!;
         private ClosedCaptionContainer closedCaption = null!;
         private Bindable<AspectRatioMethod> aspectRatioMethod = null!;
-        private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift, videoInterpolationStrength = null!;
+        private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift, videoInterpolationStrength, videoMotionBlurStrength = null!;
 
         private Bindable<bool> videoCrtEffectEnabled = null!, smoothPlaybackSpeed = null!;
 
-        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, interpolation, crt = null!;
+        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, interpolation, motionBlur, crt = null!;
 
         private Bindable<bool> useNewSubtitlesFeature = null!;
 
@@ -206,6 +207,7 @@ namespace AXPlayer.App.Graphics.Videos
             videoCrtEffectEnabled = config.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled);
             chromaticAberrationStrength = config.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength);
             videoInterpolationStrength = config.GetBindable<float>(AXPlayerSetting.VideoInterpolationStrength);
+            videoMotionBlurStrength = config.GetBindable<float>(AXPlayerSetting.VideoMotionBlurStrength);
             useNewSubtitlesFeature = config.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
             PlaybackSpeed = new Bindable<double>(1);
@@ -267,9 +269,10 @@ namespace AXPlayer.App.Graphics.Videos
                                                     interpolation = new InterpolationContainer
                                                     {
                                                         RelativeSizeAxes = Axes.Both,
-                                                        Children = new Drawable[]
+                                                        Child = motionBlur = new MotionBlurContainer
                                                         {
-                                                            blurContainer = new BufferedContainer
+                                                            RelativeSizeAxes = Axes.Both,
+                                                            Child = blurContainer = new BufferedContainer
                                                             {
                                                                 RelativeSizeAxes = Axes.Both,
                                                                 Children = new Drawable[]
@@ -442,6 +445,11 @@ namespace AXPlayer.App.Graphics.Videos
             videoInterpolationStrength.BindValueChanged(value =>
             {
                 interpolation.Strength = value.NewValue;
+            }, true);
+
+            videoMotionBlurStrength.BindValueChanged(value =>
+            {
+                motionBlur.Strength = value.NewValue;
             }, true);
 
             videoCrtEffectEnabled.BindValueChanged(value =>

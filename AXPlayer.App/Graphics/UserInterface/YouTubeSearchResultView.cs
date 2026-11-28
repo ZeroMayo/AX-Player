@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 #nullable enable
@@ -31,6 +31,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 {
     public partial class YouTubeSearchResultView : ProjectYomiClickableContainer
     {
+        private Container thumbnailContainer = null!;
         private Sprite thumbnail = null!;
         private ProjectYomiTextFlowContainer videoNameText = null!;
         private TruncatingSpriteText channelNameText = null!;
@@ -62,6 +63,16 @@ namespace AXPlayer.App.Graphics.UserInterface
         [Resolved]
         private TextureStore textureStore { get; set; } = null!;
 
+        /// <summary>
+        /// The thumbnail of this result, used as the shared element when the result expands into the player.
+        /// </summary>
+        public Drawable Thumbnail => thumbnailContainer;
+
+        /// <summary>
+        /// The texture currently displayed by <see cref="Thumbnail"/>, or <c>null</c> while it is still loading.
+        /// </summary>
+        public Texture? ThumbnailTexture => thumbnail.Texture;
+
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider overlayColourProvider)
         {
@@ -89,7 +100,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Padding = new MarginPadding(7),
                     Children = new Drawable[]
                     {
-                        new Container
+                        thumbnailContainer = new Container
                         {
                             Width = 190,
                             Height = 96,

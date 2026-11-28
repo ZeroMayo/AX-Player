@@ -12,6 +12,7 @@ using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Shaders;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.Sprites.Odometer;
+using AXPlayer.App.Graphics.Transitions;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Graphics.UserInterfaceV3;
@@ -46,6 +47,7 @@ namespace AXPlayer.App.Screens
     public partial class MainAppView : AXPlayerScreen, IKeyBindingHandler<GlobalAction>, IAXPlayerAppMessageHandler
     {
         private BufferedContainer videoContainer;
+        private SharedElementTransitionLayer sharedElementTransitionLayer;
         private ProjectYomiButton commentSendButton, searchButton, loadPlaylistBtn, downloadBtn;
         private RoundedButton acceptButton, updatePlaylistButton, loadBtn, viewChannelButton;
         private RoundedAltButton logoutButton, declineButton;

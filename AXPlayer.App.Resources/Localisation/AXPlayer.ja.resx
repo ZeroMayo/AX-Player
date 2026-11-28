@@ -640,6 +640,9 @@
   <data name="video_interpolation" xml:space="preserve">
     <value>ビデオ補間強度</value>
   </data>
+  <data name="video_motion_blur" xml:space="preserve">
+    <value>ビデオモーションブラー強度</value>
+  </data>
   <data name="discord_rich_presence" xml:space="preserve">
     <value>Discord リッチプレゼンス</value>
   </data>

@@ -38,5 +38,8 @@ namespace AXPlayer.App.Graphics.Shaders.New
 
         [ShaderStrength(1, ParamName = "Interpolation", Tooltip = "How strongly the previous frame is blended into the current frame.")]
         Interpolation,
+
+        [ShaderStrength(1, ParamName = "Motion blur", Tooltip = "How far moving content is smeared across a frame.")]
+        MotionBlur,
     }
 }

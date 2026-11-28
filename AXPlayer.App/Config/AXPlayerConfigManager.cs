@@ -71,6 +71,7 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.VideoHueShift, 0, 0, 360, 1);
             SetDefault(AXPlayerSetting.VideoCRTEffectEnabled, false);
             SetDefault(AXPlayerSetting.VideoInterpolationStrength, 0f, 0f, 1f, 0.01f);
+            SetDefault(AXPlayerSetting.VideoMotionBlurStrength, 0f, 0f, 1f, 0.01f);
 
             SetDefault(AXPlayerSetting.DiscordRichPresence, DiscordRichPresenceMode.Full);
             SetDefault(AXPlayerSetting.AudioNormalization, true);
@@ -308,5 +309,6 @@ namespace AXPlayer.App.Config
         SmoothPlaybackSpeed,
         ScreenshotCaptureLiveChat,
         InnertubeDumpEnabled,
+        VideoMotionBlurStrength,
     }
 }

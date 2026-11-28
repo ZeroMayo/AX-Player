@@ -88,6 +88,7 @@ namespace AXPlayer.App.Screens
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"Greyscale"));
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"HueShift"));
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"Interpolation"));
+                loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, @"MotionBlur"));
                 loadTargets.Add(manager.Load(VertexShaderDescriptor.TEXTURE_2, "Path"));
                 loadTargets.Add(manager.Load("PathPrepass", "PathPrepass"));
             }
