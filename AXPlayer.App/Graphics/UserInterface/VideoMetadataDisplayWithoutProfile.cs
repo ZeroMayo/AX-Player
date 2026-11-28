@@ -243,6 +243,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                     desc.TextAnchor = Anchor.TopLeft;
 
                     bgLayer2.FadeColour(ColourInfo.GradientHorizontal(overlayColourProvider.Content2, overlayColourProvider.Background5), 500, Easing.OutQuint);
+                    bgLayer2.Size = new Vector2(0.5f, 1f);
+                    bgLayer2.Anchor = Anchor.CentreLeft;
+                    bgLayer2.Origin = Anchor.CentreLeft;
                     break;
                 }
                 case VideoMetadataDisplayAlignment.Center:
@@ -256,6 +259,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                     desc.TextAnchor = Anchor.TopCentre;
 
                     bgLayer2.FadeColour(ColourInfo.GradientVertical(overlayColourProvider.Content2, overlayColourProvider.Background5), 500, Easing.OutQuint);
+                    bgLayer2.Size = new Vector2(1f, 1f);
+                    bgLayer2.Anchor = Anchor.TopCentre;
+                    bgLayer2.Origin = Anchor.TopCentre;
                     break;
                 }
                 case VideoMetadataDisplayAlignment.Right:
@@ -267,7 +273,11 @@ namespace AXPlayer.App.Graphics.UserInterface
                     desc.Anchor = Anchor.TopRight;
                     desc.Origin = Anchor.TopRight;
                     desc.TextAnchor = Anchor.TopRight;
+
                     bgLayer2.FadeColour(ColourInfo.GradientHorizontal(overlayColourProvider.Background5, overlayColourProvider.Content2), 500, Easing.OutQuint);
+                    bgLayer2.Size = new Vector2(0.5f, 1f);
+                    bgLayer2.Anchor = Anchor.CentreRight;
+                    bgLayer2.Origin = Anchor.CentreRight;
                     break;
                 }
             }
