@@ -225,7 +225,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 {
                     Right = 4
                 },
-                Size = new osuTK.Vector2(14f, 14f),
+                Size = new osuTK.Vector2(11f, 11f),
             });
             textFlow.AddText("/  " + displayName);
         }
@@ -252,7 +252,7 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         private partial class Icon : SpriteIcon, IHasLineBaseHeight
         {
-            public float LineBaseHeight => 12.5f;
+            public float LineBaseHeight => 10f;
         }
 
         MenuItem[] IHasContextMenu.ContextMenuItems
