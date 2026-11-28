@@ -147,6 +147,8 @@ namespace AXPlayer.App.Screens
 
             advancedCaptions = appConfig.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
 
+            masterVolume = config.GetBindable<double>(FrameworkSetting.VolumeUniversal);
+
             accentColor = overlayColourProvider1.Content2;
             bgColor = overlayColourProvider1.Background3;
 
@@ -3977,8 +3979,35 @@ namespace AXPlayer.App.Screens
 
             videoVolume.BindValueChanged(volume =>
             {
-                this.TransformBindableTo(volumeTextRolling, volume.NewValue, 400, Easing.OutQuint);
-                volumeText.SetText($"{(int)Math.Round(volume.NewValue * 100)}%");
+                this.TransformBindableTo(volumeTextRolling, (volume.NewValue * masterVolume.Value), 400, Easing.OutQuint);
+                volumeText.SetText($"{(int)Math.Round((volume.NewValue * masterVolume.Value) * 100)}%");
+                if (volume.NewValue > 0.5)
+                {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Hide();
+
+                    volumeIcon.Icon = MaterialSymbols.Filled.VolumeUp;
+                }
+                else if (volume.NewValue >= 0.01)
+                {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Hide();
+
+                    volumeIcon.Icon = MaterialSymbols.Filled.VolumeDown;
+                }
+                else
+                {
+                    if (!sessionStatics.Get<bool>(Static.IsControlVisible))
+                        muteStateOverlay.Show();
+
+                    volumeIcon.Icon = MaterialSymbols.Filled.VolumeMute;
+                }
+            }, true);
+
+            masterVolume.BindValueChanged(volume =>
+            {
+                this.TransformBindableTo(volumeTextRolling, (volume.NewValue * videoVolume.Value), 400, Easing.OutQuint);
+                volumeText.SetText($"{(int)Math.Round((volume.NewValue * videoVolume.Value) * 100)}%");
                 if (volume.NewValue > 0.5)
                 {
                     if (!sessionStatics.Get<bool>(Static.IsControlVisible))

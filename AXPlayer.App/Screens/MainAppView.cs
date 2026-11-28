@@ -70,6 +70,8 @@ namespace AXPlayer.App.Screens
 
         private Bindable<bool> smoothPlaybackSpeed;
 
+        private Bindable<double> masterVolume;
+
         [Resolved]
         private AXPlayerConfigManager config { get; set; }
 
