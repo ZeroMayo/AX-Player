@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
+using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Graphics.Videos;
@@ -1066,7 +1067,7 @@ namespace AXPlayer.App.Screens
 
             if (currentVideoSource != null)
             {
-                playPause.Icon = (currentVideoSource.IsPlaying() ? FontAwesome.Solid.Pause : FontAwesome.Solid.Play);
+                playPause.Icon = (currentVideoSource.IsPlaying() ? MaterialSymbols.Filled.Pause : MaterialSymbols.Filled.Play);
                 playPause.TooltipText = (currentVideoSource.IsPlaying() ? AXPlayerStrings.Pause : AXPlayerStrings.Play);
                 videoProgress.MaxValue = currentVideoSource.VideoProgress.MaxValue;
 

@@ -148,7 +148,7 @@ namespace AXPlayer.App.Overlays
                                 Anchor = Anchor.TopRight,
                                 Size = new Vector2(35, 35),
                                 IconScale = new Vector2(0.8f),
-                                Icon = FontAwesome.Solid.Times,
+                                Icon = MaterialSymbols.Filled.Times,
                                 Action = () =>
                                 {
                                    HideOverlay();

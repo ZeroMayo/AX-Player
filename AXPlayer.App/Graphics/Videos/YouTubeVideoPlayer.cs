@@ -332,7 +332,7 @@ namespace AXPlayer.App.Graphics.Videos
                         Right = 16,
                         Bottom = 96,
                     },
-                    Icon = FontAwesome.Solid.CommentAlt,
+                    Icon = MaterialSymbols.Filled.CommentAlt,
                     IconScale = new Vector2(0.85f),
                     BackgroundColour = overlayColourProvider.Background5.Opacity(0.85f),
                     TooltipText = AXPlayerStrings.LiveChatReplay("0"),
@@ -739,7 +739,7 @@ namespace AXPlayer.App.Graphics.Videos
                 Pause();
             }
 
-            keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.FastForward10sec, FontAwesome.Solid.Box);
+            keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.FastForward10sec, MaterialSymbols.Filled.Box);
         }
 
         public void FastRewind10Sec()
@@ -748,7 +748,7 @@ namespace AXPlayer.App.Graphics.Videos
                 return;
 
             SeekTo(drawableTrack.CurrentTime - seek_interval);
-            keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.FastRewind10sec, FontAwesome.Solid.Box);
+            keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.FastRewind10sec, MaterialSymbols.Filled.Box);
         }
 
         public void Pause(bool isKeyboardOrMouseAction = false)
@@ -766,7 +766,7 @@ namespace AXPlayer.App.Graphics.Videos
             }
 
             if (isKeyboardOrMouseAction)
-                keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.PlayPause, FontAwesome.Solid.Pause);
+                keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.PlayPause, MaterialSymbols.Filled.Pause);
         }
 
         public void Play(bool isKeyboardOrMouseAction = false)
@@ -792,7 +792,7 @@ namespace AXPlayer.App.Graphics.Videos
             framedClock.Start();
 
             if (isKeyboardOrMouseAction)
-                keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.PlayPause, FontAwesome.Solid.Play);
+                keyBindingAnimations.PlaySeekAnimation(KeyBindingAnimations.SeekAction.PlayPause, MaterialSymbols.Filled.Play);
         }
 
         [Resolved]

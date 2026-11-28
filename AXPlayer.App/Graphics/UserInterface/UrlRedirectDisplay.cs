@@ -41,7 +41,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             Origin = Anchor.CentreLeft;
             this.url = url;
             displayName = url;
-            icon = FontAwesome.Solid.Globe;
+            icon = MaterialSymbols.Filled.Globe;
             Enabled.Value = true;
             Masking = true;
             TooltipText = url;
@@ -101,49 +101,49 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 if (AXPlayerDescriptionParser.IsYouTubeVideo(url))
                 {
-                    icon = FontAwesome.Brands.Youtube;
+                    icon = FontAwesomeBrands.Youtube;
 
                     string videoId = VideoId.Parse(url);
                     Google.Apis.YouTube.v3.Data.Video video = api.GetVideo(videoId);
 
                     displayName = api.GetLocalizedVideoTitle(video);
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
 
                     uiLanguage.BindValueChanged(locale =>
                     {
                         Schedule(() =>
                         {
                             displayName = api.GetLocalizedVideoTitle(video);
-                            RefreshTextFlow();
+                            refreshTextFlow();
                         });
                     });
                 }
                 else if (AXPlayerDescriptionParser.IsYouTubePlaylist(url))
                 {
-                    icon = FontAwesome.Brands.Youtube;
+                    icon = FontAwesomeBrands.Youtube;
 
                     string playlistId = PlaylistId.Parse(url);
                     Google.Apis.YouTube.v3.Data.Playlist video = api.GetPlaylistInfo(playlistId);
 
                     displayName = video.Snippet.Title;
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsYouTubeChannel(url))
                 {
-                    icon = FontAwesome.Brands.Youtube;
+                    icon = FontAwesomeBrands.Youtube;
 
                     string channelId = url.Replace("https://www.youtube.com/channel/", string.Empty);
                     Google.Apis.YouTube.v3.Data.Channel channel = api.GetChannel(channelId);
 
                     displayName = api.GetLocalizedChannelTitle(channel);
-                    Schedule(() => RefreshTextFlow());
+                    Schedule(() => refreshTextFlow());
 
                     uiLanguage.BindValueChanged(locale =>
                     {
                         Schedule(() =>
                         {
                             displayName = api.GetLocalizedChannelTitle(channel);
-                            RefreshTextFlow();
+                            refreshTextFlow();
                         });
                     });
 
@@ -152,34 +152,34 @@ namespace AXPlayer.App.Graphics.UserInterface
                         Schedule(() =>
                         {
                             displayName = api.GetLocalizedChannelTitle(channel);
-                            RefreshTextFlow();
+                            refreshTextFlow();
                         });
                     });
                 }
                 else if (AXPlayerDescriptionParser.IsDiscord(url))
                 {
-                    icon = FontAwesome.Brands.Discord;
-                    Schedule(() => RefreshTextFlow());
+                    icon = FontAwesomeBrands.Discord;
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsTwitch(url))
                 {
-                    icon = FontAwesome.Brands.Twitch;
-                    Schedule(() => RefreshTextFlow());
+                    icon = FontAwesomeBrands.Twitch;
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsInstagram(url))
                 {
-                    icon = FontAwesome.Brands.Instagram;
-                    Schedule(() => RefreshTextFlow());
+                    icon = FontAwesomeBrands.Instagram;
+                    Schedule(() => refreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsTwitter(url))
                 {
-                    icon = FontAwesome.Brands.Twitter;
-                    Schedule(() => RefreshTextFlow());
+                    icon = FontAwesomeBrands.Twitter;
+                    Schedule(() => refreshTextFlow());
                 }
                 else
                 {
-                    icon = FontAwesome.Solid.Globe;
-                    Schedule(() => RefreshTextFlow());
+                    icon = MaterialSymbols.Filled.Globe;
+                    Schedule(() => refreshTextFlow());
                 }
             });
 #pragma warning restore CS4014 // 이 호출을 대기하지 않으므로 호출이 완료되기 전에 현재 메서드가 계속 실행됩니다.
@@ -215,10 +215,18 @@ namespace AXPlayer.App.Graphics.UserInterface
             Hover.FadeOut(800, Easing.OutQuint);
         }
 
-        private void RefreshTextFlow()
+        private void refreshTextFlow()
         {
             base.LoadComplete();
-            textFlow.AddIcon(icon, o => o.Margin = new MarginPadding() { Right = 4 });
+            textFlow.AddArbitraryDrawable(new Icon()
+            {
+                Icon = icon,
+                Margin = new MarginPadding()
+                {
+                    Right = 4
+                },
+                Size = new osuTK.Vector2(11f, 11f),
+            });
             textFlow.AddText("/  " + displayName);
         }
 
@@ -241,6 +249,11 @@ namespace AXPlayer.App.Graphics.UserInterface
 
         [Resolved]
         private NewToastOverlay toastOverlay { get; set; }
+
+        private partial class Icon : SpriteIcon, IHasLineBaseHeight
+        {
+            public float LineBaseHeight => 10f;
+        }
 
         MenuItem[] IHasContextMenu.ContextMenuItems
         {

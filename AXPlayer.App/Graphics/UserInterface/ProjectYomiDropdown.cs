@@ -260,7 +260,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                         {
                             Chevron = new SpriteIcon
                             {
-                                Icon = FontAwesome.Solid.ChevronRight,
+                                Icon = MaterialSymbols.Filled.ChevronRight,
                                 Size = new Vector2(8),
                                 Alpha = 0,
                                 X = chevron_offset,
@@ -365,7 +365,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                             },
                             Chevron = new SpriteIcon
                             {
-                                Icon = FontAwesome.Solid.ChevronDown,
+                                Icon = MaterialSymbols.Filled.ChevronDown,
                                 Anchor = Anchor.CentreRight,
                                 Origin = Anchor.CentreRight,
                                 Size = new Vector2(10),

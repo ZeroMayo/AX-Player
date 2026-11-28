@@ -52,7 +52,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
             this.cultureCodeProvider = cultureCodeProvider;
             this.notify = notify;
 
-            Icon = FontAwesome.Solid.Microphone;
+            Icon = MaterialSymbols.Filled.Microphone;
             TooltipText = AXPlayerStrings.VoiceSearch;
 
             Action = () => _ = recogniseAsync();

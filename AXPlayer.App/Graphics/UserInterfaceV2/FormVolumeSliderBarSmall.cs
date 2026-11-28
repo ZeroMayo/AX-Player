@@ -461,19 +461,19 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
 
             public void UpdateIconState(float value)
             {
-                IconUsage icon = FontAwesome.Solid.VolumeUp;
+                IconUsage icon = MaterialSymbols.Filled.VolumeUp;
 
                 if (value > 0.5)
                 {
-                    icon = FontAwesome.Solid.VolumeUp;
+                    icon = MaterialSymbols.Filled.VolumeUp;
                 }
                 else if (value >= 0.01)
                 {
-                    icon = FontAwesome.Solid.VolumeDown;
+                    icon = MaterialSymbols.Filled.VolumeDown;
                 }
                 else
                 {
-                    icon = FontAwesome.Solid.VolumeMute;
+                    icon = MaterialSymbols.Filled.VolumeMute;
                 }
 
                 iconDark.Icon = icon;
@@ -530,7 +530,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                                     },
                                     iconDark = new SpriteIcon
                                     {
-                                        Icon = FontAwesome.Solid.VolumeUp,
+                                        Icon = MaterialSymbols.Filled.VolumeUp,
                                         Size = new Vector2(16),
                                         Margin = new MarginPadding
                                         {
@@ -560,7 +560,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                                     },
                                     iconLight = new SpriteIcon
                                     {
-                                        Icon = FontAwesome.Solid.VolumeUp,
+                                        Icon = MaterialSymbols.Filled.VolumeUp,
                                         Size = new Vector2(16),
                                         Margin = new MarginPadding
                                         {

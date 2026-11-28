@@ -53,7 +53,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                     Anchor = Anchor.Centre,
                     Origin = Anchor.Centre,
                     Colour = colourProvider.Content2,
-                    Icon = FontAwesome.Solid.Undo,
+                    Icon = MaterialSymbols.Filled.Undo,
                     Size = new Vector2(IconSize),
                 },
                 hover = new Box

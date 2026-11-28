@@ -21,7 +21,7 @@
     <ProjectReference Include="..\AXPlayer.App\AXPlayer.App.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ZeroMayo.Framework.Android" Version="2026.1118.0" />
+    <PackageReference Include="ZeroMayo.Framework.Android" Version="2026.1128.0" />
   </ItemGroup>
   <ItemGroup>
     <!-- Directory.Build.props embeds everything under Resources/. On Android these files are Android resources instead. -->

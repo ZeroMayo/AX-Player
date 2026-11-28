@@ -82,7 +82,7 @@ namespace AXPlayer.App.Overlays.Volume
 
             Current.BindValueChanged(muted =>
             {
-                icon.Icon = muted.NewValue ? FontAwesome.Solid.VolumeMute : FontAwesome.Solid.VolumeUp;
+                icon.Icon = muted.NewValue ? MaterialSymbols.Filled.VolumeMute : MaterialSymbols.Filled.VolumeUp;
                 icon.Size = new Vector2(muted.NewValue ? 12 : 16);
                 icon.Margin = new MarginPadding { Right = muted.NewValue ? 2 : 0 };
             }, true);

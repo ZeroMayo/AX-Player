@@ -188,7 +188,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Size = new Vector2(compact ? 26 : 35),
                     IconScale = new Vector2(compact ? 0.65f : 0.8f),
                     Margin = new MarginPadding(compact ? 8 : 14),
-                    Icon = FontAwesome.Solid.Times,
+                    Icon = MaterialSymbols.Filled.Times,
                     BackgroundColour = overlayColourProvider.Background4,
                     Action = () => CloseAction?.Invoke(),
                 },
@@ -538,7 +538,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                 Origin = Anchor.TopCentre,
                                 Margin = new MarginPadding(compact ? 4 : 10),
                                 Size = new Vector2(compact ? 24 : 42),
-                                Icon = FontAwesome.Solid.CommentAlt,
+                                Icon = MaterialSymbols.Filled.CommentAlt,
                                 Colour = overlayColourProvider.Content2.Opacity(0.7f),
                             },
                             emptyTitle = new ProjectYomiSpriteText

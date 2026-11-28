@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AXPlayer.App.Graphics;
 using Google.Apis.YouTube.v3.Data;
 using AXPlayer.App.Extensions;
 using AXPlayer.App.Graphics.Containers;
@@ -109,16 +110,16 @@ namespace AXPlayer.App.Screens
             {
                 await api.SaveVideoToPlaylist(myPlaylistsDropdown.Current.Value.Id, videoId);
 
-                saveVideoOpenButton.Icon = FontAwesome.Solid.Bookmark;
+                saveVideoOpenButton.Icon = MaterialSymbols.Filled.Bookmark;
 
                 /*
-                ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Playlists, NekoPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), FontAwesome.Solid.List);
+                ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Playlists, NekoPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), MaterialSymbols.Filled.List);
 
                 Schedule(() => onScreenDisplay.Display(toast));
                 */
                 Schedule(() =>
                 {
-                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Green, AXPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
+                    //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.List, Color4.Green, AXPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
                     newToastOverlay.ShowToast(AXPlayerStrings.VideoSavedToPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title));
                 });
 
@@ -140,16 +141,16 @@ namespace AXPlayer.App.Screens
             {
                 await api.RemoveVideoFromPlaylist(myPlaylistsDropdown.Current.Value.Id, videoId);
 
-                saveVideoOpenButton.Icon = FontAwesome.Regular.Bookmark;
+                saveVideoOpenButton.Icon = MaterialSymbols.Outlined.Bookmark;
 
                 /*
-                ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Playlists, NekoPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), FontAwesome.Solid.List);
+                ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Playlists, NekoPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), MaterialSymbols.Filled.List);
 
                 Schedule(() => onScreenDisplay.Display(toast));
                 */
                 Schedule(() =>
                 {
-                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.List, Color4.Red, AXPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
+                    //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.List, Color4.Red, AXPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title), AXPlayerStrings.Playlists));
                     newToastOverlay.ShowToast(AXPlayerStrings.VideoRemovedFromPlaylist(myPlaylistsDropdown.Current.Value.Snippet.Title));
                 });
 

@@ -76,19 +76,19 @@ namespace AXPlayer.App.Graphics.UserInterface
                     {
                         new Button
                         {
-                            Icon = FontAwesome.Solid.Video,
+                            Icon = MaterialSymbols.Filled.Video,
                         },
                         new Button
                         {
-                            Icon = FontAwesome.Solid.VolumeUp,
+                            Icon = MaterialSymbols.Filled.VolumeUp,
                         },
                         new Button
                         {
-                            Icon = FontAwesome.Solid.PaintBrush,
+                            Icon = MaterialSymbols.Filled.PaintBrush,
                         },
                         new Button
                         {
-                            Icon = FontAwesome.Solid.Cog,
+                            Icon = MaterialSymbols.Filled.Cog,
                         }
                     }
                 }

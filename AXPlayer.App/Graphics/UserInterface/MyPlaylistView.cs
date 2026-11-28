@@ -172,7 +172,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                     Origin = Anchor.TopRight,
                                     Anchor = Anchor.TopRight,
                                     Size = new Vector2(25, 25),
-                                    Icon = FontAwesome.Regular.Edit,
+                                    Icon = MaterialSymbols.Outlined.Edit,
                                     IconScale = new Vector2(0.7f),
                                     TooltipText = AXPlayerStrings.EditPlaylist,
                                     BackgroundColour = overlayColourProvider.Background5,

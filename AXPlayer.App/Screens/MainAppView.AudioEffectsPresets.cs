@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using AXPlayer.App.Config;
+using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Localisation;
@@ -65,7 +66,7 @@ namespace AXPlayer.App.Screens
                                 BackgroundColour = overlayColourProvider1.Background4,
                                 Action = () => applyAudioEffectPreset(presetName),
                             },
-                            new RoundedIconOnlyButton(FontAwesome.Solid.Times)
+                            new RoundedIconOnlyButton(MaterialSymbols.Filled.Times)
                             {
                                 Width = 44,
                                 Height = 44,

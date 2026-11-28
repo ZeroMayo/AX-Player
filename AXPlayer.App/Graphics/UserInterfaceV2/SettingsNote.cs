@@ -97,19 +97,19 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 case Type.Informational:
                     background.Colour = colourProvider.Dark2;
                     text.Colour = colourProvider.Content2;
-                    text.AddIcon(FontAwesome.Solid.InfoCircle, o => o.Margin = new MarginPadding() { Right = 4 });
+                    text.AddIcon(MaterialSymbols.Filled.InfoCircle, o => o.Margin = new MarginPadding() { Right = 4 });
                     break;
 
                 case Type.Warning:
                     background.Colour = colours.Orange1;
                     text.Colour = colourProvider.Background5;
-                    text.AddIcon(FontAwesome.Solid.ExclamationTriangle, o => o.Margin = new MarginPadding() { Right = 4 });
+                    text.AddIcon(MaterialSymbols.Filled.ExclamationTriangle, o => o.Margin = new MarginPadding() { Right = 4 });
                     break;
 
                 case Type.Critical:
                     background.Colour = colours.Red1;
                     text.Colour = colourProvider.Background5;
-                    text.AddIcon(FontAwesome.Solid.TimesCircle, o => o.Margin = new MarginPadding() { Right = 4 });
+                    text.AddIcon(MaterialSymbols.Filled.TimesCircle, o => o.Margin = new MarginPadding() { Right = 4 });
                     break;
             }
 

@@ -96,7 +96,7 @@ namespace AXPlayer.App.Updater
                                 }
                             }
                         },
-                        restartButton = new RoundedIconButton(FontAwesome.Solid.Sync)
+                        restartButton = new RoundedIconButton(MaterialSymbols.Filled.Sync)
                         {
                             Size = new Vector2(120, 30),
                             Text = AXPlayerStrings.RestartNow,

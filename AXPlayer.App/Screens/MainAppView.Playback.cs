@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using AXPlayer.App.Audio;
 using AXPlayer.App.Config;
 using AXPlayer.App.Extensions;
+using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.Videos;
@@ -879,11 +880,11 @@ namespace AXPlayer.App.Screens
                     {
                         Schedule(() =>
                         {
-                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, AXPlayerStrings.NoVideoIdError, AXPlayerStrings.General));
+                            //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.MinusCircle, Color4.Red, AXPlayerStrings.NoVideoIdError, AXPlayerStrings.General));
                             newToastOverlay.ShowToast(AXPlayerStrings.NoVideoIdError);
                         });
                         /*
-                        ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.NoVideoIdError, FontAwesome.Solid.MinusCircle);
+                        ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.NoVideoIdError, MaterialSymbols.Filled.MinusCircle);
 
                         onScreenDisplay.Display(toast);
                         */
@@ -1068,7 +1069,7 @@ namespace AXPlayer.App.Screens
                             {
                                 Schedule(() =>
                                 {
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, e.Message, AXPlayerStrings.General));
+                                    notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.MinusCircle, Color4.Red, e.Message, AXPlayerStrings.General));
                                 });
                                 Schedule(() => thumbnailContainer.Hide());
                                 isVideoLoading = false;
@@ -1284,7 +1285,7 @@ namespace AXPlayer.App.Screens
 
                                 Schedule(() =>
                                 {
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
+                                    notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
                                 });
                                 settingsContainer.VideoQualitySettings.Caption = AXPlayerStrings.VideoQualityWithLabel($"{videoStreamInfo.VideoQuality.Label}, {videoStreamInfo.VideoCodec}, {videoStreamInfo.VideoQuality.Framerate}fps");
                             }
@@ -1301,7 +1302,7 @@ namespace AXPlayer.App.Screens
 
                                     Schedule(() =>
                                     {
-                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
+                                        notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
                                     });
                                     settingsContainer.VideoQualitySettings.Caption = AXPlayerStrings.VideoQualityWithLabel($"{videoStreamInfo.VideoQuality.Label}, {videoStreamInfo.VideoCodec}, {videoStreamInfo.VideoQuality.Framerate}fps");
                                 }
@@ -1316,7 +1317,7 @@ namespace AXPlayer.App.Screens
 
                                     Schedule(() =>
                                     {
-                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
+                                        notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
                                     });
                                     settingsContainer.VideoQualitySettings.Caption = AXPlayerStrings.VideoQualityWithLabel($"{videoStreamInfo.VideoQuality.Label}, {videoStreamInfo.VideoCodec}, {videoStreamInfo.VideoQuality.Framerate}fps");
                                 }
@@ -1482,7 +1483,7 @@ namespace AXPlayer.App.Screens
                                 {
                                     Schedule(() =>
                                     {
-                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, message, AXPlayerStrings.General));
+                                        notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.MinusCircle, Color4.Red, message, AXPlayerStrings.General));
                                         thumbnailContainer.Hide();
                                         videoLoadingProgressBase.Hide();
                                         loadBtnOverlayShow.Enabled.Value = true;
@@ -1499,7 +1500,7 @@ namespace AXPlayer.App.Screens
 
                                 Schedule(() =>
                                 {
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.ExclamationTriangle, Color4.Orange, message, AXPlayerStrings.General));
+                                    notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.ExclamationTriangle, Color4.Orange, message, AXPlayerStrings.General));
                                 });
                             }
 
@@ -1535,7 +1536,7 @@ namespace AXPlayer.App.Screens
                             {
                                 Schedule(() =>
                                 {
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.MinusCircle, Color4.Red, e.Message, AXPlayerStrings.General));
+                                    notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.MinusCircle, Color4.Red, e.Message, AXPlayerStrings.General));
                                 });
                                 Schedule(() => thumbnailContainer.Hide());
                                 isVideoLoading = false;
@@ -1751,7 +1752,7 @@ namespace AXPlayer.App.Screens
 
                                 Schedule(() =>
                                 {
-                                    notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
+                                    notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
                                 });
                                 settingsContainer.VideoQualitySettings.Caption = AXPlayerStrings.VideoQualityWithLabel($"{videoStreamInfo.VideoQuality.Label}, {videoStreamInfo.VideoCodec}, {videoStreamInfo.VideoQuality.Framerate}fps");
                             }
@@ -1768,7 +1769,7 @@ namespace AXPlayer.App.Screens
 
                                     Schedule(() =>
                                     {
-                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
+                                        notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
                                     });
                                     settingsContainer.VideoQualitySettings.Caption = AXPlayerStrings.VideoQualityWithLabel($"{videoStreamInfo.VideoQuality.Label}, {videoStreamInfo.VideoCodec}, {videoStreamInfo.VideoQuality.Framerate}fps");
                                 }
@@ -1783,7 +1784,7 @@ namespace AXPlayer.App.Screens
 
                                     Schedule(() =>
                                     {
-                                        notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
+                                        notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Video, Color4.Green, videoStreamInfo.VideoQuality.Label, AXPlayerStrings.VideoQuality, true));
                                     });
                                     settingsContainer.VideoQualitySettings.Caption = AXPlayerStrings.VideoQualityWithLabel($"{videoStreamInfo.VideoQuality.Label}, {videoStreamInfo.VideoCodec}, {videoStreamInfo.VideoQuality.Framerate}fps");
                                 }

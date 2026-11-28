@@ -72,7 +72,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                             TextBox = CreateInnerTextBox(),
                             new SpriteIcon
                             {
-                                Icon = FontAwesome.Solid.Search,
+                                Icon = MaterialSymbols.Filled.Search,
                                 Origin = Anchor.Centre,
                                 Anchor = Anchor.Centre,
                                 Size = new Vector2(16),

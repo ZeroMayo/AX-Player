@@ -44,7 +44,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                 Child = new SettingsItemV2(new FormSliderBar<double>
                 {
                     Caption = AXPlayerStrings.VideoVolume,
-                    Icon = FontAwesome.Solid.VolumeUp,
+                    Icon = MaterialSymbols.Filled.VolumeUp,
                     Current = Current,
                     DisplayAsPercentage = true,
                     KeyboardStep = 0.05f,

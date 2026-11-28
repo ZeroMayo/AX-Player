@@ -13,6 +13,7 @@ using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
 using osu.Framework.Logging;
+using osuTK;
 using osuTK.Graphics;
 
 namespace AXPlayer.App.Graphics.UserInterface
@@ -80,7 +81,15 @@ namespace AXPlayer.App.Graphics.UserInterface
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            textFlow.AddIcon(FontAwesome.Solid.Stopwatch, o => o.Margin = new MarginPadding() { Right = 4 });
+            textFlow.AddArbitraryDrawable(new Icon()
+            {
+                Icon = MaterialSymbols.Filled.Stopwatch,
+                Margin = new MarginPadding()
+                {
+                    Right = 4
+                },
+                Size = new osuTK.Vector2(11f, 11f),
+            });
             textFlow.AddText(text);
         }
 
@@ -118,5 +127,10 @@ namespace AXPlayer.App.Graphics.UserInterface
         }
 
         public float LineBaseHeight => 15.5f;
+
+        private partial class Icon : SpriteIcon, IHasLineBaseHeight
+        {
+            public float LineBaseHeight => 10f;
+        }
     }
 }

@@ -264,7 +264,7 @@ namespace AXPlayer.App.Graphics.UserInterface.LiveChat
                         Origin = Anchor.TopLeft,
                         Position = new Vector2(horizontalPadding, verticalPadding + (compact ? 2 : 3)),
                         Size = new Vector2(compact ? 10 : 12),
-                        Icon = FontAwesome.Solid.InfoCircle,
+                        Icon = MaterialSymbols.Filled.InfoCircle,
                         Colour = overlayColourProvider.Foreground2,
                     },
                 },
