@@ -72,7 +72,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 hotkey = value;
 
-                if (hotkeyDisplay != null)
+                if (hotkeyDisplay != null && (RuntimeInfo.IsDesktop))
                     hotkeyDisplay.Hotkey = value;
             }
         }

@@ -76,7 +76,7 @@ namespace AXPlayer.App.Screens
         [Resolved]
         private PopupDialogOverlay popupDialogOverlay { get; set; }
 
-        private MenuButtonItem loadBtnOverlayShow, settingsOverlayShowBtn, commentOpenButton, searchOpenButton, reportOpenButton, playlistOpenButton, audioEffectsOpenButton, saveVideoOpenButton, newPlaylistOpenButton, myPlaylistsOpenButton, watchHistoryOpenButton, copyVideoUrlButton, liveChatOpenButton;
+        private MenuButtonItem loadBtnOverlayShow, settingsOverlayShowBtn, commentOpenButton, searchOpenButton, reportOpenButton, playlistOpenButton, audioEffectsOpenButton, saveVideoOpenButton, newPlaylistOpenButton, myPlaylistsOpenButton, watchHistoryOpenButton, copyVideoUrlButton, liveChatOpenButton, keyboardShortcutsOpenButton;
         private VideoMetadataDisplayWithoutProfile videoMetadataDisplay;
         private VideoMetadataDisplay videoMetadataDisplayDetails;
         private RoundedButtonContainer commentOpenButtonDetails, likeButton;

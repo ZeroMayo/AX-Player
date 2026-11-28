@@ -31,6 +31,7 @@ using AXPlayer.App.Overlays.Volume;
 using AXPlayer.App.Updater;
 using AXPlayer.App.Utils;
 using Google.Apis.YouTube.v3.Data;
+using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Bindables;
@@ -3269,7 +3270,7 @@ namespace AXPlayer.App.Screens
                                                             Hotkey = new Hotkey(GlobalAction.OpenSettings),
                                                             RoundCorner = new CornersInfo(8, 8, 8, 8),
                                                         },
-                                                        new MenuButtonItem
+                                                        keyboardShortcutsOpenButton = new MenuButtonItem
                                                         {
                                                             Enabled = { Value = true },
                                                             Origin = Anchor.TopRight,
@@ -3757,6 +3758,9 @@ namespace AXPlayer.App.Screens
 
             videoLoadingProgressBase.Hide();
             videoLoadingProgressSpinner.Show();
+
+            if (!RuntimeInfo.IsDesktop)
+                keyboardShortcutsOpenButton.Hide();
 
             prevVideoButton.SetCornerRadius(new CornersInfo(15, 15, AXPlayerApp.UI_CORNER_RADIUS / 3f, AXPlayerApp.UI_CORNER_RADIUS / 3f));
             nextVideoButton.SetCornerRadius(new CornersInfo(AXPlayerApp.UI_CORNER_RADIUS / 3f, AXPlayerApp.UI_CORNER_RADIUS / 3f, 15, 15));

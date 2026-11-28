@@ -10,6 +10,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Localisation;
 using osuTK;
 using AXPlayer.App.Graphics.UserInterface;
+using osu.Framework;
 
 namespace AXPlayer.App.Graphics.UserInterfaceV2
 {
@@ -138,7 +139,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 });
             }
 
-            if (Hotkey != default)
+            if (Hotkey != default && (RuntimeInfo.IsDesktop))
             {
                 textFlow.AddArbitraryDrawable(new HotkeyDisplay
                 {
