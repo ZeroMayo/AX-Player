@@ -1386,11 +1386,19 @@ namespace AXPlayer.App.Overlays.Containers
                                                             {
                                                                 new SettingsItemV2(new FormSliderBar<double>
                                                                 {
+                                                                    Caption = AXPlayerStrings.MasterVolume,
+                                                                    Icon = MaterialSymbols.Filled.VolumeUp,
+                                                                    Current = config.GetBindable<double>(FrameworkSetting.VolumeUniversal),
+                                                                    DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Top,
+                                                                }),
+                                                                new SettingsItemV2(new FormSliderBar<double>
+                                                                {
                                                                     Caption = AXPlayerStrings.VideoVolume,
                                                                     Icon = MaterialSymbols.Filled.VolumeUp,
                                                                     Current = videoVolume,
                                                                     DisplayAsPercentage = true,
-                                                                    CornerType = FormControlCornerType.Top,
+                                                                    CornerType = FormControlCornerType.Center,
                                                                 }),
                                                                 new SettingsItemV2(new FormSliderBar<double>
                                                                 {
