@@ -227,9 +227,6 @@ namespace AXPlayer.App.Graphics.UserInterface
         {
             videoMetadataDisplayAlignment = alignment;
 
-            if (videoMetadataDisplayWithoutProfileColours != null)
-                ApplyColours(videoMetadataDisplayWithoutProfileColours);
-
             switch (alignment)
             {
                 case VideoMetadataDisplayAlignment.Left:
@@ -281,6 +278,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                     break;
                 }
             }
+
+            if (videoMetadataDisplayWithoutProfileColours != null)
+                ApplyColours(videoMetadataDisplayWithoutProfileColours);
         }
 
         private HoverSounds samples = new HoverClickSounds(HoverSampleSet.Default);
