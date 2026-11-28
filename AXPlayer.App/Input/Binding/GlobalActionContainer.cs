@@ -4,6 +4,8 @@
 #nullable enable
 
 using System.Collections.Generic;
+using System.Linq;
+using osu.Framework;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Input;
@@ -76,7 +78,37 @@ namespace AXPlayer.App.Input.Binding
             return base.OnKeyDown(e);
         }
 
-        public static IEnumerable<KeyBinding> GlobalKeyBindings => new[]
+        /// <summary>
+        /// All default key bindings for the current platform, ordered with highest priority first.
+        /// </summary>
+        /// <remarks>
+        /// IMPORTANT: Take care when changing order of the items in the enumerable.
+        /// It is used to decide the order of precedence, with the earlier items having higher precedence.
+        /// </remarks>
+        public static IEnumerable<KeyBinding> GlobalKeyBindings => RuntimeInfo.OS == RuntimeInfo.Platform.macOS
+            ? defaultKeyBindings.Concat(MacKeyBindings)
+            : defaultKeyBindings;
+
+        /// <summary>
+        /// macOS specific key bindings, which are only added to <see cref="GlobalKeyBindings"/> when running on macOS.
+        /// </summary>
+        /// <remarks>
+        /// macOS uses <c>Command</c> (<see cref="InputKey.Super"/>) where other platforms use <c>Ctrl</c>, so every default
+        /// <c>Ctrl</c> shortcut also gets a <c>Command</c> equivalent. The platform-standard <c>Command+Q</c> (quit) and
+        /// <c>Command+,</c> (settings) shortcuts are registered on top of that.
+        /// </remarks>
+        public static IEnumerable<KeyBinding> MacKeyBindings => defaultKeyBindings
+            .Where(binding => binding.KeyCombination.Keys.Contains(InputKey.Control))
+            .Select(binding => new KeyBinding(
+                binding.KeyCombination.Keys.Select(key => key == InputKey.Control ? InputKey.Super : key).ToArray(),
+                binding.Action))
+            .Concat(new[]
+            {
+                new KeyBinding(new[] { InputKey.Super, InputKey.Q }, GlobalAction.QuitApp),
+                new KeyBinding(new[] { InputKey.Super, InputKey.Comma }, GlobalAction.OpenSettings),
+            });
+
+        private static readonly KeyBinding[] defaultKeyBindings =
         {
             new KeyBinding(InputKey.Enter, GlobalAction.Select),
             new KeyBinding(InputKey.KeypadEnter, GlobalAction.Select),
