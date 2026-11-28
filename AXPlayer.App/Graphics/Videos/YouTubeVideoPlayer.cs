@@ -333,6 +333,10 @@ namespace AXPlayer.App.Graphics.Videos
                     },
                 },
                 closedCaption = new ClosedCaptionContainer(this, closedCaptionTrack, srv3Contents, useNewSubtitlesFeature),
+                keyBindingAnimations = new KeyBindingAnimations(this)
+                {
+                    RelativeSizeAxes = Axes.Both,
+                },
                 liveChatToggleButton = new IconButton
                 {
                     Anchor = Anchor.BottomRight,
@@ -350,10 +354,6 @@ namespace AXPlayer.App.Graphics.Videos
                     Action = ToggleLiveChatOverlay,
                 },
                 sharedElementTransitionLayer = new SharedElementTransitionLayer(),
-                keyBindingAnimations = new KeyBindingAnimations(this)
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
             });
 
             UpdatePreservePitch(config.Get<bool>(AXPlayerSetting.AdjustPitchOnSpeedChange));

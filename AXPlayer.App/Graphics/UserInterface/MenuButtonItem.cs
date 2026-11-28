@@ -223,6 +223,9 @@ namespace AXPlayer.App.Graphics.UserInterface
                 else
                     disabledOverlay.FadeTo(0.5f, 500, Easing.OutQuint);
             }, true);
+
+            if (!RuntimeInfo.IsDesktop)
+                hotkeyDisplay.Hide();
         }
     }
 }
