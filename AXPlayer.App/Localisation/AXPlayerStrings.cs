@@ -971,6 +971,26 @@ namespace AXPlayer.App.Localisation
         public static LocalisableString CRTVideoEffect => new TranslatableString(getKey(@"crt_video_effect"), "CRT video effect");
 
         /// <summary>
+        /// "80s TV effect"
+        /// </summary>
+        public static LocalisableString EightiesTvEffect => new TranslatableString(getKey(@"eighties_tv_effect"), "80s TV effect");
+
+        /// <summary>
+        /// "80s TV effect strength"
+        /// </summary>
+        public static LocalisableString EightiesTvIntensity => new TranslatableString(getKey(@"eighties_tv_intensity"), "80s TV effect strength");
+
+        /// <summary>
+        /// "80s TV screen curvature"
+        /// </summary>
+        public static LocalisableString EightiesTvCurvature => new TranslatableString(getKey(@"eighties_tv_curvature"), "80s TV screen curvature");
+
+        /// <summary>
+        /// "80s TV tape noise"
+        /// </summary>
+        public static LocalisableString EightiesTvNoise => new TranslatableString(getKey(@"eighties_tv_noise"), "80s TV tape noise");
+
+        /// <summary>
         /// "Video interpolation strength"
         /// </summary>
         public static LocalisableString VideoInterpolation => new TranslatableString(getKey(@"video_interpolation"), "Video interpolation strength");

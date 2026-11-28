@@ -628,6 +628,18 @@
   <data name="crt_video_effect" xml:space="preserve">
     <value>Hiệu ứng video CRT</value>
   </data>
+  <data name="eighties_tv_effect" xml:space="preserve">
+    <value>Hiệu ứng TV thập niên 80</value>
+  </data>
+  <data name="eighties_tv_intensity" xml:space="preserve">
+    <value>Độ mạnh hiệu ứng TV thập niên 80</value>
+  </data>
+  <data name="eighties_tv_curvature" xml:space="preserve">
+    <value>Độ cong màn hình TV thập niên 80</value>
+  </data>
+  <data name="eighties_tv_noise" xml:space="preserve">
+    <value>Nhiễu băng TV thập niên 80</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>Hiệu ứng hình ảnh</value>
   </data>

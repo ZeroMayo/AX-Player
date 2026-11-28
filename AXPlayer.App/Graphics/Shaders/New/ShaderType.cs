@@ -36,6 +36,11 @@ namespace AXPlayer.App.Graphics.Shaders.New
 
         CRT,
 
+        [ShaderStrength(1, ParamName = "Intensity", Tooltip = "How strongly the 80s television effect is applied.")]
+        [ShaderStrength(2, ParamName = "Curvature", Tooltip = "How strongly the picture is bent towards the edges of the tube.")]
+        [ShaderStrength(3, ParamName = "Noise", Tooltip = "The amount of tape grain and tracking noise.")]
+        RetroTv,
+
         [ShaderStrength(1, ParamName = "Interpolation", Tooltip = "How strongly the previous frame is blended into the current frame.")]
         Interpolation,
 

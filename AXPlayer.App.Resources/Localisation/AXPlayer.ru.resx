@@ -628,6 +628,18 @@
   <data name="crt_video_effect" xml:space="preserve">
     <value>Эффект CRT для видео</value>
   </data>
+  <data name="eighties_tv_effect" xml:space="preserve">
+    <value>Эффект телевизора 80-х</value>
+  </data>
+  <data name="eighties_tv_intensity" xml:space="preserve">
+    <value>Сила эффекта телевизора 80-х</value>
+  </data>
+  <data name="eighties_tv_curvature" xml:space="preserve">
+    <value>Кривизна экрана телевизора 80-х</value>
+  </data>
+  <data name="eighties_tv_noise" xml:space="preserve">
+    <value>Шум ленты телевизора 80-х</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>Визуальные эффекты</value>
   </data>

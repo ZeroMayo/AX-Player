@@ -21,6 +21,7 @@ using AXPlayer.App.Graphics.Shaders.New.Grayscale;
 using AXPlayer.App.Graphics.Shaders.New.HueShift;
 using AXPlayer.App.Graphics.Shaders.New.Interpolation;
 using AXPlayer.App.Graphics.Shaders.New.MotionBlur;
+using AXPlayer.App.Graphics.Shaders.New.RetroTV;
 using AXPlayer.App.Graphics.Transitions;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Localisation;
@@ -155,10 +156,12 @@ namespace AXPlayer.App.Graphics.Videos
         private ClosedCaptionContainer closedCaption = null!;
         private Bindable<AspectRatioMethod> aspectRatioMethod = null!;
         private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift, videoInterpolationStrength, videoMotionBlurStrength = null!;
+        private Bindable<float> videoRetroTvIntensity, videoRetroTvCurvature, videoRetroTvNoise = null!;
 
-        private Bindable<bool> videoCrtEffectEnabled = null!, smoothPlaybackSpeed = null!;
+        private Bindable<bool> videoCrtEffectEnabled = null!, videoRetroTvEffectEnabled = null!, smoothPlaybackSpeed = null!;
 
         private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, interpolation, motionBlur, crt = null!;
+        private RetroTvContainer retroTv = null!;
 
         private Bindable<bool> useNewSubtitlesFeature = null!;
 
@@ -210,6 +213,10 @@ namespace AXPlayer.App.Graphics.Videos
             chromaticAberrationStrength = config.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength);
             videoInterpolationStrength = config.GetBindable<float>(AXPlayerSetting.VideoInterpolationStrength);
             videoMotionBlurStrength = config.GetBindable<float>(AXPlayerSetting.VideoMotionBlurStrength);
+            videoRetroTvEffectEnabled = config.GetBindable<bool>(AXPlayerSetting.VideoRetroTvEffectEnabled);
+            videoRetroTvIntensity = config.GetBindable<float>(AXPlayerSetting.VideoRetroTvIntensity);
+            videoRetroTvCurvature = config.GetBindable<float>(AXPlayerSetting.VideoRetroTvCurvature);
+            videoRetroTvNoise = config.GetBindable<float>(AXPlayerSetting.VideoRetroTvNoise);
             useNewSubtitlesFeature = config.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
             PlaybackSpeed = new Bindable<double>(1);
@@ -251,46 +258,50 @@ namespace AXPlayer.App.Graphics.Videos
                         new DimmableContainer
                         {
                             RelativeSizeAxes = Axes.Both,
-                            Child = crt = new CrtContainer
+                            Child = retroTv = new RetroTvContainer
                             {
                                 RelativeSizeAxes = Axes.Both,
-                                Child = grayscale = new GrayscaleContainer
+                                Child = crt = new CrtContainer
                                 {
                                     RelativeSizeAxes = Axes.Both,
-                                    Child = chromatic = new ChromaticContainer
+                                    Child = grayscale = new GrayscaleContainer
                                     {
                                         RelativeSizeAxes = Axes.Both,
-                                        Child = bloom = new BloomContainer
+                                        Child = chromatic = new ChromaticContainer
                                         {
                                             RelativeSizeAxes = Axes.Both,
-                                            Child = hueShift = new HueShiftContainer
+                                            Child = bloom = new BloomContainer
                                             {
                                                 RelativeSizeAxes = Axes.Both,
-                                                Children = new Drawable[]
+                                                Child = hueShift = new HueShiftContainer
                                                 {
-                                                    interpolation = new InterpolationContainer
+                                                    RelativeSizeAxes = Axes.Both,
+                                                    Children = new Drawable[]
                                                     {
-                                                        RelativeSizeAxes = Axes.Both,
-                                                        Child = motionBlur = new MotionBlurContainer
+                                                        interpolation = new InterpolationContainer
                                                         {
                                                             RelativeSizeAxes = Axes.Both,
-                                                            Child = blurContainer = new BufferedContainer
+                                                            Child = motionBlur = new MotionBlurContainer
                                                             {
                                                                 RelativeSizeAxes = Axes.Both,
-                                                                Children = new Drawable[]
+                                                                Child = blurContainer = new BufferedContainer
                                                                 {
-                                                                    new Box
+                                                                    RelativeSizeAxes = Axes.Both,
+                                                                    Children = new Drawable[]
                                                                     {
-                                                                        RelativeSizeAxes = Axes.Both,
-                                                                        Colour = Color4.Black,
-                                                                    },
-                                                                    video = new Video(fileName_Video, false)
-                                                                    {
-                                                                        RelativeSizeAxes = Axes.Both,
-                                                                        FillMode = FillMode.Fit,
-                                                                        Anchor = Anchor.Centre,
-                                                                        Origin = Anchor.Centre,
-                                                                        Clock = framedClock,
+                                                                        new Box
+                                                                        {
+                                                                            RelativeSizeAxes = Axes.Both,
+                                                                            Colour = Color4.Black,
+                                                                        },
+                                                                        video = new Video(fileName_Video, false)
+                                                                        {
+                                                                            RelativeSizeAxes = Axes.Both,
+                                                                            FillMode = FillMode.Fit,
+                                                                            Anchor = Anchor.Centre,
+                                                                            Origin = Anchor.Centre,
+                                                                            Clock = framedClock,
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -298,8 +309,8 @@ namespace AXPlayer.App.Graphics.Videos
                                                     }
                                                 }
                                             }
-                                        }
-                                    },
+                                        },
+                                    }
                                 }
                             }
                         },
@@ -508,7 +519,26 @@ namespace AXPlayer.App.Graphics.Videos
                 crt.Strength = value.NewValue ? 1 : 0;
             }, true);
 
+            videoRetroTvEffectEnabled.BindValueChanged(_ => updateRetroTvStrength(), true);
+
+            videoRetroTvIntensity.BindValueChanged(_ => updateRetroTvStrength());
+
+            videoRetroTvCurvature.BindValueChanged(value =>
+            {
+                retroTv.Curvature = value.NewValue;
+            }, true);
+
+            videoRetroTvNoise.BindValueChanged(value =>
+            {
+                retroTv.Noise = value.NewValue;
+            }, true);
+
             //drawableTrack.Completed += trackCompleted;
+        }
+
+        private void updateRetroTvStrength()
+        {
+            retroTv.Strength = videoRetroTvEffectEnabled.Value ? videoRetroTvIntensity.Value : 0f;
         }
 
         private IBindable<bool> uiVisible = null!;

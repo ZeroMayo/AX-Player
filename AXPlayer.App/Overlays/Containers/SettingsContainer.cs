@@ -430,6 +430,8 @@ namespace AXPlayer.App.Overlays.Containers
 
         private BindableBool wasapi;
 
+        private Bindable<bool> videoRetroTvEffectEnabled;
+
         [BackgroundDependencyLoader]
         private void load(OverlayColourProvider overlayColourProvider, TextureStore textures, ProjectYomiColour colours, FrameworkDebugConfigManager debugConfig, FrameworkConfigManager config, Storage storage, AXPlayerConfigManager appConfig)
         {
@@ -456,6 +458,8 @@ namespace AXPlayer.App.Overlays.Containers
             scalingBackgroundDim = appConfig.GetBindable<float>(AXPlayerSetting.ScalingBackgroundDim);
             alwaysUseOriginalAudio = appConfig.GetBindable<bool>(AXPlayerSetting.AlwaysUseOriginalAudio);
             sizeWindowed = config.GetBindable<Size>(FrameworkSetting.WindowedSize);
+
+            videoRetroTvEffectEnabled = appConfig.GetBindable<bool>(AXPlayerSetting.VideoRetroTvEffectEnabled);
 
             configReleaseStream = appConfig.GetBindable<ReleaseStream>(AXPlayerSetting.ReleaseStream);
 
@@ -1123,24 +1127,48 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled),
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
-                                                        /*
-                                                        new SettingsItemV2(new FormSliderBar<float>
+                                                        new SettingsItemV2(new FormCheckBox
                                                         {
-                                                            Caption = AXPlayerStrings.VideoInterpolation,
-                                                            Icon = MaterialSymbols.Filled.ExchangeAlt,
-                                                            Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoInterpolationStrength),
-                                                            DisplayAsPercentage = true,
+                                                            Caption = AXPlayerStrings.EightiesTvEffect,
+                                                            Icon = MaterialSymbols.Filled.Video,
+                                                            Current = videoRetroTvEffectEnabled,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
-                                                        new SettingsItemV2(new FormSliderBar<float>
+                                                        eightiesTvEffectOptions = new FillFlowContainer
                                                         {
-                                                            Caption = AXPlayerStrings.VideoMotionBlur,
-                                                            Icon = MaterialSymbols.Filled.Wind,
-                                                            Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoMotionBlurStrength),
-                                                            DisplayAsPercentage = true,
-                                                            CornerType = FormControlCornerType.Center,
-                                                        }),
-                                                        */
+                                                            Direction = FillDirection.Vertical,
+                                                            RelativeSizeAxes = Axes.X,
+                                                            AutoSizeAxes = Axes.Y,
+                                                            Masking = true,
+                                                            Spacing = new Vector2(0, 2),
+                                                            Children = new Drawable[]
+                                                            {
+                                                                new SettingsItemV2(new FormSliderBar<float>
+                                                                {
+                                                                    Caption = AXPlayerStrings.EightiesTvIntensity,
+                                                                    Icon = MaterialSymbols.Filled.Sun,
+                                                                    Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoRetroTvIntensity),
+                                                                    DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
+                                                                }),
+                                                                new SettingsItemV2(new FormSliderBar<float>
+                                                                {
+                                                                    Caption = AXPlayerStrings.EightiesTvCurvature,
+                                                                    Icon = MaterialSymbols.Filled.Palette,
+                                                                    Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoRetroTvCurvature),
+                                                                    DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
+                                                                }),
+                                                                new SettingsItemV2(new FormSliderBar<float>
+                                                                {
+                                                                    Caption = AXPlayerStrings.EightiesTvNoise,
+                                                                    Icon = MaterialSymbols.Filled.SlidersH,
+                                                                    Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoRetroTvNoise),
+                                                                    DisplayAsPercentage = true,
+                                                                    CornerType = FormControlCornerType.Center,
+                                                                }),
+                                                            }
+                                                        },
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoBloomLevel,
@@ -1602,6 +1630,15 @@ namespace AXPlayer.App.Overlays.Containers
                 updateScreenshotOptionsVisibility();
             }, true);
 
+            videoRetroTvEffectEnabled.BindValueChanged(_ =>
+            {
+                eightiesTvEffectOptions.ClearTransforms();
+                eightiesTvEffectOptions.AutoSizeDuration = 400;
+                eightiesTvEffectOptions.AutoSizeEasing = Easing.OutQuint;
+
+                updateEightiesTvEffectOptionsVisibility();
+            }, true);
+
             customCaptionFonts.Enabled.BindValueChanged(enabled =>
             {
                 customCaptionFontsOptions.ClearTransforms();
@@ -1905,6 +1942,20 @@ namespace AXPlayer.App.Overlays.Containers
                     windowedResolution.Value = size.NewValue;
             });
 
+            void updateEightiesTvEffectOptionsVisibility()
+            {
+                try
+                {
+                    if (videoRetroTvEffectEnabled.Value == false)
+                        eightiesTvEffectOptions.ResizeHeightTo(0, 400, Easing.OutQuint);
+
+                    eightiesTvEffectOptions.AutoSizeAxes = videoRetroTvEffectEnabled.Value != false ? Axes.Y : Axes.None;
+                }
+                catch
+                {
+                }
+            }
+
             void updateScreenshotOptionsVisibility()
             {
                 try
@@ -2093,7 +2144,7 @@ namespace AXPlayer.App.Overlays.Containers
         private Bindable<SettingsNote.Data> discordNotInstalledNote = new Bindable<SettingsNote.Data>();
         private LinkFlowContainer dislikeCounterCredits, madeByText, gameVersion;
         private FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode> discordRichPresenceDropdown;
-        private FillFlowContainer volumeOptions, screenshotOptions, screenshotUIOptions, customCaptionFontsOptions;
+        private FillFlowContainer volumeOptions, screenshotOptions, screenshotUIOptions, customCaptionFontsOptions, eightiesTvEffectOptions;
 
         private FormEnumDropdown<GCLatencyMode> latencyModeDropdown;
 

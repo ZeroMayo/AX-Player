@@ -72,6 +72,10 @@ namespace AXPlayer.App.Config
             SetDefault(AXPlayerSetting.VideoCRTEffectEnabled, false);
             SetDefault(AXPlayerSetting.VideoInterpolationStrength, 0f, 0f, 1f, 0.01f);
             SetDefault(AXPlayerSetting.VideoMotionBlurStrength, 0f, 0f, 1f, 0.01f);
+            SetDefault(AXPlayerSetting.VideoRetroTvEffectEnabled, false);
+            SetDefault(AXPlayerSetting.VideoRetroTvIntensity, 0.8f, 0f, 1f, 0.01f);
+            SetDefault(AXPlayerSetting.VideoRetroTvCurvature, 0.65f, 0f, 1f, 0.01f);
+            SetDefault(AXPlayerSetting.VideoRetroTvNoise, 0.35f, 0f, 1f, 0.01f);
 
             SetDefault(AXPlayerSetting.DiscordRichPresence, DiscordRichPresenceMode.Full);
             SetDefault(AXPlayerSetting.AudioNormalization, true);
@@ -310,5 +314,9 @@ namespace AXPlayer.App.Config
         ScreenshotCaptureLiveChat,
         InnertubeDumpEnabled,
         VideoMotionBlurStrength,
+        VideoRetroTvEffectEnabled,
+        VideoRetroTvIntensity,
+        VideoRetroTvCurvature,
+        VideoRetroTvNoise,
     }
 }

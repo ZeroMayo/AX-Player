@@ -628,6 +628,18 @@
   <data name="crt_video_effect" xml:space="preserve">
     <value>CRT ビデオ効果</value>
   </data>
+  <data name="eighties_tv_effect" xml:space="preserve">
+    <value>80年代テレビ効果</value>
+  </data>
+  <data name="eighties_tv_intensity" xml:space="preserve">
+    <value>80年代テレビ効果の強さ</value>
+  </data>
+  <data name="eighties_tv_curvature" xml:space="preserve">
+    <value>80年代テレビ画面の湾曲</value>
+  </data>
+  <data name="eighties_tv_noise" xml:space="preserve">
+    <value>80年代テレビのテープノイズ</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>視覚効果</value>
   </data>

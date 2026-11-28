@@ -628,6 +628,18 @@
   <data name="crt_video_effect" xml:space="preserve">
     <value>CRT video efekti</value>
   </data>
+  <data name="eighties_tv_effect" xml:space="preserve">
+    <value>80'ler TV efekti</value>
+  </data>
+  <data name="eighties_tv_intensity" xml:space="preserve">
+    <value>80'ler TV efekti gücü</value>
+  </data>
+  <data name="eighties_tv_curvature" xml:space="preserve">
+    <value>80'ler TV ekran eğriliği</value>
+  </data>
+  <data name="eighties_tv_noise" xml:space="preserve">
+    <value>80'ler TV bant gürültüsü</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>Görsel efektler</value>
   </data>

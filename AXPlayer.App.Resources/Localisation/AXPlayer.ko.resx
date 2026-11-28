@@ -628,6 +628,18 @@
   <data name="crt_video_effect" xml:space="preserve">
     <value>CRT 동영상 효과</value>
   </data>
+  <data name="eighties_tv_effect" xml:space="preserve">
+    <value>80년대 TV 효과</value>
+  </data>
+  <data name="eighties_tv_intensity" xml:space="preserve">
+    <value>80년대 TV 효과 강도</value>
+  </data>
+  <data name="eighties_tv_curvature" xml:space="preserve">
+    <value>80년대 TV 화면 곡률</value>
+  </data>
+  <data name="eighties_tv_noise" xml:space="preserve">
+    <value>80년대 TV 테이프 노이즈</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>시각적 효과</value>
   </data>

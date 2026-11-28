@@ -628,6 +628,18 @@
   <data name="crt_video_effect" xml:space="preserve">
     <value>CRT video effect</value>
   </data>
+  <data name="eighties_tv_effect" xml:space="preserve">
+    <value>80s TV effect</value>
+  </data>
+  <data name="eighties_tv_intensity" xml:space="preserve">
+    <value>80s TV effect strength</value>
+  </data>
+  <data name="eighties_tv_curvature" xml:space="preserve">
+    <value>80s TV screen curvature</value>
+  </data>
+  <data name="eighties_tv_noise" xml:space="preserve">
+    <value>80s TV tape noise</value>
+  </data>
   <data name="visual_effects" xml:space="preserve">
     <value>Visual effects</value>
   </data>
