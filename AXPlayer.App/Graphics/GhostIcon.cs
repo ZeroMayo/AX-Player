@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
@@ -17,7 +17,7 @@ using osuTK;
 namespace AXPlayer.App.Graphics
 {
     /// <summary>
-    /// A (very cute) animated version of the <see cref="FontAwesome.Solid.Ghost"/> icon.
+    /// A (very cute) animated ghost icon, drawn procedurally by the <c>Ghost</c> shader.
     /// </summary>
     public partial class GhostIcon : Drawable
     {

@@ -215,14 +215,14 @@ namespace AXPlayer.App.Graphics.UserInterface
                                                     {
                                                         Caption = AXPlayerStrings.ReleaseStream,
                                                         Current = { Value = configReleaseStream.Value },
-                                                        Icon = FontAwesome.Solid.Sync,
+                                                        Icon = MaterialSymbols.Filled.Sync,
                                                         CornerType = FormControlCornerType.Top,
                                                     }),
                                                     new SettingsItemV2(new FormCheckBox
                                                     {
                                                         Caption = AXPlayerStrings.CheckUpdatesOnAppOpen,
                                                         Current = appConfig.GetBindable<bool>(AXPlayerSetting.CheckUpdatesOnAppOpen),
-                                                        Icon = FontAwesome.Solid.Sync,
+                                                        Icon = MaterialSymbols.Filled.Sync,
                                                         CornerType = FormControlCornerType.Bottom,
                                                     }),
                                                 }
@@ -313,7 +313,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
                     Height = 76,
                 },
-                updateButton = new RoundedIconButton(FontAwesome.Solid.Sync)
+                updateButton = new RoundedIconButton(MaterialSymbols.Filled.Sync)
                 {
                     Enabled = { Value = true },
                     Origin = Anchor.BottomCentre,
@@ -332,7 +332,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Size = new Vector2(35, 35),
                     IconScale = new Vector2(0.8f),
                     Margin = new MarginPadding(14),
-                    Icon = FontAwesome.Solid.Times,
+                    Icon = MaterialSymbols.Filled.Times,
                     BackgroundColour = overlayColourProvider.Background4,
                     Action = () => CloseAction?.Invoke(),
                 },

@@ -68,7 +68,7 @@ namespace AXPlayer.App.Overlays
                     Width = 500,
                     Caption = AXPlayerStrings.VideoVolume,
                     DisplayAsPercentage = true,
-                    Icon = FontAwesome.Solid.VolumeUp,
+                    Icon = MaterialSymbols.Filled.VolumeUp,
                 },
                 new FillFlowContainer
                 {

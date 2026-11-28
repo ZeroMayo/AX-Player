@@ -71,7 +71,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
         /// <summary>
         /// Sets a custom button icon. Not shown when <see cref="ButtonText"/> is set.
         /// </summary>
-        public IconUsage ButtonIcon { get; init; } = FontAwesome.Solid.ChevronRight;
+        public IconUsage ButtonIcon { get; init; } = MaterialSymbols.Filled.ChevronRight;
 
         private FormControlBackgroundWithProfileImage background = null!;
         private FormFieldCaption caption = null!;

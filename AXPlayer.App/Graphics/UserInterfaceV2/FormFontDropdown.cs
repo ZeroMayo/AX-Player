@@ -242,7 +242,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                             },
                             chevron = new SpriteIcon
                             {
-                                Icon = FontAwesome.Solid.ChevronDown,
+                                Icon = MaterialSymbols.Filled.ChevronDown,
                                 Anchor = Anchor.BottomRight,
                                 Origin = Anchor.BottomRight,
                                 Size = new Vector2(16),

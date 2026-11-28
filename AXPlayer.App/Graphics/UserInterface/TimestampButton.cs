@@ -80,7 +80,7 @@ namespace AXPlayer.App.Graphics.UserInterface
         protected override void LoadComplete()
         {
             base.LoadComplete();
-            textFlow.AddIcon(FontAwesome.Solid.Stopwatch, o => o.Margin = new MarginPadding() { Right = 4 });
+            textFlow.AddIcon(MaterialSymbols.Filled.Stopwatch, o => o.Margin = new MarginPadding() { Right = 4 });
             textFlow.AddText(text);
         }
 

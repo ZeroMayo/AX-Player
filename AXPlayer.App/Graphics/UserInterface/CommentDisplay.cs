@@ -219,7 +219,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                                                         {
                                                                             Width = 12,
                                                                             Height = 12,
-                                                                            Icon = FontAwesome.Solid.ThumbsUp,
+                                                                            Icon = MaterialSymbols.Filled.ThumbsUp,
                                                                             Colour = overlayColourProvider.Content2,
                                                                         },
                                                                         likeCount = new ProjectYomiSpriteText
@@ -264,7 +264,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                                                         {
                                                                             Width = 12,
                                                                             Height = 12,
-                                                                            Icon = FontAwesome.Solid.CommentAlt,
+                                                                            Icon = MaterialSymbols.Filled.CommentAlt,
                                                                             Colour = overlayColourProvider.Content2,
                                                                         },
                                                                         replyCount = new ProjectYomiSpriteText

@@ -89,7 +89,7 @@ namespace AXPlayer.App.Screens
 
                 if (!string.IsNullOrEmpty(commentThreadListResponse.NextPageToken))
                 {
-                    viewMoreComments = new RoundedIconButton(FontAwesome.Solid.ArrowDown)
+                    viewMoreComments = new RoundedIconButton(MaterialSymbols.Filled.ArrowDown)
                     {
                         Width = 250,
                         Anchor = Anchor.Centre,
@@ -869,13 +869,13 @@ namespace AXPlayer.App.Screens
                                     Logger.Log("UnsubscribeChannel()");
 
                                     /*
-                                    ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.SubscriptionRemoved, FontAwesome.Solid.SignOutAlt);
+                                    ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.SubscriptionRemoved, MaterialSymbols.Filled.SignOutAlt);
 
                                     Schedule(() => onScreenDisplay.Display(toast));
                                     */
                                     Schedule(() =>
                                     {
-                                        //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignOutAlt, Color4.Red, AXPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                        //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.SignOutAlt, Color4.Red, AXPlayerStrings.SubscriptionRemoved, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
                                         newToastOverlay.ShowToast(AXPlayerStrings.SubscriptionRemoved);
                                     });
                                     Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
@@ -894,13 +894,13 @@ namespace AXPlayer.App.Screens
                                 Logger.Log("SubscribeChannel()");
 
                                 /*
-                                ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.SubscriptionAdded, FontAwesome.Solid.SignInAlt);
+                                ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.SubscriptionAdded, MaterialSymbols.Filled.SignInAlt);
 
                                 Schedule(() => onScreenDisplay.Display(toast));
                                 */
                                 Schedule(() =>
                                 {
-                                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.SignInAlt, Color4.Green, AXPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
+                                    //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.SignInAlt, Color4.Green, AXPlayerStrings.SubscriptionAdded, api.GetLocalizedChannelTitle(api.GetChannel(videoData.Snippet.ChannelId))));
                                     newToastOverlay.ShowToast(AXPlayerStrings.SubscriptionAdded);
                                 });
                                 Schedule(() => UpdateChannelSubscribeState(videoData.Snippet.ChannelId));
@@ -915,10 +915,10 @@ namespace AXPlayer.App.Screens
 
                         Schedule(() =>
                         {
-                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, AXPlayerStrings.ReportSuccess, AXPlayerStrings.Report));
+                            //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.CheckCircle, Color4.Green, AXPlayerStrings.ReportSuccess, AXPlayerStrings.Report));
                             newToastOverlay.ShowToast(AXPlayerStrings.ReportSuccess);
                         });
-                        //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Report, NekoPlayerStrings.ReportSuccess, FontAwesome.Solid.CheckCircle);
+                        //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Report, NekoPlayerStrings.ReportSuccess, MaterialSymbols.Filled.CheckCircle);
                         api.ReportAbuse(videoId, reportReason.Current.Value.Id, (reportReason.Current.Value.ContainsSecondaryReasons ? reportSubReason.Current.Value.Id : null), (!string.IsNullOrEmpty(reportComment.Current.Value) ? reportComment.Current.Value : null));
                         //Schedule(() => onScreenDisplay.Display(toast));
                         reportComment.Current.Value = string.Empty;
@@ -935,7 +935,7 @@ namespace AXPlayer.App.Screens
                         if (!googleOAuth2.SignedIn.Value)
                             return;
 
-                        //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.CommentAdded, FontAwesome.Regular.Comment);
+                        //ToastBase toast = new ToastWithIcon(NekoPlayerStrings.General, NekoPlayerStrings.CommentAdded, MaterialSymbols.Outlined.Comment);
                         api.SendComment(videoId, commentTextBox.Text);
 
                         Scheduler.AddDelayed(() =>
@@ -946,7 +946,7 @@ namespace AXPlayer.App.Screens
                         //Schedule(() => onScreenDisplay.Display(toast));
                         Schedule(() =>
                         {
-                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                            //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Outlined.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
                             newToastOverlay.ShowToast(AXPlayerStrings.CommentAdded);
                         });
 
@@ -1021,7 +1021,7 @@ namespace AXPlayer.App.Screens
                         foreach (var item in myPlaylistsDropdown.Items)
                         {
                             bool result = await api.IsVideoExistsOnPlaylist(item.Id, videoId);
-                            Schedule(() => saveVideoOpenButton.Icon = result ? FontAwesome.Solid.Bookmark : FontAwesome.Regular.Bookmark);
+                            Schedule(() => saveVideoOpenButton.Icon = result ? MaterialSymbols.Filled.Bookmark : MaterialSymbols.Outlined.Bookmark);
                         }
                     }
                     catch

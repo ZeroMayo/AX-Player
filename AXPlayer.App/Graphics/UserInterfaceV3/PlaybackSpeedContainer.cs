@@ -135,7 +135,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                         Children = new Drawable[]
                         {
                             presetContent,
-                            new RoundedIconOnlyButton(FontAwesome.Solid.Times)
+                            new RoundedIconOnlyButton(MaterialSymbols.Filled.Times)
                             {
                                 Width = 28,
                                 Height = 50,
@@ -169,7 +169,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
             FormNumberBox speedInput = new FormNumberBox(allowDecimals: true)
             {
-                Icon = FontAwesome.Solid.TachometerAlt,
+                Icon = MaterialSymbols.Filled.TachometerAlt,
                 Caption = AXPlayerStrings.PlaybackSpeedWithoutValue,
                 PlaceholderText = "0.1 - 8",
                 Current = { Value = string.Empty },
@@ -184,7 +184,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
 
             Drawable speedSlider = new SettingsItemV2(new FormSliderBar<double>
             {
-                Icon = FontAwesome.Solid.TachometerAlt,
+                Icon = MaterialSymbols.Filled.TachometerAlt,
                 Caption = AXPlayerStrings.PlaybackSpeedWithoutValue,
                 Current = Current,
                 DisplayAsPercentage = true,
@@ -227,7 +227,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV3
                             Size = new Vector2(0.97f, 1f),
                             Child = speedInput,
                         },
-                        new RoundedIconOnlyButton(FontAwesome.Solid.Plus)
+                        new RoundedIconOnlyButton(MaterialSymbols.Filled.Plus)
                         {
                             Width = 60,
                             Height = 50,

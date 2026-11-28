@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AXPlayer.App;
+using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Overlays;
@@ -114,7 +115,7 @@ namespace AXPlayer.Desktop.Updater
                 game.UpdateManagerVersionText.Value = AXPlayerStrings.RestartRequired;
                 Schedule(() =>
                 {
-                    pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Sync, Color4.Green, AXPlayerStrings.RestartRequired, AXPlayerStrings.Updates)
+                    pushNotificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Sync, Color4.Green, AXPlayerStrings.RestartRequired, AXPlayerStrings.Updates)
                     {
                         Action = () => restartToApplyUpdate(updateManager, update),
                     });
@@ -130,7 +131,7 @@ namespace AXPlayer.Desktop.Updater
                 game.UpdateStatus.Value = UpdaterStatus.Error;
                 Schedule(() =>
                 {
-                    pushNotificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.Sync, Color4.Red, AXPlayerStrings.UpdateFailed, AXPlayerStrings.Updates));
+                    pushNotificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.Sync, Color4.Red, AXPlayerStrings.UpdateFailed, AXPlayerStrings.Updates));
                 });
                 game.UpdateButtonEnabled.Value = true;
                 Logger.Error(e, @"Update failed!");

@@ -41,7 +41,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             Origin = Anchor.CentreLeft;
             this.url = url;
             displayName = url;
-            icon = FontAwesome.Solid.Globe;
+            icon = MaterialSymbols.Filled.Globe;
             Enabled.Value = true;
             Masking = true;
             TooltipText = url;
@@ -178,7 +178,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 }
                 else
                 {
-                    icon = FontAwesome.Solid.Globe;
+                    icon = MaterialSymbols.Filled.Globe;
                     Schedule(() => RefreshTextFlow());
                 }
             });

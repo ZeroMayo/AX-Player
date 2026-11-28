@@ -125,7 +125,7 @@ namespace AXPlayer.App.Graphics.Containers
                         Size = new Vector2(35, 35),
                         IconScale = new Vector2(0.8f),
                         Margin = new MarginPadding(14),
-                        Icon = FontAwesome.Solid.Times,
+                        Icon = MaterialSymbols.Filled.Times,
                         Action = () =>
                         {
                             CloseNotification();

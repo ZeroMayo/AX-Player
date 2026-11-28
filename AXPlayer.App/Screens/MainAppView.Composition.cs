@@ -305,7 +305,7 @@ namespace AXPlayer.App.Screens
                                     Height = 24,
                                     Anchor = Anchor.Centre,
                                     Origin = Anchor.Centre,
-                                    Icon = FontAwesome.Solid.VolumeMute,
+                                    Icon = MaterialSymbols.Filled.VolumeMute,
                                 },
                             }
                         },
@@ -420,7 +420,7 @@ namespace AXPlayer.App.Screens
                                                     Origin = Anchor.TopRight,
                                                     Anchor = Anchor.TopRight,
                                                     Size = new Vector2(40, 40),
-                                                    Icon = FontAwesome.Solid.Bars,
+                                                    Icon = MaterialSymbols.Filled.Bars,
                                                     IconScale = new Vector2(1.2f),
                                                     TooltipText = AXPlayerStrings.Menu,
                                                     BackgroundColour = overlayColourProvider.Background5,
@@ -518,7 +518,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = false },
-                                                                                            Icon = FontAwesome.Solid.FastBackward,
+                                                                                            Icon = MaterialSymbols.Filled.FastBackward,
                                                                                             TooltipText = AXPlayerStrings.PreviousVideo,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -541,7 +541,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.Play,
+                                                                                            Icon = MaterialSymbols.Filled.Play,
                                                                                             TooltipText = AXPlayerStrings.Play,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -561,7 +561,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = false },
-                                                                                            Icon = FontAwesome.Solid.FastForward,
+                                                                                            Icon = MaterialSymbols.Filled.FastForward,
                                                                                             TooltipText = AXPlayerStrings.NextVideo,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -584,7 +584,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.Sync,
+                                                                                            Icon = MaterialSymbols.Filled.Sync,
                                                                                             TooltipText = AXPlayerStrings.Repeat,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -598,7 +598,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.ClosedCaptioning,
+                                                                                            Icon = MaterialSymbols.Filled.ClosedCaptioning,
                                                                                             TooltipText = AXPlayerStrings.ClosedCaptions,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -612,7 +612,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.Cog,
+                                                                                            Icon = MaterialSymbols.Filled.Cog,
                                                                                             TooltipText = AXPlayerStrings.VideoSettings,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -626,7 +626,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.Camera,
+                                                                                            Icon = MaterialSymbols.Filled.Camera,
                                                                                             TooltipText = AXPlayerStrings.TakeScreenshot,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -640,7 +640,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.List,
+                                                                                            Icon = MaterialSymbols.Filled.List,
                                                                                             TooltipText = AXPlayerStrings.Playlists,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -654,7 +654,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = false },
-                                                                                            Icon = FontAwesome.Regular.CommentAlt,
+                                                                                            Icon = MaterialSymbols.Outlined.CommentAlt,
                                                                                             TooltipText = AXPlayerStrings.Comments("0"),
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -669,7 +669,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.CommentAlt,
+                                                                                            Icon = MaterialSymbols.Filled.CommentAlt,
                                                                                             TooltipText = AXPlayerStrings.LiveChatReplay("0"),
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -681,7 +681,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = true },
-                                                                                            Icon = FontAwesome.Solid.MapPin,
+                                                                                            Icon = MaterialSymbols.Filled.Pin,
                                                                                             TooltipText = AXPlayerStrings.PlayerControlPin,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -695,7 +695,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = false },
-                                                                                            Icon = FontAwesome.Solid.ThumbsUp,
+                                                                                            Icon = MaterialSymbols.Filled.ThumbsUp,
                                                                                             TooltipText = AXPlayerStrings.LikeButton,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -705,7 +705,7 @@ namespace AXPlayer.App.Screens
                                                                                         {
                                                                                             Width = 50,
                                                                                             Enabled = { Value = false },
-                                                                                            Icon = FontAwesome.Solid.ThumbsDown,
+                                                                                            Icon = MaterialSymbols.Filled.ThumbsDown,
                                                                                             TooltipText = AXPlayerStrings.DislikeButton,
                                                                                             IconColour = overlayColourProvider.Content2,
                                                                                             BackgroundColour = overlayColourProvider.Background3,
@@ -774,7 +774,7 @@ namespace AXPlayer.App.Screens
                                                                                                     {
                                                                                                         speedBarIcon = new SpriteIcon
                                                                                                         {
-                                                                                                            Icon = FontAwesome.Solid.TachometerAlt,
+                                                                                                            Icon = MaterialSymbols.Filled.TachometerAlt,
                                                                                                             Width = 16,
                                                                                                             Height = 16,
                                                                                                             Margin = new MarginPadding
@@ -790,7 +790,7 @@ namespace AXPlayer.App.Screens
                                                                                                         },
                                                                                                         speedBarExpandIcon = new SpriteIcon
                                                                                                         {
-                                                                                                            Icon = FontAwesome.Solid.ChevronUp,
+                                                                                                            Icon = MaterialSymbols.Filled.ChevronUp,
                                                                                                             Width = 12,
                                                                                                             Height = 12,
                                                                                                             Margin = new MarginPadding
@@ -849,7 +849,7 @@ namespace AXPlayer.App.Screens
                                                                                                     {
                                                                                                         volumeIcon = new SpriteIcon
                                                                                                         {
-                                                                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                                                                            Icon = MaterialSymbols.Filled.VolumeUp,
                                                                                                             Width = 16,
                                                                                                             Height = 16,
                                                                                                             Margin = new MarginPadding
@@ -864,7 +864,7 @@ namespace AXPlayer.App.Screens
                                                                                                         },
                                                                                                         volumeBarExpandIcon = new SpriteIcon
                                                                                                         {
-                                                                                                            Icon = FontAwesome.Solid.ChevronUp,
+                                                                                                            Icon = MaterialSymbols.Filled.ChevronUp,
                                                                                                             Width = 12,
                                                                                                             Height = 12,
                                                                                                             Margin = new MarginPadding
@@ -986,7 +986,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -1241,7 +1241,7 @@ namespace AXPlayer.App.Screens
                                                                             {
                                                                                 Width = 15,
                                                                                 Height = 15,
-                                                                                Icon = FontAwesome.Solid.ThumbsUp,
+                                                                                Icon = MaterialSymbols.Filled.ThumbsUp,
                                                                             },
                                                                             likeCount = new ProjectYomiSpriteText
                                                                             {
@@ -1292,7 +1292,7 @@ namespace AXPlayer.App.Screens
                                                                             {
                                                                                 Width = 15,
                                                                                 Height = 15,
-                                                                                Icon = FontAwesome.Solid.ThumbsDown,
+                                                                                Icon = MaterialSymbols.Filled.ThumbsDown,
                                                                             },
                                                                             dislikeCount = new ProjectYomiSpriteText
                                                                             {
@@ -1343,7 +1343,7 @@ namespace AXPlayer.App.Screens
                                                                             {
                                                                                 Width = 15,
                                                                                 Height = 15,
-                                                                                Icon = FontAwesome.Regular.CommentAlt,
+                                                                                Icon = MaterialSymbols.Outlined.CommentAlt,
                                                                                 Colour = overlayColourProvider.Content2,
                                                                             },
                                                                             commentCount = new ProjectYomiSpriteText
@@ -1370,7 +1370,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background3,
                                     Action = () =>
                                     {
@@ -1503,7 +1503,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -1582,7 +1582,7 @@ namespace AXPlayer.App.Screens
                                                 //Schedule(() => onScreenDisplay.Display(toast));
                                                 Schedule(() =>
                                                 {
-                                                    //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Regular.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
+                                                    //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Outlined.Comment, Color4.White, AXPlayerStrings.CommentAdded, AXPlayerStrings.General));
                                                     newToastOverlay.ShowToast(AXPlayerStrings.CommentAdded);
                                                 });
 
@@ -1597,7 +1597,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Right = 6,
                                             },
-                                            Icon = FontAwesome.Solid.PaperPlane,
+                                            Icon = MaterialSymbols.Filled.PaperPlane,
                                             Width = 35,
                                             Height = 35,
                                             AlwaysPresent = true,
@@ -1688,7 +1688,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -1753,7 +1753,7 @@ namespace AXPlayer.App.Screens
                                             {
                                                 Right = 6,
                                             },
-                                            Icon = FontAwesome.Solid.Search,
+                                            Icon = MaterialSymbols.Filled.Search,
                                             Width = 35,
                                             Height = 35,
                                             AlwaysPresent = true,
@@ -1882,7 +1882,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -2074,7 +2074,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -2169,7 +2169,7 @@ namespace AXPlayer.App.Screens
                                     Margin = new MarginPadding(14),
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -2306,7 +2306,7 @@ namespace AXPlayer.App.Screens
                                     Margin = new MarginPadding(14),
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -2439,7 +2439,7 @@ namespace AXPlayer.App.Screens
                                                                 },
                                                                 new SettingsItemV2(audioEffectPresetNameBox = new FormTextBox
                                                                 {
-                                                                    Icon = FontAwesome.Solid.Bookmark,
+                                                                    Icon = MaterialSymbols.Filled.Bookmark,
                                                                     Caption = AXPlayerStrings.AudioEffectPresetName,
                                                                     PlaceholderText = AXPlayerStrings.AudioEffectPresetNamePlaceholder,
                                                                 })
@@ -2772,7 +2772,7 @@ namespace AXPlayer.App.Screens
                                     Margin = new MarginPadding(14),
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -3250,7 +3250,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Regular.FolderOpen,
+                                                            Icon = MaterialSymbols.Outlined.FolderOpen,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.LoadVideo,
                                                             Hotkey = new Hotkey(GlobalAction.OpenLoadVideo),
@@ -3263,7 +3263,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.Cog,
+                                                            Icon = MaterialSymbols.Filled.Cog,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Settings,
                                                             Hotkey = new Hotkey(GlobalAction.OpenSettings),
@@ -3276,7 +3276,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.Keyboard,
+                                                            Icon = MaterialSymbols.Filled.Keyboard,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.ShortcutHelpTitle,
                                                             RoundCorner = new CornersInfo(8, 8, 8, 8),
@@ -3293,7 +3293,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Regular.CommentAlt,
+                                                            Icon = MaterialSymbols.Outlined.CommentAlt,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.CommentsWithoutCount,
                                                             Hotkey = new Hotkey(GlobalAction.OpenComments),
@@ -3307,7 +3307,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.CommentAlt,
+                                                            Icon = MaterialSymbols.Filled.CommentAlt,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.LiveChatReplay("0"),
                                                             RoundCorner = new CornersInfo(8, 8, 8, 8),
@@ -3321,7 +3321,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Regular.Clipboard,
+                                                            Icon = MaterialSymbols.Outlined.Clipboard,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.CopyVideoURL,
                                                             RoundCorner = new CornersInfo(8, 8, 8, 8),
@@ -3349,7 +3349,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.Search,
+                                                            Icon = MaterialSymbols.Filled.Search,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Search,
                                                             Hotkey = new Hotkey(GlobalAction.OpenSearch),
@@ -3362,7 +3362,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.Flag,
+                                                            Icon = MaterialSymbols.Filled.Flag,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Report,
                                                             Hotkey = new Hotkey(GlobalAction.ReportAbuse),
@@ -3375,7 +3375,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.List,
+                                                            Icon = MaterialSymbols.Filled.List,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Playlists,
                                                             Hotkey = new Hotkey(GlobalAction.OpenPlaylist),
@@ -3388,7 +3388,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.List,
+                                                            Icon = MaterialSymbols.Filled.List,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.MyPlaylists,
                                                             Hotkey = new Hotkey(GlobalAction.OpenMyPlaylists),
@@ -3406,7 +3406,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.History,
+                                                            Icon = MaterialSymbols.Filled.History,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.WatchHistory,
                                                             Hotkey = new Hotkey(GlobalAction.OpenWatchHistory),
@@ -3423,7 +3423,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                            Icon = MaterialSymbols.Filled.VolumeUp,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.AudioEffects,
                                                             Hotkey = new Hotkey(GlobalAction.OpenAudioEffects),
@@ -3436,7 +3436,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Regular.Bookmark,
+                                                            Icon = MaterialSymbols.Outlined.Bookmark,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Save,
                                                             Hotkey = new Hotkey(GlobalAction.SaveVideoToPlaylist),
@@ -3449,7 +3449,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.Bookmark,
+                                                            Icon = MaterialSymbols.Filled.Bookmark,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.AddNewPlaylist,
                                                             Hotkey = new Hotkey(GlobalAction.AddPlaylistKey),
@@ -3467,7 +3467,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.Bell,
+                                                            Icon = MaterialSymbols.Filled.Bell,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Notifications,
                                                             Hotkey = new Hotkey(GlobalAction.Notifications),
@@ -3485,7 +3485,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.SignOutAlt,
+                                                            Icon = MaterialSymbols.Filled.SignOutAlt,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Exit,
                                                             Hotkey = new Hotkey(GlobalAction.QuitApp),
@@ -3527,7 +3527,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -3622,7 +3622,7 @@ namespace AXPlayer.App.Screens
                                                             Anchor = Anchor.TopRight,
                                                             Size = new Vector2(1, 45),
                                                             RelativeSizeAxes = Axes.X,
-                                                            Icon = FontAwesome.Solid.SignOutAlt,
+                                                            Icon = MaterialSymbols.Filled.SignOutAlt,
                                                             IconScale = new Vector2(1.2f),
                                                             Text = AXPlayerStrings.Exit,
                                                             Action = () =>
@@ -3740,7 +3740,7 @@ namespace AXPlayer.App.Screens
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {
@@ -3980,21 +3980,21 @@ namespace AXPlayer.App.Screens
                     if (!sessionStatics.Get<bool>(Static.IsControlVisible))
                         muteStateOverlay.Hide();
 
-                    volumeIcon.Icon = FontAwesome.Solid.VolumeUp;
+                    volumeIcon.Icon = MaterialSymbols.Filled.VolumeUp;
                 }
                 else if (volume.NewValue >= 0.01)
                 {
                     if (!sessionStatics.Get<bool>(Static.IsControlVisible))
                         muteStateOverlay.Hide();
 
-                    volumeIcon.Icon = FontAwesome.Solid.VolumeDown;
+                    volumeIcon.Icon = MaterialSymbols.Filled.VolumeDown;
                 }
                 else
                 {
                     if (!sessionStatics.Get<bool>(Static.IsControlVisible))
                         muteStateOverlay.Show();
 
-                    volumeIcon.Icon = FontAwesome.Solid.VolumeMute;
+                    volumeIcon.Icon = MaterialSymbols.Filled.VolumeMute;
                 }
             }, true);
 
@@ -4002,7 +4002,7 @@ namespace AXPlayer.App.Screens
             {
                 captionButton.SetEnabledValue2(!enabled.NewValue);
                 captionButton.IconObject.FadeColour(enabled.NewValue ? bgColor : accentColor, 250, Easing.OutQuint);
-                captionButton.Icon = enabled.NewValue ? FontAwesome.Solid.ClosedCaptioning : FontAwesome.Regular.ClosedCaptioning;
+                captionButton.Icon = enabled.NewValue ? MaterialSymbols.Filled.ClosedCaptioning : MaterialSymbols.Outlined.ClosedCaptioning;
             }, true);
 
             alwaysUseOriginalAudio.BindValueChanged(enabled =>

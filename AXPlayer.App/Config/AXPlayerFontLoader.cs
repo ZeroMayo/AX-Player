@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
+// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Collections.Generic;
@@ -181,6 +181,36 @@ namespace AXPlayer.App.Config
             AddFont(Resources, @"Fonts/UIFonts/Noto/Noto-Hangul");
             AddFont(Resources, @"Fonts/UIFonts/Noto/Noto-Thai");
             */
+
+            // Material Symbols Rounded is used for every UI icon except brand logos (which stay on FontAwesome).
+            // The font's FILL axis replaces the old FontAwesome solid/regular split.
+            var materialSymbols = game.AddVariableFont(Resources, @"Fonts/MaterialSymbolsRounded/MaterialSymbolsRounded");
+
+            materialSymbols.AddInstance(
+                new FontVariation
+                {
+                    Axes = new Dictionary<string, double>
+                    {
+                        { @"FILL", 1 },
+                        { @"GRAD", 0 },
+                        { @"opsz", 24 },
+                        { @"wght", 400 },
+                    },
+                },
+                @"MaterialSymbolsRounded-Filled");
+
+            materialSymbols.AddInstance(
+                new FontVariation
+                {
+                    Axes = new Dictionary<string, double>
+                    {
+                        { @"FILL", 0 },
+                        { @"GRAD", 0 },
+                        { @"opsz", 24 },
+                        { @"wght", 400 },
+                    },
+                },
+                @"MaterialSymbolsRounded-Outlined");
 
             var Pretendard = game.AddVariableFont(Resources, @"Fonts/PretendardVariable/PretendardVariable");
             Pretendard.AddInstance(@"PretendardVariable-Regular");

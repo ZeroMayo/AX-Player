@@ -59,7 +59,7 @@ namespace AXPlayer.App.Graphics.Videos
                         rightContent.RepeatCount = 0;
                         rightContent.HideNow();
                         leftContent.RepeatCount += 5;
-                        leftContent.PlaySeekAnimation(FontAwesome.Solid.ChevronLeft);
+                        leftContent.PlaySeekAnimation(MaterialSymbols.Filled.ChevronLeft);
                         break;
                     }
                     case SeekAction.FastForward10sec:
@@ -67,7 +67,7 @@ namespace AXPlayer.App.Graphics.Videos
                         leftContent.RepeatCount = 0;
                         leftContent.HideNow();
                         rightContent.RepeatCount += 5;
-                        rightContent.PlaySeekAnimation(FontAwesome.Solid.ChevronRight);
+                        rightContent.PlaySeekAnimation(MaterialSymbols.Filled.ChevronRight);
                         break;
                     }
                     case SeekAction.PlayPause:
@@ -127,7 +127,7 @@ namespace AXPlayer.App.Graphics.Videos
                                         {
                                             Width = 15,
                                             Height = 15,
-                                            Icon = FontAwesome.Solid.ChevronLeft,
+                                            Icon = MaterialSymbols.Filled.ChevronLeft,
                                             Margin = new MarginPadding { Right = 2 },
                                         },
                                         seekValue = new ProjectYomiSpriteText(false)
@@ -180,7 +180,7 @@ namespace AXPlayer.App.Graphics.Videos
                                         {
                                             Width = 15,
                                             Height = 15,
-                                            Icon = FontAwesome.Solid.ChevronRight,
+                                            Icon = MaterialSymbols.Filled.ChevronRight,
                                             Margin = new MarginPadding { Left = 2 },
                                         },
                                     }
@@ -222,7 +222,7 @@ namespace AXPlayer.App.Graphics.Videos
                                         {
                                             Width = 25,
                                             Height = 25,
-                                            Icon = FontAwesome.Solid.ChevronRight,
+                                            Icon = MaterialSymbols.Filled.ChevronRight,
                                         },
                                     }
                                 }

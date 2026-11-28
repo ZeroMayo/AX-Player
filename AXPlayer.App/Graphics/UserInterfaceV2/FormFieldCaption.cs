@@ -132,7 +132,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                     Anchor = Anchor.BottomLeft,
                     Origin = Anchor.BottomLeft,
                     Size = new Vector2(10),
-                    Icon = FontAwesome.Solid.QuestionCircle,
+                    Icon = MaterialSymbols.Filled.QuestionCircle,
                     Margin = new MarginPadding { Left = 5 },
                     Y = 1f,
                 });

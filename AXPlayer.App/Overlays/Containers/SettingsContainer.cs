@@ -357,67 +357,67 @@ namespace AXPlayer.App.Overlays.Containers
             {
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.Star,
+                    Icon = MaterialSymbols.Filled.Star,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("Quick Actions")),
                     TooltipText = AXPlayerStrings.QuickAction,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.Cog,
+                    Icon = MaterialSymbols.Filled.Cog,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("General Settings")),
                     TooltipText = AXPlayerStrings.General,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.WindowMaximize,
+                    Icon = MaterialSymbols.Filled.WindowMaximize,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("UI Settings")),
                     TooltipText = AXPlayerStrings.UserInterface,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.Bolt,
+                    Icon = MaterialSymbols.Filled.Bolt,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("Graphics Settings")),
                     TooltipText = AXPlayerStrings.Graphics,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.Camera,
+                    Icon = MaterialSymbols.Filled.Camera,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("Screenshot Settings")),
                     TooltipText = AXPlayerStrings.Screenshot,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.Video,
+                    Icon = MaterialSymbols.Filled.Video,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("Video Settings")),
                     TooltipText = AXPlayerStrings.Video,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.Sun,
+                    Icon = MaterialSymbols.Filled.Sun,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("VFX Settings")),
                     TooltipText = AXPlayerStrings.VisualEffects,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.ClosedCaptioning,
+                    Icon = MaterialSymbols.Filled.ClosedCaptioning,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("CC Settings")),
                     TooltipText = AXPlayerStrings.ClosedCaptions,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.VolumeUp,
+                    Icon = MaterialSymbols.Filled.VolumeUp,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("Audio Settings")),
                     TooltipText = AXPlayerStrings.Audio,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.Bug,
+                    Icon = MaterialSymbols.Filled.Bug,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("Debug Settings")),
                     TooltipText = AXPlayerStrings.Debug,
                 },
                 new AXPlayerSettingsTabBar.Button
                 {
-                    Icon = FontAwesome.Solid.InfoCircle,
+                    Icon = MaterialSymbols.Filled.InfoCircle,
                     ClickAction = _ => Schedule(() => ShowSettingsOverlayAtName("App Info")),
                     TooltipText = AXPlayerStrings.AppInfo,
                 },
@@ -588,7 +588,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(settingsBackupDropdown = new SettingsBackupDropdown
                                                         {
                                                             Caption = AXPlayerStrings.SettingsBackup,
-                                                            Icon = FontAwesome.Solid.Save,
+                                                            Icon = MaterialSymbols.Filled.Save,
                                                             CornerType = FormControlCornerType.None,
                                                         })
                                                         {
@@ -622,7 +622,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.CloseButtonAction,
                                                             Current = closeButtonAction,
-                                                            Icon = FontAwesome.Regular.WindowClose,
+                                                            Icon = MaterialSymbols.Outlined.WindowClose,
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
                                                         discordRichPresenceDropdownBase = new SettingsItemV2(discordRichPresenceDropdown = new FormEnumDropdownWithDiscordProfileImage<DiscordRichPresenceMode>
@@ -657,8 +657,8 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.CheckUpdate,
                                                             Text = game.Version,
-                                                            //ButtonIcon = FontAwesome.Solid.Sync,
-                                                            Icon = FontAwesome.Solid.Sync,
+                                                            //ButtonIcon = MaterialSymbols.Filled.Sync,
+                                                            Icon = MaterialSymbols.Filled.Sync,
                                                             Action = () => {
                                                                 CheckUpdateAction.Invoke();
                                                             },
@@ -676,7 +676,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.Language,
                                                             Current = game.CurrentLanguage,
-                                                            Icon = FontAwesome.Solid.Language,
+                                                            Icon = MaterialSymbols.Filled.Language,
                                                             AlwaysShowSearchBar = true,
                                                             CornerType = FormControlCornerType.Top,
                                                         })
@@ -687,41 +687,41 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.UsernameDisplayMode,
                                                             Current = usernameDisplayMode,
-                                                            Icon = FontAwesome.Solid.User,
+                                                            Icon = MaterialSymbols.Filled.User,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<VideoMetadataDisplayAlignment>
                                                         {
                                                             Caption = VideoMetadataDisplayAlignmentStrings.VideoMetadataDisplayAlignmentSetting,
                                                             Current = videoMetadataDisplayAlignment,
-                                                            Icon = FontAwesome.Solid.List,
+                                                            Icon = MaterialSymbols.Filled.List,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<OverlayColourScheme>
                                                         {
                                                             Caption = AXPlayerStrings.ColourScheme,
                                                             Current = colourSchemeBindable,
-                                                            Icon = FontAwesome.Solid.Palette,
+                                                            Icon = MaterialSymbols.Filled.Palette,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<UIFont>
                                                         {
                                                             Caption = AXPlayerStrings.UIFont,
                                                             Current = ui_font,
-                                                            Icon = FontAwesome.Solid.Font,
+                                                            Icon = MaterialSymbols.Filled.Font,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<ProfileImageShape>
                                                         {
                                                             Caption = AXPlayerStrings.ProfileImageShape,
                                                             Current = profileImageShape,
-                                                            Icon = FontAwesome.Solid.Shapes,
+                                                            Icon = MaterialSymbols.Filled.Shapes,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.UIScaling,
-                                                            Icon = FontAwesome.Solid.SlidersH,
+                                                            Icon = MaterialSymbols.Filled.SlidersH,
                                                             TransferValueOnCommit = true,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.UIScale),
                                                             KeyboardStep = 0.01f,
@@ -731,28 +731,28 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.PlayOverlaySFX,
-                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                            Icon = MaterialSymbols.Filled.VolumeUp,
                                                             Current = playOverlaySFX,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<SFXType>
                                                         {
                                                             Caption = AXPlayerStrings.SFXType,
-                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                            Icon = MaterialSymbols.Filled.VolumeUp,
                                                             Current = overlaySFXType,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormEnumDropdown<PlayerControllerFadeStyle>
                                                         {
                                                             Caption = AXPlayerStrings.PlayerControllerFadeStyle,
-                                                            Icon = FontAwesome.Solid.Eye,
+                                                            Icon = MaterialSymbols.Filled.Eye,
                                                             Current = appConfig.GetBindable<PlayerControllerFadeStyle>(AXPlayerSetting.PlayerControllerFadeStyle),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.WavySeekbar,
-                                                            Icon = FontAwesome.Solid.SlidersH,
+                                                            Icon = MaterialSymbols.Filled.SlidersH,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.WavySeekBar),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
@@ -767,7 +767,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FrameSyncDropdown
                                                         {
                                                             Caption = AXPlayerStrings.FrameLimiter,
-                                                            Icon = FontAwesome.Solid.SlidersH,
+                                                            Icon = MaterialSymbols.Filled.SlidersH,
                                                             Current = frameSyncMode,
                                                             Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F7 })),
                                                             CornerType = FormControlCornerType.Top,
@@ -775,7 +775,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new ThreadingModeDropdown
                                                         {
                                                             Caption = AXPlayerStrings.ThreadingMode,
-                                                            Icon = FontAwesome.Solid.Bolt,
+                                                            Icon = MaterialSymbols.Filled.Bolt,
                                                             Current = config.GetBindable<ExecutionMode>(FrameworkSetting.ExecutionMode),
                                                             Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.Alt, InputKey.F7 })),
                                                             CornerType = FormControlCornerType.Center,
@@ -783,7 +783,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         windowModeDropdownSettings = new SettingsItemV2(windowModeDropdown = new WindowModeDropdown
                                                         {
                                                             Caption = AXPlayerStrings.ScreenMode,
-                                                            Icon = FontAwesome.Regular.WindowMaximize,
+                                                            Icon = MaterialSymbols.Outlined.WindowMaximize,
                                                             Items = window?.SupportedWindowModes,
                                                             Current = windowMode,
                                                             Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.F11 })),
@@ -795,7 +795,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         displayDropdownCore = new SettingsItemV2(displayDropdown = new DisplaySettingsDropdown
                                                         {
                                                             Caption = AXPlayerStrings.Display,
-                                                            Icon = FontAwesome.Regular.WindowMaximize,
+                                                            Icon = MaterialSymbols.Outlined.WindowMaximize,
                                                             Items = window?.Displays,
                                                             Current = currentDisplay,
                                                             CornerType = FormControlCornerType.Center,
@@ -806,7 +806,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         resolutionFullscreenDropdownCore = new SettingsItemV2(resolutionFullscreenDropdown = new ResolutionSettingsDropdown
                                                         {
                                                             Caption = AXPlayerStrings.ScreenResolution,
-                                                            Icon = FontAwesome.Regular.WindowMaximize,
+                                                            Icon = MaterialSymbols.Outlined.WindowMaximize,
                                                             ItemSource = resolutionsFullscreen,
                                                             Current = sizeFullscreen,
                                                             CornerType = FormControlCornerType.Center,
@@ -818,7 +818,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         resolutionWindowedDropdownCore = new SettingsItemV2(resolutionWindowedDropdown = new ResolutionSettingsDropdown
                                                         {
                                                             Caption = AXPlayerStrings.ScreenResolution,
-                                                            Icon = FontAwesome.Regular.WindowMaximize,
+                                                            Icon = MaterialSymbols.Outlined.WindowMaximize,
                                                             ItemSource = resolutionsWindowed,
                                                             Current = windowedResolution,
                                                             CornerType = FormControlCornerType.Center,
@@ -830,21 +830,21 @@ namespace AXPlayer.App.Overlays.Containers
                                                         safeAreaConsiderationsBase = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShrinkGameToSafeArea,
-                                                            Icon = FontAwesome.Regular.WindowMaximize,
+                                                            Icon = MaterialSymbols.Outlined.WindowMaximize,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SafeAreaConsiderations),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         minimiseOnFocusLossCheckboxCore = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.MinimiseOnFocusLoss,
-                                                            Icon = FontAwesome.Regular.WindowMinimize,
+                                                            Icon = MaterialSymbols.Outlined.WindowMinimize,
                                                             Current = config.GetBindable<bool>(FrameworkSetting.MinimiseOnFocusLossInFullscreen),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new RendererSettingsDropdown
                                                         {
                                                             Caption = AXPlayerStrings.Renderer,
-                                                            Icon = FontAwesome.Solid.Bolt,
+                                                            Icon = MaterialSymbols.Filled.Bolt,
                                                             Current = renderer,
                                                             Items = host.GetPreferredRenderersForCurrentPlatform().Order()
                                                             #pragma warning disable CS0612 // Type or member is obsolete
@@ -855,7 +855,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         reflexSettingBase = new SettingsItemV2(reflexSetting = new ReflexDropdown
                                                         {
                                                             Caption = "NVIDIA Reflex",
-                                                            Icon = FontAwesome.Solid.Bolt,
+                                                            Icon = MaterialSymbols.Filled.Bolt,
                                                             Current = reflexMode,
                                                             HintText = AXPlayerStrings.ReflexHint,
                                                             CornerType = FormControlCornerType.Center,
@@ -866,7 +866,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShowFPS,
-                                                            Icon = FontAwesome.Solid.Bolt,
+                                                            Icon = MaterialSymbols.Filled.Bolt,
                                                             Current = fpsDisplay,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleFPSDisplay),
                                                             CornerType = FormControlCornerType.Center,
@@ -874,7 +874,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(ScreenScaling = new FormEnumDropdown<ScalingMode>
                                                         {
                                                             Caption = AXPlayerStrings.ScreenScaling,
-                                                            Icon = FontAwesome.Solid.WindowMaximize,
+                                                            Icon = MaterialSymbols.Filled.WindowMaximize,
                                                             Current = appConfig.GetBindable<ScalingMode>(AXPlayerSetting.Scaling),
                                                             Hotkey = new Hotkey(GlobalAction.CycleScalingMode),
                                                             CornerType = FormControlCornerType.Bottom,
@@ -896,7 +896,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 {
                                                                     Caption = AXPlayerStrings.HorizontalPosition,
                                                                     Current = scalingPositionX,
-                                                                    Icon = FontAwesome.Solid.RulerHorizontal,
+                                                                    Icon = MaterialSymbols.Filled.RulerHorizontal,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
                                                                     CornerType = FormControlCornerType.Center,
@@ -908,7 +908,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 {
                                                                     Caption = AXPlayerStrings.VerticalPosition,
                                                                     Current = scalingPositionY,
-                                                                    Icon = FontAwesome.Solid.RulerVertical,
+                                                                    Icon = MaterialSymbols.Filled.RulerVertical,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
                                                                     CornerType = FormControlCornerType.Center,
@@ -919,7 +919,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.HorizontalScale,
-                                                                    Icon = FontAwesome.Solid.RulerHorizontal,
+                                                                    Icon = MaterialSymbols.Filled.RulerHorizontal,
                                                                     Current = scalingSizeX,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
@@ -931,7 +931,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.VerticalScale,
-                                                                    Icon = FontAwesome.Solid.RulerVertical,
+                                                                    Icon = MaterialSymbols.Filled.RulerVertical,
                                                                     Current = scalingSizeY,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
@@ -943,7 +943,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(dimSlider = new FormSliderBar<float>
                                                                 {
                                                                     Caption = AXPlayerStrings.ThumbnailDim,
-                                                                    Icon = FontAwesome.Regular.Sun,
+                                                                    Icon = MaterialSymbols.Outlined.Sun,
                                                                     Current = scalingBackgroundDim,
                                                                     KeyboardStep = 0.01f,
                                                                     DisplayAsPercentage = true,
@@ -962,7 +962,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormEnumDropdown<Config.ScreenshotFormat>
                                                         {
                                                             Caption = AXPlayerStrings.ScreenshotFormat,
-                                                            Icon = FontAwesome.Solid.WindowMaximize,
+                                                            Icon = MaterialSymbols.Filled.WindowMaximize,
                                                             Current = screenshotFormat,
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
@@ -978,7 +978,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormSliderBar<int>
                                                                 {
                                                                     Caption = AXPlayerStrings.ScreenshotQuality,
-                                                                    Icon = FontAwesome.Solid.SlidersH,
+                                                                    Icon = MaterialSymbols.Filled.SlidersH,
                                                                     Current = appConfig.GetBindable<int>(AXPlayerSetting.ScreenshotQuality),
                                                                     LabelFormat = value => $"{value}%",
                                                                     CornerType = FormControlCornerType.Center,
@@ -988,7 +988,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(screenshotUIVisibleOption = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShowCursorInScreenshots,
-                                                            Icon = FontAwesome.Solid.WindowMaximize,
+                                                            Icon = MaterialSymbols.Filled.WindowMaximize,
                                                             Current = screenshotUIVisible,
                                                             CornerType = FormControlCornerType.Bottom,
                                                             DynamicCornerType = true,
@@ -1005,7 +1005,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormCheckBox
                                                                 {
                                                                     Caption = AXPlayerStrings.ShowLiveChatsInScreenshots,
-                                                                    Icon = FontAwesome.Solid.CommentAlt,
+                                                                    Icon = MaterialSymbols.Filled.CommentAlt,
                                                                     Current = appConfig.GetBindable<bool>(AXPlayerSetting.ScreenshotCaptureLiveChat),
                                                                     CornerType = FormControlCornerType.Bottom,
                                                                 }),
@@ -1022,7 +1022,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormEnumDropdown<AspectRatioMethod>
                                                         {
                                                             Caption = AXPlayerStrings.AspectRatioMethod,
-                                                            Icon = FontAwesome.Solid.WindowMaximize,
+                                                            Icon = MaterialSymbols.Filled.WindowMaximize,
                                                             Current = aspectRatioMethod,
                                                             Hotkey = new Hotkey(GlobalAction.CycleAspectRatio),
                                                             CornerType = FormControlCornerType.Top,
@@ -1030,7 +1030,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<double>
                                                         {
                                                             Caption = AXPlayerStrings.VideoDimLevel,
-                                                            Icon = FontAwesome.Regular.Sun,
+                                                            Icon = MaterialSymbols.Outlined.Sun,
                                                             Current = appConfig.GetBindable<double>(AXPlayerSetting.VideoDimLevel),
                                                             DisplayAsPercentage = true,
                                                             KeyboardStep = 0.05f,
@@ -1039,7 +1039,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(hwAccelCheckbox = new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.UseHardwareAcceleration,
-                                                            Icon = FontAwesome.Solid.Bolt,
+                                                            Icon = MaterialSymbols.Filled.Bolt,
                                                             CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
@@ -1048,7 +1048,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         VideoQualitySettingsCore = new SettingsItemV2(VideoQualitySettings = new YouTubeQualityDropdown
                                                         {
                                                             Caption = AXPlayerStrings.VideoQuality,
-                                                            Icon = FontAwesome.Solid.Video,
+                                                            Icon = MaterialSymbols.Filled.Video,
                                                             CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
@@ -1057,7 +1057,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         AudioQualitySettingsCore = new SettingsItemV2(AudioQualitySettings = new YouTubeAudioStreamDropdown
                                                         {
                                                             Caption = AXPlayerStrings.AudioTracks,
-                                                            Icon = FontAwesome.Solid.FileAudio,
+                                                            Icon = MaterialSymbols.Filled.FileAudio,
                                                             CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
@@ -1066,21 +1066,21 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShowVideoMetadataOnWindowTitle,
-                                                            Icon = FontAwesome.Solid.Font,
+                                                            Icon = MaterialSymbols.Filled.Font,
                                                             Current = showVideoMetadataOnWindowTitle,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ResetPlaybackSpeedWhenLoadingAVideo,
-                                                            Icon = FontAwesome.Solid.TachometerAlt,
+                                                            Icon = MaterialSymbols.Filled.TachometerAlt,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.ResetPlaybackSpeedWhenLoadingAVideo),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.SmoothPlaybackSpeed,
-                                                            Icon = FontAwesome.Solid.TachometerAlt,
+                                                            Icon = MaterialSymbols.Filled.TachometerAlt,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmoothPlaybackSpeed),
                                                             CornerType = FormControlCornerType.Center,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleSmoothPlaybackSpeed)
@@ -1088,21 +1088,21 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.SmartCrossfade,
-                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Icon = MaterialSymbols.Filled.ExchangeAlt,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmartCrossfadeEnabled),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.SmartCrossfadeSilenceTrim,
-                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Icon = MaterialSymbols.Filled.ExchangeAlt,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.SmartCrossfadeSilenceTrim),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.SmartCrossfadeDuration,
-                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Icon = MaterialSymbols.Filled.ExchangeAlt,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.SmartCrossfadeDuration),
                                                             KeyboardStep = 1,
                                                             LabelFormat = value => $"{value:N0}s",
@@ -1119,7 +1119,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.CRTVideoEffect,
-                                                            Icon = FontAwesome.Solid.Sun,
+                                                            Icon = MaterialSymbols.Filled.Sun,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled),
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
@@ -1127,7 +1127,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoInterpolation,
-                                                            Icon = FontAwesome.Solid.ExchangeAlt,
+                                                            Icon = MaterialSymbols.Filled.ExchangeAlt,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoInterpolationStrength),
                                                             DisplayAsPercentage = true,
                                                             CornerType = FormControlCornerType.Center,
@@ -1135,7 +1135,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoMotionBlur,
-                                                            Icon = FontAwesome.Solid.Wind,
+                                                            Icon = MaterialSymbols.Filled.Wind,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoMotionBlurStrength),
                                                             DisplayAsPercentage = true,
                                                             CornerType = FormControlCornerType.Center,
@@ -1144,7 +1144,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoBloomLevel,
-                                                            Icon = FontAwesome.Solid.Sun,
+                                                            Icon = MaterialSymbols.Filled.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoBloomLevel),
                                                             DisplayAsPercentage = true,
                                                             CornerType = FormControlCornerType.Center,
@@ -1152,7 +1152,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.ChromaticAberration,
-                                                            Icon = FontAwesome.Solid.Sun,
+                                                            Icon = MaterialSymbols.Filled.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength),
                                                             DisplayAsPercentage = true,
                                                             CornerType = FormControlCornerType.Center,
@@ -1160,7 +1160,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoGrayscaleLevel,
-                                                            Icon = FontAwesome.Solid.Sun,
+                                                            Icon = MaterialSymbols.Filled.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoGrayscaleLevel),
                                                             DisplayAsPercentage = true,
                                                             CornerType = FormControlCornerType.Center,
@@ -1168,7 +1168,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoHueShift,
-                                                            Icon = FontAwesome.Solid.Sun,
+                                                            Icon = MaterialSymbols.Filled.Sun,
                                                             Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoHueShift),
                                                             KeyboardStep = 1,
                                                             LabelFormat = value => $"{value:N0}°",
@@ -1196,7 +1196,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ClosedCaptions,
-                                                            Icon = FontAwesome.Solid.ClosedCaptioning,
+                                                            Icon = MaterialSymbols.Filled.ClosedCaptioning,
                                                             Current = captionEnabled,
                                                             Hotkey = new Hotkey(GlobalAction.CycleCaptionLanguage),
                                                             CornerType = FormControlCornerType.Top,
@@ -1204,7 +1204,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         advancedSubtitlesBase = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.AdvancedSubtitleStyle,
-                                                            Icon = FontAwesome.Solid.ClosedCaptioning,
+                                                            Icon = MaterialSymbols.Filled.ClosedCaptioning,
                                                             Current = advancedSubtitles,
                                                             CornerType = FormControlCornerType.Center,
                                                         })
@@ -1214,7 +1214,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         CaptionLangOptions = new SettingsItemV2(CaptionLangDropdown = new YouTubeI18nLangDropdown
                                                         {
                                                             Caption = AXPlayerStrings.CaptionLanguage,
-                                                            Icon = FontAwesome.Solid.Language,
+                                                            Icon = MaterialSymbols.Filled.Language,
                                                             CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
@@ -1224,13 +1224,13 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.CaptionFont,
                                                             Current = caption_font,
-                                                            Icon = FontAwesome.Solid.Font,
+                                                            Icon = MaterialSymbols.Filled.Font,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         customCaptionFontsToggleBase = new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.CustomCaptionFontEnabled,
-                                                            Icon = FontAwesome.Solid.Font,
+                                                            Icon = MaterialSymbols.Filled.Font,
                                                             Current = customCaptionFonts.Enabled,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
@@ -1246,7 +1246,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 customCaptionFontItem = new SettingsItemV2(customCaptionFontDropdown = new FormDropdown<string>
                                                                 {
                                                                     Caption = AXPlayerStrings.CustomCaptionFont,
-                                                                    Icon = FontAwesome.Solid.Font,
+                                                                    Icon = MaterialSymbols.Filled.Font,
                                                                     Current = customCaptionFonts.SelectedFont,
                                                                     Items = customCaptionFonts.AvailableFonts,
                                                                     CornerType = FormControlCornerType.Center,
@@ -1257,7 +1257,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormButton
                                                                 {
                                                                     Caption = AXPlayerStrings.CustomCaptionFontFolder,
-                                                                    Icon = FontAwesome.Solid.Folder,
+                                                                    Icon = MaterialSymbols.Filled.Folder,
                                                                     Text = customCaptionFonts.FolderPath,
                                                                     ButtonText = AXPlayerStrings.OpenInFileExplorer,
                                                                     CornerType = FormControlCornerType.Center,
@@ -1269,7 +1269,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormButton
                                                                 {
                                                                     Caption = AXPlayerStrings.RefreshCustomCaptionFonts,
-                                                                    Icon = FontAwesome.Solid.SyncAlt,
+                                                                    Icon = MaterialSymbols.Filled.SyncAlt,
                                                                     Text = AXPlayerStrings.RefreshCustomCaptionFontsDescription,
                                                                     ButtonText = AXPlayerStrings.Refresh,
                                                                     CornerType = FormControlCornerType.Center,
@@ -1283,7 +1283,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.CaptionBGOpacity,
-                                                            Icon = FontAwesome.Solid.Sun,
+                                                            Icon = MaterialSymbols.Filled.Sun,
                                                             Current = captionBGOpacity,
                                                             DisplayAsPercentage = true,
                                                             CornerType = FormControlCornerType.Center,
@@ -1292,13 +1292,13 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.CaptionBGColour,
                                                             Current = appConfig.GetBindable<Colour4>(AXPlayerSetting.CaptionBGColor),
-                                                            Icon = FontAwesome.Solid.Palette,
+                                                            Icon = MaterialSymbols.Filled.Palette,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormSliderBar<int>
                                                         {
                                                             Caption = AXPlayerStrings.CaptionCornerRadius,
-                                                            Icon = FontAwesome.Solid.SlidersH,
+                                                            Icon = MaterialSymbols.Filled.SlidersH,
                                                             Current = appConfig.GetBindable<int>(AXPlayerSetting.CaptionCornerRadius),
                                                             KeyboardStep = 1,
                                                             LabelFormat = value => $"{value}px",
@@ -1307,7 +1307,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ClosedCaptionsBackdropBlur,
-                                                            Icon = FontAwesome.Solid.ClosedCaptioning,
+                                                            Icon = MaterialSymbols.Filled.ClosedCaptioning,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.ClosedCaptionsBackdropBlur),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
@@ -1322,7 +1322,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(audioDeviceDropdown = new AudioDeviceDropdown
                                                         {
                                                             Caption = AXPlayerStrings.OutputDevice,
-                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                            Icon = MaterialSymbols.Filled.VolumeUp,
                                                             CornerType = FormControlCornerType.Top,
                                                         })
                                                         {
@@ -1335,7 +1335,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.AdjustPitchOnSpeedChange,
-                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                            Icon = MaterialSymbols.Filled.VolumeUp,
                                                             Current = adjustPitch,
                                                             Hotkey = new Hotkey(GlobalAction.ToggleAdjustPitchOnSpeedChange),
                                                             CornerType = FormControlCornerType.Bottom,
@@ -1359,7 +1359,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormSliderBar<double>
                                                                 {
                                                                     Caption = AXPlayerStrings.VideoVolume,
-                                                                    Icon = FontAwesome.Solid.VolumeUp,
+                                                                    Icon = MaterialSymbols.Filled.VolumeUp,
                                                                     Current = videoVolume,
                                                                     DisplayAsPercentage = true,
                                                                     CornerType = FormControlCornerType.Top,
@@ -1367,7 +1367,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                                 new SettingsItemV2(new FormSliderBar<double>
                                                                 {
                                                                     Caption = AXPlayerStrings.SFXVolume,
-                                                                    Icon = FontAwesome.Solid.VolumeUp,
+                                                                    Icon = MaterialSymbols.Filled.VolumeUp,
                                                                     Current = config.GetBindable<double>(FrameworkSetting.VolumeEffect),
                                                                     DisplayAsPercentage = true,
                                                                     CornerType = FormControlCornerType.Center,
@@ -1377,7 +1377,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.AudioNormalization,
-                                                            Icon = FontAwesome.Solid.VolumeUp,
+                                                            Icon = MaterialSymbols.Filled.VolumeUp,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.AudioNormalization),
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
@@ -1392,7 +1392,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.ShowLogOverlay,
-                                                            Icon = FontAwesome.Solid.Bug,
+                                                            Icon = MaterialSymbols.Filled.Bug,
                                                             Current = config.GetBindable<bool>(FrameworkSetting.ShowLogOverlay),
                                                             Hotkey = new Hotkey(new KeyCombination(new [] { InputKey.Control, InputKey.F10 })),
                                                             CornerType = FormControlCornerType.Top,
@@ -1401,21 +1401,21 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.InnertubeDumpToggle,
                                                             HintText = AXPlayerStrings.InnertubeDumpToggleDesc,
-                                                            Icon = FontAwesome.Solid.Bug,
+                                                            Icon = MaterialSymbols.Filled.Bug,
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.InnertubeDumpEnabled),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(new FormCheckBox
                                                         {
                                                             Caption = AXPlayerStrings.BypassFTBRenderPass,
-                                                            Icon = FontAwesome.Solid.Bug,
+                                                            Icon = MaterialSymbols.Filled.Bug,
                                                             Current = debugConfig.GetBindable<bool>(DebugSetting.BypassFrontToBackPass),
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
                                                         new SettingsItemV2(latencyModeDropdown = new FormEnumDropdown<GCLatencyMode>
                                                         {
                                                             Caption = AXPlayerStrings.GC_Mode,
-                                                            Icon = FontAwesome.Solid.Bug,
+                                                            Icon = MaterialSymbols.Filled.Bug,
                                                             CornerType = FormControlCornerType.Bottom,
                                                         }),
                                                         new SettingsButtonV2
@@ -1572,7 +1572,7 @@ namespace AXPlayer.App.Overlays.Containers
                                     Size = new Vector2(35, 35),
                                     IconScale = new Vector2(0.8f),
                                     Margin = new MarginPadding(14),
-                                    Icon = FontAwesome.Solid.Times,
+                                    Icon = MaterialSymbols.Filled.Times,
                                     BackgroundColour = overlayColourProvider.Background4,
                                     Action = () =>
                                     {

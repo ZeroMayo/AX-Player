@@ -52,7 +52,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 {
                     Margin = new MarginPadding { Horizontal = 10, },
                     Size = new Vector2(8),
-                    Icon = FontAwesome.Solid.ChevronRight,
+                    Icon = MaterialSymbols.Filled.ChevronRight,
                     Anchor = Anchor.CentreRight,
                     Origin = Anchor.CentreRight,
                 });

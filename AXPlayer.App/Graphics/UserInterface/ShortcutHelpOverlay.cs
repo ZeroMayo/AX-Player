@@ -99,7 +99,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Colour = ColourInfo.GradientVertical(overlayColourProvider.Background5.Opacity(0), overlayColourProvider.Background5),
                     Height = 76,
                 },
-                resetAllButton = new RoundedIconButton(FontAwesome.Solid.Undo)
+                resetAllButton = new RoundedIconButton(MaterialSymbols.Filled.Undo)
                 {
                     Anchor = Anchor.BottomCentre,
                     Origin = Anchor.BottomCentre,
@@ -117,7 +117,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     Size = new Vector2(35, 35),
                     IconScale = new Vector2(0.8f),
                     Margin = new MarginPadding(14),
-                    Icon = FontAwesome.Solid.Times,
+                    Icon = MaterialSymbols.Filled.Times,
                     BackgroundColour = overlayColourProvider.Background4,
                     Action = () => CloseAction?.Invoke(),
                 },
@@ -256,7 +256,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                                             Origin = Anchor.Centre,
                                             Action = () => shortcutManager.BeginCapture(action),
                                         },
-                                        resetButton = new RoundedIconOnlyButton(FontAwesome.Solid.Undo)
+                                        resetButton = new RoundedIconOnlyButton(MaterialSymbols.Filled.Undo)
                                         {
                                             Size = new Vector2(28, 28),
                                             Anchor = Anchor.Centre,

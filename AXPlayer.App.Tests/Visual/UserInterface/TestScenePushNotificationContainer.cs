@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2026 ZeroMayo <boomboxrapsody@gmail.com>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
 using NUnit.Framework;
 using osu.Framework.Graphics.Sprites;
@@ -16,7 +17,7 @@ namespace AXPlayer.App.Tests.Visual.UserInterface
 
         public TestScenePushNotificationContainer()
         {
-            Add(new PushNotificationContainer(FontAwesome.Solid.Bell, Color4.Yellow, "Test notification test テスト 테스트 123\nmultiline test\nmultiline test", "test テスト 테스트 123")
+            Add(new PushNotificationContainer(MaterialSymbols.Filled.Bell, Color4.Yellow, "Test notification test テスト 테스트 123\nmultiline test\nmultiline test", "test テスト 테스트 123")
             {
                 Anchor = osu.Framework.Graphics.Anchor.Centre,
                 Origin = osu.Framework.Graphics.Anchor.Centre,

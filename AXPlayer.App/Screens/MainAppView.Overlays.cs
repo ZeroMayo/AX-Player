@@ -79,11 +79,11 @@ namespace AXPlayer.App.Screens
                     {
                         Schedule(() =>
                         {
-                            //notificationOverlay.Push(new PushNotificationContainer(FontAwesome.Solid.CheckCircle, Color4.Green, AXPlayerStrings.RunningLatestRelease(game.Version), AXPlayerStrings.Updates));
+                            //notificationOverlay.Push(new PushNotificationContainer(MaterialSymbols.Filled.CheckCircle, Color4.Green, AXPlayerStrings.RunningLatestRelease(game.Version), AXPlayerStrings.Updates));
                             newToastOverlay.ShowToast(AXPlayerStrings.RunningLatestRelease(game.Version));
                         });
                         /*
-                        ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Updates, NekoPlayerStrings.RunningLatestRelease(game.Version), FontAwesome.Solid.CheckCircle);
+                        ToastBase toast = new ToastWithIcon(NekoPlayerStrings.Updates, NekoPlayerStrings.RunningLatestRelease(game.Version), MaterialSymbols.Filled.CheckCircle);
 
                         onScreenDisplay.Display(toast);
                         */
