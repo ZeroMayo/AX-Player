@@ -5,6 +5,7 @@
 
 using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Sprites;
+using osu.Framework;
 using osu.Framework.Allocation;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
