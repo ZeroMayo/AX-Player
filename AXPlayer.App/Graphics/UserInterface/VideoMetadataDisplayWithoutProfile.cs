@@ -62,13 +62,29 @@ namespace AXPlayer.App.Graphics.UserInterface
             public ColourInfo FGColor2;
         }
 
+        private VideoMetadataDisplayWithoutProfileColours videoMetadataDisplayWithoutProfileColours;
+
         public void ApplyColours(VideoMetadataDisplayWithoutProfileColours colours)
         {
+            videoMetadataDisplayWithoutProfileColours = colours;
             bgLayer.FadeColour(colours.BGColor, 500, Easing.OutQuint);
             videoName.FadeColour(colours.FGColor, 500, Easing.OutQuint);
             desc.FadeColour(colours.FGColor2, 500, Easing.OutQuint);
 
-            bgLayer2.FadeColour(ColourInfo.GradientHorizontal(colours.FGColor, colours.BGColor), 500, Easing.OutQuint);
+            switch (videoMetadataDisplayAlignment)
+            {
+                case VideoMetadataDisplayAlignment.Left:
+                    bgLayer2.FadeColour(ColourInfo.GradientHorizontal(colours.FGColor, colours.BGColor), 500, Easing.OutQuint);
+                    break;
+
+                case VideoMetadataDisplayAlignment.Center:
+                    bgLayer2.FadeColour(ColourInfo.GradientVertical(colours.FGColor, colours.BGColor), 500, Easing.OutQuint);
+                    break;
+
+                case VideoMetadataDisplayAlignment.Right:
+                    bgLayer2.FadeColour(ColourInfo.GradientHorizontal(colours.BGColor, colours.FGColor), 500, Easing.OutQuint);
+                    break;
+            }
             bgLayer2.FadeTo(0.2f, 500, Easing.OutQuint);
         }
 
@@ -202,8 +218,18 @@ namespace AXPlayer.App.Graphics.UserInterface
             return base.OnClick(e);
         }
 
+        [Resolved]
+        private OverlayColourProvider overlayColourProvider { get; set; }
+
+        private VideoMetadataDisplayAlignment videoMetadataDisplayAlignment;
+
         public void SetVideoMetadataDisplayAlignment(VideoMetadataDisplayAlignment alignment)
         {
+            videoMetadataDisplayAlignment = alignment;
+
+            if (videoMetadataDisplayWithoutProfileColours != null)
+                ApplyColours(videoMetadataDisplayWithoutProfileColours);
+
             switch (alignment)
             {
                 case VideoMetadataDisplayAlignment.Left:
@@ -215,6 +241,8 @@ namespace AXPlayer.App.Graphics.UserInterface
                     desc.Anchor = Anchor.TopLeft;
                     desc.Origin = Anchor.TopLeft;
                     desc.TextAnchor = Anchor.TopLeft;
+
+                    bgLayer2.FadeColour(ColourInfo.GradientHorizontal(overlayColourProvider.Content2, overlayColourProvider.Background5), 500, Easing.OutQuint);
                     break;
                 }
                 case VideoMetadataDisplayAlignment.Center:
@@ -226,6 +254,8 @@ namespace AXPlayer.App.Graphics.UserInterface
                     desc.Anchor = Anchor.TopCentre;
                     desc.Origin = Anchor.TopCentre;
                     desc.TextAnchor = Anchor.TopCentre;
+
+                    bgLayer2.FadeColour(ColourInfo.GradientVertical(overlayColourProvider.Content2, overlayColourProvider.Background5), 500, Easing.OutQuint);
                     break;
                 }
                 case VideoMetadataDisplayAlignment.Right:
@@ -237,6 +267,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                     desc.Anchor = Anchor.TopRight;
                     desc.Origin = Anchor.TopRight;
                     desc.TextAnchor = Anchor.TopRight;
+                    bgLayer2.FadeColour(ColourInfo.GradientHorizontal(overlayColourProvider.Background5, overlayColourProvider.Content2), 500, Easing.OutQuint);
                     break;
                 }
             }
