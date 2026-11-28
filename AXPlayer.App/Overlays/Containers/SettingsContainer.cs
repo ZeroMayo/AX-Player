@@ -629,7 +629,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.DiscordRichPresence,
                                                             Current = discordRichPresence,
-                                                            Icon = FontAwesome.Brands.Discord,
+                                                            Icon = FontAwesomeBrands.Discord,
                                                             CornerType = FormControlCornerType.Center,
                                                         })
                                                         {
@@ -639,7 +639,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                         {
                                                             Caption = AXPlayerStrings.GoogleAccount,
                                                             Text = AXPlayerStrings.SignedOut,
-                                                            Icon = FontAwesome.Brands.Google,
+                                                            Icon = FontAwesomeBrands.Google,
                                                             CornerType = FormControlCornerType.Center,
                                                             Action = () => {
                                                                 OAuthSignInAction.Invoke();

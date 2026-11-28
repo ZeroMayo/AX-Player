@@ -101,7 +101,7 @@ namespace AXPlayer.App.Graphics.UserInterface
             {
                 if (AXPlayerDescriptionParser.IsYouTubeVideo(url))
                 {
-                    icon = FontAwesome.Brands.Youtube;
+                    icon = FontAwesomeBrands.Youtube;
 
                     string videoId = VideoId.Parse(url);
                     Google.Apis.YouTube.v3.Data.Video video = api.GetVideo(videoId);
@@ -120,7 +120,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 }
                 else if (AXPlayerDescriptionParser.IsYouTubePlaylist(url))
                 {
-                    icon = FontAwesome.Brands.Youtube;
+                    icon = FontAwesomeBrands.Youtube;
 
                     string playlistId = PlaylistId.Parse(url);
                     Google.Apis.YouTube.v3.Data.Playlist video = api.GetPlaylistInfo(playlistId);
@@ -130,7 +130,7 @@ namespace AXPlayer.App.Graphics.UserInterface
                 }
                 else if (AXPlayerDescriptionParser.IsYouTubeChannel(url))
                 {
-                    icon = FontAwesome.Brands.Youtube;
+                    icon = FontAwesomeBrands.Youtube;
 
                     string channelId = url.Replace("https://www.youtube.com/channel/", string.Empty);
                     Google.Apis.YouTube.v3.Data.Channel channel = api.GetChannel(channelId);
@@ -158,22 +158,22 @@ namespace AXPlayer.App.Graphics.UserInterface
                 }
                 else if (AXPlayerDescriptionParser.IsDiscord(url))
                 {
-                    icon = FontAwesome.Brands.Discord;
+                    icon = FontAwesomeBrands.Discord;
                     Schedule(() => RefreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsTwitch(url))
                 {
-                    icon = FontAwesome.Brands.Twitch;
+                    icon = FontAwesomeBrands.Twitch;
                     Schedule(() => RefreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsInstagram(url))
                 {
-                    icon = FontAwesome.Brands.Instagram;
+                    icon = FontAwesomeBrands.Instagram;
                     Schedule(() => RefreshTextFlow());
                 }
                 else if (AXPlayerDescriptionParser.IsTwitter(url))
                 {
-                    icon = FontAwesome.Brands.Twitter;
+                    icon = FontAwesomeBrands.Twitter;
                     Schedule(() => RefreshTextFlow());
                 }
                 else

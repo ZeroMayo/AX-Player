@@ -212,6 +212,10 @@ namespace AXPlayer.App.Config
                 },
                 @"MaterialSymbolsRounded-Outlined");
 
+            // Brand logos are the only icons still sourced from Font Awesome, but from the bundled Font Awesome 7 font
+            // rather than the framework's pre-rendered Font Awesome 5 atlases. Static font, registered as "FontAwesome7Brands".
+            game.AddOutlineFont(Resources, @"Fonts/FontAwesome7Brands/FontAwesome7Brands");
+
             var Pretendard = game.AddVariableFont(Resources, @"Fonts/PretendardVariable/PretendardVariable");
             Pretendard.AddInstance(@"PretendardVariable-Regular");
             Pretendard.AddInstance(@"PretendardVariable-ExtraBold");
