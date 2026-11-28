@@ -1123,6 +1123,7 @@ namespace AXPlayer.App.Overlays.Containers
                                                             Current = appConfig.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled),
                                                             CornerType = FormControlCornerType.Top,
                                                         }),
+                                                        /*
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoInterpolation,
@@ -1131,6 +1132,15 @@ namespace AXPlayer.App.Overlays.Containers
                                                             DisplayAsPercentage = true,
                                                             CornerType = FormControlCornerType.Center,
                                                         }),
+                                                        new SettingsItemV2(new FormSliderBar<float>
+                                                        {
+                                                            Caption = AXPlayerStrings.VideoMotionBlur,
+                                                            Icon = FontAwesome.Solid.Wind,
+                                                            Current = appConfig.GetBindable<float>(AXPlayerSetting.VideoMotionBlurStrength),
+                                                            DisplayAsPercentage = true,
+                                                            CornerType = FormControlCornerType.Center,
+                                                        }),
+                                                        */
                                                         new SettingsItemV2(new FormSliderBar<float>
                                                         {
                                                             Caption = AXPlayerStrings.VideoBloomLevel,

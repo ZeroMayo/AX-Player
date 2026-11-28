@@ -101,6 +101,7 @@ namespace AXPlayer.App.Screens
                         Schedule(async () =>
                         {
                             SetVideoSource(item.Id.VideoId);
+                            playSearchResultSharedElementTransition(trickcal_is_good_game);
                         });
                     };
 

@@ -17,6 +17,7 @@ using AXPlayer.App.Graphics.Cursor;
 using AXPlayer.App.Graphics.Shaders;
 using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Graphics.Sprites.Odometer;
+using AXPlayer.App.Graphics.Transitions;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Graphics.UserInterfaceV3;
@@ -3748,6 +3749,7 @@ namespace AXPlayer.App.Screens
                                 },
                             }
                         },
+                        sharedElementTransitionLayer = new SharedElementTransitionLayer(),
                     }
                 }
             };

@@ -640,6 +640,9 @@
   <data name="video_interpolation" xml:space="preserve">
     <value>Intensidad de interpolación de vídeo</value>
   </data>
+  <data name="video_motion_blur" xml:space="preserve">
+    <value>Intensidad del desenfoque de movimiento del vídeo</value>
+  </data>
   <data name="discord_rich_presence" xml:space="preserve">
     <value>Discordia la presencia rica</value>
   </data>

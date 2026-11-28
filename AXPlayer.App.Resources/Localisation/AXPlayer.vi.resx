@@ -640,6 +640,9 @@
   <data name="video_interpolation" xml:space="preserve">
     <value>Cường độ nội suy video</value>
   </data>
+  <data name="video_motion_blur" xml:space="preserve">
+    <value>Cường độ làm nhoè chuyển động của video</value>
+  </data>
   <data name="discord_rich_presence" xml:space="preserve">
     <value>Trạng thái hoạt động chi tiết trên Discord</value>
   </data>

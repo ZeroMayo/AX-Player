@@ -20,6 +20,8 @@ using AXPlayer.App.Graphics.Shaders.New.CRT;
 using AXPlayer.App.Graphics.Shaders.New.Grayscale;
 using AXPlayer.App.Graphics.Shaders.New.HueShift;
 using AXPlayer.App.Graphics.Shaders.New.Interpolation;
+using AXPlayer.App.Graphics.Shaders.New.MotionBlur;
+using AXPlayer.App.Graphics.Transitions;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Localisation;
 using AXPlayer.App.Online;
@@ -90,6 +92,7 @@ namespace AXPlayer.App.Graphics.Videos
 
         private LiveChatReplayOverlay liveChatOverlay = null!;
         private IconButton liveChatToggleButton = null!;
+        private SharedElementTransitionLayer sharedElementTransitionLayer = null!;
         private readonly Task<IReadOnlyList<LiveChatReplayMessage>>? preloadedLiveChatReplay;
         private CancellationTokenSource? liveChatLoadCancellation;
         private string? liveChatVideoId;
@@ -151,11 +154,11 @@ namespace AXPlayer.App.Graphics.Videos
         private KeyBindingAnimations keyBindingAnimations = null!;
         private ClosedCaptionContainer closedCaption = null!;
         private Bindable<AspectRatioMethod> aspectRatioMethod = null!;
-        private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift, videoInterpolationStrength = null!;
+        private Bindable<float> videoBloomLevel, chromaticAberrationStrength, videoGrayscaleLevel, videoHueShift, videoInterpolationStrength, videoMotionBlurStrength = null!;
 
         private Bindable<bool> videoCrtEffectEnabled = null!, smoothPlaybackSpeed = null!;
 
-        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, interpolation, crt = null!;
+        private VideoNewShaderContainer bloom, chromatic, grayscale, hueShift, interpolation, motionBlur, crt = null!;
 
         private Bindable<bool> useNewSubtitlesFeature = null!;
 
@@ -206,6 +209,7 @@ namespace AXPlayer.App.Graphics.Videos
             videoCrtEffectEnabled = config.GetBindable<bool>(AXPlayerSetting.VideoCRTEffectEnabled);
             chromaticAberrationStrength = config.GetBindable<float>(AXPlayerSetting.ChromaticAberrationStrength);
             videoInterpolationStrength = config.GetBindable<float>(AXPlayerSetting.VideoInterpolationStrength);
+            videoMotionBlurStrength = config.GetBindable<float>(AXPlayerSetting.VideoMotionBlurStrength);
             useNewSubtitlesFeature = config.GetBindable<bool>(AXPlayerSetting.UseNewSubtitlesFeature);
             track = tracks.GetFromStream(File.OpenRead(fileName_Audio), fileName_Audio);
             PlaybackSpeed = new Bindable<double>(1);
@@ -267,9 +271,10 @@ namespace AXPlayer.App.Graphics.Videos
                                                     interpolation = new InterpolationContainer
                                                     {
                                                         RelativeSizeAxes = Axes.Both,
-                                                        Children = new Drawable[]
+                                                        Child = motionBlur = new MotionBlurContainer
                                                         {
-                                                            blurContainer = new BufferedContainer
+                                                            RelativeSizeAxes = Axes.Both,
+                                                            Child = blurContainer = new BufferedContainer
                                                             {
                                                                 RelativeSizeAxes = Axes.Both,
                                                                 Children = new Drawable[]
@@ -316,10 +321,6 @@ namespace AXPlayer.App.Graphics.Videos
                         CloseAction = () => LiveChatOverlayVisible.Value = false,
                     },
                 },
-                keyBindingAnimations = new KeyBindingAnimations
-                {
-                    RelativeSizeAxes = Axes.Both,
-                },
                 closedCaption = new ClosedCaptionContainer(this, closedCaptionTrack, srv3Contents, useNewSubtitlesFeature),
                 liveChatToggleButton = new IconButton
                 {
@@ -336,7 +337,12 @@ namespace AXPlayer.App.Graphics.Videos
                     BackgroundColour = overlayColourProvider.Background5.Opacity(0.85f),
                     TooltipText = AXPlayerStrings.LiveChatReplay("0"),
                     Action = ToggleLiveChatOverlay,
-                }
+                },
+                sharedElementTransitionLayer = new SharedElementTransitionLayer(),
+                keyBindingAnimations = new KeyBindingAnimations
+                {
+                    RelativeSizeAxes = Axes.Both,
+                },
             });
 
             UpdatePreservePitch(config.Get<bool>(AXPlayerSetting.AdjustPitchOnSpeedChange));
@@ -377,18 +383,66 @@ namespace AXPlayer.App.Graphics.Videos
 
             LiveChatOverlayVisible.BindValueChanged(visible =>
             {
+                const float live_chat_corner_radius = 10;
+
                 liveChatToggleButton.IconColour = visible.NewValue ? overlayColourProvider.Highlight1 : overlayColourProvider.Content2;
 
                 if (visible.NewValue)
                 {
-                    liveChatOverlayContainer.ScaleTo(1, 500, Easing.OutElasticHalf);
-                    liveChatOverlayContainer.FadeIn(250, Easing.OutQuint);
+                    // Start from the toggle button's bounds and let the panel fade in while the proxy dissolves into it.
+                    liveChatOverlayContainer.FinishTransforms();
+                    liveChatOverlayContainer.Scale = Vector2.One;
+                    liveChatOverlayContainer.Alpha = 0;
+
+                    bool started = sharedElementTransitionLayer.Play(
+                        liveChatToggleButton,
+                        liveChatOverlayContainer,
+                        () => new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = overlayColourProvider.Background5,
+                        },
+                        sourceCornerRadius: liveChatToggleButton.DrawHeight / 2,
+                        destinationCornerRadius: live_chat_corner_radius,
+                        // The button's visibility is owned by updateLiveChatToggleVisibility(), which hides it while the overlay is open.
+                        restoreSource: false);
+
+                    if (started)
+                    {
+                        liveChatOverlayContainer.Delay(SharedElementTransitionLayer.DEFAULT_DURATION)
+                                                 .FadeIn(SharedElementTransitionLayer.DEFAULT_FADE_OUT_DURATION, Easing.OutQuad);
+                    }
+                    else
+                    {
+                        liveChatOverlayContainer.ScaleTo(1, 500, Easing.OutElasticHalf);
+                        liveChatOverlayContainer.FadeIn(250, Easing.OutQuint);
+                    }
+
                     loadLiveChatReplay();
                 }
                 else
                 {
-                    liveChatOverlayContainer.ScaleTo(0.7f, 500, Easing.OutQuint);
-                    liveChatOverlayContainer.FadeOut(250, Easing.OutQuint);
+                    // Collapse back into the button. The panel stays hidden once the proxy has finished.
+                    liveChatOverlayContainer.FinishTransforms();
+                    liveChatOverlayContainer.Scale = Vector2.One;
+
+                    bool started = sharedElementTransitionLayer.Play(
+                        liveChatOverlayContainer,
+                        liveChatToggleButton,
+                        () => new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = overlayColourProvider.Background5,
+                        },
+                        sourceCornerRadius: live_chat_corner_radius,
+                        destinationCornerRadius: liveChatToggleButton.DrawHeight / 2,
+                        restoreSource: false);
+
+                    if (!started)
+                    {
+                        liveChatOverlayContainer.ScaleTo(0.7f, 500, Easing.OutQuint);
+                        liveChatOverlayContainer.FadeOut(250, Easing.OutQuint);
+                    }
                 }
 
                 updateLiveChatToggleVisibility();
@@ -442,6 +496,11 @@ namespace AXPlayer.App.Graphics.Videos
             videoInterpolationStrength.BindValueChanged(value =>
             {
                 interpolation.Strength = value.NewValue;
+            }, true);
+
+            videoMotionBlurStrength.BindValueChanged(value =>
+            {
+                motionBlur.Strength = value.NewValue;
             }, true);
 
             videoCrtEffectEnabled.BindValueChanged(value =>

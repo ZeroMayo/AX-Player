@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AXPlayer.App.Config;
 using AXPlayer.App.Graphics;
 using AXPlayer.App.Graphics.Containers;
+using AXPlayer.App.Graphics.Transitions;
 using AXPlayer.App.Graphics.UserInterface;
 using AXPlayer.App.Graphics.UserInterfaceV2;
 using AXPlayer.App.Localisation;
@@ -291,6 +292,28 @@ namespace AXPlayer.App.Screens
                 overlayContent.FadeInFromZero(250, Easing.OutQuart);
                 //overlayShowSample.Play();
             }
+        }
+
+        /// <summary>
+        /// Expands the thumbnail of a search result into the video player using a Material design shared element transition.
+        /// </summary>
+        private void playSearchResultSharedElementTransition(YouTubeSearchResultView result)
+        {
+            if (sharedElementTransitionLayer == null || result.ThumbnailTexture is not { } texture)
+                return;
+
+            sharedElementTransitionLayer.Play(
+                result.Thumbnail,
+                videoContainer,
+                () => new Sprite
+                {
+                    Size = new Vector2(1, 1.5f),
+                    Origin = Anchor.Centre,
+                    Anchor = Anchor.Centre,
+                    RelativeSizeAxes = Axes.Both,
+                    FillMode = FillMode.Stretch,
+                    Texture = texture,
+                });
         }
 
         private void refreshSFX()

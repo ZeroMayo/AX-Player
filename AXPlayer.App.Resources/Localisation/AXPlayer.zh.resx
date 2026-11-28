@@ -640,6 +640,9 @@
   <data name="video_interpolation" xml:space="preserve">
     <value>视频插帧强度</value>
   </data>
+  <data name="video_motion_blur" xml:space="preserve">
+    <value>视频运动模糊强度</value>
+  </data>
   <data name="discord_rich_presence" xml:space="preserve">
     <value>Discord 动态状态</value>
   </data>
