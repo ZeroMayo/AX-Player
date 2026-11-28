@@ -53,7 +53,7 @@ namespace AXPlayer.Desktop.Windows.Updater
                 IUpdateSource updateSource = new GithubSource(@"https://github.com/ZeroMayo/AX-Player", null, ReleaseStream.Value == App.Config.ReleaseStream.Beta);
                 Velopack.UpdateManager updateManager = new Velopack.UpdateManager(updateSource, new UpdateOptions
                 {
-                    AllowVersionDowngrade = true
+                    AllowVersionDowngrade = true,
                 });
 
                 UpdateInfo? update = await updateManager.CheckForUpdatesAsync().ConfigureAwait(false);

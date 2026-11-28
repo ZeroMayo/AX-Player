@@ -10,8 +10,10 @@ using AXPlayer.App.Graphics.Sprites;
 using AXPlayer.App.Localisation;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Shapes;
 using osu.Framework.Localisation;
 
 namespace AXPlayer.App.Graphics.UserInterfaceV2
@@ -39,7 +41,7 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
         }
 
         [BackgroundDependencyLoader]
-        private void load()
+        private void load(OverlayColourProvider overlayColourProvider)
         {
             Drawable[] columns = new Drawable[TenBandEqualizer.BAND_COUNT];
 
@@ -91,14 +93,29 @@ namespace AXPlayer.App.Graphics.UserInterfaceV2
                 };
             }
 
-            InternalChild = new FillFlowContainer
+            InternalChild = new Container
             {
+                Masking = true,
                 RelativeSizeAxes = Axes.X,
                 AutoSizeAxes = Axes.Y,
-                Direction = FillDirection.Horizontal,
-                // Leaves room for the revert-to-default button of the enclosing settings item.
-                Padding = new MarginPadding { Right = 40 },
-                Children = columns,
+                CornerRadius = new CornersInfo(8, AXPlayerApp.UI_CORNER_RADIUS, 8, AXPlayerApp.UI_CORNER_RADIUS),
+                Children = new Drawable[]
+                {
+                    new Box
+                    {
+                        Colour = overlayColourProvider.Background4.Darken(0.1f),
+                        RelativeSizeAxes = Axes.Both,
+                    },
+                    new FillFlowContainer
+                    {
+                        RelativeSizeAxes = Axes.X,
+                        AutoSizeAxes = Axes.Y,
+                        Direction = FillDirection.Horizontal,
+                        // Leaves room for the revert-to-default button of the enclosing settings item.
+                        Padding = new MarginPadding {  Left = 16, Right = 16 },
+                        Children = columns,
+                    }
+                },
             };
         }
 

@@ -46,6 +46,7 @@ namespace AXPlayer.App.Updater
 
                 if (latestTagName != version)
                 {
+                    game.UpdateStatus.Value = UpdaterStatus.Updating;
                     game.UpdateInfo.Value = new AXPlayerUpdateInfo()
                     {
                         Version = latest.TagName,
