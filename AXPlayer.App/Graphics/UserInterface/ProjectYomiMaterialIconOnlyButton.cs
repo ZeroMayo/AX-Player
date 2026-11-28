@@ -130,12 +130,21 @@ namespace AXPlayer.App.Graphics.UserInterface
                 Schedule(() =>
                 {
                     SpriteText.Text = "";
-                    SpriteText.AddIcon(icon);
+                    SpriteText.AddArbitraryDrawable(new Icon()
+                    {
+                        Icon = icon,
+                        Size = new osuTK.Vector2(14f, 14f),
+                    });
                 });
             }
 
             Colour = dimColour;
             Enabled.BindValueChanged(_ => this.FadeColour(dimColour, 200, Easing.OutQuint), true);
+        }
+
+        private partial class Icon : SpriteIcon, IHasLineBaseHeight
+        {
+            public float LineBaseHeight => 11.5f;
         }
 
         private Color4 dimColour => Enabled.Value ? Color4.White : Color4.Gray;
