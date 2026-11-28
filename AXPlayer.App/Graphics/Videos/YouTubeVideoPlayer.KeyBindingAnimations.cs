@@ -3,6 +3,7 @@
 
 #nullable disable
 
+using AXPlayer.App.Graphics.Containers;
 using AXPlayer.App.Graphics.Sprites;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
@@ -23,11 +24,18 @@ namespace AXPlayer.App.Graphics.Videos
         {
             private SeekAnimation leftContent, centerContent, rightContent;
 
+            private YouTubeVideoPlayer videoPlayer;
+
+            public KeyBindingAnimations(YouTubeVideoPlayer videoPlayer)
+            {
+                this.videoPlayer = videoPlayer;
+            }
+
             [BackgroundDependencyLoader]
             private void load()
             {
                 AddRange(new Drawable[] {
-                    leftContent = new SeekAnimation(SeekAction.FastRewind10sec)
+                    leftContent = new SeekAnimation(SeekAction.FastRewind10sec, videoPlayer)
                     {
                         Anchor = Anchor.TopLeft,
                         Origin = Anchor.TopLeft,
@@ -40,7 +48,7 @@ namespace AXPlayer.App.Graphics.Videos
                         Origin = Anchor.TopRight,
                         RelativeSizeAxes = Axes.Both,
                     },
-                    rightContent = new SeekAnimation(SeekAction.FastForward10sec)
+                    rightContent = new SeekAnimation(SeekAction.FastForward10sec, videoPlayer)
                     {
                         Anchor = Anchor.TopRight,
                         Origin = Anchor.TopRight,
@@ -89,7 +97,7 @@ namespace AXPlayer.App.Graphics.Videos
 
                 private ScheduledDelegate fadeOut;
 
-                public SeekAnimation(SeekAction trackAction)
+                public SeekAnimation(SeekAction trackAction, YouTubeVideoPlayer videoPlayer = null)
                 {
                     this.trackAction = trackAction;
                     if (trackAction == SeekAction.FastRewind10sec)
@@ -139,6 +147,13 @@ namespace AXPlayer.App.Graphics.Videos
                                 }
                             }
                         });
+
+                        //double click container
+                        Add(new DoubleClickContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            DoubleClickAction = () => videoPlayer.FastRewind10Sec(),
+                        });
                     }
                     else if (trackAction == SeekAction.FastForward10sec)
                     {
@@ -186,6 +201,12 @@ namespace AXPlayer.App.Graphics.Videos
                                     }
                                 }
                             }
+                        });
+
+                        Add(new DoubleClickContainer
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            DoubleClickAction = () => videoPlayer.FastForward10Sec(),
                         });
                     }
                     else

@@ -339,7 +339,7 @@ namespace AXPlayer.App.Graphics.Videos
                     Action = ToggleLiveChatOverlay,
                 },
                 sharedElementTransitionLayer = new SharedElementTransitionLayer(),
-                keyBindingAnimations = new KeyBindingAnimations
+                keyBindingAnimations = new KeyBindingAnimations(this)
                 {
                     RelativeSizeAxes = Axes.Both,
                 },
